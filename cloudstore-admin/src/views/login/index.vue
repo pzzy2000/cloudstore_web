@@ -13,7 +13,7 @@
         <el-form-item prop="username">
           <el-input name="username"
                     type="text"
-                    v-model="loginForm.username"
+                    v-model="loginForm['bean.access']"
                     autoComplete="on"
                     placeholder="请输入用户名">
           <span slot="prefix">
@@ -25,7 +25,7 @@
           <el-input name="password"
                     :type="pwdType"
                     @keyup.enter.native="handleLogin"
-                    v-model="loginForm.password"
+                    v-model="loginForm['bean.password']"
                     autoComplete="on"
                     placeholder="请输入密码">
           <span slot="prefix">
@@ -69,7 +69,6 @@
   import {isvalidUsername} from '@/utils/validate';
   import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
   import login_center_bg from '@/assets/images/login_center_bg.png'
-
   export default {
     name: 'login',
     data() {
@@ -89,12 +88,12 @@
       };
       return {
         loginForm: {
-          username: '',
-          password: '',
+          'bean.access': '',
+          'bean.password': '',
         },
         loginRules: {
-          username: [{required: true, trigger: 'blur', validator: validateUsername}],
-          password: [{required: true, trigger: 'blur', validator: validatePass}]
+          'bean.access': [{required: true, trigger: 'blur', validator: validateUsername}],
+          'bean.password': [{required: true, trigger: 'blur', validator: validatePass}]
         },
         loading: false,
         pwdType: 'password',
@@ -104,13 +103,13 @@
       }
     },
     created() {
-      this.loginForm.username = getCookie("username");
-      this.loginForm.password = getCookie("password");
-      if(this.loginForm.username === undefined||this.loginForm.username==null||this.loginForm.username===''){
-        this.loginForm.username = 'admin';
+      this.loginForm['bean.access'] = getCookie("username");
+      this.loginForm['bean.password'] = getCookie("password");
+      if(this.loginForm['bean.access']  === undefined||this.loginForm['bean.access'] ==null||this.loginForm['bean.access'] ===''){
+        this.loginForm['bean.access']  = 'admin';
       }
-      if(this.loginForm.password === undefined||this.loginForm.password==null){
-        this.loginForm.password = '';
+      if(this.loginForm['bean.password'] === undefined||this.loginForm['bean.password']==null){
+        this.loginForm['bean.password'] = '';
       }
     },
     methods: {

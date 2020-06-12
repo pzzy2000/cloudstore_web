@@ -286,8 +286,8 @@
 
   const defaultListQuery = {
     keyword: null,
-    pageNum: 1,
-    pageSize: 5,
+    ['commSearchBean.pageNum']: 1,
+    ['commSearchBean.pageSize']: 5,
     publishStatus: null,
     verifyStatus: null,
     productSn: null,
@@ -476,7 +476,7 @@
         });
       },
       handleSearchList() {
-        this.listQuery.pageNum = 1;
+        this.listQuery['commSearchBean.pageNum'] = 1;
         this.getList();
       },
       handleAddProduct() {
@@ -645,5 +645,3 @@
   }
 </script>
 <style></style>
-
-

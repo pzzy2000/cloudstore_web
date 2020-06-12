@@ -75,27 +75,27 @@ const permission = {
     }
   },
   actions: {
-    GenerateRoutes({ commit }, data) {
+    GenerateRoutes({ commit }, menuBeans) {
       return new Promise(resolve => {
-        const { menus } = data;
-        const { username } = data;
+        // const { menus } = data;
+        // const { username } = data;
         const accessedRouters = asyncRouterMap.filter(v => {
-          //admin帐号直接返回所有菜单
-          // if(username==='admin') return true;
-          if (hasPermission(menus, v)) {
-            if (v.children && v.children.length > 0) {
-              v.children = v.children.filter(child => {
-                if (hasPermission(menus, child)) {
-                  return child
-                }
-                return false;
-              });
-              return v
-            } else {
-              return v
-            }
-          }
-          return false;
+          // //admin帐号直接返回所有菜单
+          // // if(username==='admin') return true;
+          // if (hasPermission(menus, v)) {
+          //   if (v.children && v.children.length > 0) {
+          //     v.children = v.children.filter(child => {
+          //       if (hasPermission(menus, child)) {
+          //         return child
+          //       }
+          //       return false;
+          //     });
+          //     return v
+          //   } else {
+          //     return v
+          //   }
+          // }
+          return true;
         });
         //对菜单进行排序
         sortRouters(accessedRouters);
@@ -107,4 +107,3 @@ const permission = {
 };
 
 export default permission;
-

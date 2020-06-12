@@ -1,20 +1,21 @@
 import request from '@/utils/request'
 
-export function login(username, password) {
+export function login(form) {
+  let formData = new FormData();
+  for (var key in form) {
+    formData.append(key, form[key]);
+  }
   return request({
-    url: '/admin/login',
+    url: '/sys/manager/platform/login',
     method: 'post',
-    data: {
-      username,
-      password
-    }
+    data: formData
   })
 }
 
 export function getInfo() {
   return request({
-    url: '/admin/info',
-    method: 'get',
+    url: '/sys/menu/load',
+    method: 'post',
   })
 }
 

@@ -1,9 +1,15 @@
 import request from '@/utils/request'
 export function fetchList(params) {
+
+  let formData = new FormData();
+  for (var key in params) {
+    formData.append(key, params[key]);
+  }
+
   return request({
-    url:'/product/list',
-    method:'get',
-    params:params
+    url:'/goods/list',
+    method:'POST',
+    data:formData
   })
 }
 
@@ -69,4 +75,3 @@ export function getProduct(id) {
     method:'get',
   })
 }
-
