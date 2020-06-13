@@ -5,21 +5,21 @@
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
         <el-button
-          style="float: right"
+          style="float: right;margin-bottom: 10px;"
           @click="handleSearchList()"
           type="primary"
           size="small">
           查询结果
         </el-button>
         <el-button
-          style="float: right;margin-right: 15px"
+          style="float: right;margin-right: 15px;margin-bottom: 10px;"
           @click="handleResetSearch()"
           size="small">
           重置
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="用户名字：">
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
           </el-form-item>
@@ -154,6 +154,7 @@
     keyword: null,
     pageNum: 1,
     pageSize: 5,
+    userType:'platform',
     publishStatus: null,
     verifyStatus: null,
     productSn: null,
@@ -226,10 +227,12 @@
           value: 2,
           label: '永久关闭'
         }],
-        userTypes:[{
-          value: 'supplier',
-          label: '供应商'
-        }, {
+        userTypes:[
+        //   {
+        //   value: 'supplier',
+        //   label: '供应商'
+        // },
+        {
           value: 'platform',
           label: '平台管理'
         }],
@@ -290,12 +293,12 @@
         this.getList();
       },
       handleUpdateUserInfo(index, row){
-        
+
         let  pageNum = this.listQuery.pageNum;
         let  pageSize =this.listQuery.pageSize;
         let   userId = row.id;
 
-       this.$router.push({path:'/sys/user/edit',query: {userId: userId,pageNum:pageNum,pageSize:pageSize}});
+       this.$router.push({path:'/sys/manager/user/edit',query: {userId: userId,pageNum:pageNum,pageSize:pageSize}});
       },
 
       // handleBatchOperate() {
