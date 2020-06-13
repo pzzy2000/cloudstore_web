@@ -9,6 +9,9 @@ import VCharts from 'v-charts'
 
 import '@/styles/index.scss' // global css
 
+import ElementUIRWDispatcher from 'element-ui-rw-dispatcher'
+import 'element-ui-rw-dispatcher/styles/index.scss'
+
 import App from './App'
 import router from './router'
 import store from './store'
@@ -18,6 +21,7 @@ import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
+Vue.use(ElementUIRWDispatcher)
 
 Vue.config.productionTip = false
 

@@ -1,15 +1,12 @@
 import request from '@/utils/request'
-export function fetchList(params) {
+import {switchForm} from '@/api/iunits'
 
-  let formData = new FormData();
-  for (var key in params) {
-    formData.append(key, params[key]);
-  }
+export function fetchList(params) {
 
   return request({
     url:'/goods/list',
     method:'POST',
-    data:formData
+    data:switchForm(params)
   })
 }
 

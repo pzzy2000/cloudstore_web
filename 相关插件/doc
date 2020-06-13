@@ -1,0 +1,22 @@
+Vue export default基本结构
+https://www.cnblogs.com/zhousjcn/p/13024857.html
+HBuilderX\plugins\npm\npm i tslib
+HBuilderX\plugins\npm\npm i element-ui-rw-dispatcher
+
+const getOptions = () => {
+  return {
+    namespace: baseConfig.namespace,
+    activeText: baseConfig.activeText,
+    inactiveText: baseConfig.inactiveText,
+    separator: baseConfig.separator,
+    rangeSeparator: baseConfig.rangeSeparator,
+    readStateRender: baseConfig.readStateRender,
+    
+    
+    
+    
+    Message({
+        message: res.result.msg,
+        type: 'error',
+        duration: 3 * 1000
+      })

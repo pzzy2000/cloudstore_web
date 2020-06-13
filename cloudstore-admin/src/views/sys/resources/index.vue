@@ -20,11 +20,11 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="商品名称"></el-input>
+          <el-form-item label="用户名字：">
+            <el-input style="width: 203px" v-model="listQuery.name" placeholder="商品名称"></el-input>
           </el-form-item>
-          <el-form-item label="商品货号：">
-            <el-input style="width: 203px" v-model="listQuery.productSn" placeholder="商品货号"></el-input>
+          <el-form-item label="访问账号：">
+            <el-input style="width: 203px" v-model="listQuery.phone" placeholder="商品货号"></el-input>
           </el-form-item>
           <el-form-item label="商品分类：">
             <el-cascader
@@ -645,5 +645,3 @@
   }
 </script>
 <style></style>
-
-

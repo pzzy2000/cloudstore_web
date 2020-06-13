@@ -35,6 +35,36 @@ export const constantRouterMap = [
 ]
 
 export const asyncRouterMap = [
+
+  {
+    path:'/sys/user',
+    component: Layout,
+    redirect: '/sys/user/list',
+    name: 'sys',
+    meta: {title: '系统管理', icon: 'product-list'},
+    children: [
+      {
+        path: 'list',
+        name: 'userlist',
+        component: () => import('@/views/sys/user/index'),
+        meta: {title: '用户列表', icon: 'product-list'}
+      },
+      {
+        path: 'edit',
+        name: 'useredit',
+        component: () => import('@/views/sys/user/edit'),
+        meta: {title: '编辑用户', icon: 'product-list'},
+        hidden: true
+
+      },
+      {
+        path: 'resources',
+        name: 'resources',
+        component: () => import('@/views/sys/resources/index'),
+        meta: {title: '参数管理', icon: 'ums-resource'}
+      }
+    ]
+  },
   {
     path: '/pms',
     component: Layout,
@@ -366,4 +396,3 @@ export default new Router({
   scrollBehavior: () => ({y: 0}),
   routes: constantRouterMap
 })
-
