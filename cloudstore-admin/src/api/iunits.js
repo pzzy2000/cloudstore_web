@@ -14,6 +14,8 @@ let formData = new FormData();
         let key_=key;
         if(key_ == 'pageNum' || key_==='pageSize'){
           key_='commSearchBean.'+key_;
+        }else if(key_ == 'optType'){
+          key_=key_;
         }else{
           key_='bean.'+key_;
         }

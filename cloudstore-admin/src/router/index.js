@@ -91,6 +91,22 @@ export const asyncRouterMap = [
         }
       ]
 
+  },{
+
+      path:'/sys/tracking',
+      component: Layout,
+      redirect: '/sys/tracking/list',
+      name: 'tracking',
+      meta: {title: '物流管理', icon: 'product-list'},
+      children: [
+        {
+          path: 'list',
+          name: 'trackinglist',
+          component: () => import('@/views/tracking/list'),
+          meta: {title: '物流公司列表', icon: 'product-list'}
+        }
+      ]
+
   },
   // {
   //   path: '/pms',
