@@ -36,6 +36,26 @@ export const constantRouterMap = [
 
 export const asyncRouterMap = [
 
+
+  {
+    path:'/sys/supplier',
+    component: Layout,
+    redirect: '/sys/supplier/list',
+    name: 'sys',
+    meta: {title: '供应商管理', icon: 'product-list'},
+     children: [{
+       path: 'list',
+       name: 'supplier_list',
+       component: () => import('@/views/supplier/list'),
+       meta: {title: '供应商列表', icon: 'product-list'}
+     },{
+       path: 'info',
+       name: 'supplier_info',
+       component: () => import('@/views/supplier/info'),
+       meta: {title: '供应商详情', icon: 'product-list'}
+     }]
+  },
+
   {
     path:'/sys/manager',
     component: Layout,
