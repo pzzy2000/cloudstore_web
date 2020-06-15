@@ -20,3 +20,15 @@ const getOptions = () => {
         type: 'error',
         duration: 3 * 1000
       })
+      
+      
+   1: 设置：
+   npm config set registry https://registry.npm.taobao.org
+   
+   npm congfig get registry
+    
+   2：
+   npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+   
+   3： npm install
+   
