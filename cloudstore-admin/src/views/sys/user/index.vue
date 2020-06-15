@@ -151,71 +151,20 @@
   import { fetchList } from '@/api/sysuser'
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
-    keyword: null,
     pageNum: 1,
     pageSize: 5,
     userType:'platform',
-    publishStatus: null,
-    verifyStatus: null,
-    productSn: null,
-    productCategoryId: null,
-    brandId: null
   };
   export default {
     name: "productList",
     data() {
       return {
-        editSkuInfo:{
-          dialogVisible:false,
-          productId:null,
-          productSn:'',
-          productAttributeCategoryId:null,
-          stockList:[],
-          productAttr:[],
-          keyword:null
-        },
-        operates: [
-          {
-            label: "商品上架",
-            value: "publishOn"
-          },
-          {
-            label: "商品下架",
-            value: "publishOff"
-          },
-          {
-            label: "设为推荐",
-            value: "recommendOn"
-          },
-          {
-            label: "取消推荐",
-            value: "recommendOff"
-          },
-          {
-            label: "设为新品",
-            value: "newOn"
-          },
-          {
-            label: "取消新品",
-            value: "newOff"
-          },
-          {
-            label: "转移到分类",
-            value: "transferCategory"
-          },
-          {
-            label: "移入回收站",
-            value: "recycle"
-          }
-        ],
-        operateType: null,
+       
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,
         listLoading: true,
-        selectProductCateValue: null,
         multipleSelection: [],
-        productCateOptions: [],
         brandOptions: [],
         userStatuses:[{  //0:正常;1:违规关闭;2:永久关闭
           value: 0,
@@ -285,7 +234,7 @@
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.result.result.records;
-          this.total = response.result.result.total;
+          this.total = parseInt( response.result.result.total);
         });
       },
       handleSearchList() {
@@ -301,62 +250,6 @@
        this.$router.push({path:'/sys/manager/user/edit',query: {userId: userId,pageNum:pageNum,pageSize:pageSize}});
       },
 
-      // handleBatchOperate() {
-      //   if(this.operateType==null){
-      //     this.$message({
-      //       message: '请选择操作类型',
-      //       type: 'warning',
-      //       duration: 1000
-      //     });
-      //     return;
-      //   }
-      //   if(this.multipleSelection==null||this.multipleSelection.length<1){
-      //     this.$message({
-      //       message: '请选择要操作的商品',
-      //       type: 'warning',
-      //       duration: 1000
-      //     });
-      //     return;
-      //   }
-      //   this.$confirm('是否要进行该批量操作?', '提示', {
-      //     confirmButtonText: '确定',
-      //     cancelButtonText: '取消',
-      //     type: 'warning'
-      //   }).then(() => {
-      //     let ids=[];
-      //     for(let i=0;i<this.multipleSelection.length;i++){
-      //       ids.push(this.multipleSelection[i].id);
-      //     }
-      //     switch (this.operateType) {
-      //       case this.operates[0].value:
-      //         this.updatePublishStatus(1,ids);
-      //         break;
-      //       case this.operates[1].value:
-      //         this.updatePublishStatus(0,ids);
-      //         break;
-      //       case this.operates[2].value:
-      //         this.updateRecommendStatus(1,ids);
-      //         break;
-      //       case this.operates[3].value:
-      //         this.updateRecommendStatus(0,ids);
-      //         break;
-      //       case this.operates[4].value:
-      //         this.updateNewStatus(1,ids);
-      //         break;
-      //       case this.operates[5].value:
-      //         this.updateNewStatus(0,ids);
-      //         break;
-      //       case this.operates[6].value:
-      //         break;
-      //       case this.operates[7].value:
-      //         this.updateDeleteStatus(1,ids);
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //     this.getList();
-      //   });
-      // },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;

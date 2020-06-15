@@ -88,9 +88,9 @@
         console.log('submit!');
       },
       toback(){
-       
+
           console.log('submit! '+this.pageSize);
-      this.$router.push({path:'/sys/user/list',query: {pageNum:this.pageNum,pageSize:this.pageSize}});
+      this.$router.push({path:'/sys/manager/user/list',query: {pageNum:this.pageNum,pageSize:this.pageSize}});
       },
       loadData() {
         this.userinfo.name = '12121212';

@@ -41,7 +41,7 @@ export const asyncRouterMap = [
     path:'/sys/supplier',
     component: Layout,
     redirect: '/sys/supplier/list',
-    name: 'sys',
+    name: 'supplier',
     meta: {title: '供应商管理', icon: 'product-list'},
      children: [{
        path: 'list',
@@ -53,6 +53,63 @@ export const asyncRouterMap = [
        name: 'supplier_info',
        component: () => import('@/views/supplier/info'),
        meta: {title: '供应商详情', icon: 'product-list'}
+     }]
+  },{
+
+      path:'/sys/goods',
+      component: Layout,
+      redirect: '/sys/goods/list',
+      name: 'goods',
+      meta: {title: '商品管理', icon: 'product-list'},
+       children: [{
+         path: 'list',
+         name: 'goods_list',
+         component: () => import('@/views/supplier/list'),
+         meta: {title: '商品列表', icon: 'product-list'}
+       },{
+         path: 'info',
+         name: 'goods_info',
+         component: () => import('@/views/supplier/info'),
+         meta: {title: '商品详情', icon: 'product-list'}
+       },{
+         path: 'category',
+         name: 'goods_category',
+         component: () => import('@/views/supplier/info'),
+         meta: {title: '商品分类', icon: 'product-list'}
+       },{
+
+         path: 'property',
+         name: 'goods_property',
+         component: () => import('@/views/supplier/info'),
+         meta: {title: '商品规格参数', icon: 'product-list'}
+       }]
+
+  },{
+    path:'/sys/agent',
+    component: Layout,
+    redirect: '/sys/agent/list',
+    name: 'agent',
+    meta: {title: '代理商', icon: 'product-list'},
+     children: [{
+         path: 'list',
+        name: 'agent_list',
+        component: () => import('@/views/supplier/list'),
+        meta: {title: '代理列表', icon: 'product-list'}
+     },{
+        path: 'list',
+        name: 'agent_info',
+        component: () => import('@/views/supplier/info'),
+        meta: {title: '代理详情', icon: 'product-list'}
+     },{
+        path: 'level',
+        name: 'agent_level',
+        component: () => import('@/views/supplier/info'),
+        meta: {title: '代理等级', icon: 'product-list'}
+     },{
+        path: 'goods',
+        name: 'agent_goods',
+        component: () => import('@/views/supplier/info'),
+        meta: {title: '代理商品', icon: 'product-list'}
      }]
   },
 
@@ -86,7 +143,7 @@ export const asyncRouterMap = [
         path: 'info/dict',
         name: 'dictlist',
         component: () => import('@/views/sys/dict/dictlist'),
-        meta: {title: '参数管理', icon: 'ums-resource'}
+        meta: {title: '数字字典', icon: 'ums-resource'}
       }
     ]
   },{
