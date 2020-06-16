@@ -26,43 +26,8 @@
           <el-form-item label="访问账号：">
             <el-input style="width: 203px" v-model="listQuery.phone" placeholder="商品货号"></el-input>
           </el-form-item>
-          <el-form-item label="商品分类：">
-            <el-cascader
-              clearable
-              v-model="selectProductCateValue"
-              :options="productCateOptions">
-            </el-cascader>
-          </el-form-item>
-          <el-form-item label="商品品牌：">
-            <el-select v-model="listQuery.brandId" placeholder="请选择品牌" clearable>
-              <el-option
-                v-for="item in brandOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="上架状态：">
-            <el-select v-model="listQuery.publishStatus" placeholder="全部" clearable>
-              <el-option
-                v-for="item in publishStatusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="审核状态：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
-              <el-option
-                v-for="item in verifyStatusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          
+          
         </el-form>
       </div>
     </el-card>
@@ -107,8 +72,9 @@
         </el-table-column>
 
         <el-table-column label="操作" width="360" align="center">
-          <!--
+
           <template slot-scope="scope">
+            <!--
               <el-button
                 size="mini"
                 @click="handleShowProduct(scope.$index, scope.row)">查看
@@ -117,12 +83,13 @@
                 size="mini"
                 @click="handleUpdateProduct(scope.$index, scope.row)">编辑
               </el-button>
+               -->
               <el-button
                 size="mini"
-                @click="addDict(scope.$index, scope.row)">增加子类
+                @click="tochild(scope.$index, scope.row)">查看子类
               </el-button>
           </template>
-          -->
+
         </el-table-column>
       </el-table>
     </div>
@@ -153,16 +120,6 @@
     name: "productList",
     data() {
       return {
-        editSkuInfo:{
-          dialogVisible:false,
-          productId:null,
-          productSn:'',
-          productAttributeCategoryId:null,
-          stockList:[],
-          productAttr:[],
-          keyword:null
-        },
-
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
@@ -172,7 +129,11 @@
       }
     },
     created() {
-      this.getList();
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>  "+(this.$route.query.parentId))
+       this.listQuery.parentId = typeof(this.$route.query.parentId)=="undefined"?0:this.$route.query.parentId;
+       this.listQuery.pageNum = typeof(this.$route.query.pageNum)=="undefined"?1:this.$route.query.pageNum;
+       this.listQuery.pageSize = typeof(this.$route.query.pageSize)=="undefined"?defaultListQuery.pageSize:this.$route.query.pageSize;
+       this.getList();
     },
     watch: {
       // selectProductCateValue: function (newValue) {
@@ -194,6 +155,13 @@
       // }
     },
     methods: {
+
+      tochild(index, row){
+          // this.listQuery.parentId = row.id;
+          // this.getList();
+           this.$router.push({path:'/sys/manager/dict/list',
+               query: {parentId: row.id,pparentId:row.parentId,ppageNum:this.listQuery.pageNum,ppageSize:this.listQuery.pageSize}});
+      },
 
       haveChild(row, column){
         let  childs  = row.childs;
