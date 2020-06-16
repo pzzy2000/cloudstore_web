@@ -191,9 +191,9 @@
         let userId = row.id;
 
         this.$router.push({
-          path: '/sys/manager/user/edit',
+          path: '/sys/supplier/info',
           query: {
-            userId: userId,
+            supplierId: userId,
             pageNum: pageNum,
             pageSize: pageSize
           }
