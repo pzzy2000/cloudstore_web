@@ -140,10 +140,17 @@ export const asyncRouterMap = [
         hidden: true
       },
       {
-        path: 'info/dict',
+        path: 'dict/list',
         name: 'dictlist',
-        component: () => import('@/views/sys/dict/dictlist'),
-        meta: {title: '数字字典', icon: 'ums-resource'}
+        component: () => import('@/views/sys/dict/list'),
+        meta: {title: '数字字典列表', icon: 'ums-resource'}
+      },
+      {
+        path: 'dict/add',
+        name: 'dictadd',
+        component: () => import('@/views/sys/dict/add'),
+        meta: {title: '添加数字字典', icon: 'ums-resource'},
+         hidden: true
       }
     ]
   },{
