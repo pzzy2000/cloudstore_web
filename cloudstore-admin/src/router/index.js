@@ -80,9 +80,9 @@ export const asyncRouterMap = [
          component: () => import('@/views/supplier/info'),
          meta: {title: '商品详情', icon: 'product-list'}
        },{
-         path: 'category',
+         path: 'category?parentId=0',
          name: 'goods_category',
-         component: () => import('@/views/supplier/info'),
+         component: () => import('@/views/pms/productCate/index'),
          meta: {title: '商品分类', icon: 'product-list'}
        },{
 
