@@ -1,7 +1,12 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import {
+  Message,
+  MessageBox
+} from 'element-ui'
 import store from '../store'
-import { getToken } from '@/utils/auth'
+import {
+  getToken
+} from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
@@ -12,7 +17,7 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(config => {
   if (store.getters.token) {
-    console.log(">>>>>>>>>>>>>>>>>>   request拦截器  "+ getToken() ) ;
+    console.log(">>>>>>>>>>>>>>>>>>   request拦截器  " + getToken());
     config.headers['auth'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   return config
@@ -25,9 +30,9 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
   response => {
-  /**
-  * code为非200是抛错 可结合自己业务进行修改
-  */
+    /**
+     * code为非200是抛错 可结合自己业务进行修改
+     */
     const res = response.data
     console.log(response.data);
     // if (res.result.code !== 200)
@@ -46,17 +51,22 @@ service.interceptors.response.use(
           type: 'warning'
         }).then(() => {
           store.dispatch('FedLogOut').then(() => {
-            location.reload()// 为了重新实例化vue-router对象 避免bug
+            location.reload() // 为了重新实例化vue-router对象 避免bug
           })
         })
       }
       return Promise.reject('error')
     } else {
+      // Message({
+      //   message: "www",
+      //   type: 'info',
+      //   duration: 3 * 1000
+      // })
       return response.data
     }
   },
   error => {
-    console.log('err' + error)// for debug
+    console.log('err' + error) // for debug
     Message({
       message: error.message,
       type: 'error',
