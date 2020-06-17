@@ -89,7 +89,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,20]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -109,7 +109,7 @@
         listLoading: true,
         listQuery: {
           pageNum: 1,
-          pageSize: 5,
+          pageSize: 10,
           parentId: 0,
         },
 
@@ -142,7 +142,7 @@
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.result.result.records;
-          this.total = response.result.result.records.total;
+          this.total = parseInt( response.result.result.total);
         });
       },
       handleSizeChange(val) {

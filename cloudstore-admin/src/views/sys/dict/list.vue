@@ -26,8 +26,8 @@
           <el-form-item label="访问账号：">
             <el-input style="width: 203px" v-model="listQuery.phone" placeholder="商品货号"></el-input>
           </el-form-item>
-          
-          
+
+
         </el-form>
       </div>
     </el-card>
@@ -50,7 +50,7 @@
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
 
-        <el-table-column label="字典code" width="120" align="center">
+        <el-table-column label="字典code"  align="center">
           <template slot-scope="scope">{{scope.row.code}}</template>
         </el-table-column>
         <el-table-column label="字典名称" align="center">
@@ -71,7 +71,7 @@
            <template slot-scope="scope">{{scope.row.desc}}</template>
         </el-table-column>
 
-        <el-table-column label="操作" width="360" align="center">
+        <el-table-column label="操作" width="160" align="center">
 
           <template slot-scope="scope">
             <!--
@@ -86,6 +86,7 @@
                -->
               <el-button
                 size="mini"
+                :disabled="scope.row.childs | disableNextLevel"
                 @click="tochild(scope.$index, scope.row)">查看子类
               </el-button>
           </template>
@@ -101,7 +102,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[20]"
+        :page-sizes="[10,20]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -113,7 +114,7 @@
 
   const defaultListQuery = {
     pageNum: 1,
-    pageSize: 20,
+    pageSize: 10,
     optType:'search'
   };
   export default {
@@ -129,38 +130,37 @@
       }
     },
     created() {
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>  "+(this.$route.query.parentId))
-       this.listQuery.parentId = typeof(this.$route.query.parentId)=="undefined"?0:this.$route.query.parentId;
-       this.listQuery.pageNum = typeof(this.$route.query.pageNum)=="undefined"?1:this.$route.query.pageNum;
-       this.listQuery.pageSize = typeof(this.$route.query.pageSize)=="undefined"?defaultListQuery.pageSize:this.$route.query.pageSize;
+       this.resetParentId();
        this.getList();
     },
-    watch: {
-      // selectProductCateValue: function (newValue) {
-      //   if (newValue != null && newValue.length == 2) {
-      //     this.listQuery.productCategoryId = newValue[1];
-      //   } else {
-      //     this.listQuery.productCategoryId = null;
-      //   }
-
-      // }
-    },
+   watch: {
+     $route(route) {
+       this.resetParentId();
+       this.getList();
+     }
+   },
     filters: {
-      // verifyStatusFilter(value) {
-      //   if (value === 1) {
-      //     return '审核通过';
-      //   } else {
-      //     return '未审核';
-      //   }
-      // }
+       disableNextLevel(value) {
+         if (value === 3) {
+           return true;
+         } else {
+           return false;
+         }
+       }
     },
     methods: {
 
+      resetParentId(){
+        this.listQuery.pageNum = 1;
+        if (this.$route.query.parentId != null) {
+          this.listQuery.parentId = this.$route.query.parentId;
+        } else {
+          this.listQuery.parentId = 0;
+        }
+      },
+
       tochild(index, row){
-          // this.listQuery.parentId = row.id;
-          // this.getList();
-           this.$router.push({path:'/sys/manager/dict/list',
-               query: {parentId: row.id,pparentId:row.parentId,ppageNum:this.listQuery.pageNum,ppageSize:this.listQuery.pageSize}});
+          this.$router.push({path: '/sys/manager/dict/list', query: {parentId: row.id}});
       },
 
       haveChild(row, column){
@@ -195,12 +195,7 @@
         });
       },
 
-      addDict(index, row){
-         let  pageNum = this.listQuery.pageNum;
-         let  pageSize =this.listQuery.pageSize;
-         let   parentId = index ==-1? -1: row.id;
-        this.$router.push({path:'/sys/manager/dict/add',query: {opt:0,parentId: parentId,pageNum:pageNum,pageSize:pageSize}});
-      },
+
 
 
       handleSearchList() {
