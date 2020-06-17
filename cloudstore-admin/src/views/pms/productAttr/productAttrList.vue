@@ -96,7 +96,7 @@
   </div>
 </template>
 <script>
-  import {fetchList, deleteProductAttr,createProductAttr} from '@/api/productAttr'
+  import {fetchList, deleteProductAttr,createProductAttr,updateProductAttr} from '@/api/productAttr'
 
   export default {
     name: 'productAttrList',
@@ -163,7 +163,7 @@
                 this.getList();
               });
             }else{
-              updateProductAttrCate({'id':this.productAttrCate.id,'propertyName':this.productAttrCate.propertyName,'descs':this.productAttrCate.descs,'optType':'update'}).then(response=>{
+              createProductAttr({'id':this.productAttrAdd.id,'name':this.productAttrAdd.name,'optType':'update'}).then(response=>{
                 this.$message({
                   message: '修改成功',
                   type: 'success',
@@ -215,7 +215,11 @@
         this.getList();
       },
       handleUpdate(index, row) {
-        this.$router.push({path:'/pms/updateProductAttr',query:{id:row.id}});
+        //this.$router.push({path:'/pms/updateProductAttr',query:{id:row.id}});
+        this.dialogVisible = true;
+        this.dialogTitle = "编辑属性";
+        this.productAttrAdd.name = row.name;
+        this.productAttrAdd.id = row.id;
       },
       handleDeleteProductAttr(ids) {
         this.$confirm('是否要删除该属性', '提示', {
@@ -223,9 +227,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let data = new URLSearchParams();
-          data.append("ids", ids);
-          deleteProductAttr(data).then(response => {
+          deleteProductAttr(ids).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',
@@ -236,9 +238,9 @@
         });
       },
       handleDelete(index, row) {
-        let ids = [];
-        ids.push(row.id);
-        this.handleDeleteProductAttr(ids);
+        /* let ids = [];
+        ids.push(row.id); */
+        this.handleDeleteProductAttr({'ids':row.id});
       },
     },
     filters: {

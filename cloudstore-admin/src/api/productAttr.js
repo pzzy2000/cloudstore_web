@@ -10,9 +10,9 @@ export function fetchList(params) {
 
 export function deleteProductAttr(data) {
   return request({
-    url:'/productAttribute/delete',
+    url:'/goods/property/param/delete',
     method:'post',
-    data:data
+    data:switchForm(data)
   })
 }
 
