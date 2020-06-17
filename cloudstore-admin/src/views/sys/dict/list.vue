@@ -56,6 +56,10 @@
         <el-table-column label="字典名称" align="center">
          <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
+        
+        <el-table-column label="字典类型" align="center">
+         <template slot-scope="scope">{{scope.row.dirctType.name}}</template>
+        </el-table-column>
 
         <el-table-column label="是否有子类" align="center" :formatter="haveChild">
 
@@ -141,7 +145,7 @@
    },
     filters: {
        disableNextLevel(value) {
-         if (value === 3) {
+         if (value === 0) {
            return true;
          } else {
            return false;
