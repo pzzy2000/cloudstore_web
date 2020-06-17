@@ -19,28 +19,17 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.id}}</template>
-        </el-table-column>
         <el-table-column label="属性名称" width="140" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="商品类型" width="140" align="center">
-          <template slot-scope="scope">{{$route.query.cname}}</template>
-        </el-table-column>
-        <el-table-column label="属性是否可选" width="120" align="center">
-          <template slot-scope="scope">{{scope.row.selectType|selectTypeFilter}}</template>
-        </el-table-column>
-        <el-table-column label="属性值的录入方式" width="150" align="center">
-          <template slot-scope="scope">{{scope.row.inputType|inputTypeFilter}}</template>
-        </el-table-column>
-        <el-table-column label="可选值列表" align="center">
+
+       <!-- <el-table-column label="类型名称" align="center">
           <template slot-scope="scope">{{scope.row.inputList}}</template>
+        </el-table-column> -->
+        <el-table-column label="属性类型"  align="center">
+          <template slot-scope="scope">{{scope.row.type | attrType}}</template>
         </el-table-column>
-        <el-table-column label="排序" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.sort}}</template>
-        </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -87,10 +76,27 @@
         :total="total">
       </el-pagination>
     </div>
+    <el-dialog
+      :title="dialogTitle"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <el-table-column label="编号" width="100" align="center">
+        <template slot-scope="scope">{{scope.row.id}}</template>
+      </el-table-column>
+      <el-form ref="productAttrCatForm":model="productAttrAdd" :rules="rules" label-width="120px">
+        <el-form-item label="类型名称" prop="name">
+          <el-input v-model="productAttrAdd.name" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm('productAttrCatForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-  import {fetchList, deleteProductAttr} from '@/api/productAttr'
+  import {fetchList, deleteProductAttr,createProductAttr} from '@/api/productAttr'
 
   export default {
     name: 'productAttrList',
@@ -102,16 +108,28 @@
         listQuery: {
           pageNum: 1,
           pageSize: 5,
-          type: this.$route.query.type
+          goodsPropertyId: this.$route.query.goodsPropertyId,
+          type: this.$route.query.type,
         },
         operateType: null,
         multipleSelection: [],
+        dialogVisible: false,
+        dialogTitle:'',
+        productAttrAdd:{
+          name:'',
+          id:null
+        },
         operates: [
           {
             label: "删除",
             value: "deleteProductAttr"
           }
-        ]
+        ],
+        rules: {
+          name: [
+            { required: true, message: '请输入属性名称', trigger: 'blur' }
+          ]
+        }
       }
     },
     created() {
@@ -120,14 +138,46 @@
     methods: {
       getList() {
         this.listLoading = true;
-        fetchList(this.$route.query.cid, this.listQuery).then(response => {
+        fetchList(this.listQuery).then(response => {
           this.listLoading = false;
-          this.list = response.data.list;
-          this.total = response.data.total;
+          this.list = response.result.result.records;
+          this.total = response.result.result.records.total;
         });
       },
       addProductAttr() {
-        this.$router.push({path:'/pms/addProductAttr',query:{cid:this.$route.query.cid,type:this.$route.query.type}});
+        //this.$router.push({path:'/sys/goods/addProductAttr',query:{goodsPropertyId:this.$route.query.goodsPropertyId,type:this.$route.query.type}});
+        this.dialogVisible = true;
+        this.dialogTitle = "添加属性";
+      },
+      handleConfirm(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if(this.dialogTitle==="添加属性"){
+              createProductAttr({'goodsPropertyId':this.$route.query.goodsPropertyId,'name':this.productAttrAdd.name,'optType':'save','type':this.$route.query.type}).then(response=>{
+                this.$message({
+                  message: '添加成功',
+                  type: 'success',
+                  duration:1000
+                });
+                this.dialogVisible = false;
+                this.getList();
+              });
+            }else{
+              updateProductAttrCate({'id':this.productAttrCate.id,'propertyName':this.productAttrCate.propertyName,'descs':this.productAttrCate.descs,'optType':'update'}).then(response=>{
+                this.$message({
+                  message: '修改成功',
+                  type: 'success',
+                  duration:1000
+                });
+                this.dialogVisible = false;
+                this.getList();
+              });
+            }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -199,6 +249,13 @@
           return '手工录入'
         }
       },
+      attrType(value) {
+        if (value === 0) {
+          return '规格';
+        } else {
+          return '参数'
+        }
+      },
       selectTypeFilter(value) {
         if (value === 1) {
           return '单选';
@@ -215,5 +272,3 @@
 <style rel="stylesheet/scss" lang="scss" scoped>
 
 </style>
-
-

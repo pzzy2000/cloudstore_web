@@ -16,23 +16,26 @@
                 :data="list"
                 v-loading="listLoading"
                 border>
-        <el-table-column label="编号" width="100" align="center">
+       <!-- <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="类型名称" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.propertyName}}</template>
         </el-table-column>
-        <el-table-column label="属性数量" width="200" align="center">
-          <template slot-scope="scope">{{scope.row.attributeCount==null?0:scope.row.attributeCount}}</template>
+        <el-table-column label="描述" align="center">
+          <template slot-scope="scope">{{scope.row.descs}}</template>
         </el-table-column>
-        <el-table-column label="参数数量" width="200" align="center">
-          <template slot-scope="scope">{{scope.row.paramCount==null?0:scope.row.paramCount}}</template>
+        <el-table-column label="规格数量"  align="center">
+          <template slot-scope="scope">{{scope.row.specificationsNumber==null?0:scope.row.specificationsNumber}}</template>
         </el-table-column>
-        <el-table-column label="设置" width="200" align="center">
+        <el-table-column label="参数数量"  align="center">
+          <template slot-scope="scope">{{scope.row.parametersNumber==null?0:scope.row.parametersNumber}}</template>
+        </el-table-column>
+        <el-table-column label="设置"  align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="getAttrList(scope.$index, scope.row)">属性列表
+              @click="getAttrList(scope.$index, scope.row)">规格列表
             </el-button>
             <el-button
               size="mini"
@@ -71,9 +74,15 @@
       :title="dialogTitle"
       :visible.sync="dialogVisible"
       width="30%">
+      <el-table-column label="编号" width="100" align="center">
+        <template slot-scope="scope">{{scope.row.id}}</template>
+      </el-table-column>
       <el-form ref="productAttrCatForm":model="productAttrCate" :rules="rules" label-width="120px">
         <el-form-item label="类型名称" prop="name">
-          <el-input v-model="productAttrCate.name" auto-complete="off"></el-input>
+          <el-input v-model="productAttrCate.propertyName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="描述" prop="descs">
+          <el-input v-model="productAttrCate.descs" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -100,11 +109,11 @@
         dialogVisible: false,
         dialogTitle:'',
         productAttrCate:{
-          name:'',
+          propertyName:'',
           id:null
         },
         rules: {
-          name: [
+          propertyName: [
             { required: true, message: '请输入类型名称', trigger: 'blur' }
           ]
         }
@@ -118,8 +127,8 @@
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
-          this.list = response.data.list;
-          this.total = response.data.total;
+          this.list = response.result.result.records;
+          this.total = response.result.result.records.total;
         });
       },
       addProductAttrCate() {
@@ -141,7 +150,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteProductAttrCate(row.id).then(response=>{
+          deleteProductAttrCate({'ids':row.id}).then(response=>{
             this.$message({
               message: '删除成功',
               type: 'success',
@@ -154,22 +163,21 @@
       handleUpdate(index, row) {
         this.dialogVisible = true;
         this.dialogTitle = "编辑类型";
-        this.productAttrCate.name = row.name;
-        this.productAttrCate.id = row.id;
+        this.productAttrCate.propertyName = row.propertyName;
+        this.productAttrCate.descs = row.descs;
+         this.productAttrCate.id = row.id;
       },
       getAttrList(index, row) {
-        this.$router.push({path: '/pms/productAttrList',query:{cid:row.id,cname:row.name,type:0}})
+        this.$router.push({path: '/sys/goods/param',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:0}})
       },
       getParamList(index, row) {
-        this.$router.push({path: '/pms/productAttrList',query:{cid:row.id,cname:row.name,type:1}})
+        this.$router.push({path: '/sys/goods/param',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:1}})
       },
       handleConfirm(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            let data = new URLSearchParams();
-            data.append("name",this.productAttrCate.name);
             if(this.dialogTitle==="添加类型"){
-              createProductAttrCate(data).then(response=>{
+              createProductAttrCate({'propertyName':this.productAttrCate.propertyName,'descs':this.productAttrCate.descs,'optType':'save'}).then(response=>{
                 this.$message({
                   message: '添加成功',
                   type: 'success',
@@ -179,7 +187,7 @@
                 this.getList();
               });
             }else{
-              updateProductAttrCate(this.productAttrCate.id,data).then(response=>{
+              updateProductAttrCate({'id':this.productAttrCate.id,'propertyName':this.productAttrCate.propertyName,'descs':this.productAttrCate.descs,'optType':'update'}).then(response=>{
                 this.$message({
                   message: '修改成功',
                   type: 'success',
@@ -200,5 +208,3 @@
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 </style>
-
-

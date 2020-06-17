@@ -1,32 +1,34 @@
 import request from '@/utils/request'
+import {switchForm} from '@/api/iunits'
 export function fetchList(params) {
   return request({
-    url:'/productAttribute/category/list',
-    method:'get',
-    params:params
-  })
-}
-
-export function createProductAttrCate(data) {
-  return request({
-    url:'/productAttribute/category/create',
+    url:'/goods/property/list',
     method:'post',
-    data:data
+    data:switchForm(params)
   })
 }
 
-export function deleteProductAttrCate(id) {
+export function createProductAttrCate(params) {
   return request({
-    url:'/productAttribute/category/delete/'+id,
-    method:'get'
-  })
-}
-
-export function updateProductAttrCate(id,data) {
-  return request({
-    url:'/productAttribute/category/update/'+id,
+    url:'/goods/property/save',
     method:'post',
-    data:data
+    data:switchForm(params)
+  })
+}
+
+export function deleteProductAttrCate(params) {
+  return request({
+    url:'/goods/property/delete',
+    method:'post',
+    data:switchForm(params)
+  })
+}
+
+export function updateProductAttrCate(params) {
+  return request({
+    url:'/goods/property/save',
+    method:'post',
+    data:switchForm(params)
   })
 }
 export function fetchListWithAttr() {

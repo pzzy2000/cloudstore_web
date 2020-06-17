@@ -1,9 +1,10 @@
 import request from '@/utils/request'
-export function fetchList(cid,params) {
+import {switchForm} from '@/api/iunits'
+export function fetchList(params) {
   return request({
-    url:'/productAttribute/list/'+cid,
-    method:'get',
-    params:params
+    url:'/goods/property/param/list',
+    method:'post',
+    data:switchForm(params)
   })
 }
 
@@ -17,9 +18,9 @@ export function deleteProductAttr(data) {
 
 export function createProductAttr(data) {
   return request({
-    url:'/productAttribute/create',
+    url:'/goods/property/param/save',
     method:'post',
-    data:data
+    data:switchForm(data)
   })
 }
 

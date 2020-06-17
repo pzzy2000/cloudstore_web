@@ -4,60 +4,7 @@
       <el-form-item label="属性名称：" prop="name">
         <el-input v-model="productAttr.name"></el-input>
       </el-form-item>
-      <el-form-item label="商品类型：">
-        <el-select v-model="productAttr.productAttributeCategoryId" placeholder="请选择">
-          <el-option
-            v-for="item in productAttrCateList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="分类筛选样式:">
-        <el-radio-group v-model="productAttr.filterType">
-          <el-radio :label="0">普通</el-radio>
-          <el-radio :label="1">颜色</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="能否进行检索:">
-        <el-radio-group v-model="productAttr.searchType">
-          <el-radio :label="0">不需要检索</el-radio>
-          <el-radio :label="1">关键字检索</el-radio>
-          <el-radio :label="2">范围检索</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="商品属性关联:">
-        <el-radio-group v-model="productAttr.relatedStatus">
-          <el-radio :label="1">是</el-radio>
-          <el-radio :label="0">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="属性是否可选:">
-        <el-radio-group v-model="productAttr.selectType">
-          <el-radio :label="0">唯一</el-radio>
-          <el-radio :label="1">单选</el-radio>
-          <el-radio :label="2">复选</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="属性值的录入方式:">
-        <el-radio-group v-model="productAttr.inputType">
-          <el-radio :label="0">手工录入</el-radio>
-          <el-radio :label="1">从下面列表中选择</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="属性值可选值列表:">
-        <el-input :autosize="true" type="textarea" v-model="inputListFormat"></el-input>
-      </el-form-item>
-      <el-form-item label="是否支持手动新增:">
-        <el-radio-group v-model="productAttr.handAddStatus">
-          <el-radio :label="1">是</el-radio>
-          <el-radio :label="0">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="排序属性：">
-        <el-input v-model="productAttr.sort"></el-input>
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="onSubmit('productAttrFrom')">提交</el-button>
         <el-button  v-if="!isEdit" @click="resetForm('productAttrFrom')">重置</el-button>
@@ -151,13 +98,13 @@
                   this.$router.back();
                 });
               }else{
-                createProductAttr(this.productAttr).then(response=>{
+                createProductAttr({'goodsPropertyId':this.$route.query.goodsPropertyId,'name':this.productAttr.name,'optType':'save','type':this.$route.query.type}).then(response=>{
                   this.$message({
                     message: '提交成功',
                     type: 'success',
                     duration: 1000
                   });
-                  this.resetForm('productAttrFrom');
+                  this.$router.go(-1);
                 });
               }
             });
