@@ -27,17 +27,23 @@
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
         border>
         <el-table-column type="selection" width="60" align="center" fixed></el-table-column>
-        <el-table-column label="供应商名称" width="120" align="center" fixed>
+        <el-table-column label="供应商名称"  align="center" fixed>
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="供应商等级" width="140" align="center">
+        <el-table-column label="供应商等级"  align="center">
           <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>
         </el-table-column>
-        <el-table-column label="是否删除" width="140" align="center" :formatter="deleteStatus">
+        <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
 
         </el-table-column>
-        <el-table-column label="审核状态" width="140" align="center" :formatter="showStatus">
+        <el-table-column label="审核状态"  align="center" :formatter="showStatus">
         </el-table-column>
+
+		<el-table-column label="所属账号"  align="center" :formatter="showAccess">
+
+		</el-table-column>
+
+
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
             <p>
@@ -144,6 +150,9 @@
       }
     },
     methods: {
+      showAccess(row,column){
+           return ( row.sysManagerUserBean ==null )?'数据读取错误':row.sysManagerUserBean.name ;
+      },
       showStatus(row, column) {
         let status = row.status;
         switch (status) {
