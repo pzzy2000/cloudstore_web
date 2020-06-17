@@ -18,12 +18,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="数量单位：">
-        <el-input v-model="productCate.productUnit"></el-input>
-      </el-form-item>
-      <el-form-item label="排序：">
-        <el-input v-model="productCate.sort"></el-input>
-      </el-form-item>
+
       <el-form-item label="是否显示：">
         <el-radio-group v-model="productCate.showStatus">
           <el-radio :label="1">是</el-radio>
@@ -36,7 +31,14 @@
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="分类图标：">
+
+      <el-form-item label="是否显示在首页：">
+        <el-radio-group v-model="productCate.indexStatus">
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <!-- <el-form-item label="分类图标：">
         <single-upload v-model="productCate.icon"></single-upload>
       </el-form-item>
       <el-form-item v-for="(filterProductAttr, index) in filterProductAttrList"
@@ -55,7 +57,7 @@
       </el-form-item>
       <el-form-item label="关键词：">
         <el-input v-model="productCate.keywords"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="分类描述：">
         <el-input type="textarea" :autosize="true" v-model="productCate.description"></el-input>
       </el-form-item>
@@ -74,16 +76,14 @@
   import SingleUpload from '@/components/Upload/singleUpload';
 
   const defaultProductCate = {
-    description: '',
-    icon: '',
-    keywords: '',
     name: '',
-    navStatus: 0,
-    parentId: 0,
-    productUnit: '',
-    showStatus: 0,
-    sort: 0,
-    productAttributeIdList: []
+    parentId: '',
+    showStatus: '',
+    navStatus: '',
+    indexStatus: '',
+    description: '',
+    optType:'',
+   /* productAttributeIdList: [] */
   };
   export default {
     name: "ProductCateDetail",
@@ -129,13 +129,16 @@
       } else {
         this.productCate = Object.assign({}, defaultProductCate);
       }
+      this.productCate.showStatus = 0;
+      this.productCate.navStatus = 0;
+      this.productCate.indexStatus = 0;
       this.getSelectProductCateList();
       this.getProductAttrCateList();
     },
     methods: {
       getSelectProductCateList() {
-        fetchList(0, {pageSize: 100, pageNum: 1}).then(response => {
-          this.selectProductCateList = response.data.list;
+        fetchList({parentId:0,pageSize: 100, pageNum: 1}).then(response => {
+         /* this.selectProductCateList = response.result.result; */
           this.selectProductCateList.unshift({id: 0, name: '无上级分类'});
         });
       },
@@ -177,7 +180,7 @@
               type: 'warning'
             }).then(() => {
               if (this.isEdit) {
-                this.productCate.productAttributeIdList = this.getProductAttributeIdList();
+               /* this.productCate.productAttributeIdList = this.getProductAttributeIdList(); */
                 updateProductCate(this.$route.query.id, this.productCate).then(response => {
                   this.$message({
                     message: '修改成功',
@@ -187,7 +190,8 @@
                   this.$router.back();
                 });
               } else {
-                this.productCate.productAttributeIdList = this.getProductAttributeIdList();
+              /*  this.productCate.productAttributeIdList = this.getProductAttributeIdList(); */
+               this.productCate.optType='save';
                 createProductCate(this.productCate).then(response => {
                   this.$refs[formName].resetFields();
                   this.resetForm(formName);

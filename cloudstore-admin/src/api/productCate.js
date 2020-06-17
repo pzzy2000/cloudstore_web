@@ -1,9 +1,10 @@
 import request from '@/utils/request'
-export function fetchList(parentId,params) {
+import {switchForm,saveSupplier} from '@/api/iunits'
+export function fetchList(params) {
   return request({
-    url:'/productCategory/list/'+parentId,
-    method:'get',
-    params:params
+    url:'/goods/category/list',
+    method:'post',
+    data:switchForm(params)
   })
 }
 export function deleteProductCate(id) {
@@ -15,9 +16,9 @@ export function deleteProductCate(id) {
 
 export function createProductCate(data) {
   return request({
-    url:'/productCategory/create',
+    url:'/goods/category/save',
     method:'post',
-    data:data
+    data:switchForm(data)
   })
 }
 

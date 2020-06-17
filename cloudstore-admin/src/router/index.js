@@ -82,13 +82,34 @@ export const asyncRouterMap = [
        },{
          path: 'category',
          name: 'goods_category',
-         component: () => import('@/views/supplier/info'),
+         component: () => import('@/views/pms/productCate/index'),
          meta: {title: '商品分类', icon: 'product-list'}
+       },
+       {
+         path: 'add',
+         name: 'goodsSave',
+         component: () => import('@/views/pms/productCate/add'),
+         meta: {title: '添加商品分类'},
+         hidden: true
+       },
+       {
+         path: 'addProductAttr',
+         name: 'addProductAttr',
+         component: () => import('@/views/pms/productAttr/addProductAttr'),
+         meta: {title: '添加商品属性'},
+         hidden: true
+       },
+       {
+         path: 'param',
+         name: 'goodsParam',
+         component: () => import('@/views/pms/productAttr/productAttrList'),
+         meta: {title: '添加规格'},
+         hidden: true
        },{
 
          path: 'property',
          name: 'goods_property',
-         component: () => import('@/views/supplier/info'),
+         component: () => import('@/views/pms/productAttr/index'),
          meta: {title: '商品规格参数', icon: 'product-list'}
        }]
 
