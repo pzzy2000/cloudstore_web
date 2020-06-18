@@ -10,9 +10,10 @@
       v-show="showStatus[0]"
       v-model="productParam"
       :is-edit="isEdit"
-      @nextStep="nextStep">
+      @prevStep="prevStep"
+      @finishCommit="finishCommit">
     </product-info-detail>
-    <product-sale-detail
+   <!-- <product-sale-detail
       v-show="showStatus[1]"
       v-model="productParam"
       :is-edit="isEdit"
@@ -32,7 +33,7 @@
       :is-edit="isEdit"
       @prevStep="prevStep"
       @finishCommit="finishCommit">
-    </product-relation-detail>
+    </product-relation-detail> -->
   </el-card>
 </template>
 <script>
@@ -43,7 +44,18 @@
   import {createProduct,getProduct,updateProduct} from '@/api/product';
 
   const defaultProductParam = {
-    albumPics: '',
+    goodsName:null,
+    goodsSubtitle:null,
+    goodsBrand:null,
+    goodsNumber:null,
+    salePrice:null,
+    martPrice:null,
+    unit:null,
+    categoryOneId:null,
+    categoryTwoId:null,
+    categoryThreeId:null,
+    optType:'save'
+    /* albumPics: '',
     brandId: null,
     brandName: '',
     deleteStatus: 0,
@@ -101,7 +113,7 @@
     unit: '',
     usePointLimit: 0,
     verifyStatus: 0,
-    weight: 0
+    weight: 0 */
   };
   export default {
     name: 'ProductDetail',
@@ -120,11 +132,11 @@
       }
     },
     created(){
-      if(this.isEdit){
+      /* if(this.isEdit){
         getProduct(this.$route.query.id).then(response=>{
           this.productParam=response.data;
         });
-      }
+      } */
     },
     methods: {
       hideAll() {
@@ -181,5 +193,3 @@
     width: 800px;
   }
 </style>
-
-

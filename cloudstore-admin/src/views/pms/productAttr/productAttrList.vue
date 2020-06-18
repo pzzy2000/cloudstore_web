@@ -44,7 +44,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="batch-operate-container">
+   <!-- <div class="batch-operate-container">
       <el-select
         size="small"
         v-model="operateType" placeholder="批量操作">
@@ -63,7 +63,7 @@
         size="small">
         确定
       </el-button>
-    </div>
+    </div> -->
     <div class="pagination-container">
       <el-pagination
         background

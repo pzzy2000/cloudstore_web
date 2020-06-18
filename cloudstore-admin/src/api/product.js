@@ -50,11 +50,11 @@ export function updatePublishStatus(params) {
   })
 }
 
-export function createProduct(data) {
+export function createProduct(params) {
   return request({
-    url:'/product/create',
+    url:'/goods/save',
     method:'post',
-    data:data
+    data:switchForm(params)
   })
 }
 

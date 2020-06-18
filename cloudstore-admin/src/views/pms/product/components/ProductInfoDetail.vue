@@ -1,21 +1,29 @@
 <template>
   <div style="margin-top: 50px">
-    <el-form :model="value" :rules="rules" ref="productInfoForm" label-width="120px" style="width: 600px" size="small">
-      <el-form-item label="商品分类：" prop="productCategoryId">
+    <el-form :model="value" :rules="rules" ref="productInfoForm" label-width="120px"  size="small">
+      <el-form-item label="商品分类："  prop="productCategoryId">
         <el-cascader
           v-model="selectProductCateValue"
           :options="productCateOptions">
         </el-cascader>
+        <el-cascader
+          v-model="selectProductCateValueOne"
+          :options="productCateOptionsOne">
+        </el-cascader>
+        <el-cascader
+          v-model="selectProductCateValueTwo"
+          :options="productCateOptionsTwo">
+        </el-cascader>
       </el-form-item>
-      <el-form-item label="商品名称：" prop="name">
-        <el-input v-model="value.name"></el-input>
+      <el-form-item label="商品名称：" prop="goodsName">
+        <el-input v-model="value.goodsName"></el-input>
       </el-form-item>
-      <el-form-item label="副标题：" prop="subTitle">
-        <el-input v-model="value.subTitle"></el-input>
+      <el-form-item label="副标题：" prop="goodsSubtitle">
+        <el-input v-model="value.goodsSubtitle"></el-input>
       </el-form-item>
-      <el-form-item label="商品品牌：" prop="brandId">
-        <el-select
-          v-model="value.brandId"
+      <el-form-item label="商品品牌：" prop="goodsBrand">
+       <!-- <el-select
+          v-model="value.goodsBrand"
           @change="handleBrandChange"
           placeholder="请选择品牌">
           <el-option
@@ -24,36 +32,27 @@
             :label="item.label"
             :value="item.value">
           </el-option>
-        </el-select>
+        </el-select> -->
+        <el-input v-model="value.goodsBrand"></el-input>
       </el-form-item>
-      <el-form-item label="商品介绍：">
+      <!-- <el-form-item label="商品介绍：">
         <el-input
           :autoSize="true"
           v-model="value.description"
           type="textarea"
           placeholder="请输入内容"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="商品货号：">
-        <el-input v-model="value.productSn"></el-input>
+        <el-input v-model="value.goodsNumber"></el-input>
       </el-form-item>
       <el-form-item label="商品售价：">
-        <el-input v-model="value.price"></el-input>
+        <el-input v-model="value.salePrice"></el-input>
       </el-form-item>
       <el-form-item label="市场价：">
-        <el-input v-model="value.originalPrice"></el-input>
-      </el-form-item>
-      <el-form-item label="商品库存：">
-        <el-input v-model="value.stock"></el-input>
+        <el-input v-model="value.martPrice"></el-input>
       </el-form-item>
       <el-form-item label="计量单位：">
         <el-input v-model="value.unit"></el-input>
-      </el-form-item>
-      <el-form-item label="商品重量：">
-        <el-input v-model="value.weight" style="width: 300px"></el-input>
-        <span style="margin-left: 20px">克</span>
-      </el-form-item>
-      <el-form-item label="排序">
-        <el-input v-model="value.sort"></el-input>
       </el-form-item>
       <el-form-item style="text-align: center">
         <el-button type="primary" size="medium" @click="handleNext('productInfoForm')">下一步，填写商品促销</el-button>
@@ -65,7 +64,7 @@
 <script>
   import {fetchListWithChildren} from '@/api/productCate'
   import {fetchList as fetchBrandList} from '@/api/brand'
-  import {getProduct} from '@/api/product';
+  import {getProduct,createProduct} from '@/api/product';
 
   export default {
     name: "ProductInfoDetail",
@@ -82,23 +81,27 @@
         //选中商品分类的值
         selectProductCateValue: [],
         productCateOptions: [],
+        selectProductCateValueOne: [],
+        productCateOptionsOne: [],
+        selectProductCateValueTwo: [],
+        productCateOptionsTwo: [],
         brandOptions: [],
         rules: {
-          name: [
+          goodsName: [
             {required: true, message: '请输入商品名称', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ],
-          subTitle: [{required: true, message: '请输入商品副标题', trigger: 'blur'}],
-          productCategoryId: [{required: true, message: '请选择商品分类', trigger: 'blur'}],
-          brandId: [{required: true, message: '请选择商品品牌', trigger: 'blur'}],
-          description: [{required: true, message: '请输入商品介绍', trigger: 'blur'}],
-          requiredProp: [{required: true, message: '该项为必填项', trigger: 'blur'}]
+          goodsSubtitle: [{required: true, message: '请输入商品副标题', trigger: 'blur'}],
+          //productCategoryId: [{required: true, message: '请选择商品分类', trigger: 'blur'}],
+          goodsBrand: [{required: true, message: '请选择商品品牌', trigger: 'blur'}],
+          //description: [{required: true, message: '请输入商品介绍', trigger: 'blur'}],
+          //requiredProp: [{required: true, message: '该项为必填项', trigger: 'blur'}]
         }
       };
     },
     created() {
       this.getProductCateList();
-      this.getBrandList();
+      //this.getBrandList();
     },
     computed:{
       //商品的编号
@@ -114,13 +117,34 @@
         this.handleEditCreated();
       },
       selectProductCateValue: function (newValue) {
-        if (newValue != null && newValue.length === 2) {
+        /* if (newValue != null && newValue.length === 2) {
           this.value.productCategoryId = newValue[1];
           this.value.productCategoryName= this.getCateNameById(this.value.productCategoryId);
         } else {
           this.value.productCategoryId = null;
           this.value.productCategoryName=null;
-        }
+        } */
+        fetchListWithChildren(newValue).then(response => {
+          let list = response.result.result;
+          this.productCateOptionsOne = [];
+          for (let i = 0; i < list.length; i++) {
+            this.productCateOptionsOne.push({label: list[i].name, value: list[i].id});
+          }
+        });
+        this.value.categoryOneId= this.getCateNameById(newValue);
+      },
+      selectProductCateValueOne: function (newValue) {
+        fetchListWithChildren(newValue).then(response => {
+          let list = response.result.result;
+          this.productCateOptionsTwo = [];
+          for (let i = 0; i < list.length; i++) {
+            this.productCateOptionsTwo.push({label: list[i].name, value: list[i].id});
+          }
+        });
+        this.value.categoryTwoId= this.getCateNameByIdOne(newValue);
+      },
+      selectProductCateValueTwo: function (newValue) {
+        this.value.categoryThreeId= this.getCateNameByIdTwo(newValue);
       }
     },
     methods: {
@@ -133,17 +157,11 @@
         this.hasEditCreated=true;
       },
       getProductCateList() {
-        fetchListWithChildren().then(response => {
-          let list = response.data;
+        fetchListWithChildren(0).then(response => {
+          let list = response.result.result;
           this.productCateOptions = [];
           for (let i = 0; i < list.length; i++) {
-            let children = [];
-            if (list[i].children != null && list[i].children.length > 0) {
-              for (let j = 0; j < list[i].children.length; j++) {
-                children.push({label: list[i].children[j].name, value: list[i].children[j].id});
-              }
-            }
-            this.productCateOptions.push({label: list[i].name, value: list[i].id, children: children});
+            this.productCateOptions.push({label: list[i].name, value: list[i].id});
           }
         });
       },
@@ -157,7 +175,7 @@
         });
       },
       getCateNameById(id){
-        let name=null;
+        /* let name=null;
         for(let i=0;i<this.productCateOptions.length;i++){
           for(let j=0;j<this.productCateOptions[i].children.length;j++){
             if(this.productCateOptions[i].children[j].value===id){
@@ -166,12 +184,39 @@
             }
           }
         }
-        return name;
+        return name; */
+       let name=null;
+       for(let i=0;i<this.productCateOptions.length;i++){
+          if(this.productCateOptions[i].value===id){
+              name =this.productCateOptions[i].label;
+              return name;
+          }
+       }
+
+      },
+      getCateNameByIdOne(id){
+       let name=null;
+       for(let i=0;i<this.productCateOptionsOne.length;i++){
+          if(this.productCateOptionsOne[i].value===id){
+              name =this.productCateOptionsOne[i].label;
+              return name;
+          }
+       }
+      },
+      getCateNameByIdTwo(id){
+       let name=null;
+       for(let i=0;i<this.productCateOptionsTwo.length;i++){
+          if(this.productCateOptionsTwo[i].value===id){
+              name =this.productCateOptionsTwo[i].label;
+              return name;
+          }
+       }
       },
       handleNext(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$emit('nextStep');
+           /* this.$emit('nextStep'); */
+           this.$emit('finishCommit');
           } else {
             this.$message({
               message: '验证失败',

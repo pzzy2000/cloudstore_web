@@ -53,9 +53,9 @@ export function updateNavStatus(data) {
   })
 }
 
-export function fetchListWithChildren() {
+export function fetchListWithChildren(params) {
   return request({
-    url:'/productCategory/list/withChildren',
-    method:'get'
+    url:'/goods/category/getGoodsCateByParId?parentId='+params,
+    method:'get',
   })
 }

@@ -21,10 +21,10 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="输入搜索：">
-            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="商品名称"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
           </el-form-item>
           <el-form-item label="商品货号：">
-            <el-input style="width: 203px" v-model="listQuery.productSn" placeholder="商品货号"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号"></el-input>
           </el-form-item>
           <el-form-item label="商品分类：">
             <el-cascader
@@ -87,19 +87,19 @@
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="商品图片" width="120" align="center">
+        <!-- <el-table-column label="商品图片" width="120" align="center">
           <template slot-scope="scope"><img style="height: 80px" :src="scope.row.pic"></template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="商品名称" align="center">
           <template slot-scope="scope">
-            <p>{{scope.row.name}}</p>
-            <p>品牌：{{scope.row.brandName}}</p>
+            <p>{{scope.row.goodsName}}</p>
+            <p>品牌：{{scope.row.goodsBrand}}</p>
           </template>
         </el-table-column>
         <el-table-column label="价格/货号" width="120" align="center">
           <template slot-scope="scope">
-            <p>价格：￥{{scope.row.price}}</p>
-            <p>货号：{{scope.row.productSn}}</p>
+            <p>价格：￥{{scope.row.salePrice}}</p>
+            <p>货号：{{scope.row.goodsNumber}}</p>
           </template>
         </el-table-column>
         <el-table-column label="标签" width="140" align="center">
@@ -109,10 +109,10 @@
                 @change="handlePublishStatusChange(scope.$index, scope.row)"
                 :active-value="1"
                 :inactive-value="0"
-                v-model="scope.row.publishStatus">
+                v-model="scope.row.shelfStatus">
               </el-switch>
             </p>
-            <p>新品：
+          <!--  <p>新品：
               <el-switch
                 @change="handleNewStatusChange(scope.$index, scope.row)"
                 :active-value="1"
@@ -127,10 +127,10 @@
                 :inactive-value="0"
                 v-model="scope.row.recommandStatus">
               </el-switch>
-            </p>
+            </p> -->
           </template>
         </el-table-column>
-        <el-table-column label="排序" width="100" align="center">
+        <!-- <el-table-column label="排序" width="100" align="center">
           <template slot-scope="scope">{{scope.row.sort}}</template>
         </el-table-column>
         <el-table-column label="SKU库存" width="100" align="center">
@@ -151,7 +151,7 @@
               </el-button>
             </p>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
             <p>
@@ -165,10 +165,10 @@
               </el-button>
             </p>
             <p>
-              <el-button
+              <!-- <el-button
                 size="mini"
                 @click="handleShowLog(scope.$index, scope.row)">日志
-              </el-button>
+              </el-button> -->
               <el-button
                 size="mini"
                 type="danger"
@@ -368,8 +368,8 @@
     },
     created() {
       this.getList();
-      this.getBrandList();
-      this.getProductCateList();
+       //this.getBrandList();
+      //this.getProductCateList();
     },
     watch: {
       selectProductCateValue: function (newValue) {
@@ -403,8 +403,8 @@
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
-          this.list = response.data.list;
-          this.total = response.data.total;
+          this.list = response.result.result.records;
+          this.total = parseInt(response.result.result.total);
         });
       },
       getBrandList() {
@@ -480,7 +480,7 @@
         this.getList();
       },
       handleAddProduct() {
-        this.$router.push({path:'/pms/addProduct'});
+        this.$router.push({path:'/sys/goods/addProduct'});
       },
       handleBatchOperate() {
         if(this.operateType==null){
@@ -553,7 +553,7 @@
       handlePublishStatusChange(index, row) {
         let ids = [];
         ids.push(row.id);
-        this.updatePublishStatus(row.publishStatus, ids);
+        this.updatePublishStatus(row.shelfStatus, ids);
       },
       handleNewStatusChange(index, row) {
         let ids = [];
@@ -645,5 +645,3 @@
   }
 </script>
 <style></style>
-
-

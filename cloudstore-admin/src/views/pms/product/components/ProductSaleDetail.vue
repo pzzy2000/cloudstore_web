@@ -188,7 +188,7 @@
       }
     },
     created() {
-      if (this.isEdit) {
+     /* if (this.isEdit) {
         // this.handleEditCreated();
       } else {
         fetchMemberLevelList({defaultStatus: 0}).then(response => {
@@ -199,7 +199,7 @@
           }
           this.value.memberPriceList = memberPriceList;
         });
-      }
+      } */
     },
     computed: {
       //选中的服务保证
