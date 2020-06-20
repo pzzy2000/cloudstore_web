@@ -13,7 +13,7 @@ export function get(params) {
   return request({
     url: '/sys/dict/get',
     method: 'POST',
-    params: params
+    data: switchForm(params)
   })
 }
 

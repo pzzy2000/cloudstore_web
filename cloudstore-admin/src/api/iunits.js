@@ -1,11 +1,11 @@
 import { Message, MessageBox } from 'element-ui'
 
 export function msg(msg) {
-       Message({
-             message: msg,
-             type: 'info',
-             duration: 3 * 1000
-           })
+   Message({
+         message: msg,
+         type: 'info',
+         duration: 3 * 1000
+       })
   }
 
 export function switchForm(data) {

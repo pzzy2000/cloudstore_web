@@ -37,3 +37,19 @@ export function fetchListWithAttr() {
     method:'get'
   })
 }
+
+export function getAttributetypes(params) {
+  return request({
+    url: '/goods/property/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function getCommodityspecification(params) {
+  return request({
+    url: '/goods/property/param/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
