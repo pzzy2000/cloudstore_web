@@ -115,7 +115,7 @@
     optType:null,
     provinceId:null,
     cityId:null,
-    districtId:null,
+    areaId:null,
       },
       isEdit: {
         type: Boolean,
@@ -203,7 +203,7 @@
         this.value.cityId= newValue[0];
       },
       selectDistrictValue: function (newValue) {
-        this.value.districtId= newValue[0];
+        this.value.areaId= newValue[0];
       },
       selectProductCateValue: function (newValue) {
         /* if (newValue != null && newValue.length === 2) {
