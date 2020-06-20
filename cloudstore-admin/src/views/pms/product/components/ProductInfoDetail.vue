@@ -15,6 +15,22 @@
           :options="productCateOptionsTwo">
         </el-cascader>
       </el-form-item>
+
+      <el-form-item label="地区："  prop="provinceId">
+        <el-cascader
+          v-model="selectProvinceValue"
+          :options="provinceOptions">
+        </el-cascader>
+        <el-cascader
+          v-model="selectCityValue"
+          :options="cityOptions">
+        </el-cascader>
+        <el-cascader
+          v-model="selectDistrictValue"
+          :options="districtOptions">
+        </el-cascader>
+      </el-form-item>
+
       <el-form-item label="商品名称：" prop="goodsName">
         <el-input v-model="value.goodsName"></el-input>
       </el-form-item>
@@ -45,17 +61,17 @@
       <el-form-item label="商品货号：">
         <el-input v-model="value.goodsNumber"></el-input>
       </el-form-item>
-      <el-form-item label="商品售价：">
+     <!-- <el-form-item label="商品售价：">
         <el-input v-model="value.salePrice"></el-input>
       </el-form-item>
-      <el-form-item label="市场价：">
+     <el-form-item label="市场价：">
         <el-input v-model="value.martPrice"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="计量单位：">
         <el-input v-model="value.unit"></el-input>
       </el-form-item>
       <el-form-item style="text-align: center">
-        <el-button type="primary" size="medium" @click="handleNext('productInfoForm')">下一步，填写商品促销</el-button>
+        <el-button type="primary" size="medium" @click="handleNext('productInfoForm')">下一步，填写商品属性</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -65,11 +81,42 @@
   import {fetchListWithChildren} from '@/api/productCate'
   import {fetchList as fetchBrandList} from '@/api/brand'
   import {getProduct,createProduct} from '@/api/product';
+  import {fetchList as provinceChildren,get} from '@/api/sysdict';
+
+  /* const defaultProductParam = {
+    goodsName:null,
+    goodsSubtitle:null,
+    goodsBrand:null,
+    goodsNumber:null,
+    salePrice:null,
+    martPrice:null,
+    unit:null,
+    categoryOneId:null,
+    categoryTwoId:null,
+    categoryThreeId:null,
+    optType:'save'
+  } */
 
   export default {
     name: "ProductInfoDetail",
     props: {
-      value: Object,
+      value: {
+
+    goodsName:null,
+    goodsSubtitle:null,
+    goodsBrand:null,
+    goodsNumber:null,
+    salePrice:null,
+    martPrice:null,
+    unit:null,
+    categoryOneId:null,
+    categoryTwoId:null,
+    categoryThreeId:null,
+    optType:null,
+    provinceId:null,
+    cityId:null,
+    areaId:null,
+      },
       isEdit: {
         type: Boolean,
         default: false
@@ -85,7 +132,13 @@
         productCateOptionsOne: [],
         selectProductCateValueTwo: [],
         productCateOptionsTwo: [],
-        brandOptions: [],
+        selectProvinceValue: [],
+        provinceOptions: [],
+        selectCityValue: [],
+        cityOptions: [],
+        selectDistrictValue: [],
+        districtOptions: [],
+        //productParam: Object.assign({}, defaultProductParam),
         rules: {
           goodsName: [
             {required: true, message: '请输入商品名称', trigger: 'blur'},
@@ -101,6 +154,15 @@
     },
     created() {
       this.getProductCateList();
+      /* this.getProvinceList(); */
+      let param = {pageNum: 1, pageSize: 100,codeType:'province'};
+      provinceChildren(param).then(response => {
+        let list = response.result.result;
+        this.provinceOptions = [];
+        for (let i = 0; i < list.length; i++) {
+          this.provinceOptions.push({label: list[i].name, value: list[i].id});
+        }
+      });
       //this.getBrandList();
     },
     computed:{
@@ -115,6 +177,33 @@
         if(this.hasEditCreated)return;
         if(newValue===undefined||newValue==null||newValue===0)return;
         this.handleEditCreated();
+      },
+     /* getProvinceList() {
+
+
+      }, */
+      selectProvinceValue: function (newValue) {
+          get({'id':newValue[0]}).then(response => {
+          let list = response.result.result;
+          this.cityOptions = [];
+          for (let i = 0; i < list.length; i++) {
+            this.cityOptions.push({label: list[i].name, value: list[i].id});
+          }
+        });
+        this.value.provinceId= newValue[0];
+      },
+      selectCityValue: function (newValue) {
+        provinceChildren({'id':newValue[0]}).then(response => {
+          let list = response.result.result;
+          this.districtOptions = [];
+          for (let i = 0; i < list.length; i++) {
+            this.districtOptions.push({label: list[i].name, value: list[i].id});
+          }
+        });
+        this.value.cityId= newValue[0];
+      },
+      selectDistrictValue: function (newValue) {
+        this.value.areaId= newValue[0];
       },
       selectProductCateValue: function (newValue) {
         /* if (newValue != null && newValue.length === 2) {
@@ -131,7 +220,7 @@
             this.productCateOptionsOne.push({label: list[i].name, value: list[i].id});
           }
         });
-        this.value.categoryOneId= this.getCateNameById(newValue);
+        this.value.categoryOneId= newValue[0];
       },
       selectProductCateValueOne: function (newValue) {
         fetchListWithChildren(newValue).then(response => {
@@ -141,10 +230,10 @@
             this.productCateOptionsTwo.push({label: list[i].name, value: list[i].id});
           }
         });
-        this.value.categoryTwoId= this.getCateNameByIdOne(newValue);
+        this.value.categoryTwoId= newValue[0];
       },
       selectProductCateValueTwo: function (newValue) {
-        this.value.categoryThreeId= this.getCateNameByIdTwo(newValue);
+        this.value.categoryThreeId= newValue[0];
       }
     },
     methods: {
@@ -207,6 +296,7 @@
        let name=null;
        for(let i=0;i<this.productCateOptionsTwo.length;i++){
           if(this.productCateOptionsTwo[i].value===id){
+            console.log(this.productCateOptionsTwo[i].value);
               name =this.productCateOptionsTwo[i].label;
               return name;
           }
@@ -215,8 +305,18 @@
       handleNext(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-           /* this.$emit('nextStep'); */
-           this.$emit('finishCommit');
+           /* this.$emit('finishCommit'); */
+           this.value.optType = 'save';
+           createProduct(this.value).then(response=>{
+             this.$message({
+               type: 'success',
+               message: '提交成功',
+               duration:1000
+             });
+             //location.reload();
+            //this.$emit('nextStep');
+            this.$router.push({path:'/sys/goods/addProductAttrParm'});
+           });
           } else {
             this.$message({
               message: '验证失败',

@@ -163,6 +163,10 @@
                 size="mini"
                 @click="handleUpdateProduct(scope.$index, scope.row)">编辑
               </el-button>
+              <el-button
+                size="mini"
+                @click="addsku">添加sku
+              </el-button>
             </p>
             <p>
               <!-- <el-button
@@ -391,6 +395,9 @@
       }
     },
     methods: {
+      addsku(){
+        this.$router.push("/pms/addProduct")
+      },
       getProductSkuSp(row, index) {
         let spData = JSON.parse(row.spData);
         if(spData!=null&&index<spData.length){

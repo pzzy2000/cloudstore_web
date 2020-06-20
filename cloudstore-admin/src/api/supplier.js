@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import {switchForm,saveSupplier} from '@/api/iunits'
 
-export function    searchSupplierDetail(supplierId){
+export function searchSupplierDetail(supplierId){
   console.log(supplierId)
     return request({
       url:'/sys/supplier/searchdetail',

@@ -63,7 +63,6 @@ export const asyncRouterMap = [
        meta: {title: '供应商详情', icon: 'product-list'}
      }]
   },{
-
       path:'/sys/goods',
       component: Layout,
       redirect: '/sys/goods/list',
@@ -93,6 +92,13 @@ export const asyncRouterMap = [
          hidden: true
        },
        {
+        path: 'addProductAttrParm',
+         name: 'addProductAttrParm',
+         component: () => import('@/views/pms/product/components/ProductAttrDetail'),
+         meta: {title: '添加商品属性参数', icon: 'product-add'},
+         hidden: true
+       },
+       {
          path: 'add',
          name: 'goodsSave',
          component: () => import('@/views/pms/productCate/add'),
@@ -103,7 +109,7 @@ export const asyncRouterMap = [
          path: 'addProductAttr',
          name: 'addProductAttr',
          component: () => import('@/views/pms/productAttr/addProductAttr'),
-         meta: {title: '添加商品属性'},
+         meta: {title: '添加属性'},
          hidden: true
        },
        {
