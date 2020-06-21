@@ -40,7 +40,7 @@ export function fetchListWithAttr() {
 
 export function getAttributetypes(params) {
   return request({
-    url: '/goods/property/list',
+    url: '/goods/property/select',
     method: 'POST',
     data: switchForm(params)
   })

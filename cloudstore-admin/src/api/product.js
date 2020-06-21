@@ -58,17 +58,19 @@ export function createProduct(params) {
   })
 }
 
+export function getProduct(params) {
+  return request({
+    url:'/goods/get',
+    method:'post',
+    data:switchForm(params)
+  })
+}
+
+
 export function updateProduct(id,data) {
   return request({
     url:'/product/update/'+id,
     method:'post',
     data:data
-  })
-}
-
-export function getProduct(id) {
-  return request({
-    url:'/product/updateInfo/'+id,
-    method:'get',
   })
 }

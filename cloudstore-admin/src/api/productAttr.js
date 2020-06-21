@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 import {switchForm} from '@/api/iunits'
+
+export function fetchSelectList(params) {
+  return request({
+    url:'/goods/property/param/select',
+    method:'post',
+    data:switchForm(params)
+  })
+}
+
 export function fetchList(params) {
   return request({
     url:'/goods/property/param/list',
