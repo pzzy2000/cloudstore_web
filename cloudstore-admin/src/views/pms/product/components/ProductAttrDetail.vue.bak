@@ -2,24 +2,24 @@
   <div style="margin-top: 50px">
     <el-form :model="value" ref="productAttrForm" label-width="120px" style="width: 720px" size="small">
       <el-form-item label="属性类型：">
-        <el-select v-model="value.productAttributeCategoryId"
-                   placeholder="请选择属性类型"
-                   @change="handleProductAttrChange">
+        <el-select v-model="productAttributeCategoryId"
+         placeholder="请选择属性类型"
+         @change="handleProductAttrChange">
           <el-option
             v-for="item in productAttributeCategoryOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.id"
+            :label="item.propertyName"
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="商品规格：">
         <el-card shadow="never" class="cardBg">
-          <div v-for="(productAttr,idx) in selectProductAttr">
+          <div v-for="(productAttr,idx) in selectProductAttr" :key="idx">
             {{productAttr.name}}：
             <el-checkbox-group v-if="productAttr.handAddStatus===0" v-model="selectProductAttr[idx].values">
               <el-checkbox v-for="item in getInputListArr(productAttr.inputList)" :label="item" :key="item"
-                           class="littleMarginLeft"></el-checkbox>
+                class="littleMarginLeft"></el-checkbox>
             </el-checkbox-group>
             <div v-else>
               <el-checkbox-group v-model="selectProductAttr[idx].values">
@@ -30,14 +30,30 @@
                   </el-button>
                 </div>
               </el-checkbox-group>
-              <el-input v-model="addProductAttrValue" style="width: 160px;margin-left: 10px" clearable></el-input>
+              <el-input v-model="selectProductAttr[idx].values" style="width: 160px;margin-left: 10px" clearable></el-input>
               <el-button class="littleMarginLeft" @click="handleAddProductAttrValue(idx)">增加</el-button>
             </div>
           </div>
         </el-card>
+        <!-- <table>
+          <tr>
+            <th>销售价格</th>
+            <th>商品库存</th>
+            <th>库存预警值</th>
+            <th>SKU编号</th>
+            <th>操作</th>
+          </tr>
+          <tr class="tit">
+            <td><input type="text" placeholder="销售价格" v-model="saleprice"></td>
+            <td><input type="text" placeholder="商品库存" v-model="goodnum"></td>
+            <td><input type="text" placeholder="库存预警值" v-model="dangernum"></td>
+            <td><input type="text" placeholder="SKU编号" v-model="SKUnum"></td>
+            <td><el-button type="primary" @click="addSku">添加</el-button></td>
+          </tr>
+        </table> -->
         <el-table style="width: 100%;margin-top: 20px"
-                  :data="value.skuStockList"
-                  border>
+        :data="value.skuStockList"
+        border>
           <el-table-column
             v-for="(item,index) in selectProductAttr"
             :label="item.name"
@@ -65,7 +81,7 @@
           </el-table-column>
           <el-table-column
             label="库存预警值"
-            width="80"
+            width="120"
             align="center">
             <template slot-scope="scope">
               <el-input v-model="scope.row.lowStock"></el-input>
@@ -90,6 +106,29 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- <el-table
+          :data="tableData"
+          style="width: 100%">
+          <el-table-column
+            prop="price"
+            label="销售价格">
+          </el-table-column>
+          <el-table-column
+            prop="num"
+            label="商品库存">
+          </el-table-column>
+          <el-table-column
+            prop="danger"
+            label="库存预警值">
+          </el-table-column>
+          <el-table-column
+            prop="biaoh"
+            label="SKU编号">
+          </el-table-column>
+          <el-table-column
+            label="操作">
+          </el-table-column>
+        </el-table> -->
         <el-button
           type="primary"
           style="margin-top: 20px"
@@ -153,7 +192,7 @@
 </template>
 
 <script>
-  import {fetchList as fetchProductAttrCateList} from '@/api/productAttrCate'
+  import {fetchList as fetchProductAttrCateList, getAttributetypes, getCommodityspecification} from '@/api/productAttrCate'
   import {fetchList as fetchProductAttrList} from '@/api/productAttr'
   import SingleUpload from '@/components/Upload/singleUpload'
   import MultiUpload from '@/components/Upload/multiUpload'
@@ -184,7 +223,18 @@
         //可手动添加的商品属性
         addProductAttrValue: '',
         //商品富文本详情激活类型
-        activeHtmlName: 'pc'
+        activeHtmlName: 'pc',
+        // 售价
+        saleprice: "",
+        // 数量
+        goodnum: "",
+        // 预警值
+        dangernum: "",
+        // SKU编号
+        SKUnum: "",
+        tableData: [],
+        // 获取选项的id
+        productAttributeCategoryId: "",
       }
     },
     computed: {
@@ -196,9 +246,9 @@
         return true;
       },
       //商品的编号
-      productId(){
+     /* productId(){
         return this.value.id;
-      },
+      }, */
       //商品的主图和画册图片
       selectProductPics:{
         get:function () {
@@ -237,6 +287,15 @@
     },
     created() {
       this.getProductAttrCateList();
+      let obj = {
+        pageNum: 1,
+        pageSize: 100,
+       }
+      getAttributetypes(obj).then(res => {
+        console.log(res);
+        let alist = res.result;
+         this.productAttributeCategoryOptions = alist.result.records;
+        })
     },
     watch: {
       productId:function (newValue) {
@@ -247,6 +306,16 @@
       }
     },
     methods: {
+      addSku() {
+        let SKUlist = {
+          price: this.saleprice,
+          num: this.goodnum,
+          danger: this.dangernum,
+          biaoh: this.SKUnum
+        }
+        this.tableData.push(SKUlist)
+        console.log(this.tableData);
+      },
       handleEditCreated() {
         //根据商品属性分类id获取属性和参数
         if(this.value.productAttributeCategoryId!=null){
@@ -258,7 +327,7 @@
         let param = {pageNum: 1, pageSize: 100};
         fetchProductAttrCateList(param).then(response => {
           this.productAttributeCategoryOptions = [];
-          let list = response.data.list;
+          let list = response.result.result.records;
           for (let i = 0; i < list.length; i++) {
             this.productAttributeCategoryOptions.push({label: list[i].name, value: list[i].id});
           }
@@ -366,15 +435,24 @@
           }
         }
       },
-      handleProductAttrChange(value) {
-        this.getProductAttrList(0, value);
-        this.getProductAttrList(1, value);
+      handleProductAttrChange() {
+        // this.getProductAttrList(0, value);
+        // this.getProductAttrList(1, value);
+        let obj = {
+          goodsPropertyId: this.productAttributeCategoryId,
+          pageNum: 1,
+          pageSize: 100
+        }
+        getCommodityspecification(obj).then(res => {
+          console.log(res);
+          this.selectProductAttr = res.result.result.records;
+        })
       },
       getInputListArr(inputList) {
         return inputList.split(',');
       },
       handleAddProductAttrValue(idx) {
-        let options = this.selectProductAttr[idx].options;
+        let options = this.selectProductAttr[idx].values;
         if (this.addProductAttrValue == null || this.addProductAttrValue == '') {
           this.$message({
             message: '属性值不能为空',
@@ -627,5 +705,9 @@
 
   .cardBg {
     background: #F8F9FC;
+  }
+  .tit input{
+    width: 100px;
+    height: 25px;
   }
 </style>

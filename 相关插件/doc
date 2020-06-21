@@ -32,3 +32,5 @@ const getOptions = () => {
    
    3： npm install
    
+   :remote-method="searchCategory('1',null)"
+   

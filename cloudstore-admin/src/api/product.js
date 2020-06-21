@@ -52,7 +52,7 @@ export function updatePublishStatus(params) {
 
 export function createProduct(params) {
   return request({
-    url:'/goods/save',
+    url:'/goods/save?optType=save',
     method:'post',
     data:switchForm(params)
   })

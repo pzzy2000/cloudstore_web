@@ -38,6 +38,16 @@
 			
 		}
 
+	},{
+
+		"path": "pages/user/user",
+		"style": {
+			"navigationBarTitleText": "",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false
+			
+		}
+
 	}],
 	"subPackages": [],
 	"globalStyle": {
@@ -76,7 +86,7 @@
 				"text": "购物车"
 			},
 			{
-				"pagePath": "pages/index/user",
+				"pagePath": "pages/user/user",
 				"iconPath": "static/tab-my.png",
 				"selectedIconPath": "static/tab-my-current.png",
 				"text": "我的"

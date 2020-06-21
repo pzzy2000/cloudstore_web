@@ -1,7 +1,7 @@
 <template>
   <div style="margin-top: 50px">
     <el-form :model="value" :rules="rules" ref="productInfoForm" label-width="120px"  size="small">
-      <el-form-item label="商品分类："  prop="productCategoryId">
+      <el-form-item label="商品分类：" >
         <el-cascader
           v-model="selectProductCateValue"
           :options="productCateOptions">
@@ -16,7 +16,7 @@
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="地区："  prop="provinceId">
+      <el-form-item label="地区：" >
         <el-cascader
           v-model="selectProvinceValue"
           :options="provinceOptions">
@@ -31,24 +31,13 @@
         </el-cascader>
       </el-form-item>
 
-      <el-form-item label="商品名称：" prop="goodsName">
+      <el-form-item label="商品名称：">
         <el-input v-model="value.goodsName"></el-input>
       </el-form-item>
-      <el-form-item label="副标题：" prop="goodsSubtitle">
+      <el-form-item label="副标题：" >
         <el-input v-model="value.goodsSubtitle"></el-input>
       </el-form-item>
-      <el-form-item label="商品品牌：" prop="goodsBrand">
-       <!-- <el-select
-          v-model="value.goodsBrand"
-          @change="handleBrandChange"
-          placeholder="请选择品牌">
-          <el-option
-            v-for="item in brandOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select> -->
+      <el-form-item label="商品品牌：">
         <el-input v-model="value.goodsBrand"></el-input>
       </el-form-item>
       <!-- <el-form-item label="商品介绍：">
@@ -61,7 +50,7 @@
       <el-form-item label="商品货号：">
         <el-input v-model="value.goodsNumber"></el-input>
       </el-form-item>
-     <!-- <el-form-item label="商品售价：">
+     <el-form-item label="商品售价：">
         <el-input v-model="value.salePrice"></el-input>
       </el-form-item>
      <el-form-item label="市场价：">
@@ -83,40 +72,10 @@
   import {getProduct,createProduct} from '@/api/product';
   import {fetchList as provinceChildren,get} from '@/api/sysdict';
 
-  /* const defaultProductParam = {
-    goodsName:null,
-    goodsSubtitle:null,
-    goodsBrand:null,
-    goodsNumber:null,
-    salePrice:null,
-    martPrice:null,
-    unit:null,
-    categoryOneId:null,
-    categoryTwoId:null,
-    categoryThreeId:null,
-    optType:'save'
-  } */
 
   export default {
     name: "ProductInfoDetail",
     props: {
-      value: {
-
-    goodsName:null,
-    goodsSubtitle:null,
-    goodsBrand:null,
-    goodsNumber:null,
-    salePrice:null,
-    martPrice:null,
-    unit:null,
-    categoryOneId:null,
-    categoryTwoId:null,
-    categoryThreeId:null,
-    optType:null,
-    provinceId:null,
-    cityId:null,
-    areaId:null,
-      },
       isEdit: {
         type: Boolean,
         default: false
@@ -154,7 +113,7 @@
     },
     created() {
       this.getProductCateList();
-      /* this.getProvinceList(); */
+      /* this.getProvinceList(); 
       let param = {pageNum: 1, pageSize: 100,codeType:'province'};
       provinceChildren(param).then(response => {
         let list = response.result.result;
@@ -163,6 +122,7 @@
           this.provinceOptions.push({label: list[i].name, value: list[i].id});
         }
       });
+      **/
       //this.getBrandList();
     },
     computed:{

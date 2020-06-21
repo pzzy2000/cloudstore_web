@@ -14,13 +14,6 @@
       @nextStep="nextStep"
       @finishCommit="finishCommit">
     </product-info-detail>
-   <!-- <product-sale-detail
-      v-show="showStatus[1]"
-      v-model="productParam"
-      :is-edit="isEdit"
-      @nextStep="nextStep"
-      @prevStep="prevStep">
-    </product-sale-detail> -->
     <product-attr-detail
       v-show="showStatus[1]"
       v-model="productParam"
@@ -28,97 +21,38 @@
       @nextStep="nextStep"
       @prevStep="prevStep">
     </product-attr-detail>
-    <!-- <product-relation-detail
-      v-show="showStatus[3]"
-      v-model="productParam"
-      :is-edit="isEdit"
-      @prevStep="prevStep"
-      @finishCommit="finishCommit">
-    </product-relation-detail> -->
   </el-card>
 </template>
 <script>
   import ProductInfoDetail from './ProductInfoDetail';
-  import ProductSaleDetail from './ProductSaleDetail';
   import ProductAttrDetail from './ProductAttrDetail';
-  import ProductRelationDetail from './ProductRelationDetail';
   import {createProduct,getProduct,updateProduct} from '@/api/product';
 
   const defaultProductParam = {
-    /* goodsName:null,
-    goodsSubtitle:null,
-    goodsBrand:null,
-    goodsNumber:null,
-    salePrice:null,
-    martPrice:null,
-    unit:null,
-    categoryOneId:null,
-    categoryTwoId:null,
-    categoryThreeId:null,
-    optType:'save' */
-    /* albumPics: '',
-    brandId: null,
-    brandName: '',
-    deleteStatus: 0,
-    description: '',
-    detailDesc: '',
-    detailHtml: '',
-    detailMobileHtml: '',
-    detailTitle: '',
-    feightTemplateId: 0,
-    flashPromotionCount: 0,
-    flashPromotionId: 0,
-    flashPromotionPrice: 0,
-    flashPromotionSort: 0,
-    giftPoint: 0,
-    giftGrowth: 0,
-    keywords: '',
-    lowStock: 0,
-    name: '',
-    newStatus: 0,
-    note: '',
-    originalPrice: 0,
-    pic: '',
-    //会员价格{memberLevelId: 0,memberPrice: 0,memberLevelName: null}
-    memberPriceList: [],
-    //商品满减
-    productFullReductionList: [{fullPrice: 0, reducePrice: 0}],
-    //商品阶梯价格
-    productLadderList: [{count: 0,discount: 0,price: 0}],
-    previewStatus: 0,
-    price: 0,
-    productAttributeCategoryId: null,
-    //商品属性相关{productAttributeId: 0, value: ''}
-    productAttributeValueList: [],
-    //商品sku库存信息{lowStock: 0, pic: '', price: 0, sale: 0, skuCode: '', spData: '', stock: 0}
-    skuStockList: [],
-    //商品相关专题{subjectId: 0}
-    subjectProductRelationList: [],
-    //商品相关优选{prefrenceAreaId: 0}
-    prefrenceAreaProductRelationList: [],
-    productCategoryId: null,
-    productCategoryName: '',
-    productSn: '',
-    promotionEndTime: '',
-    promotionPerLimit: 0,
-    promotionPrice: null,
-    promotionStartTime: '',
-    promotionType: 0,
-    publishStatus: 0,
-    recommandStatus: 0,
-    sale: 0,
-    serviceIds: '',
-    sort: 0,
-    stock: 0,
-    subTitle: '',
-    unit: '',
-    usePointLimit: 0,
-    verifyStatus: 0,
-    weight: 0 */
+       id:null,
+       provinceId:null,
+       cityId:null,
+       areaId:null,
+       serviceGuarantee:null,
+       unit:null,
+       categoryOneId:null,
+       categoryTwoId:null,
+       categoryThreeId:null,
+       goodsSubtitle:null,
+       goodsNumber:null,
+       goodsName:null,
+       goodsBrand:null,
+       salePrice:null,
+       propertyId:null,
+       status:null,
+       martPrice:null,
+       returnRuleId:null,
+       freightRuleId:null,
+       shelfStatus:null
   };
   export default {
     name: 'ProductDetail',
-    components: {ProductInfoDetail, ProductSaleDetail, ProductAttrDetail, ProductRelationDetail},
+    components: {ProductInfoDetail, ProductAttrDetail},
     props: {
       isEdit: {
         type: Boolean,
@@ -129,15 +63,15 @@
       return {
         active: 0,
         productParam: Object.assign({}, defaultProductParam),
-        showStatus: [true, false, false, false]
+        showStatus: [true, false]
       }
     },
     created(){
-      /* if(this.isEdit){
+      if(this.isEdit){
         getProduct(this.$route.query.id).then(response=>{
           this.productParam=response.data;
         });
-      } */
+      }
     },
     methods: {
       hideAll() {
@@ -191,6 +125,6 @@
 </script>
 <style>
   .form-container {
-    width: 1300px;
+    width: 900px;
   }
 </style>

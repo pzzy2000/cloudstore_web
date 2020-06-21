@@ -9,6 +9,22 @@ export function fetchList(params) {
   })
 }
 
+export function fetchDistrictList(params) {
+  let  dataparams={
+    dirctType:'areas',
+    codeType:params.codeType,
+    parentId:params.parentId,
+
+  };
+  return request({
+    url: '/sys/dict/search',
+    method: 'POST',
+    data: switchForm(dataparams)
+  })
+}
+
+
+
 export function get(params) {
   return request({
     url: '/sys/dict/get',
