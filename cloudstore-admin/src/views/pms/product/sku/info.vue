@@ -15,7 +15,7 @@
         </el-form-item>
         <el-form-item label="商品规格：">
           <el-card shadow="never" class="cardBg">
-            <div v-for="(productAttr,idx) in selectProductAttr">
+            <div v-for="(productAttr,idx) in goodsku.guige">
               <div  v-if="productAttr.type===0">
                 <p> {{productAttr.name}}：</p>
                 <el-input v-model="addProductAttrValue" style="width: 160px;margin-left: 10px" clearable></el-input>
@@ -47,8 +47,8 @@
               <el-table style="width: 100%;margin-top: 20px"
                                 :data="goodsku.skuStockList"
                                 border>
-                        <el-table-column
-                                v-for="(item,index) in selectProductAttr"
+                        <el-table-column  fixed
+                                v-for="(item,index) in goodsku.guige"
                                 :label="item.name"
                                 :key="item.id"
                                 align="center">
@@ -94,7 +94,7 @@
                                            style="width: 200px;display: inline-block;margin-left: 10px"></single-upload>
                           </template>
                         </el-table-column>
-                        <el-table-column
+                        <el-table-column  fixed="right"
                                 label="操作"
                                 width="80"
                                 align="center">
@@ -143,16 +143,15 @@
         rwDispatcherState: 'write',
         goodsku: {
           goods: {},
-          skuStockList:{
-
-          }
+          skuStockList:[],
+          guige:[],
+          attr:[]
         },
         productAttributeCategoryOptions: {
 
         },
-        selectProductAttr:{
 
-        }
+
       }
     },
     created() {
@@ -175,10 +174,21 @@
       },
       handleProductAttrChange(productId) {
         this.loading = true;
+        this.goodsku.guige=[];
+        this.goodsku.attr=[];
         fetchPropertisParamsSelectList({goodsPropertyId:productId}).then(response => {
           this.loading = false;
-          let list = response.result.result;
-          this.selectProductAttr = list.records;
+          let list = response.result.result.records;
+          // this.selectProductAttr = list.records;
+           for (let i = 0; i < list.length; i++) {
+             if( list[i].type ===0){
+                  this.goodsku.guige.push(list[i]);
+              }else{
+                 this.goodsku.attr.push(list[i]);
+              }
+             }
+
+
         });
       },
       getproductAttributeCategory() {
