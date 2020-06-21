@@ -33,7 +33,7 @@
               <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border>
                 <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center">
                   <template slot-scope="scope">
-                    {{getProductSkuSp(scope.row,index)}}
+                    {{getProductSkuSp(scope.row,index,item)}}
                   </template>
                 </el-table-column>
                 <el-table-column label="销售价格" width="80" align="center">
@@ -58,7 +58,10 @@
                 </el-table-column>
                 <el-table-column label="属性图片：" align="left" width="200">
                   <template slot-scope="scope">
+                    <!--
                     <single-upload v-model="scope.row.pic" style="width: 200px;display: inline-block;margin-left: 10px"></single-upload>
+                    -->
+
                   </template>
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" width="80" align="center">
@@ -147,9 +150,9 @@
         this.goodsku.guige = [];
         this.goodsku.guigeValue = {};
         this.goodsku.guigeSelectValue = {},
-          this.goodsku.attr = [];
+        this.goodsku.attr = [];
         this.goodsku.addGuige = {};
-
+        this.goodsku.skuStockList = [];
         fetchPropertisParamsSelectList({
           goodsPropertyId: productId
         }).then(response => {
@@ -208,24 +211,40 @@
         let keys = Object.keys(selectValue);
         let array4 = [];
         for (let index in keys) {
-          let keyValue = selectValue[keys[index]];
-          array4.push(keyValue);
+          let keyValues = selectValue[keys[index]];
+          if (keyValues.length === 0) continue;
+          let x = [];
+          for (let i = 0; i < keyValues.length; i++) {
+            x.push("'" + keys[index] + "':'" + keyValues[i] + "'");
+          }
+          array4.push(x);
         }
-
         var result = array4.reduce((last, current) => {
-                const array = [];
-                last.forEach(par1 => {
-                    current.forEach(par2 => {
-                        array.push(par1 + "_" + par2);
-                         console.log(par1 + "_" + par2);
-                    });
-                });
-                return array;
+          const array = [];
+          last.forEach(par1 => {
+            current.forEach(par2 => {
+              array.push(par1 + "," + par2);
             });
-
-
-        console.log("   " + result);
+          });
+          return array;
+        });
+        for (let ix in result) {
+          //   // console.log(result[ix]);
+          let xx = "\"{" + result[ix] + "}\"";
+          console.log(xx);
+          this.goodsku.skuStockList.push({
+            sgk: JSON.parse(xx)
+          })
+        }
       },
+
+      getProductSkuSp(row, index, item) {
+        // console.log("  row  " + row);
+        let sgk = row.sgk;
+        var obj = eval('(' + sgk + ')');
+        // console.log("  row  " + (obj[item.id]));
+        return (obj[item.id]);
+      }
 
     },
 
