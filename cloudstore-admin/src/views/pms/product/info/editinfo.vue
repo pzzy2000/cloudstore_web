@@ -354,33 +354,33 @@
         });
       },
 
-      savebaseinfo(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$confirm('是否提交数据', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              saveSupplierInfo(this.baseinfo, this.blicense).then(response => {
-                this.$message({
-                  message: '修改成功',
-                  type: 'success',
-                  duration: 1000
-                });
-                this.$router.go(0)
-              });
-            });
-          } else {
-            this.$message({
-              message: '验证失败',
-              type: 'error',
-              duration: 1000
-            });
-            return false;
-          }
-        });
-      },
+      // savebaseinfo(formName) {
+      //   this.$refs[formName].validate((valid) => {
+      //     if (valid) {
+      //       this.$confirm('是否提交数据', '提示', {
+      //         confirmButtonText: '确定',
+      //         cancelButtonText: '取消',
+      //         type: 'warning'
+      //       }).then(() => {
+      //         saveSupplierInfo(this.baseinfo, this.blicense).then(response => {
+      //           this.$message({
+      //             message: '修改成功',
+      //             type: 'success',
+      //             duration: 1000
+      //           });
+      //           this.$router.go(0)
+      //         });
+      //       });
+      //     } else {
+      //       this.$message({
+      //         message: '验证失败',
+      //         type: 'error',
+      //         duration: 1000
+      //       });
+      //       return false;
+      //     }
+      //   });
+      // },
 
 
     }
