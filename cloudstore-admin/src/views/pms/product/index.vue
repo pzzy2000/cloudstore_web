@@ -526,7 +526,14 @@
         });
       },
       handleShowProduct(index, row) {
-        console.log("handleShowProduct", row);
+        let productId = row.id;
+        this.$router.push({
+          path: '/sys/goods/info',
+          query: {
+            productId: productId,
+            action: 0,
+          }
+        });
       },
       handleShowVerifyDetail(index, row) {
         console.log("handleShowVerifyDetail", row);
