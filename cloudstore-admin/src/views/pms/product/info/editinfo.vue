@@ -14,41 +14,31 @@
           <el-form-item label="商品品牌："  prop="goodsBrand">
             <el-input v-model="baseinfo.goodsBrand"></el-input>
           </el-form-item>
-          <br />
           <el-form-item label="商品货号：" prop="goodsNumber">
             <el-input v-model="baseinfo.goodsNumber"></el-input>
           </el-form-item>
-          <br />
           <el-form-item label="商品售价：" required prop="salePrice">
             <el-input v-model="baseinfo.salePrice"></el-input>
           </el-form-item>
-          <br />
           <el-form-item label="市场价：" required prop="martPrice">
             <el-input v-model="baseinfo.martPrice"></el-input>
           </el-form-item>
-          <br />
           <el-form-item label="计量单位：" prop="unit">
             <el-input v-model="baseinfo.unit"></el-input>
           </el-form-item>
-
-
         </el-form>
         <div>
-
           <el-button style="float: right;margin-bottom: 10px;" @click="addProduct" :style="{ display: button.add}" size="small">
             增加
           </el-button>
-
           <el-button style="float: right;margin-bottom: 10px;" @click="shownUpdateSbutton(true)" :style="{ display: button.update}"
             size="small">
             更新
           </el-button>
-
           <el-button style="float: right;margin-bottom: 10px;" @click="shownUpdateSbutton(false)" :style="{ display: button.cancel}"
             size="small">
             取消
           </el-button>
-
         </div>
       </div>
     </el-card>
