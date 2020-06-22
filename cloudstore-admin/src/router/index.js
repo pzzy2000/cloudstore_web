@@ -72,12 +72,12 @@ export const asyncRouterMap = [
        children: [{
          path: 'list',
          name: 'goods_list',
-         component: () => import('@/views/pms/product/index'),
+         component: () => import('@/views/pms/product/list'),
          meta: {title: '商品列表', icon: 'product-list'}
        },
        {
         path: 'baseinfo',
-         name: 'addProduct',
+         name: 'add_goods',
          component: () => import('@/views/pms/product/info/editinfo'),
          meta: {title: '添加商品', icon: 'product-add'},
        },
@@ -104,13 +104,13 @@ export const asyncRouterMap = [
          component: () => import('@/views/pms/productCate/index'),
          meta: {title: '商品分类', icon: 'product-list'}
        },
-       {
-        path: 'addProductAttrParm',
-         name: 'addProductAttrParm',
-         component: () => import('@/views/pms/product/components/ProductAttrDetail'),
-         meta: {title: '添加商品属性参数', icon: 'product-add'},
-         hidden: true
-       },
+       // {
+       //  path: 'addProductAttrParm',
+       //   name: 'addProductAttrParm',
+       //   component: () => import('@/views/pms/product/components/ProductAttrDetail'),
+       //   meta: {title: '添加商品属性参数', icon: 'product-add'},
+       //   hidden: true
+       // },
        {
          path: 'add',
          name: 'goodsSave',
@@ -148,7 +148,7 @@ export const asyncRouterMap = [
      children: [{
          path: 'list',
         name: 'agent_list',
-        component: () => import('@/views/supplier/list'),
+        component: () => import('@/views/agent/list'),
         meta: {title: '代理列表', icon: 'product-list'}
      },{
         path: 'list',

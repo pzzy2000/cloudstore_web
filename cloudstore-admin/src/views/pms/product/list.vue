@@ -68,16 +68,16 @@
         <el-table-column label="商品货号" align="center">
           <template slot-scope="scope">{{scope.row.goodsNumber}}</template>
         </el-table-column>
-        <el-table-column label="销售价格/市场价" width="120" align="center">
-          <template slot-scope="scope">{{scope.row.salePrice}}/{{scope.row.martPrice}}</template>
+        <el-table-column label="销售价格/市场价" width="150" align="left">
+          <template slot-scope="scope" > ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>
         </el-table-column>
-        <el-table-column label="标签" width="140" align="center">
+        <el-table-column label="状态" width="140" align="center">
           <template slot-scope="scope">
-            <p>上架：
+            上架：
               <el-switch @change="handlePublishStatusChange(scope.$index, scope.row)" :active-value="1" :inactive-value="0"
                 v-model="scope.row.shelfStatus">
               </el-switch>
-            </p>
+
           </template>
         </el-table-column>
         <!-- <el-table-column label="排序" width="100" align="center">
@@ -530,7 +530,7 @@
         this.$router.push({
           path: '/sys/goods/info',
           query: {
-            productId: productId,
+            goodsId: productId,
             action: 0,
           }
         });

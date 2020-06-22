@@ -3,7 +3,7 @@ import {switchForm,saveSupplier} from '@/api/iunits'
 
 export function fetchList(params){
     return request({
-      url:'/agent/level/list',
+      url:'/agent/list',
       method:'post',
      data: switchForm(params)
     })
