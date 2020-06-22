@@ -16,7 +16,6 @@
         <el-form-item label="商品规格：">
           <el-card shadow="never" class="cardBg">
             <div v-for="(productAttr,idx) in goodsku.guige">
-
               <div>
                 <p> {{productAttr.name}} ：
                   <el-input v-model="goodsku.addGuige[productAttr.id]" style="width: 160px;margin-left: 10px" clearable></el-input>
@@ -31,7 +30,8 @@
 
             <div>
               <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border>
-                <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center">
+                <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center"
+                  width="100">
                   <template slot-scope="scope">
                     {{getProductSkuSp(scope.row,index,item)}}
                   </template>
@@ -56,12 +56,9 @@
                     <el-input v-model="scope.row.skuCode"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column label="属性图片：" align="left" width="200">
+                <el-table-column label="属性图片：" align="left" width="400">
                   <template slot-scope="scope">
-                    <!--
-                    <single-upload v-model="scope.row.pic" style="width: 200px;display: inline-block;margin-left: 10px"></single-upload>
-                    -->
-
+                    <single-upload v-model="scope.row.pic" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
                   </template>
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" width="80" align="center">
@@ -75,11 +72,35 @@
                 <el-button type="primary" style="margin-top: 20px" @click="handleRefreshProductSkuList">刷新列表
                 </el-button>
               </div>
+
             </div>
           </el-card>
 
         </el-form-item>
+        <el-form-item label="商品参数：">
+          <el-card shadow="never" class="cardBg">
+            <div v-for="(item,index) in goodsku.attr">
+              <div>
+                <p> <a style="width: 150px;"> {{item.attr.name}}:</a>
+                  <el-input v-model="item.value" style="width: 160px;margin-left: 10px" clearable></el-input>
+                </p>
+              </div>
+            </div>
+          </el-card>
+        </el-form-item>
+        <el-form-item label="商品相册：">
+          <multi-upload v-model="goodsku.goodsPics"></multi-upload>
+        </el-form-item>
+        <el-form-item label="规格参数：">
+          <tinymce :width="595" :height="300" v-model="goodsku.mobileHtml"></tinymce>
+        </el-form-item>
       </el-form>
+
+      <el-button style="float: right;margin-bottom: 10px;" @click="updateGoodsProperties"
+        size="small">
+        更新
+      </el-button>
+
     </el-card>
   </div>
 </template>
@@ -90,17 +111,25 @@
   } from '@/api/productAttrCate';
 
   import {
-    getProduct
+    getProduct,
+    updateGoodsAttr
   } from '@/api/product';
 
   import {
     fetchSelectList as fetchPropertisParamsSelectList
   } from '@/api/productAttr';
 
-
+  import SingleUpload from '@/components/Upload/singleUpload';
+  import MultiUpload from '@/components/Upload/multiUpload';
+  import Tinymce from '@/components/Tinymce';
 
   export default {
     name: "productsku",
+    components: {
+      SingleUpload,
+      MultiUpload,
+      Tinymce
+    },
     provide() {
       return {
         rwDispatcherProvider: this
@@ -112,9 +141,11 @@
         rwDispatcherState: 'write',
         goodsku: {
           goods: {},
+          goodsPics: [],
           skuStockList: [], //table 显示的  规格头
+          //paramsList: [], //参数列表
           guige: [], //分类 的 规格
-          attr: [], //分类 的 属性
+          attr: [], //分类 的 属性  key 参数 object  vlaue:
           guigeValue: {}, //key : 规格ID id []
           guigeSelectValue: {},
           addGuige: { // 增加的规格值
@@ -133,6 +164,29 @@
       // this.getproductAttributeCategory();
     },
     methods: {
+
+      updateGoodsProperties() {
+        let good_sku = this.goodsku;
+
+        let data = {};
+        data.propertyId = good_sku.propertyId;
+        data.skuStockList  = good_sku.skuStockList;
+        data.goodsId = good_sku.goods.id;
+        data.goodsPics = good_sku.goodsPics;
+        data.attr =[];
+        good_sku.attr.forEach(function(value,index,array){
+          let xx={attrid:value.attr.id, value:value.value }
+          data.attr.push(xx);
+        });
+
+        updateGoodsAttr(data).then(response => {
+          this.loading = false;
+          let list = response.result.result;
+          this.goodsku.goods = list;
+          this.getproductAttributeCategory();
+        });
+      },
+
       getgoodsInfo() {
         let gooodsId = this.$route.query.goodsid;
         getProduct({
@@ -150,7 +204,7 @@
         this.goodsku.guige = [];
         this.goodsku.guigeValue = {};
         this.goodsku.guigeSelectValue = {},
-        this.goodsku.attr = [];
+          this.goodsku.attr = [];
         this.goodsku.addGuige = {};
         this.goodsku.skuStockList = [];
         fetchPropertisParamsSelectList({
@@ -165,7 +219,11 @@
               this.goodsku.guigeValue[list[i].id] = [];
               this.goodsku.guigeSelectValue[list[i].id] = [];
             } else {
-              this.goodsku.attr.push(list[i]);
+              let attr = {
+                attr: list[i],
+                value: ''
+              };
+              this.goodsku.attr.push(attr);
             }
           }
 
@@ -204,6 +262,16 @@
         this.refreshProductSkuList();
 
       },
+
+      handleRemoveProductSku(index, row) {
+        let list = this.goodsku.skuStockList;
+        if (list.length === 1) {
+          list.pop();
+        } else {
+          list.splice(index, 1);
+        }
+      },
+
       refreshProductSkuList() {
         this.goodsku.skuStockList = [];
         let skuList = this.goodsku.skuStockList;

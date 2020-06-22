@@ -1,6 +1,17 @@
 import request from '@/utils/request'
 import {switchForm} from '@/api/iunits'
 
+
+export function updateGoodsAttr(params) {
+
+  return request({
+    url:'/goods/list1',
+    method:'POST',
+    data:params
+  })
+}
+
+
 export function fetchList(params) {
 
   return request({
