@@ -161,6 +161,8 @@
     created() {
       this.rwDispatcherState = "write";
       this.getgoodsInfo();
+      // this.$.MultiUpload.useOss=false;
+      // this.$.MultiUpload.minioUploadUrl="http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update"
       // this.getproductAttributeCategory();
     },
     methods: {

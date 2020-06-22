@@ -11,6 +11,7 @@
       :on-preview="handlePreview"
       :limit="maxCount"
       :on-exceed="handleExceed"
+      :headers="myHeaders"
     >
       <i class="el-icon-plus"></i>
     </el-upload>
@@ -21,6 +22,12 @@
 </template>
 <script>
   import {policy} from '@/api/oss'
+  import {
+    getToken
+  } from '@/utils/auth'
+
+  var token = getToken(); // 要保证取到
+  // alert(token);
 
   export default {
     name: 'multiUpload',
@@ -43,11 +50,12 @@
           dir: '',
           host: ''
         },
+        myHeaders: {auth: token},
         dialogVisible: false,
         dialogImageUrl:null,
-        useOss:true, //使用oss->true;使用MinIO->false
+        useOss:false, //使用oss->true;使用MinIO->false
         ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
-        minioUploadUrl:'http://localhost:8080/minio/upload',
+        minioUploadUrl:'http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update',
       };
     },
     computed: {
@@ -117,5 +125,3 @@
 <style>
 
 </style>
-
-

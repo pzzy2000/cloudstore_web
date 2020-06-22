@@ -9,6 +9,7 @@
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
+       :headers="myHeaders"
       :on-preview="handlePreview">
       <el-button size="small" type="primary">点击上传</el-button>
       <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10MB</div>
@@ -20,6 +21,11 @@
 </template>
 <script>
   import {policy} from '@/api/oss'
+  import {
+    getToken
+  } from '@/utils/auth'
+
+  var token = getToken(); // 要保证取到
 
   export default {
     name: 'singleUpload',
@@ -63,9 +69,10 @@
           // callback:'',
         },
         dialogVisible: false,
-        useOss:true, //使用oss->true;使用MinIO->false
+         myHeaders: {auth: token},
+        useOss:false, //使用oss->true;使用MinIO->false
         ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
-        minioUploadUrl:'http://localhost:8080/minio/upload',
+       minioUploadUrl:'http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update',
       };
     },
     methods: {
@@ -117,5 +124,3 @@
 <style>
 
 </style>
-
-
