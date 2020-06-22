@@ -12,13 +12,9 @@
 		components: {
 			mallplusCopyright
 		},
-		
-		
-
 		onLoad() {
 			this.getAgentInfo();
 		},
-
 		methods: {
 			async getAgentInfo() {
 				console.log("is wei xin "+this.$config.isWeiXin)
@@ -32,8 +28,6 @@
                    })
 				}
 			}
-
-
 		}
 	};
 </script>
