@@ -1,55 +1,61 @@
 {
-	"pages": [{
-		"path": "pages/welcome/welcome",
-		"style": {
-			"navigationBarTitleText": "",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false
-		}
-	}, {
+	"pages": [
+		{
+			"path": "pages/welcome/welcome",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		}, 
+		{
 
-		"path": "pages/public/login",
-		"style": {
-			"navigationBarTitleText": "",
-			"navigationStyle": "custom",
-			"app-plus": {
-				"titleNView": false,
-				"animationType": "slide-in-bottom"
+			"path": "pages/public/login",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-bottom"
+				}
+			}
+		}, 
+		{
+
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		}, 
+		{
+
+			"path": "pages/public/reg",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false	
 			}
 		}
-
-	}, {
-
-		"path": "pages/index/index",
-		"style": {
-			"navigationBarTitleText": "",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false
-			
+	],
+	"subPackages": [
+		{
+			"root":"packageE",
+			"pages": [
+				"pages/applyBusiness"
+			]
 		}
-
-	}, {
-
-		"path": "pages/public/reg",
-		"style": {
-			"navigationBarTitleText": "",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false
-			
-		}
-
-	},{
-
-		"path": "pages/user/user",
-		"style": {
-			"navigationBarTitleText": "",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false
-			
-		}
-
-	}],
-	"subPackages": [],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

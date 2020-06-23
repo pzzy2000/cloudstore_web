@@ -62,7 +62,8 @@ export const asyncRouterMap = [
        component: () => import('@/views/supplier/info'),
        meta: {title: '供应商详情', icon: 'product-list'}
      }]
-  },{
+  },
+  {
       path:'/sys/goods',
       component: Layout,
       redirect: '/sys/goods/list',
@@ -71,12 +72,12 @@ export const asyncRouterMap = [
        children: [{
          path: 'list',
          name: 'goods_list',
-         component: () => import('@/views/pms/product/index'),
+         component: () => import('@/views/pms/product/list'),
          meta: {title: '商品列表', icon: 'product-list'}
        },
        {
         path: 'baseinfo',
-         name: 'addProduct',
+         name: 'add_goods',
          component: () => import('@/views/pms/product/info/editinfo'),
          meta: {title: '添加商品', icon: 'product-add'},
        },
@@ -95,7 +96,7 @@ export const asyncRouterMap = [
        {
          path: 'info',
          name: 'goods_info',
-         component: () => import('@/views/supplier/info'),
+         component: () => import('@/views/pms/product/info/editinfo'),
          meta: {title: '商品详情', icon: 'product-list'}
        },{
          path: 'category',
@@ -103,13 +104,13 @@ export const asyncRouterMap = [
          component: () => import('@/views/pms/productCate/index'),
          meta: {title: '商品分类', icon: 'product-list'}
        },
-       {
-        path: 'addProductAttrParm',
-         name: 'addProductAttrParm',
-         component: () => import('@/views/pms/product/components/ProductAttrDetail'),
-         meta: {title: '添加商品属性参数', icon: 'product-add'},
-         hidden: true
-       },
+       // {
+       //  path: 'addProductAttrParm',
+       //   name: 'addProductAttrParm',
+       //   component: () => import('@/views/pms/product/components/ProductAttrDetail'),
+       //   meta: {title: '添加商品属性参数', icon: 'product-add'},
+       //   hidden: true
+       // },
        {
          path: 'add',
          name: 'goodsSave',
@@ -157,7 +158,7 @@ export const asyncRouterMap = [
      },{
         path: 'level',
         name: 'agent_level',
-        component: () => import('@/views/supplier/info'),
+        component: () => import('@/views/agent/level/list'),
         meta: {title: '代理等级', icon: 'product-list'}
      },{
         path: 'goods',

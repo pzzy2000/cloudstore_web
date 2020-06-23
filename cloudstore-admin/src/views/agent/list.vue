@@ -26,32 +26,39 @@
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
         border>
-        <el-table-column type="selection" width="60" align="center" fixed></el-table-column>
-        <el-table-column label="代理名称" align="center" fixed>
+        <el-table-column type="selection" width="150" align="center" fixed></el-table-column>
+        <el-table-column label="代理商名字" align="center" fixed>
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="代理等级" align="center">
-          <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>
-        </el-table-column>
-        <el-table-column label="地址" align="center" :formatter="showAddress">
-        </el-table-column>
-        <el-table-column label="是否删除" align="center" :formatter="deleteStatus">
+
+        <el-table-column label="地址" align="center" width="300" :formatter="showAddress">
 
         </el-table-column>
+        <el-table-column label="详细地址" align="center" width="300">
+                 <template slot-scope="scope">{{scope.row.detailAddress}}</template>
+        </el-table-column>
+
+        <el-table-column label="代理商等级" width="150" align="center">
+          <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>
+        </el-table-column>
+
         <el-table-column label="审核状态" align="center" :formatter="showStatus">
         </el-table-column>
 
-        <el-table-column label="所属账号" align="center" :formatter="showAccess">
+        <el-table-column label="所属账号" align="center"  width="300" :formatter="showAccess">
 
         </el-table-column>
 
 
+
+        <el-table-column label="是否删除" align="center" :formatter="deleteStatus">
+
+        </el-table-column>
+
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-            <p>
-              <el-button size="mini" @click="handleUpdateUserInfo(scope.$index, scope.row)">查看
-              </el-button>
-            </p>
+            <el-button size="mini" @click="handleUpdateUserInfo(scope.$index, scope.row)">查看
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -82,14 +89,13 @@
   import {
     msg
   } from '@/api/iunits'
-
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 5,
 
   };
   export default {
-    name: "productList",
+    name: "agentlist",
     data() {
       return {
 
@@ -154,13 +160,15 @@
       showAccess(row, column) {
         return (row.sysManagerUserBean == null) ? '数据读取错误' : row.sysManagerUserBean.name;
       },
-      showAddress(row, column){
-        try{
-             return row.provinceBean.name  +  row.cityBean.name + row.areaBean.name
-             }catch(e){
-              return '数据读取错误';
-             }
+
+      showAddress(row, column) {
+        try {
+          return row.provinceBean.name + " " + row.cityBean.name + " " + row.areaBean.name;
+        } catch (e) {
+          return '数据读取错误';
+        }
       },
+
       showStatus(row, column) {
         let status = row.status;
         switch (status) {
@@ -258,68 +266,7 @@
           ids.push(row.id);
           this.updateDeleteStatus(1, ids);
         });
-      },
-      // handleUpdateProduct(index,row){
-      //   this.$router.push({path:'/pms/updateProduct',query:{id:row.id}});
-      // },
-      // handleShowProduct(index,row){
-      //   console.log("handleShowProduct",row);
-      // },
-      // handleShowVerifyDetail(index,row){
-      //   console.log("handleShowVerifyDetail",row);
-      // },
-      // handleShowLog(index,row){
-      //   console.log("handleShowLog",row);
-      // },
-      // updatePublishStatus(publishStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('publishStatus', publishStatus);
-      //   updatePublishStatus(params).then(response => {
-      //     this.$message({
-      //       message: '修改成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      // },
-      // updateNewStatus(newStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('newStatus', newStatus);
-      //   updateNewStatus(params).then(response => {
-      //     this.$message({
-      //       message: '修改成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      // },
-      // updateRecommendStatus(recommendStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('recommendStatus', recommendStatus);
-      //   updateRecommendStatus(params).then(response => {
-      //     this.$message({
-      //       message: '修改成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      // },
-      // updateDeleteStatus(deleteStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('deleteStatus', deleteStatus);
-      //   updateDeleteStatus(params).then(response => {
-      //     this.$message({
-      //       message: '删除成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      //   this.getList();
-      // }
+      }
     }
   }
 </script>

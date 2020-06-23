@@ -38,7 +38,6 @@
 				<text class="e-b">升级会员享受更多折扣 一测就上线</text>
 			</view>
 		</view>
-
 		<view
 			class="cover-container"
 			:style="[
@@ -52,7 +51,6 @@
 			@touchend="coverTouchend"
 		>
 			<image class="arc" src="/static/arc.png"></image>
-
 			<view class="tj-sction">
 				<view class="tj-item" @click="toNav('../../pagesU/user/deposit')">
 					<text class="num">{{ userDetailInfo.blance || 0 }}</text>
@@ -104,7 +102,6 @@
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="navTo('../../pagesU/user/collect')"></list-cell>
 				<list-cell icon="icon-share cgtt" iconColor="#0e68d7" v-if="!userDetailInfo.storeId" title="商户入驻" @eventClick="navTo('../../pagesC/store/applyBusiness')"></list-cell>
 				<list-cell icon="icon-share cgtt" iconColor="#0e68d7" v-if="userDetailInfo.storeId" title="商户主页" @eventClick="navTo(`../../pagesC/store/businessDetails?id=${userDetailInfo.storeId}`)"></list-cell>
-
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai cgtt" iconColor="#0e68d7" v-if="!userDetailInfo.roomNums" title="绑定社区" @eventClick="navTo('../../pagesA/build/bindCommunity')"></list-cell>
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai cgtt" iconColor="#0e68d7" v-if="userDetailInfo.roomNums" title="社区主页" @eventClick="navTo('../../pagesA/build/community')"></list-cell>
 					<list-cell icon="icon-pinglun-copy" iconColor="#0e68d7" title="我的邀请码" :tips="userDetailInfo.id"  @eventClick="navTo('../../pagesU/user/invite')"></list-cell>
@@ -114,9 +111,9 @@
 			</view>
 		</view>
 		<neil-modal :show="inputShow" @close="cancel" title="编辑" @cancel="cancel" @confirm="confirm">
-        				<input v-model="inputContent" style="margin:20upx" placeholder="请输入..." />
-        			</neil-modal>
-<mallplusCopyright></mallplusCopyright>
+			<input v-model="inputContent" style="margin:20upx" placeholder="请输入..." />
+		</neil-modal>
+		<mallplusCopyright></mallplusCopyright>
 	</view>
 </template>
 <script>
@@ -125,20 +122,16 @@ import Api from '@/common/api';
 import listCell from '@/components/mix-list-cell';
 import neilModal from '@/components/neil-modal.vue';
 import { mapState,mapMutations } from 'vuex';
-let startY = 0,
-	moveY = 0,
-	pageAtTop = true;
-export default {
-
+	let startY = 0, moveY = 0, pageAtTop = true;
+	export default {
 	components: {
-    		mallplusCopyright,
-		listCell,neilModal
+    	mallplusCopyright, listCell, neilModal
 	},
 	data() {
 		return {
 			inputShow: false,
-        			feild: undefined,
-        			inputContent: '',
+			feild: undefined,
+			inputContent: '',
 			coverTransform: 'translateY(0px)',
 			coverTransition: '0s',
 			moving: false,
@@ -146,21 +139,16 @@ export default {
 				blance: 0,
 				integration: 0
 			},
-
 			couponList: [],
 			viewList: []
 		};
 	},
-
 	async onLoad() {
-    		this.getData()
-
-    	},
+		this.getData()
+	},
 	async onShow() {
 		this.getData()
-
 	},
-
 	// #ifndef MP
 	onNavigationBarButtonTap(e) {
 		const index = e.index;
@@ -190,54 +178,47 @@ export default {
 		}
 	},
 	methods: {
-	...mapMutations(['logout']),
-
-inputShowModal(feild) {
+		...mapMutations(['logout']),
+		inputShowModal(feild) {
 			this.feild = feild;
 			this.inputShow = true;
 			this.inputContent = '';
 		},
-    		cancel() {
-            			this.inputShow = false;
-
-            		},
-
-            		confirm() {
-            			const that = this;
-            			if (!that.inputContent) {
-            				that.$api.msg('输入不能为空');
-            				return;
-            			}
-            			let obj = {	id:this.userDetailInfo.id};
-            			obj[that.feild] = that.inputContent;
-            			Api.apiCall('post', Api.member.updateMember, obj);
-            			that.$api.msg('修改成功');
-            			that.userInfos[that.feild] = that.inputContent
-
-            		},
+		cancel() {
+			this.inputShow = false;
+		},
+		confirm() {
+			const that = this;
+			if (!that.inputContent) {
+				that.$api.msg('输入不能为空');
+				return;
+			}
+			let obj = {	id:this.userDetailInfo.id};
+			obj[that.feild] = that.inputContent;
+			Api.apiCall('post', Api.member.updateMember, obj);
+			that.$api.msg('修改成功');
+			that.userInfos[that.feild] = that.inputContent
+		},
 		async getData(){
 			this.getuserinfo();
 			// this.getHistory();
 		},
 		// 获取用户信息
 		async getuserinfo(){
-
 				let params = {  };
 				let data1 = await Api.apiCall('get', Api.index.userInfo, params);
 				if(!data1){
-                			this.userDetailInfo={};
-                	}
+						this.userDetailInfo={};
+				}
 				this.userDetailInfo = data1.member;
 				if(!data1.member){
 					this.logout();
 				}else{
 				uni.setStorageSync('userInfos', data1.member);
-                				console.log(this.userDetailInfo)
-                				let couponList = data1.histories;
-                				this.couponList = couponList;
+					console.log(this.userDetailInfo)
+					let couponList = data1.histories;
+					this.couponList = couponList;
 				}
-
-
 		},
 		// 获取浏览历史
 		async getHistory(){
@@ -247,7 +228,6 @@ inputShowModal(feild) {
 				this.viewList = data.result;
 			}
 		},
-
 		toNav(url){
 			uni.navigateTo({
 				url: url
@@ -258,13 +238,11 @@ inputShowModal(feild) {
 				url: '../../pagesU/user/profile'
 			});
 		},
-
 		toWeChatLogin(){
 			uni.navigateTo({
 				url: '/pages/public/login',
 			});
 		},
-
 		//详情页
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
@@ -285,7 +263,6 @@ inputShowModal(feild) {
 				url: url
 			});
 		},
-
 		/**
 		 *  会员卡下拉和回弹
 		 *  1.关闭bounce避免ios端下拉冲突
@@ -499,30 +476,29 @@ inputShowModal(feild) {
 </script>
 <style lang="scss">
 @font-face {
-		font-family: cgtt;
-		font-weight: normal;
-		font-style: normal;
-		src: url('//at.alicdn.com/t/font_1475801_5innv59qqcr.ttf') format('truetype'),
-	}
+	font-family: cgtt;
+	font-weight: normal;
+	font-style: normal;
+	src: url('//at.alicdn.com/t/font_1475801_5innv59qqcr.ttf') format('truetype'),
+}
 page{
 	background: #F3F3F3;
 }
 .cgtt {
-		font-family: "cgtt" !important;
-		font-size: 16px;
-		font-style: normal;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-	}
+	font-family: "cgtt" !important;
+	font-size: 16px;
+	font-style: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
 
-	.icon-userShare:before {
-		content: "\c600";
-	}
+.icon-userShare:before {
+	content: "\c600";
+}
 
-	.icon-userJoin:before {
-		content: "\c601";
-	}
-
+.icon-userJoin:before {
+	content: "\c601";
+}
 %flex-center {
 	display: flex;
 	flex-direction: column;
@@ -536,7 +512,6 @@ page{
 	background: #fff;
 	border-radius: 10upx;
 }
-
 .user-section {
 	height: 520upx;
 	padding: 100upx 30upx 0;
@@ -555,8 +530,8 @@ page{
 	height: 180upx;
 	display: flex;
 	align-items: center;
-	position: relative;
 	z-index: 1;
+	position: relative;
 	.portrait {
 		width: 130upx;
 		height: 130upx;

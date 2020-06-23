@@ -5,7 +5,7 @@ import {switchForm} from '@/api/iunits'
 export function updateGoodsAttr(params) {
 
   return request({
-    url:'/goods/list1',
+    url:'/goods/sku/goodsSkuList',
     method:'POST',
     data:params
   })

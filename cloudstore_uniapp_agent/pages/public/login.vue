@@ -38,7 +38,7 @@
 			<!-- #endif -->
 		</view>
 		<view class="register-section">
-			还没有账号?<text @click="toRegist">马上注册</text> <text @click="regagent">代理注册</text>
+			还没有账号?<text @click="toRegist">马上注册</text> <text @click="regagent">代理注册111</text>
 		</view>
 
 		<mallplusCopyright></mallplusCopyright>
@@ -79,6 +79,11 @@
 			// 	const key = e.currentTarget.dataset.key;
 			// 	this[key] = e.detail.value;
 			// },
+			navBack () {
+				uni.switchTab({
+					url: '/pages/index/index'
+				});
+			},
 			toRegist() {
 				uni.navigateTo({
 					url: '/pages/public/reg'

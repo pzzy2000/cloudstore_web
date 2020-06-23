@@ -12,15 +12,15 @@
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="退货规则："  prop="returnRuleId">
+          <el-form-item label="退货规则：" prop="returnRuleId">
             <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">
 
             </el-select-dispatcher>
           </el-form-item>
 
-          <el-form-item label="运费规则："  prop="freightRuleId">
-            <el-cascader v-model="baseinfo.freightRuleId" id="freightRuleId">
-            </el-cascader>
+          <el-form-item label="运费规则：" prop="freightRuleId">
+            <el-select-dispatcher v-model="baseinfo.freightRuleId" id="freightRuleId">
+            </el-select-dispatcher>
           </el-form-item>
           <br />
           <el-form-item label="商品分类：" required prop="categoryOneId">
@@ -55,43 +55,43 @@
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
-          <el-form-item  required prop="cityId">
+          <el-form-item required prop="cityId">
             <el-select-dispatcher v-model="baseinfo.cityId" :options="category1" remote placeholder="市" :loading="loading"
               v-on:change="selectDistrict($event, 2)">
               <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
-           <el-form-item  required prop="areaId">
-          <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"
-            v-on:change="selectDistrict($event, 3)">
-            <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">
-            </el-option>
-          </el-select-dispatcher>
+          <el-form-item required prop="areaId">
+            <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"
+              v-on:change="selectDistrict($event, 3)">
+              <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select-dispatcher>
           </el-form-item>
 
           <el-form-item label="副标题：" required prop="goodsSubtitle">
-            <el-input v-model="baseinfo.goodsSubtitle"></el-input>
+            <el-input-dispatcher v-model="baseinfo.goodsSubtitle"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="商品品牌："  prop="goodsBrand">
-            <el-input v-model="baseinfo.goodsBrand"></el-input>
+          <el-form-item label="商品品牌：" prop="goodsBrand">
+            <el-input-dispatcher v-model="baseinfo.goodsBrand"></el-input-dispatcher>
           </el-form-item>
           <br />
           <el-form-item label="商品货号：" prop="goodsNumber">
-            <el-input v-model="baseinfo.goodsNumber"></el-input>
+            <el-input-dispatcher v-model="baseinfo.goodsNumber"></el-input-dispatcher>
           </el-form-item>
           <br />
           <el-form-item label="商品售价：" required prop="salePrice">
-            <el-input v-model="baseinfo.salePrice"></el-input>
+            <el-input-dispatcher v-model="baseinfo.salePrice"></el-input-dispatcher>
           </el-form-item>
           <br />
           <el-form-item label="市场价：" required prop="martPrice">
-            <el-input v-model="baseinfo.martPrice"></el-input>
+            <el-input-dispatcher v-model="baseinfo.martPrice"></el-input-dispatcher>
           </el-form-item>
           <br />
           <el-form-item label="计量单位：" prop="unit">
-            <el-input v-model="baseinfo.unit"></el-input>
+            <el-input-dispatcher v-model="baseinfo.unit"></el-input-dispatcher>
           </el-form-item>
 
 
@@ -121,6 +121,10 @@
 
 <script>
   import {
+    msg
+  } from '@/api/iunits';
+
+  import {
     fetchListWithChildren
   } from '@/api/productCate';
 
@@ -134,7 +138,7 @@
   } from '@/api/product';
 
   export default {
-    name: "supplierBaseinfo",
+    name: "goodBaseinfo",
     provide() {
       return {
         rwDispatcherProvider: this
@@ -162,18 +166,22 @@
           add: "none",
           cancel: 'none'
         },
+        goodsId: null,
         rwDispatcherState: 'write',
       }
     },
     mounted() {
       // mounted在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作
     },
+    
+  
     created() {
       let action = this.$route.query.action; //1:增加 2：编辑 0:查看,默认是查看
-      action = (typeof(action) == 'undefined') ? 1 : action;
+      action = parseInt((typeof(action) == 'undefined') ? "1" : action);
       switch (action) {
         case 0:
           this.rwDispatcherState = "read"; //write  read
+          this.goodsId = (typeof(this.$route.query.goodsId) == 'undefined') ? -1 : this.$route.query.goodsId;
           break;
         case 1:
           this.rwDispatcherState = "write"; //write  read
@@ -184,7 +192,7 @@
           break;
 
       }
-      if (action == 2) {
+      if (action == 2 || action == 0) {
         this.loadInfo();
       }
       this.searchRootCategory();
@@ -299,27 +307,21 @@
       },
 
       async loadInfo() {
-        await searchSupplierDetail({
-          supplierId: this.supplierId
+        if (this.goodsId === null) {
+          msg("系统错误,没有发现商品信息[id]");
+          return;
+        };
+         let goodsId_ = this.goodsId;
+         console.log("load  goods info  goodsid : "+goodsId_);
+        await getProduct({
+          id: goodsId_
         }).then(response => {
-          if (response.result.result.supplier != null) {
-            // this.baseinfo.supplierName = response.result.result.supplier.name;
-            // this.baseinfo.phone = response.result.result.supplier.phone;
-            // this.baseinfo.shopName = response.result.result.shop.shopName;
-            // this.baseinfo.notice = response.result.result.shop.notice;
-            // this.blicense.licenseName = response.result.result.supplierMainInfo.licenseName;
-            // this.blicense.creditCode = response.result.result.supplierMainInfo.creditCode;
-            // this.blicense.workNumber = response.result.result.supplierMainInfo.workNumber;
-            // this.blicense.introduce = response.result.result.supplierMainInfo.introduce;
-            // this.blicense.brand = response.result.result.supplierMainInfo.brand;
-            // this.blicense.startTime = response.result.result.supplierMainInfo.startTime;
-            // this.blicense.phone = response.result.result.supplierMainInfo.phone;
-            // this.blicense.email = response.result.result.supplierMainInfo.email;
-            // this.blicense.registerCapital = response.result.result.supplierMainInfo.registerCapital;
-            // this.blicense.legalPerson = response.result.result.supplierMainInfo.legalPerson;
-            // this.blicense.cardType = response.result.result.supplierMainInfo.cardType;
-            // this.blicense.cardNo = response.result.result.supplierMainInfo.cardNo;
+          if (response) {
+            this.baseinfo = response.result.result;
+          } else {
+            msg("系统错误,获得商品信息错误");
           }
+
         });
       },
 
