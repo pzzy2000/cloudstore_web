@@ -19,7 +19,7 @@ export default {
 	 
 	agent:{
 	   userinfo:"/agent/get",//获取用户信息	
-	   userlogin:"/sys/manager/platform/login",
+	   userlogin:"sys/manager/platform/login",
 	   reg:"sys/manager/platform/register/agent"
 	},
 	

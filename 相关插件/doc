@@ -3,6 +3,10 @@ https://www.cnblogs.com/zhousjcn/p/13024857.html
 HBuilderX\plugins\npm\npm i tslib
 HBuilderX\plugins\npm\npm i element-ui-rw-dispatcher
 
+
+element-ui-rw-dispatcher
+
+
 const getOptions = () => {
   return {
     namespace: baseConfig.namespace,

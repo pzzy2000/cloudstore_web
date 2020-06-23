@@ -68,7 +68,7 @@
         <el-table-column label="商品货号" align="center">
           <template slot-scope="scope">{{scope.row.goodsNumber}}</template>
         </el-table-column>
-        <el-table-column label="销售价格/市场价" width="120" align="center">
+        <el-table-column label="销售价格/市场价" width="150" align="center">
           <template slot-scope="scope">{{scope.row.salePrice}}/{{scope.row.martPrice}}</template>
         </el-table-column>
         <el-table-column label="标签" width="140" align="center">

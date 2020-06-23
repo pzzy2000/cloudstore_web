@@ -147,7 +147,7 @@ export const asyncRouterMap = [
      children: [{
          path: 'list',
         name: 'agent_list',
-        component: () => import('@/views/supplier/list'),
+        component: () => import('@/views/agent/list'),
         meta: {title: '代理列表', icon: 'product-list'}
      },{
         path: 'list',
