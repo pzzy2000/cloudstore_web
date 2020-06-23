@@ -87,7 +87,18 @@ export const asyncRouterMap = [
          component: () => import('@/views/pms/product/info/editinfo'),
          meta: {title: '商品详情', icon: 'product-list'},
          hidden: true
-       },{
+       },
+
+       {
+         path: 'skuinfo',
+         name: 'sku_info',
+         component: () => import('@/views/pms/product/sku/info'),
+         meta: {title: '商品详情', icon: 'product-list'},
+         hidden: true
+       },
+
+
+       {
          path: 'category',
          name: 'goods_category',
          component: () => import('@/views/pms/productCate/index'),
@@ -140,10 +151,11 @@ export const asyncRouterMap = [
         component: () => import('@/views/agent/list'),
         meta: {title: '代理列表', icon: 'product-list'}
      },{
-        path: 'list',
+        path: 'info',
         name: 'agent_info',
-        component: () => import('@/views/supplier/info'),
-        meta: {title: '代理详情', icon: 'product-list'}
+        component: () => import('@/views/agent/info'),
+        meta: {title: '代理详情', icon: 'product-list'},
+          hidden: true
      },{
         path: 'level',
         name: 'agent_level',
