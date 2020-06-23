@@ -59,8 +59,8 @@
 		},
 		data() {
 			return {
-				access: '',
-				password: '',
+				access: '13312121212',
+				password: '1212',
 				isWeiXin: false,
 				sysInfo: '',
 				logining: false,
@@ -380,7 +380,7 @@
 					console.log(data);
 					this.$api.msg("登录成功");
 					that.login(data);
-					uni.setStorageSync('userInfos', data.result);
+					uni.setStorageSync('userInfo', data.result);
 					uni.setStorageSync('token', data.result.token);
 					console.log(uni.getStorageSync('token'));
 					uni.switchTab({

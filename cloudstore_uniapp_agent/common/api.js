@@ -17,14 +17,17 @@ export default {
 	 * 接口名称
 	 */
 	 
-	agent:{
+	agent:{//用户接口
 	   userinfo:"/agent/get",//获取用户信息	
 	   userlogin:"sys/manager/platform/login",
 	   reg:"sys/manager/platform/register/agent"
 	},
-	goods: {
-	   list: '/goods/list' //获取商品列表
+	goods: { //商品接口
+	   list: '/goods/list' ,//获取商品列表
+	   detail: '/goods/getGoodsInfoByGoodsId',
+	   save:'agent/goods/save' //代理商将商品加入代理
 	},
+	
 	/**
 	 * 封装请求（async await 封装uni.request） 对应portal 项目
 	 * method	   post/get
@@ -33,7 +36,7 @@ export default {
 	 * load		   是否需要loading
 	 * isSwitch     是否转换
 	 */
-	async apiCall(method, endpoint, data, load, isSwitch) {
+	async apiCall(method, endpoint, data, load, isSwitch, msg) {
 		if (typeof(isSwitch) == 'undefined') {
 			isSwitch = true;
 		}
@@ -126,9 +129,7 @@ export default {
 			} else {
 				return result;
 			}
-
 		}
-
 	},
 	
 	/**

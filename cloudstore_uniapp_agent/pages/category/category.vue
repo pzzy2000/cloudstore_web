@@ -15,10 +15,17 @@
 		<view class="goods-list">
 			<view v-for="(item, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(item)">
 				<view class="image-wrapper"><image :src="item.pic" mode="aspectFill"></image></view>
-				<text class="title clamp">{{ item.name }}</text>
-				<view class="price-box">
-					<text class="price">{{ item.price }}</text>
-					<text>已售 {{ item.sale }}</text>
+				<view class="goods-detail">
+					<text class="title clamp">{{ item.goodsName }}</text>
+					<text class="title clamp subhead ">{{item.goodsSubtitle}}</text>
+					<view class="price-box">
+						<view class="price">
+							<text class="priceSale">{{ item.salePrice }}</text>
+							/
+							<text class="pricemart">{{ item.martPrice }}</text>
+						</view>
+						<button class="goodsBtn">去代理</button>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -66,11 +73,11 @@ export default {
 
 	onLoad(options) {
 		// #ifdef H5
-		this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight + 'px';
+		//this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight + 'px';
 		// #endif
 		this.keyword = options.keyword;
 		this.cateId = options.sid;
-		this.loadCateList(options.fid, options.sid);
+		//this.loadCateList(options.fid, options.sid);
 		this.loadData();
 	},
 	onPageScroll(e) {
@@ -94,72 +101,87 @@ export default {
 	methods: {
 		//加载分类
 		async loadCateList(fid, sid) {
-			let params = {};
-			let list = await Api.apiCall('get', Api.goods.typeList, params);
-			//let list = await this.$api.json('cateList');
-			let cateList = list.data.filter(item => item.pid == null);
-
-			cateList.forEach(item => {
-				let tempList = list.filter(val => val.pid == item.id);
-				item.child = tempList;
-			});
-			this.cateList = cateList;
+			let params = {
+				pageNum: '1',
+				pageSize: '10'
+			};
+			let list = await Api.apiCall('get', Api.goods.list, params);
+			console.log(list)
+			if (list) {
+				let cateList = list.data.filter(item => item.pid == null);
+				
+				cateList.forEach(item => {
+					let tempList = list.filter(val => val.pid == item.id);
+					item.child = tempList;
+				});
+				this.cateList = cateList;
+			}
 		},
 		//加载商品 ，带下拉刷新和上滑加载
 		async loadData(type = 'add', loading) {
+			let params = {
+				pageNum: '1',
+				pageSize: '10'
+			};
+			let list = await Api.apiCall('post', Api.goods.list, params);
+			if (list) {
+				console.log(list)
+				this.goodsList = list.result.records
+			}
 			//没有更多直接返回
-			if (type === 'add') {
-				if (this.loadingType === 'nomore') {
-					return;
-				}
-				this.loadingType = 'loading';
-			} else {
-				this.loadingType = 'more';
-			}
-			let params;
-			if (this.cateId) {
-				params = { pageNum: this.pageNum, productCategoryId: this.cateId };
-				if (this.keyword) {
-					params = { pageNum: this.pageNum, productCategoryId: this.cateId, keyword: this.keyword };
-				}
-			}
-			if (this.keyword) {
-				params = { pageNum: this.pageNum, keyword: this.keyword };
-			} else {
-				params = { pageNum: this.pageNum };
-			}
+			// if (type === 'add') {
+			// 	if (this.loadingType === 'nomore') {
+			// 		return;
+			// 	}
+			// 	this.loadingType = 'loading';
+			// } else {
+			// 	this.loadingType = 'more';
+			// }
+			// let params;
+			// if (this.cateId) {
+			// 	params = { pageNum: this.pageNum, productCategoryId: this.cateId };
+			// 	if (this.keyword) {
+			// 		params = { pageNum: this.pageNum, productCategoryId: this.cateId, keyword: this.keyword };
+			// 	}
+			// }
+			// if (this.keyword) {
+			// 	params = { pageNum: this.pageNum, keyword: this.keyword };
+			// } else {
+			// 	params = { pageNum: this.pageNum };
+			// }
 
-			let list = await Api.apiCall('get', Api.goods.goodsList, params);
-
-			let goodsList = list.data.records;
-			// let goodsList = await this.$api.json('goodsList');
-			if (type === 'refresh') {
-				this.goodsList = [];
-			}
-			//筛选，测试数据直接前端筛选了
-			if (this.filterIndex === 1) {
-				goodsList.sort((a, b) => b.sales - a.sales);
-			}
-			if (this.filterIndex === 2) {
-				goodsList.sort((a, b) => {
-					if (this.priceOrder == 1) {
-						return a.price - b.price;
-					}
-					return b.price - a.price;
-				});
-			}
-
-			this.goodsList = this.goodsList.concat(goodsList);
-
-			//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
-			this.loadingType = this.goodsList.length > list.total ? 'nomore' : 'more';
-			if (type === 'refresh') {
-				if (loading == 1) {
-					uni.hideLoading();
-				} else {
-					uni.stopPullDownRefresh();
-				}
-			}
+			// let list = await Api.apiCall('post', Api.goods.list, params);
+			// console.log(list)
+			// if (list) {
+			// 	let goodsList = list.data.records;
+			// 	if (type === 'refresh') {
+			// 		this.goodsList = [];
+			// 	}
+			// 	//筛选，测试数据直接前端筛选了
+			// 	if (this.filterIndex === 1) {
+			// 		goodsList.sort((a, b) => b.sales - a.sales);
+			// 	}
+			// 	if (this.filterIndex === 2) {
+			// 		goodsList.sort((a, b) => {
+			// 			if (this.priceOrder == 1) {
+			// 				return a.price - b.price;
+			// 			}
+			// 			return b.price - a.price;
+			// 		});
+			// 	}
+				
+			// 	this.goodsList = this.goodsList.concat(goodsList);
+				
+			// 	//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
+			// 	this.loadingType = this.goodsList.length > list.total ? 'nomore' : 'more';
+			// 	if (type === 'refresh') {
+			// 		if (loading == 1) {
+			// 			uni.hideLoading();
+			// 		} else {
+			// 			uni.stopPullDownRefresh();
+			// 		}
+			// 	}
+			// }	
 		},
 		//筛选点击
 		tabClick(index) {
@@ -210,7 +232,7 @@ export default {
 			//测试数据没有写id，用title代替
 			let id = item.id;
 			uni.navigateTo({
-				url: `/pages/product/product?id=${id}`
+				url: '/pages/goods/goodsDetail/goodsDetail?id='+id
 			});
 		},
 		stopPrevent() {}
@@ -365,43 +387,76 @@ page,
 	.goods-item {
 		display: flex;
 		flex-direction: column;
-		width: 48%;
+		flex-flow: nowrap;
+		width: 100%;
 		padding-bottom: 40upx;
-		&:nth-child(2n + 1) {
-			margin-right: 4%;
-		}
+		// &:nth-child(2n + 1) {
+		// 	margin-right: 4%;
+		// }
 	}
 	.image-wrapper {
-		width: 100%;
-		height: 330upx;
+		width: 55%;
+		height: 250upx;
 		border-radius: 3px;
 		overflow: hidden;
+		padding: 10upx;
 		image {
 			width: 100%;
 			height: 100%;
 			opacity: 1;
 		}
 	}
-	.title {
-		font-size: $font-lg;
-		color: $font-color-dark;
-		line-height: 80upx;
-	}
-	.price-box {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding-right: 10upx;
-		font-size: 24upx;
-		color: $font-color-light;
-	}
-	.price {
-		font-size: $font-lg;
-		color: $uni-color-primary;
-		line-height: 1;
-		&:before {
-			content: '￥';
-			font-size: 26upx;
+	.goods-detail {
+		display: inline-block;
+		width: 100%;
+		padding: 10upx;
+		.title {
+			font-size: $font-lg;
+			color: $font-color-dark;
+			line-height: 80upx;
+		}
+		.subhead {
+			color: #333;
+			font-size: 18upx;
+		}
+		.price-box {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-right: 10upx;
+			font-size: 24upx;
+			color: $font-color-light;
+			.price {
+				.priceSale {
+					font-size: 40upx;
+					color: $uni-color-primary;
+					line-height: 1;
+					&:before {
+						content: '￥';
+						font-size: 26upx;
+					}	
+				}
+				.pricemart {
+					font-size: 16upx;
+					color: #000;
+					text-decoration:line-through;
+					line-height: 1;
+					&:before {
+						content: '￥';
+						font-size: 26upx;
+					}	
+				}
+			}
+			.goodsBtn {
+				font-size: 30upx;
+				color: #fff;
+				background: red;
+				height: 70upx;
+				line-height: 70upx;
+				width: 150upx;
+				padding: 0;
+				margin: 0;
+			}
 		}
 	}
 }
