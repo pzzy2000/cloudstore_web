@@ -82,22 +82,11 @@ export const asyncRouterMap = [
          meta: {title: '添加商品', icon: 'product-add'},
        },
        {
-        path: 'skuinfo',
-         name: 'skuinfo',
-         component: () => import('@/views/pms/product/sku/info'),
-         meta: {title: 'SKU', icon: 'product-add'},
-       },
-       {
-        path: 'attribute',
-         name: 'editattribute',
-         component: () => import('@/views/pms/product/info/editinfo'),
-         meta: {title: '添加商品', icon: 'product-add'},
-       },
-       {
          path: 'info',
          name: 'goods_info',
          component: () => import('@/views/pms/product/info/editinfo'),
-         meta: {title: '商品详情', icon: 'product-list'}
+         meta: {title: '商品详情', icon: 'product-list'},
+         hidden: true
        },{
          path: 'category',
          name: 'goods_category',

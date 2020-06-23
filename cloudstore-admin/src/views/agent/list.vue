@@ -45,7 +45,7 @@
         <el-table-column label="审核状态" align="center" :formatter="showStatus">
         </el-table-column>
 
-        <el-table-column label="所属账号" align="center"  width="300" :formatter="showAccess">
+        <el-table-column label="所属账号" align="center"   :formatter="showAccess">
 
         </el-table-column>
 
