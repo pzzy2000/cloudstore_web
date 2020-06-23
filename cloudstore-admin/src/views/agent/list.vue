@@ -35,7 +35,7 @@
 
         </el-table-column>
         <el-table-column label="详细地址" align="center" width="300">
-                 <template slot-scope="scope">{{scope.row.detailAddress}}</template>
+          <template slot-scope="scope">{{scope.row.detailAddress}}</template>
         </el-table-column>
 
         <el-table-column label="代理商等级" width="150" align="center">
@@ -45,7 +45,7 @@
         <el-table-column label="审核状态" align="center" :formatter="showStatus">
         </el-table-column>
 
-        <el-table-column label="所属账号" align="center"   :formatter="showAccess">
+        <el-table-column label="所属账号" align="center" :formatter="showAccess">
 
         </el-table-column>
 
@@ -57,7 +57,7 @@
 
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdateUserInfo(scope.$index, scope.row)">查看
+            <el-button size="mini" @click="showinfo(scope.$index, scope.row)">查看
             </el-button>
           </template>
         </el-table-column>
@@ -105,47 +105,40 @@
         listLoading: true,
         multipleSelection: [],
         brandOptions: [],
-        userStatuses: [{ //0:正常;1:违规关闭;2:永久关闭
-          value: 0,
-          label: '正常'
-        }, {
-          value: 1,
-          label: '违规关闭'
-        }, {
-          value: 2,
-          label: '永久关闭'
-        }],
-        userTypes: [
-          //   {
-          //   value: 'supplier',
-          //   label: '供应商'
-          // },
-          {
-            value: 'platform',
-            label: '平台管理'
-          }
-        ],
-        verifyStatusOptions: [{
-          value: 1,
-          label: '审核通过'
-        }, {
-          value: 0,
-          label: '未审核'
-        }]
+        // userStatuses: [{ //0:正常;1:违规关闭;2:永久关闭
+        //   value: 0,
+        //   label: '正常'
+        // }, {
+        //   value: 1,
+        //   label: '违规关闭'
+        // }, {
+        //   value: 2,
+        //   label: '永久关闭'
+        // }],
+        // userTypes: [
+        //   //   {
+        //   //   value: 'supplier',
+        //   //   label: '供应商'
+        //   // },
+        //   {
+        //     value: 'platform',
+        //     label: '平台管理'
+        //   }
+        // ],
+        // verifyStatusOptions: [{
+        //   value: 1,
+        //   label: '审核通过'
+        // }, {
+        //   value: 0,
+        //   label: '未审核'
+        // }]
       }
     },
     created() {
       this.getList();
     },
     watch: {
-      selectProductCateValue: function(newValue) {
-        if (newValue != null && newValue.length == 2) {
-          this.listQuery.productCategoryId = newValue[1];
-        } else {
-          this.listQuery.productCategoryId = null;
-        }
 
-      }
     },
     filters: {
       verifyStatusFilter(value) {
@@ -209,16 +202,17 @@
         this.listQuery.pageNum = 1;
         this.getList();
       },
-      handleUpdateUserInfo(index, row) {
+      showinfo(index, row) {
 
         let pageNum = this.listQuery.pageNum;
         let pageSize = this.listQuery.pageSize;
-        let userId = row.id;
+        let id = row.id;
 
         this.$router.push({
-          path: '/sys/supplier/info',
+          path: '/sys/agent/info',
           query: {
-            supplierId: userId,
+            agentId: id,
+            action:0,
             pageNum: pageNum,
             pageSize: pageSize
           }

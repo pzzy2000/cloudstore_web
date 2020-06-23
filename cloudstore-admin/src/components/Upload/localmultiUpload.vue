@@ -18,16 +18,17 @@
     getToken
   } from '@/utils/auth'
 
+
+  import {
+    msg
+  } from '@/api/iunits'
+
   var token = getToken(); // 要保证取到
   // alert(token);
 
   export default {
-    name: 'multiUpload',
+    name: 'localmultiUpload',
     props: {
-      uploadUrl:{
-              type: String,
-              default: ''
-      },
       //图片属性数组
       value: Array,
       //最大上传图片数量
@@ -53,33 +54,36 @@
         dialogImageUrl: null,
         useOss: false, //使用oss->true;使用MinIO->false
         // ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
-        minioUploadUrl:this.uploadUrl
+        minioUploadUrl: 'http://120.24.156.254:18888/platform/sys/upload/entity/image/update'
       };
     },
-    created() {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  "+this.minioUploadUrl);
-    },
+
     computed: {
       fileList() {
         let fileList = [];
-        for (let i = 0; i < this.value.length; i++) {
-          fileList.push({
-            url: this.value[i]
-          });
+        if( typeof(this.value)=='undefined'){
+          return   fileList;
+        }else{
+          for (let i = 0; i < this.value.length; i++) {
+            fileList.push({
+              url: this.value[i].url
+            });
+          }
+          return fileList;
         }
-        return fileList;
+
       }
     },
     methods: {
       emitInput(fileList) {
         let value = [];
         for (let i = 0; i < fileList.length; i++) {
-          value.push(fileList[i].url);
+          value.push(fileList[i]);
         }
         this.$emit('input', value)
       },
       handleRemove(file, fileList) {
-        this.emitInput(fileList);
+        this.emit (fileList);
       },
       handlePreview(file) {
         this.dialogVisible = true;
@@ -107,17 +111,19 @@
         })
       },
       handleUploadSuccess(res, file) {
-        let url = this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name;
-        if (!this.useOss) {
-          //不使用oss直接获取图片路径
-          url = res.data.url;
+
+        let re = res.result;
+        if (re.code == 0) {
+          this.fileList.push({
+            name: file.name,
+            url: re.result.url+"&auth="+token,
+            id: re.result.id
+          });
+          this.emitInput(this.fileList);
+        } else {
+            msg("图片上传失败");
         }
 
-        this.fileList.push({
-          name: file.name,
-          url: url
-        });
-        this.emitInput(this.fileList);
       },
       handleExceed(files, fileList) {
         this.$message({

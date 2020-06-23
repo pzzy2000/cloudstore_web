@@ -78,24 +78,21 @@
             <el-input-dispatcher style="width: 214px" v-model="blicense.cardNo" placeholder="证件号码"></el-input-dispatcher>
           </el-form-item>
           <el-form-item label="证件照片：" required>
-            <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" limit="4"
-              :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
+            <localmulti-upload v-model="blicense.cardPhoto" :data="updateParams"></localmulti-upload>
           </el-form-item>
           <br />
-          <el-form-item label="营业执照照片：" required>
-            <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-preview="handlePictureCardPreview"
-              limit="4" :on-remove="handleRemove">
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
-          </el-form-item>
+          <div v-if="rwDispatcherState =='read'">
+                     <el-form-item label="营业执照照片：" required> </el-form-item>
+
+          </div>
+
+          <div v-else>
+               <el-form-item label="营业执照照片：" required>
+                 <localmulti-upload v-model="blicense.goodsPics"></localmulti-upload>
+               </el-form-item>
+          </div>
+
+
         </el-form>
         <div>
           <el-button style="float: right;margin-bottom: 10px;" @click="shownUpdateSbutton(true)" :style="{ display: shownUpdateSubelButton}"
@@ -115,46 +112,34 @@
 
         </div>
       </div>
-
     </el-card>
   </div>
+
 </template>
 
 <script>
+  import localmultiUpload from '@/components/Upload/localmultiUpload';
   import {
     searchSupplierDetail,saveSupplierInfo
-  } from '@/api/supplier'
+  } from '@/api/supplier' ;
 
-//   const defaultBaseInfo = {
-//     supplierName: '',
-//     phone: '',
-//     shopName: '',
-//     notice: '',
-//   };
-// const defaultBlicense = {
-//     licenseName: '',
-//     creditCode: '',
-//     introduce: '',
-//     workNumber: '',
-//     brand: '',
-//     startTime: '',
-//     phone: '',
-//     email: '',
-//     registerCapital: '',
-//     legalPerson: '',
-//     cardType: '',
-//     cardNo: '',
-//   };
   export default {
     name: "supplierBaseinfo",
+    components: {
+      localmultiUpload
+    },
     provide() {
       return {
         rwDispatcherProvider: this
       }
     },
     data() {
+
       return {
         // baseInfo: Object.assign({}, defaultBaseInfo),
+        updateParams:{
+          from:'SysUser'
+        },
         baseinfo:{
               supplierName: '',
               phone: '',
@@ -162,7 +147,7 @@
               notice: ''
         },
         blicense: {
-             licenseName: '',
+              licenseName: '',
               creditCode: '',
               introduce: '',
               workNumber: '',
@@ -174,12 +159,12 @@
               legalPerson: '',
               cardType: '',
               cardNo: '',
+              cardPhoto:[],
         },
         rwDispatcherState: 'write',
         shownUpdateButton: "none",
         shownUpdateSubelButton: "",
         supplierId: typeof(this.$route.query.supplierId) == 'undefined' ? null : this.$route.query.supplierId,
-
       }
     },
     mounted() {
@@ -231,6 +216,7 @@
            this.blicense.legalPerson = response.result.result.supplierMainInfo.legalPerson;
            this.blicense.cardType = response.result.result.supplierMainInfo.cardType;
            this.blicense.cardNo = response.result.result.supplierMainInfo.cardNo;
+           this.blicense.cardPhoto =[];
           }
         });
       },
@@ -243,6 +229,14 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+                console.log(this.blicense);
+                let  picId=[];
+                for(let  i=0; i<this.blicense.cardPhoto.length ; i++){
+                      let  x = this.blicense.cardPhoto[i];
+                      picId.push(this.blicense.cardPhoto[i].id);
+                }
+                a+b;
+                this.blicense.cardPhoto = picId;
                 saveSupplierInfo(this.baseinfo,this.blicense).then(response=>{
                   this.$message({
                     message: '修改成功',
@@ -263,6 +257,16 @@
         });
       },
 
+      handlePictureCardPreview(){
+
+      },
+
+      handleRemove(){
+
+      },
+      dialogVisible(){
+
+      }
 
     }
   }
