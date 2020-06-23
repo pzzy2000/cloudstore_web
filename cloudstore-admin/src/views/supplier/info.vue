@@ -78,7 +78,18 @@
             <el-input-dispatcher style="width: 214px" v-model="blicense.cardNo" placeholder="证件号码"></el-input-dispatcher>
           </el-form-item>
           <el-form-item label="证件照片：" required>
-            <localmulti-upload v-model="blicense.cardPhoto"></localmulti-upload>
+            <div v-if="rwDispatcherState =='read'">
+
+                <el-image  v-for=" (item,index) in blicense.cardPhoto" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
+                     <div slot="placeholder" class="image-slot">
+                       加载中<span class="dot">...</span>
+                     </div>
+                </el-image>
+
+            </div>
+            <div v-else>
+             <localmulti-upload v-model="blicense.cardPhoto"></localmulti-upload>
+            </div>
           </el-form-item>
           <br />
           <div v-if="rwDispatcherState =='read'">
@@ -122,6 +133,8 @@
   import {
     searchSupplierDetail,saveSupplierInfo
   } from '@/api/supplier' ;
+
+  import{photoUrl} from '@/api/iunits';
 
   export default {
     name: "supplierBaseinfo",
@@ -180,6 +193,7 @@
     mounted() {
 
     },
+
     methods: {
 
       shownUpdateSbutton(action) {

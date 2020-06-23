@@ -55,14 +55,14 @@
         if( typeof(this.value)=='undefined'){
           return   fileList;
         }else{
-          for (let i = 0; i < this.value.length; i++) {
-            let  xx =  this.value[i];
-            xx.url =xx.url+"&auth="+token;
-            fileList.push(xx);
-            // fileList.push({
-            //   url: this.value[i].url+"&auth="+token
-            // });
-          }
+          // for (let i = 0; i < this.value.length; i++) {
+          //   let  xx =  this.value[i];
+          //   xx.url =xx.url+"&auth="+token;
+          //   fileList.push(xx);
+          //   // fileList.push({
+          //   //   url: this.value[i].url+"&auth="+token
+          //   // });
+          // }
           return  this.value;
         }
 
