@@ -15,10 +15,10 @@
 					</template>
 					<template v-else>
 						<!-- #ifdef H5 || APP-PLUS -->
-						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toLogin"></image>
+						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toLogin">未登录</image>
 						<!-- #endif -->
 						<!-- #ifdef MP-WEIXIN -->
-						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toWeChatLogin"></image>
+						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toWeChatLogin">未登录</image>
                         <!-- #endif -->
 						<!-- #ifdef MP-ALIPAY -->
 						<view class="portrait"></view>
@@ -432,7 +432,8 @@ import { mapState,mapMutations } from 'vuex';
 			uni.navigateTo({
 				url: '/pages/public/login'
 			});
-		}, //在线客服,只有手机号的，请自己替换为手机号
+		}, 
+		//在线客服,只有手机号的，请自己替换为手机号
 		showChat() {
 			// #ifdef H5
 			let _this = this;
@@ -532,6 +533,10 @@ page{
 	align-items: center;
 	z-index: 1;
 	position: relative;
+	.member-top-c {
+		display: flex;
+		align-items: center;
+	}
 	.portrait {
 		width: 130upx;
 		height: 130upx;

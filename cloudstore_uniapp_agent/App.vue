@@ -491,5 +491,5 @@
 
 	.placeholder {
 		color: #999999;
-	}
+	}	
 </style>
