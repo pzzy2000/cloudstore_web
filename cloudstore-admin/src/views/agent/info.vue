@@ -7,92 +7,39 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="baseinfo" ref="baseinfoFrom" size="small" label-width="130px">
-          <el-divider content-position="left"><i class="el-icon-search"></i>商品基本信息</el-divider>
-          <el-form-item label="商品名称：" required prop="goodsName">
-            <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
+          <el-divider content-position="left"><i class="el-icon-search"></i>社区代理基本信息</el-divider>
+          <el-form-item label="代理名字名称：" prop="name">
+            <span>{{baseinfo.name}}</span>
           </el-form-item>
           <br />
-          <el-form-item label="退货规则：" prop="returnRuleId">
-            <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">
-
-            </el-select-dispatcher>
-          </el-form-item>
-
-          <el-form-item label="运费规则：" prop="freightRuleId">
-            <el-select-dispatcher v-model="baseinfo.freightRuleId" id="freightRuleId">
-            </el-select-dispatcher>
+          <el-form-item label="代理等级：" prop="returnRuleId">
+          <span v-if="baseinfo.levelBean !=null ">{{baseinfo.levelBean.name}}</span>
           </el-form-item>
           <br />
-          <el-form-item label="商品分类：" required prop="categoryOneId">
-            <el-select-dispatcher v-model="baseinfo.categoryOneId" :options="category1" remote placeholder="一级分类"
-              :loading="loading" v-on:change="seclectCategory($event, 1)">
-              <el-option v-for="item in category.one" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
-          </el-form-item>
-          <el-form-item required prop="categoryTwoId">
-            <el-select-dispatcher v-model="baseinfo.categoryTwoId" :options="category1" remote v-on:change="seclectCategory($event, 2)"
-              placeholder="二级分类" :loading="loading">
-              <el-option v-for="item in category.two" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
-          </el-form-item>
-          <el-form-item required prop="categoryThreeId">
-            <el-select-dispatcher v-model="baseinfo.categoryThreeId" :options="category1" remote v-on:change="seclectCategory($event, 3)"
-              placeholder="三级分类" :loading="loading">
-              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
+          <el-form-item label="联系电话：" prop="phone">
+            <span>{{baseinfo.phone}}</span>
           </el-form-item>
           <br />
 
 
 
-          <el-form-item label="地区：" required prop="provinceId">
-            <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"
-              v-on:change="selectDistrict($event, 1)">
-              <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
+          <el-form-item label="地区：" prop="provinceId">
+            <span v-if="baseinfo.provinceBean !=null " >{{baseinfo.provinceBean.name}}</span>
+            <span v-if="baseinfo.cityBean !=null ">{{baseinfo.cityBean.name}}</span>
+            <span v-if="baseinfo.areaBean !=null ">{{baseinfo.areaBean.name}}</span>
+            <span v-if="baseinfo.detailAddress !=null " >{{baseinfo.detailAddress}}</span>
           </el-form-item>
-          <el-form-item required prop="cityId">
-            <el-select-dispatcher v-model="baseinfo.cityId" :options="category1" remote placeholder="市" :loading="loading"
-              v-on:change="selectDistrict($event, 2)">
-              <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
-          </el-form-item>
-          <el-form-item required prop="areaId">
-            <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"
-              v-on:change="selectDistrict($event, 3)">
-              <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
-          </el-form-item>
+          <br />
 
-          <el-form-item label="副标题：" required prop="goodsSubtitle">
-            <el-input-dispatcher v-model="baseinfo.goodsSubtitle"></el-input-dispatcher>
+          <el-form-item label="审核状态：" prop="goodsSubtitle">
+            <span>{{baseinfo.status}}</span>
           </el-form-item>
           <br />
-          <el-form-item label="商品品牌：" prop="goodsBrand">
-            <el-input-dispatcher v-model="baseinfo.goodsBrand"></el-input-dispatcher>
+          <el-form-item label="所属账号：" prop="goodsBrand">
+            <span v-if="baseinfo.sysManagerUserBean !=null " >{{baseinfo.sysManagerUserBean.name}}</span>
           </el-form-item>
           <br />
-          <el-form-item label="商品货号：" prop="goodsNumber">
-            <el-input-dispatcher v-model="baseinfo.goodsNumber"></el-input-dispatcher>
-          </el-form-item>
-          <br />
-          <el-form-item label="商品售价：" required prop="salePrice">
-            <el-input-dispatcher v-model="baseinfo.salePrice"></el-input-dispatcher>
-          </el-form-item>
-          <br />
-          <el-form-item label="市场价：" required prop="martPrice">
-            <el-input-dispatcher v-model="baseinfo.martPrice"></el-input-dispatcher>
-          </el-form-item>
-          <br />
-          <el-form-item label="计量单位：" prop="unit">
-            <el-input-dispatcher v-model="baseinfo.unit"></el-input-dispatcher>
-          </el-form-item>
+
 
 
         </el-form>
@@ -139,9 +86,8 @@
   } from '@/api/sysdict';
 
   import {
-    getProduct,
-    createProduct
-  } from '@/api/product';
+    getAgentInfo
+  } from '@/api/agent';
 
   export default {
     name: "goodBaseinfo",
@@ -155,7 +101,13 @@
         // baseInfo: Object.assign({}, defaultBaseInfo),
         loading: false,
         baseinfo: {
-          id: null
+          // id: '',
+          // name:'',
+          // levelBean:{name:''},
+          // provinceBean:{name:''},
+          // cityBean:{name:''},
+          // areaBean:{name:''},
+          // sysManagerUserBean:{name:''}
         },
         category: {
           one: [],
@@ -173,8 +125,8 @@
           cancel: 'none',
           reset: "none"
         },
-        goodsId: null,
-        rwDispatcherState: 'write',
+        agentId: null,
+        rwDispatcherState: 'read',
       }
     },
     mounted() {
@@ -207,7 +159,7 @@
         this.button.add = "none";
         this.button.reset = "none";
         this.button.update = "none";
-        this.button.cancel = "none";
+        this.button.cancel = "";
       },
 
       showAddBut() {
@@ -225,29 +177,32 @@
       reload() {
         let action = this.$route.query.action; //1:增加 2：编辑 0:查看,默认是查看
 
-        action = parseInt((typeof(action) == 'undefined') ? "1" : action);
+        action = 0;
+
+
+        action = parseInt((typeof(action) == 'undefined') ? "2" : action);
         switch (action) {
           case 0:
             this.rwDispatcherState = "read"; //write  read
-            this.goodsId = (typeof(this.$route.query.goodsId) == 'undefined') ? -1 : this.$route.query.goodsId;
+            this.agentId = (typeof(this.$route.query.agentId) == 'undefined') ? null : this.$route.query.agentId;
             this.showinfoBut();
             break;
           case 1:
-            this.rwDispatcherState = "write"; //write  read
-            this.showAddBut();
-            this.baseinfo = {};
-            break;
+            // this.rwDispatcherState = "write"; //write  read
+            // this.showAddBut();
+            // this.baseinfo = {};
+            // break;
           case 2:
-            this.rwDispatcherState = "write";
-            this.goodsId = (typeof(this.$route.query.goodsId) == 'undefined') ? -1 : this.$route.query.goodsId;
-            this.showUpdateBut();
-            break;
+            // this.rwDispatcherState = "write";
+            // this.goodsId = (typeof(this.$route.query.goodsId) == 'undefined') ? -1 : this.$route.query.goodsId;
+            // this.showUpdateBut();
+            // break;
         }
         if (action == 2 || action == 0) {
           this.loadInfo();
         }
-        this.searchRootCategory();
-        this.selectRootDistrict();
+        // this.searchRootCategory();
+        // this.selectRootDistrict();
       },
 
 
@@ -343,15 +298,16 @@
 
       async loadInfo() {
 
-        if (this.goodsId === null) {
+        if (this.agentId === null) {
           msg("系统错误,没有发现商品信息[id]");
           return;
         };
-        let goodsId_ = this.goodsId;
-        console.log("load  goods info  goodsid : " + goodsId_);
-        await getProduct({
-          id: goodsId_
+        let agentId = this.agentId;
+        console.log("load  goods info  agentId : " + agentId);
+        await getAgentInfo({
+          id: agentId
         }).then(response => {
+          1 + 1;
           if (response) {
             this.baseinfo = response.result.result;
           } else {
@@ -370,12 +326,12 @@
 
       },
 
-      updateProduct(){
-         msg("更新");
+      updateProduct() {
+        msg("更新");
       },
 
-      resetProduct(){
-         msg("重置form");
+      resetProduct() {
+        msg("重置form");
       },
 
       addProduct() {

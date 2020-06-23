@@ -8,10 +8,9 @@ export function fetchList(params){
      data: switchForm(params)
     })
 }
-
-export function saveUpdateLevel(params){
+export function getAgentInfo(params){
     return request({
-      url:'/agent/level/save',
+      url:'/agent/get',
       method:'post',
      data: switchForm(params)
     })

@@ -8,6 +8,7 @@ import * as Common from './config/common.js'
 import * as Db from './config/db.js'
 import * as Config from './config/config.js'
 import Json from './Json' //测试用数据
+
 /**
  *  因工具函数属于公司资产, 所以直接在Vue实例挂载几个常用的函数
  *  所有测试用数据均存放于根目录json.js

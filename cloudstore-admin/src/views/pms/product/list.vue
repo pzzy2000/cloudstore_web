@@ -69,14 +69,14 @@
           <template slot-scope="scope">{{scope.row.goodsNumber}}</template>
         </el-table-column>
         <el-table-column label="销售价格/市场价" width="150" align="left">
-          <template slot-scope="scope" > ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>
+          <template slot-scope="scope"> ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>
         </el-table-column>
         <el-table-column label="状态" width="140" align="center">
           <template slot-scope="scope">
             上架：
-              <el-switch @change="handlePublishStatusChange(scope.$index, scope.row)" :active-value="1" :inactive-value="0"
-                v-model="scope.row.shelfStatus">
-              </el-switch>
+            <el-switch @change="handlePublishStatusChange(scope.$index, scope.row)" :active-value="1" :inactive-value="0"
+              v-model="scope.row.shelfStatus">
+            </el-switch>
 
           </template>
         </el-table-column>
@@ -304,8 +304,13 @@
       }
     },
     methods: {
-      addsku(index,row) {
-        this.$router.push({path:"/sys/goods/skuinfo",query:{goodsid:row.id}})
+      addsku(index, row) {
+        this.$router.push({
+          path: "/sys/goods/skuinfo",
+          query: {
+            goodsid: row.id
+          }
+        })
       },
       getProductSkuSp(row, index) {
         let spData = JSON.parse(row.spData);
@@ -487,21 +492,7 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      handlePublishStatusChange(index, row) {
-        let ids = [];
-        ids.push(row.id);
-        this.updatePublishStatus(row.shelfStatus, ids);
-      },
-      handleNewStatusChange(index, row) {
-        let ids = [];
-        ids.push(row.id);
-        this.updateNewStatus(row.newStatus, ids);
-      },
-      handleRecommendStatusChange(index, row) {
-        let ids = [];
-        ids.push(row.id);
-        this.updateRecommendStatus(row.recommandStatus, ids);
-      },
+  
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -518,10 +509,12 @@
         });
       },
       handleUpdateProduct(index, row) {
+        let productId = row.id;
         this.$router.push({
-          path: '/pms/updateProduct',
+          path: '/sys/goods/info',
           query: {
-            id: row.id
+            goodsId: productId,
+            action: 2,
           }
         });
       },
@@ -535,48 +528,8 @@
           }
         });
       },
-      handleShowVerifyDetail(index, row) {
-        console.log("handleShowVerifyDetail", row);
-      },
-      handleShowLog(index, row) {
-        console.log("handleShowLog", row);
-      },
-      updatePublishStatus(publishStatus, ids) {
-        let params = new URLSearchParams();
-        params.append('ids', ids);
-        params.append('publishStatus', publishStatus);
-        updatePublishStatus(params).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
-      },
-      updateNewStatus(newStatus, ids) {
-        let params = new URLSearchParams();
-        params.append('ids', ids);
-        params.append('newStatus', newStatus);
-        updateNewStatus(params).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
-      },
-      updateRecommendStatus(recommendStatus, ids) {
-        let params = new URLSearchParams();
-        params.append('ids', ids);
-        params.append('recommendStatus', recommendStatus);
-        updateRecommendStatus(params).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
-      },
+
+
       updateDeleteStatus(deleteStatus, ids) {
         let params = new URLSearchParams();
         params.append('ids', ids);

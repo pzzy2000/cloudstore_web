@@ -54,6 +54,7 @@
         </el-table-column>
       </el-table>
     </div>
+    <!--
     <div class="batch-operate-container">
       <el-select size="small" v-model="operateType" placeholder="批量操作">
         <el-option v-for="item in operates" :key="item.value" :label="item.label" :value="item.value">
@@ -63,6 +64,7 @@
         确定
       </el-button>
     </div>
+    -->
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize" :page-sizes="[5,10,15]" :current-page.sync="listQuery.pageNum" :total="total">

@@ -85,9 +85,9 @@
   </div>
 </template>
 <script>
-  import {
-    fetchList,saveUpdateLevel
-  } from '@/api/agent'
+  // import {
+  //   fetchList,saveUpdateLevel
+  // } from '@/api/agent'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 5,
@@ -160,11 +160,11 @@
 
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
-          this.listLoading = false;
-          this.list = response.result.result.records;
-          this.total = response.result.result.records.total;
-        });
+        // fetchList(this.listQuery).then(response => {
+        //   this.listLoading = false;
+        //   this.list = response.result.result.records;
+        //   this.total = response.result.result.records.total;
+        // });
       },
       add() {
         this.dialogVisible = true;

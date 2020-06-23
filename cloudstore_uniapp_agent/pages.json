@@ -44,18 +44,42 @@
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false	
+				"enablePullDownRefresh": false
 			}
-		}
-	],
-	"subPackages": [
+		},
 		{
-			"root":"packageE",
-			"pages": [
-				"pages/applyBusiness"
-			]
-		}
-	],
+			"path": "pages/category/category",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/goods/goodsDetail/goodsDetail",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+            "path" : "pages/agency/agency",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        },
+		{
+            "path" : "pages/cart/cart",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -71,7 +95,7 @@
 				"pagePath": "pages/index/index",
 				"iconPath": "static/tab-home.png",
 				"selectedIconPath": "static/tab-home-current.png",
-				"text": "供应商"
+				"text": "推荐"
 			},
 			{
 				"pagePath": "pages/category/category",
@@ -80,10 +104,10 @@
 				"text": "分类"
 			},
 			{
-				"pagePath": "pages/index/nearbyBusiness",
+				"pagePath": "pages/agency/agency",
 				"iconPath": "static/fujin.png",
 				"selectedIconPath": "static/fujin_.png",
-				"text": "附近商家"
+				"text": "我的代理"
 			},
 			{
 				"pagePath": "pages/cart/cart",
