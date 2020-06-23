@@ -22,7 +22,9 @@ export default {
 	   userlogin:"sys/manager/platform/login",
 	   reg:"sys/manager/platform/register/agent"
 	},
-	
+	goods: {
+	   list: '/goods/list' //获取商品列表
+	},
 	/**
 	 * 封装请求（async await 封装uni.request） 对应portal 项目
 	 * method	   post/get

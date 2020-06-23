@@ -44,18 +44,26 @@
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false	
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/category/category",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
 			}
 		}
-	],
-	"subPackages": [
-		{
-			"root":"packageE",
-			"pages": [
-				"pages/applyBusiness"
-			]
-		}
-	],
+	    ,{
+            "path" : "pages/nearbyBusiness/nearbyBusiness",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/cart/cart",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -80,7 +88,7 @@
 				"text": "分类"
 			},
 			{
-				"pagePath": "pages/index/nearbyBusiness",
+				"pagePath": "pages/nearbyBusiness/nearbyBusiness",
 				"iconPath": "static/fujin.png",
 				"selectedIconPath": "static/fujin_.png",
 				"text": "附近商家"
