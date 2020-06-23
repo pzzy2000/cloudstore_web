@@ -96,20 +96,26 @@
 
 
         </el-form>
-        <div>
+        <div style="text-align:center">
 
-          <el-button style="float: right;margin-bottom: 10px;" @click="addProduct" :style="{ display: button.add}" size="small">
+          <el-button style="float: none;margin-bottom: 10px;" @click="addProduct" :style="{ display: button.add}" size="small">
             增加
           </el-button>
 
-          <el-button style="float: right;margin-bottom: 10px;" @click="shownUpdateSbutton(true)" :style="{ display: button.update}"
+          <el-button style="float: none;margin-bottom: 10px;" @click="resetProduct" :style="{ display: button.reset}"
+            size="small">
+            重置
+          </el-button>
+
+
+          <el-button style="float: none;margin-bottom: 10px;" @click="updateProduct" :style="{ display: button.update}"
             size="small">
             更新
           </el-button>
 
-          <el-button style="float: right;margin-bottom: 10px;" @click="shownUpdateSbutton(false)" :style="{ display: button.cancel}"
+          <el-button style="float: none;margin-bottom: 10px;" @click="cancelList" :style="{ display: button.cancel}"
             size="small">
-            取消
+            返回
           </el-button>
 
         </div>
@@ -164,45 +170,86 @@
         button: {
           update: "none",
           add: "none",
-          cancel: 'none'
+          cancel: 'none',
+          reset: "none"
         },
         goodsId: null,
         rwDispatcherState: 'write',
       }
     },
     mounted() {
+      // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  mounted 2");
       // mounted在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作
     },
-    
-  
-    created() {
-      let action = this.$route.query.action; //1:增加 2：编辑 0:查看,默认是查看
-      action = parseInt((typeof(action) == 'undefined') ? "1" : action);
-      switch (action) {
-        case 0:
-          this.rwDispatcherState = "read"; //write  read
-          this.goodsId = (typeof(this.$route.query.goodsId) == 'undefined') ? -1 : this.$route.query.goodsId;
-          break;
-        case 1:
-          this.rwDispatcherState = "write"; //write  read
-          this.button.add = "";
-          break;
-        case 2:
-          this.rwDispatcherState = "write";
-          break;
 
-      }
-      if (action == 2 || action == 0) {
-        this.loadInfo();
-      }
-      this.searchRootCategory();
-      this.selectRootDistrict();
+    beforeMount() {},
+
+
+    created() {
+      this.reload();
+
     },
 
     mounted() {
+      this.reload()
+    },
 
+
+    watch: {
+      '$route'(to, from) {
+        console.log('to=' + to)
+        this.reload()
+      }
     },
     methods: {
+
+      showinfoBut() {
+        this.button.add = "none";
+        this.button.reset = "none";
+        this.button.update = "none";
+        this.button.cancel = "none";
+      },
+
+      showAddBut() {
+        this.button.add = "";
+        this.button.reset = "";
+        this.button.update = "none";
+        this.button.cancel = "none";
+      },
+      showUpdateBut() {
+        this.button.add = "none";
+        this.button.reset = "none";
+        this.button.update = "";
+        this.button.cancel = "";
+      },
+      reload() {
+        let action = this.$route.query.action; //1:增加 2：编辑 0:查看,默认是查看
+
+        action = parseInt((typeof(action) == 'undefined') ? "1" : action);
+        switch (action) {
+          case 0:
+            this.rwDispatcherState = "read"; //write  read
+            this.goodsId = (typeof(this.$route.query.goodsId) == 'undefined') ? -1 : this.$route.query.goodsId;
+            this.showinfoBut();
+            break;
+          case 1:
+            this.rwDispatcherState = "write"; //write  read
+            this.showAddBut();
+            this.baseinfo = {};
+            break;
+          case 2:
+            this.rwDispatcherState = "write";
+            this.goodsId = (typeof(this.$route.query.goodsId) == 'undefined') ? -1 : this.$route.query.goodsId;
+            this.showUpdateBut();
+            break;
+        }
+        if (action == 2 || action == 0) {
+          this.loadInfo();
+        }
+        this.searchRootCategory();
+        this.selectRootDistrict();
+      },
+
 
       searchRootCategory() {
         this.loading = true;
@@ -293,26 +340,15 @@
       },
 
 
-      shownUpdateSbutton(action) {
-        if (action == true) {
-          this.shownUpdateButton = ""
-          this.shownUpdateSubelButton = "none"
-          this.rwDispatcherState = "write" //write  read
-        } else {
-          this.shownUpdateButton = "none"
-          this.shownUpdateSubelButton = ""
-          this.rwDispatcherState = "read" //write  read
-        }
-
-      },
 
       async loadInfo() {
+
         if (this.goodsId === null) {
           msg("系统错误,没有发现商品信息[id]");
           return;
         };
-         let goodsId_ = this.goodsId;
-         console.log("load  goods info  goodsid : "+goodsId_);
+        let goodsId_ = this.goodsId;
+        console.log("load  goods info  goodsid : " + goodsId_);
         await getProduct({
           id: goodsId_
         }).then(response => {
@@ -323,6 +359,23 @@
           }
 
         });
+      },
+
+      cancelList() {
+        if (window.history.length > 1) {
+          this.$router.back()
+        } else {
+          this.$router.push('/sys/goods/list')
+        }
+
+      },
+
+      updateProduct(){
+         msg("更新");
+      },
+
+      resetProduct(){
+         msg("重置form");
       },
 
       addProduct() {
@@ -355,36 +408,6 @@
           }
         });
       },
-
-      // savebaseinfo(formName) {
-      //   this.$refs[formName].validate((valid) => {
-      //     if (valid) {
-      //       this.$confirm('是否提交数据', '提示', {
-      //         confirmButtonText: '确定',
-      //         cancelButtonText: '取消',
-      //         type: 'warning'
-      //       }).then(() => {
-      //         saveSupplierInfo(this.baseinfo, this.blicense).then(response => {
-      //           this.$message({
-      //             message: '修改成功',
-      //             type: 'success',
-      //             duration: 1000
-      //           });
-      //           this.$router.go(0)
-      //         });
-      //       });
-      //     } else {
-      //       this.$message({
-      //         message: '验证失败',
-      //         type: 'error',
-      //         duration: 1000
-      //       });
-      //       return false;
-      //     }
-      //   });
-      // },
-
-
     }
   }
 </script>
