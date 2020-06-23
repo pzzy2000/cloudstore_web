@@ -1,6 +1,6 @@
 <template> 
   <div>
-    <el-upload :action="useOss?ossUploadUrl:minioUploadUrl" :data="useOss?dataObj:null" list-type="picture-card"
+    <el-upload :action="minioUploadUrl" :data="null" list-type="picture-card"
       :file-list="fileList" :before-upload="beforeUpload" :on-remove="handleRemove" :on-success="handleUploadSuccess"
       :on-preview="handlePreview" :limit="maxCount" :on-exceed="handleExceed" :headers="myHeaders">
       <i class="el-icon-plus"></i>
@@ -39,21 +39,12 @@
     },
     data() {
       return {
-        dataObj: {
-          policy: '',
-          signature: '',
-          key: '',
-          ossaccessKeyId: '',
-          dir: '',
-          host: ''
-        },
         myHeaders: {
           auth: token
         },
         dialogVisible: false,
         dialogImageUrl: null,
-        useOss: false, //使用oss->true;使用MinIO->false
-        // ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
+        useOss: false,
         minioUploadUrl: 'http://120.24.156.254:18888/platform/sys/upload/entity/image/update'
       };
     },
@@ -65,25 +56,32 @@
           return   fileList;
         }else{
           for (let i = 0; i < this.value.length; i++) {
-            fileList.push({
-              url: this.value[i].url
-            });
+            let  xx =  this.value[i];
+            xx.url =xx.url+"&auth="+token;
+            fileList.push(xx);
+            // fileList.push({
+            //   url: this.value[i].url+"&auth="+token
+            // });
           }
-          return fileList;
+          return  this.value;
         }
 
       }
     },
     methods: {
       emitInput(fileList) {
-        let value = [];
-        for (let i = 0; i < fileList.length; i++) {
-          value.push(fileList[i]);
-        }
-        this.$emit('input', value)
+        // let value = [];
+        // for (let i = 0; i < fileList.length; i++) {
+        //   value.push(fileList[i]);
+        // }
+
+        // this.$emit('input', value)
+         this.$emit('input', fileList);
+
       },
       handleRemove(file, fileList) {
-        this.emit (fileList);
+        // this.$emit (fileList);
+        this.$emit('input', fileList);
       },
       handlePreview(file) {
         this.dialogVisible = true;
@@ -115,9 +113,10 @@
         let re = res.result;
         if (re.code == 0) {
           this.fileList.push({
-            name: file.name,
+            // name: file.name,
+            id:re.result.id,
             url: re.result.url+"&auth="+token,
-            id: re.result.id
+            uid: re.result.id
           });
           this.emitInput(this.fileList);
         } else {

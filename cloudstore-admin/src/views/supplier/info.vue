@@ -78,7 +78,7 @@
             <el-input-dispatcher style="width: 214px" v-model="blicense.cardNo" placeholder="证件号码"></el-input-dispatcher>
           </el-form-item>
           <el-form-item label="证件照片：" required>
-            <localmulti-upload v-model="blicense.cardPhoto" :data="updateParams"></localmulti-upload>
+            <localmulti-upload v-model="blicense.cardPhoto"></localmulti-upload>
           </el-form-item>
           <br />
           <div v-if="rwDispatcherState =='read'">
@@ -216,7 +216,7 @@
            this.blicense.legalPerson = response.result.result.supplierMainInfo.legalPerson;
            this.blicense.cardType = response.result.result.supplierMainInfo.cardType;
            this.blicense.cardNo = response.result.result.supplierMainInfo.cardNo;
-           this.blicense.cardPhoto =[];
+           this.blicense.cardPhoto =response.result.result.supplierMainInfo.cardPhotos;
           }
         });
       },
@@ -233,9 +233,8 @@
                 let  picId=[];
                 for(let  i=0; i<this.blicense.cardPhoto.length ; i++){
                       let  x = this.blicense.cardPhoto[i];
-                      picId.push(this.blicense.cardPhoto[i].id);
+                      picId.push(this.blicense.cardPhoto[i].uid);
                 }
-                a+b;
                 this.blicense.cardPhoto = picId;
                 saveSupplierInfo(this.baseinfo,this.blicense).then(response=>{
                   this.$message({
@@ -243,7 +242,7 @@
                     type: 'success',
                     duration: 1000
                   });
-                  this.$router.go(0)
+                  // this.$router.go(0)
                 });
             });
           } else {
