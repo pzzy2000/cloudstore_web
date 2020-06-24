@@ -34,7 +34,6 @@
         },
         rules: {
           name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-          level: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
           order: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
         }
       }

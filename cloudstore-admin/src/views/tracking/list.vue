@@ -32,6 +32,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button size="mini" style="float: right" @click="addLogistics">添加</el-button>
       <!--
       <el-button
         class="btn-add"
@@ -44,18 +45,22 @@
     <div class="table-container">
       <el-table ref="productTable"
                 :data="list"
-                style="width: 100%"
+                style="width: 80%"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
                 border>
-        <el-table-column type="selection" width="60" align="center" fixed ></el-table-column>
-        <el-table-column label="物流公司" width="200" align="center" fixed>
+        <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
+        <el-table-column label="物流公司" width="400px" align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
          </el-table-column>
-        <el-table-column label="物流公司编码" width="200" align="center">
+        <el-table-column label="物流公司编码" width="400px" align="center">
           <template slot-scope="scope">{{scope.row.code}}</template>
         </el-table-column>
-        <el-table-column label=""  align="center">
+        <el-table-column label="操作"  align="center">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="editlogis(scope.$index, scope.row)">编辑</el-button>
+            <el-button type="danger" size="mini">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -133,12 +138,12 @@
       },
 
       handleSelectionChange(val){
-            this.multipleSelection = val;
+        this.multipleSelection = val;
       },
 
       handleCurrentChange(val) {
-              this.listQuery.pageNum = val;
-              this.getList();
+        this.listQuery.pageNum = val;
+        this.getList();
       },
 
       handleSizeChange(val) {
@@ -153,6 +158,18 @@
               this.listQuery.pageNum = 1;
               this.listQuery.pageSize = val;
               this.getList();
+      },
+      addLogistics() {
+        this.$router.push({
+          path: "/sys/tracking/addlogistics",
+          query: {rds: "write"}
+        })
+      },
+      editlogis(index, row) {
+        this.$router.push({
+          path: "/sys/tracking/addlogistics",
+          query: {rds: "write", id: row.id}
+        })
       }
     }
   }
