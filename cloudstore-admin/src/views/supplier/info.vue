@@ -257,6 +257,7 @@
                     duration: 1000
                   });
                   // this.$router.go(0)
+                  this.$forceUpdate();
                 });
             });
           } else {
