@@ -8,4 +8,10 @@ export function fetchList(params){
      data: switchForm(params)
     })
 }
-
+export function getAgentInfo(params){
+    return request({
+      url:'/agent/get',
+      method:'post',
+     data: switchForm(params)
+    })
+}

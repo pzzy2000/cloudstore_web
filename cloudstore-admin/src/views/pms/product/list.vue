@@ -71,6 +71,15 @@
         <el-table-column label="销售价格/市场价" width="150" align="left">
           <template slot-scope="scope"> ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>
         </el-table-column>
+        <el-table-column label="商品图片" align="center">
+          <template slot-scope="scope">
+           <el-image  v-for=" (item,index) in scope.row.goodsPhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div>
+           </el-image>
+           </template>
+        </el-table-column>
         <el-table-column label="状态" width="140" align="center">
           <template slot-scope="scope">
             上架：
@@ -492,7 +501,7 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-  
+
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);

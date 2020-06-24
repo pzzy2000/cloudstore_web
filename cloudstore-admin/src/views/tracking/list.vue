@@ -32,12 +32,14 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <!--
       <el-button
         class="btn-add"
         @click="handleAddProduct()"
         size="mini">
         添加
       </el-button>
+      -->
     </el-card>
     <div class="table-container">
       <el-table ref="productTable"
@@ -65,7 +67,7 @@
              @current-change="handleCurrentChange"
              layout="total, sizes,prev, pager, next,jumper"
              :page-size="listQuery.pageSize"
-             :page-sizes="[20]"
+             :page-sizes="[10]"
              :current-page.sync="listQuery.pageNum"
              :total="total">
            </el-pagination>
@@ -79,7 +81,7 @@
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
-    pageSize: 20,
+    pageSize: 10,
     optType:'search'
   };
   export default {
@@ -151,7 +153,7 @@
               this.listQuery.pageNum = 1;
               this.listQuery.pageSize = val;
               this.getList();
-      },
+      }
     }
   }
 </script>

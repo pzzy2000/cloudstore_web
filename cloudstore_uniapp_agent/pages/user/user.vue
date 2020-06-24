@@ -15,10 +15,10 @@
 					</template>
 					<template v-else>
 						<!-- #ifdef H5 || APP-PLUS -->
-						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toLogin"></image>
+						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toLogin">{{user.name}}</image>
 						<!-- #endif -->
 						<!-- #ifdef MP-WEIXIN -->
-						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toWeChatLogin"></image>
+						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toWeChatLogin">{{user.name}}</image>
                         <!-- #endif -->
 						<!-- #ifdef MP-ALIPAY -->
 						<view class="portrait"></view>
@@ -140,7 +140,10 @@ import { mapState,mapMutations } from 'vuex';
 				integration: 0
 			},
 			couponList: [],
-			viewList: []
+			viewList: [],
+			user:{
+				name: null || '未登录'
+			}
 		};
 	},
 	async onLoad() {
@@ -204,22 +207,27 @@ import { mapState,mapMutations } from 'vuex';
 			// this.getHistory();
 		},
 		// 获取用户信息
-		async getuserinfo(){
-				let params = {  };
-				let data1 = await Api.apiCall('get', Api.index.userInfo, params);
-				if(!data1){
-						this.userDetailInfo={};
-				}
-				this.userDetailInfo = data1.member;
-				if(!data1.member){
-					this.logout();
-				}else{
-				uni.setStorageSync('userInfos', data1.member);
-					console.log(this.userDetailInfo)
-					let couponList = data1.histories;
-					this.couponList = couponList;
-				}
+		getuserinfo(){
+			let userInfo = uni.getStorageSync('userInfo');
+			if (userInfo) {
+				this.user = userInfo
+			}
 		},
+		// 	let params = {  };
+		// 	let data1 = await Api.apiCall('get', Api.index.userInfo, params);
+		// 	if(!data1){
+		// 		this.userDetailInfo={};
+		// 	}
+		// 	this.userDetailInfo = data1.member;
+		// 	if(!data1.member){
+		// 		this.logout();
+		// 	}else{
+		// 	uni.setStorageSync('userInfos', data1.member);
+		// 		console.log(this.userDetailInfo)
+		// 		let couponList = data1.histories;
+		// 		this.couponList = couponList;
+		// 	}
+		// },
 		// 获取浏览历史
 		async getHistory(){
 			if(this.hasLogin){
@@ -432,7 +440,8 @@ import { mapState,mapMutations } from 'vuex';
 			uni.navigateTo({
 				url: '/pages/public/login'
 			});
-		}, //在线客服,只有手机号的，请自己替换为手机号
+		}, 
+		//在线客服,只有手机号的，请自己替换为手机号
 		showChat() {
 			// #ifdef H5
 			let _this = this;
@@ -532,6 +541,10 @@ page{
 	align-items: center;
 	z-index: 1;
 	position: relative;
+	.member-top-c {
+		display: flex;
+		align-items: center;
+	}
 	.portrait {
 		width: 130upx;
 		height: 130upx;

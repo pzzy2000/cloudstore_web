@@ -72,10 +72,10 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center" fixed ></el-table-column>
-        <el-table-column label="用户名称" width="120" align="center" fixed>
+        <el-table-column label="用户名称"  align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
          </el-table-column>
-        <el-table-column label="登录名" width="120" align="center">
+        <el-table-column label="登录名"  align="center">
           <template slot-scope="scope">{{scope.row.access}}</template>
         </el-table-column>
         <el-table-column label="注册电话" width="140" align="center">
@@ -93,7 +93,7 @@
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-            <p>
+              <!--
               <el-button
                 size="mini"
                 @click="handleShowProduct(scope.$index, scope.row)">查看
@@ -102,16 +102,18 @@
                 size="mini"
                 @click="handleUpdateUserInfo(scope.$index, scope.row)">编辑
               </el-button>
+              -->
               <el-button
                 size="mini"
                 type="danger"
                 @click="handleDelete(scope.$index, scope.row)">删除
               </el-button>
-            </p>
+
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <!--
     <div class="batch-operate-container">
       <el-select
         size="small"
@@ -132,6 +134,7 @@
         确定
       </el-button>
     </div>
+    -->
     <div class="pagination-container">
       <el-pagination
         background
@@ -139,7 +142,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[20]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -152,14 +155,14 @@
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
-    pageSize: 5,
-    userType:'platform',
+    pageSize: 20
+    // userType:'platform',
   };
   export default {
     name: "productList",
     data() {
       return {
-       
+
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,

@@ -12,6 +12,10 @@
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
           </el-form-item>
           <br />
+          <el-form-item label="商品图片："  prop="goodsName">
+                     <single-upload v-model="goodsPics"></single-upload>
+          </el-form-item>
+          <br/>
           <el-form-item label="退货规则：" prop="returnRuleId">
             <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">
 
@@ -143,6 +147,8 @@
     createProduct
   } from '@/api/product';
 
+  import SingleUpload from '@/components/Upload/singleUpload';
+
   export default {
     name: "goodBaseinfo",
     provide() {
@@ -150,12 +156,16 @@
         rwDispatcherProvider: this
       }
     },
+    components: {
+      SingleUpload
+    },
     data() {
       return {
         // baseInfo: Object.assign({}, defaultBaseInfo),
         loading: false,
         baseinfo: {
-          id: null
+          id: null,
+          // goodsPics:[],
         },
         category: {
           one: [],
@@ -175,6 +185,7 @@
         },
         goodsId: null,
         rwDispatcherState: 'write',
+        goodsPics:[]
       }
     },
     mounted() {
@@ -354,6 +365,7 @@
         }).then(response => {
           if (response) {
             this.baseinfo = response.result.result;
+            this.goodsPics = this.baseinfo.goodsPics;
           } else {
             msg("系统错误,获得商品信息错误");
           }
@@ -387,9 +399,16 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+              let goodsPics=[];
+             for(let  i=0; i<this.goodsPics.length ; i++){
+                   let  x = this.goodsPics[i];
+                   goodsPics.push(this.goodsPics[i].uid);
+             }
+             this.baseinfo.goodsPics = goodsPics;
               createProduct(this.baseinfo).then(response => {
                 if (!response) return;
                 this.$refs['baseinfoFrom'].resetFields();
+                this.goodsPics=[];
                 this.$message({
                   message: '增加商品成功',
                   type: 'success',

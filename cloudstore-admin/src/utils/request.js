@@ -11,7 +11,8 @@ import {
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
-  timeout: 15000 // 请求超时时间
+  timeout: 15000 ,// 请求超时时间
+  minioUploadUrl:process.env.BASE_API+"/sys/upload/entity/image/update"
 })
 
 // request拦截器
