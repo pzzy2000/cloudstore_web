@@ -212,7 +212,19 @@
         goodsId: null,
         rwDispatcherState: 'write',
         goodsPics: [],
-        goodsDetailPics:[]
+        goodsDetailPics:[],
+        rules: {
+          goodsName: [{required: true, message: '请输入商品名称', trigger: 'blur'}],
+          categoryOneId: [{required: true, message: '请输入一级分类', trigger: 'blur'}],
+          categoryTwoId: [{required: true, message: '请输入二级分类', trigger: 'blur'}],
+          categoryThreeId: [{required: true, message: '请输入三级分类', trigger: 'blur'}],
+          provinceId: [{required: true, message: '请输入省', trigger: 'blur'}],
+          cityId: [{required: true, message: '请输入市', trigger: 'blur'}],
+          areaId: [{required: true, message: '请输入区/县', trigger: 'blur'}],
+          goodsSubtitle: [{required: true, message: '请输入副标题', trigger: 'blur'}],
+          salePrice: [{required: true, message: '请输入商品售价', trigger: 'blur'}],
+          martPrice: [{required: true, message: '请输入市场价', trigger: 'blur'}]
+        }
       }
     },
     mounted() {
@@ -445,7 +457,7 @@
       },
 
       resetProduct() {
-        msg("重置form");
+        this.$refs['baseinfo'].resetFields();
       },
 
       addProduct() {
