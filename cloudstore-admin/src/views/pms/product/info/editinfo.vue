@@ -12,26 +12,12 @@
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="商品图片：" prop="goodsName">
-            <div v-if="rwDispatcherState =='read'">
-              <el-image v-for=" (item,index) in goodsPics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;">
-                <div slot="placeholder" class="image-slot">
-                  加载中<span class="dot">...</span>
-                </div>
-              </el-image>
-            </div>
-            <div v-else>
-              <single-upload v-model="goodsPics"></single-upload>
-            </div>
-
-          </el-form-item>
-          <br />
           <el-form-item label="退货规则：" prop="returnRuleId">
             <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">
 
             </el-select-dispatcher>
           </el-form-item>
-          <br />
+
           <el-form-item label="运费规则：" prop="freightRuleId">
             <el-select-dispatcher v-model="baseinfo.freightRuleId" id="freightRuleId">
             </el-select-dispatcher>
@@ -96,11 +82,11 @@
             <el-input-dispatcher v-model="baseinfo.goodsNumber"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="商品售价：" required prop="salePrice">
+          <el-form-item label="商品售价：" prop="salePrice">
             <el-input-dispatcher v-model="baseinfo.salePrice"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="市场价：" required prop="martPrice">
+          <el-form-item label="市场价：" prop="martPrice">
             <el-input-dispatcher v-model="baseinfo.martPrice"></el-input-dispatcher>
           </el-form-item>
           <br />
@@ -157,8 +143,6 @@
     createProduct
   } from '@/api/product';
 
-  import SingleUpload from '@/components/Upload/singleUpload';
-
   export default {
     name: "goodBaseinfo",
     provide() {
@@ -166,16 +150,12 @@
         rwDispatcherProvider: this
       }
     },
-    components: {
-      SingleUpload
-    },
     data() {
       return {
         // baseInfo: Object.assign({}, defaultBaseInfo),
         loading: false,
         baseinfo: {
-          id: null,
-          // goodsPics:[],
+          id: null
         },
         category: {
           one: [],
@@ -195,7 +175,18 @@
         },
         goodsId: null,
         rwDispatcherState: 'write',
-        goodsPics:[]
+        rules: {
+          goodsName: [{required: true, message: '请输入商品名称', trigger: 'blur'}],
+          categoryOneId: [{required: true, message: '请输入一级分类', trigger: 'blur'}],
+          categoryTwoId: [{required: true, message: '请输入二级分类', trigger: 'blur'}],
+          categoryThreeId: [{required: true, message: '请输入三级分类', trigger: 'blur'}],
+          provinceId: [{required: true, message: '请输入省', trigger: 'blur'}],
+          cityId: [{required: true, message: '请输入市', trigger: 'blur'}],
+          areaId: [{required: true, message: '请输入区/县', trigger: 'blur'}],
+          goodsSubtitle: [{required: true, message: '请输入副标题', trigger: 'blur'}],
+          salePrice: [{required: true, message: '请输入商品售价', trigger: 'blur'}],
+          martPrice: [{required: true, message: '请输入市场价', trigger: 'blur'}]
+        }
       }
     },
     mounted() {
@@ -375,7 +366,6 @@
         }).then(response => {
           if (response) {
             this.baseinfo = response.result.result;
-            this.goodsPics = this.baseinfo.goodsPics;
           } else {
             msg("系统错误,获得商品信息错误");
           }
@@ -397,28 +387,21 @@
       },
 
       resetProduct(){
-         msg("重置form");
+        this.$refs['baseinfo'].resetFields();
       },
 
       addProduct() {
 
-        this.$refs['baseinfoFrom'].validate((valid) => {
+        this.$refs['baseinfo'].validate((valid) => {
           if (valid) {
             this.$confirm('是否提交数据', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              let goodsPics=[];
-             for(let  i=0; i<this.goodsPics.length ; i++){
-                   let  x = this.goodsPics[i];
-                   goodsPics.push(this.goodsPics[i].uid);
-             }
-             this.baseinfo.goodsPics = goodsPics;
               createProduct(this.baseinfo).then(response => {
                 if (!response) return;
-                this.$refs['baseinfoFrom'].resetFields();
-                this.goodsPics=[];
+                this.$refs['baseinfo'].resetFields();
                 this.$message({
                   message: '增加商品成功',
                   type: 'success',
