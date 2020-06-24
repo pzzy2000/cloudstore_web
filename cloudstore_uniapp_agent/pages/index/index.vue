@@ -447,7 +447,9 @@
 			async homeRecommendProduct() {
 				let params = {};
 				let groupHotGoodsList = await Api.apiCall('get', Api.index.homeRecommendProduct, params);
-				this.homeRecommendProductList = groupHotGoodsList.records;
+				if (groupHotGoodsList) {
+					this.homeRecommendProductList = groupHotGoodsList.records;	
+				}
 			},
 			/**
 			 * 获取轮播图
@@ -504,8 +506,9 @@
 					pageNum: this.pageNum
 				};
 				let list = await Api.apiCall('get', Api.goods.goodsList, params);
-
-				let goodsList = list.records;
+				if (list) {
+					let goodsList = list.records;	
+				}
 
 				if (type === 'refresh') {
 					this.newProductList = [];
@@ -533,7 +536,9 @@
 					sort: 2
 				};
 				let groupHotGoodsList = await Api.apiCall('get', Api.member.storeList, params);
-				this.storeList = groupHotGoodsList.records;
+				if (groupHotGoodsList) {
+					this.storeList = groupHotGoodsList.records;
+				}
 			},
 			/**
 			 * 获取团购信息
@@ -541,7 +546,9 @@
 			async getHotGoodsList() {
 				let params = {};
 				let groupHotGoodsList = await Api.apiCall('get', Api.goods.groupHotGoodsList, params);
-				this.groupHotGoodsList = groupHotGoodsList;
+				if (groupHotGoodsList) {
+					this.groupHotGoodsList = groupHotGoodsList;	
+				}
 			},
 
 			/**
@@ -683,7 +690,6 @@
 					couponId: item.id
 				};
 				let data = await Api.apiCall('post', Api.index.acceptCoupon, params);
-				console.log(data);
 				if (data) {
 					this.$api.msg(data);
 				}

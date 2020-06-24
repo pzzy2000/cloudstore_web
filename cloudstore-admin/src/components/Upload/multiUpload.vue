@@ -1,8 +1,8 @@
 <template> 
   <div>
-    <el-upload :action="useOss?ossUploadUrl:minioUploadUrl" :data="useOss?dataObj:null" list-type="picture-card"
-      :file-list="fileList" :before-upload="beforeUpload" :on-remove="handleRemove" :on-success="handleUploadSuccess"
-      :on-preview="handlePreview" :limit="maxCount" :on-exceed="handleExceed" :headers="myHeaders">
+    <el-upload :action="minioUploadUrl" :data="null" list-type="picture-card" :file-list="fileList" :before-upload="beforeUpload"
+      :on-remove="handleRemove" :on-success="handleUploadSuccess" :on-preview="handlePreview" :limit="maxCount"
+      :on-exceed="handleExceed" :headers="myHeaders">
       <i class="el-icon-plus"></i>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
@@ -18,16 +18,16 @@
     getToken
   } from '@/utils/auth'
 
+  import {
+    msg
+  } from '@/api/iunits'
+
   var token = getToken(); // 要保证取到
   // alert(token);
 
   export default {
     name: 'multiUpload',
     props: {
-      uploadUrl:{
-              type: String,
-              default: ''
-      },
       //图片属性数组
       value: Array,
       //最大上传图片数量
@@ -38,48 +38,49 @@
     },
     data() {
       return {
-        dataObj: {
-          policy: '',
-          signature: '',
-          key: '',
-          ossaccessKeyId: '',
-          dir: '',
-          host: ''
-        },
         myHeaders: {
           auth: token
         },
         dialogVisible: false,
         dialogImageUrl: null,
-        useOss: false, //使用oss->true;使用MinIO->false
-        // ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
-        minioUploadUrl:this.uploadUrl
+        useOss: false,
+        minioUploadUrl: 'http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update'
       };
     },
-    created() {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  "+this.minioUploadUrl);
-    },
+
     computed: {
       fileList() {
         let fileList = [];
-        for (let i = 0; i < this.value.length; i++) {
-          fileList.push({
-            url: this.value[i]
-          });
+        if (typeof(this.value) == 'undefined') {
+          return fileList;
+        } else {
+          // for (let i = 0; i < this.value.length; i++) {
+          //   let  xx =  this.value[i];
+          //   xx.url =xx.url+"&auth="+token;
+          //   fileList.push(xx);
+          //   // fileList.push({
+          //   //   url: this.value[i].url+"&auth="+token
+          //   // });
+          // }
+          return this.value;
         }
-        return fileList;
+
       }
     },
     methods: {
       emitInput(fileList) {
-        let value = [];
-        for (let i = 0; i < fileList.length; i++) {
-          value.push(fileList[i].url);
-        }
-        this.$emit('input', value)
+        // let value = [];
+        // for (let i = 0; i < fileList.length; i++) {
+        //   value.push(fileList[i]);
+        // }
+
+        // this.$emit('input', value)
+        this.$emit('input', fileList);
+
       },
       handleRemove(file, fileList) {
-        this.emitInput(fileList);
+        // this.$emit (fileList);
+        this.$emit('input', fileList);
       },
       handlePreview(file) {
         this.dialogVisible = true;
@@ -107,17 +108,21 @@
         })
       },
       handleUploadSuccess(res, file) {
-        let url = this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name;
-        if (!this.useOss) {
-          //不使用oss直接获取图片路径
-          url = res.data.url;
+
+        let re = res.result;
+        if (re.code == 0) {
+          this.fileList.push({
+            // name: file.name,
+            id: re.result.uid,
+            // url: re.result.url + "&auth=" + token,
+            url: re.result.url,
+            uid: re.result.uid
+          });
+          this.emitInput(this.fileList);
+        } else {
+          msg("图片上传失败");
         }
 
-        this.fileList.push({
-          name: file.name,
-          url: url
-        });
-        this.emitInput(this.fileList);
       },
       handleExceed(files, fileList) {
         this.$message({

@@ -77,10 +77,11 @@
           <el-form-item label="证件号码：" required>
             <el-input-dispatcher style="width: 214px" v-model="blicense.cardNo" placeholder="证件号码"></el-input-dispatcher>
           </el-form-item>
+          <br/>
           <el-form-item label="证件照片：" required>
             <div v-if="rwDispatcherState =='read'">
 
-                <el-image  v-for=" (item,index) in blicense.cardPhoto" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
+                <el-image  v-for=" (item,index) in cardPhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
                      <div slot="placeholder" class="image-slot">
                        加载中<span class="dot">...</span>
                      </div>
@@ -88,21 +89,23 @@
 
             </div>
             <div v-else>
-             <localmulti-upload v-model="blicense.cardPhoto"></localmulti-upload>
+             <localmulti-upload v-model="cardPhotos"></localmulti-upload>
             </div>
           </el-form-item>
           <br />
+          <el-form-item label="营业执照照片：" required>
           <div v-if="rwDispatcherState =='read'">
-                     <el-form-item label="营业执照照片：" required> </el-form-item>
-
+                    <el-image  v-for=" (item,index) in licensePhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
+                         <div slot="placeholder" class="image-slot">
+                           加载中<span class="dot">...</span>
+                         </div>
+                    </el-image>
           </div>
 
           <div v-else>
-               <el-form-item label="营业执照照片：" required>
-                 <localmulti-upload v-model="blicense.goodsPics"></localmulti-upload>
-               </el-form-item>
+                   <localmulti-upload v-model="licensePhotos"></localmulti-upload>
           </div>
-
+         </el-form-item>
 
         </el-form>
         <div>
@@ -174,6 +177,8 @@
               cardNo: '',
               cardPhoto:[],
         },
+        cardPhotos:[],
+        licensePhotos:[],
         rwDispatcherState: 'write',
         shownUpdateButton: "none",
         shownUpdateSubelButton: "",
@@ -230,7 +235,8 @@
            this.blicense.legalPerson = response.result.result.supplierMainInfo.legalPerson;
            this.blicense.cardType = response.result.result.supplierMainInfo.cardType;
            this.blicense.cardNo = response.result.result.supplierMainInfo.cardNo;
-           this.blicense.cardPhoto =response.result.result.supplierMainInfo.cardPhotos;
+           this.cardPhotos =response.result.result.supplierMainInfo.cardPhotos;
+           this.licensePhotos = response.result.result.supplierMainInfo.licensePhotos;
           }
         });
       },
@@ -245,12 +251,23 @@
             }).then(() => {
                 console.log(this.blicense);
                 let  picId=[];
-                for(let  i=0; i<this.blicense.cardPhoto.length ; i++){
-                      let  x = this.blicense.cardPhoto[i];
-                      picId.push(this.blicense.cardPhoto[i].uid);
+                for(let  i=0; i<this.cardPhotos.length ; i++){
+                      let  x = this.cardPhotos[i];
+                      picId.push(this.cardPhotos[i].uid);
                 }
+
+
                 this.blicense.cardPhoto = picId;
+
+                let  licensePhotoId=[];
+                for(let  i=0; i<this.licensePhotos.length ; i++){
+                      let  x = this.licensePhotos[i];
+                      licensePhotoId.push(this.licensePhotos[i].uid);
+                }
+                this.blicense.licensePhoto = licensePhotoId;
                 saveSupplierInfo(this.baseinfo,this.blicense).then(response=>{
+                  this.cardPhotos =response.result.result.supplierMainInfo.cardPhotos;
+                  this.rwDispatcherState="read";
                   this.$message({
                     message: '修改成功',
                     type: 'success',

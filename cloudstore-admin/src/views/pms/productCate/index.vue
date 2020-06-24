@@ -3,6 +3,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
+      <el-button type="primary" size="mini" style="float: right;" @click="addlevel">添加</el-button>
     <!--  <el-button
         class="btn-add"
         @click="handleAddProductCate()"
@@ -61,6 +62,11 @@
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
             </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDeletethislevel(scope.$index, scope.row)">删除
+            </el-button>
           <!-- <el-button
               size="mini"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
@@ -98,7 +104,7 @@
 </template>
 
 <script>
-  import {fetchList,deleteProductCate,updateShowStatus,updateNavStatus} from '@/api/productCate'
+  import {fetchList,deleteProductCate,updateShowStatus,updateNavStatus,deleteGoodlevel} from '@/api/productCate'
 
   export default {
     name: "productCateList",
@@ -111,8 +117,7 @@
           pageNum: 1,
           pageSize: 10,
           parentId: 0,
-        },
-
+        }
       }
     },
     created() {
@@ -182,31 +187,55 @@
           });
         });
       },
+      addlevel() {
+        // console.log(this.list);
+        this.$router.push({
+          path: "/sys/goods/addlevel",
+          query: {
+            parentId: this.$route.query.parentId,
+            level: this.list[0].level
+          }
+        });
+      },
       handleShowNextLevel(index, row) {
         this.$router.push({path: '/sys/goods/category', query: {parentId: row.id}})
       },
       handleTransferProduct(index, row) {
         console.log('handleAddProductCate');
       },
-      handleUpdate(index, row) {
-        this.$router.push({path:'/pms/updateProductCate',query:{id:row.id}});
-      },
-      handleDelete(index, row) {
-        this.$confirm('是否要删除该品牌', '提示', {
+      handleDeletethislevel(index, row) {
+        this.$confirm('是否要删除该分类', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteProductCate(row.id).then(response => {
-            this.$message({
-              message: '删除成功',
-              type: 'success',
-              duration: 1000
-            });
-            this.getList();
-          });
-        });
-      }
+          deleteGoodlevel('/goods/category/delete', {'ids': row.id}).then(res => {
+            console.log(res);
+            if (res.result.code == 0){
+              this.getList();
+            }
+          })
+        })
+      },
+      handleUpdate(index, row) {
+        this.$router.push({path:'/pms/updateProductCate',query:{id:row.id}});
+      },
+      // handleDelete(index, row) {
+      //   this.$confirm('是否要删除该品牌', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }).then(() => {
+      //     deleteProductCate(row.id).then(response => {
+      //       this.$message({
+      //         message: '删除成功',
+      //         type: 'success',
+      //         duration: 1000
+      //       });
+      //       this.getList();
+      //     });
+      //   });
+      // }
     },
     filters: {
       levelFilter(value) {

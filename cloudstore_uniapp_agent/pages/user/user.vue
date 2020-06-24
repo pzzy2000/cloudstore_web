@@ -146,7 +146,7 @@ import { mapState,mapMutations } from 'vuex';
 			}
 		};
 	},
-	async onLoad() {
+	onLoad() {
 		this.getData()
 	},
 	async onShow() {

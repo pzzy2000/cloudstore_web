@@ -15,14 +15,19 @@
 					分享到
 				</view>
 				<view class="share-list">
-					<view 
+					<!-- <view 
 						v-for="(item, index) in shareList" :key="index"
 						class="share-item" 
 						@click="shareToFriend(item.text)"
+					> -->
+					<button
+						v-for="(item, index) in shareList" :key="index"
+						class="share-item" 
+						open-type="share"
 					>
 						<image :src="item.icon" mode=""></image>
 						<text>{{item.text}}</text>
-					</view>
+					</button>
 				</view>
 			</scroll-view>
 			<view class="bottom b-t" @click="toggleMask">取消</view>
@@ -182,6 +187,9 @@
 	.share-list{
 		display:flex;
 		flex-wrap: wrap;
+		button::after{
+			border: none !important;
+		}
 	}
 	.share-item{
 		min-width: 33.33%;
@@ -190,6 +198,8 @@
 		justify-content: center;
 		align-items: center;
 		height: 180upx;
+		border: none;
+		background-color: #fff;
 		image{
 			width: 80upx;
 			height: 80upx;

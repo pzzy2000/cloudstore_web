@@ -1,8 +1,8 @@
 <template> 
   <div>
-    <el-upload :action="minioUploadUrl" :data="null" list-type="picture-card"
-      :file-list="fileList" :before-upload="beforeUpload" :on-remove="handleRemove" :on-success="handleUploadSuccess"
-      :on-preview="handlePreview" :limit="maxCount" :on-exceed="handleExceed" :headers="myHeaders">
+    <el-upload :action="minioUploadUrl" :data="null" list-type="picture-card" :file-list="fileList" :before-upload="beforeUpload"
+      :on-remove="handleRemove" :on-success="handleUploadSuccess" :on-preview="handlePreview" :limit="maxCount"
+      :on-exceed="handleExceed" :headers="myHeaders">
       <i class="el-icon-plus"></i>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
@@ -17,7 +17,6 @@
   import {
     getToken
   } from '@/utils/auth'
-
 
   import {
     msg
@@ -52,9 +51,9 @@
     computed: {
       fileList() {
         let fileList = [];
-        if( typeof(this.value)=='undefined'){
-          return   fileList;
-        }else{
+        if (typeof(this.value) == 'undefined') {
+          return fileList;
+        } else {
           // for (let i = 0; i < this.value.length; i++) {
           //   let  xx =  this.value[i];
           //   xx.url =xx.url+"&auth="+token;
@@ -63,7 +62,7 @@
           //   //   url: this.value[i].url+"&auth="+token
           //   // });
           // }
-          return  this.value;
+          return this.value;
         }
 
       }
@@ -76,7 +75,7 @@
         // }
 
         // this.$emit('input', value)
-         this.$emit('input', fileList);
+        this.$emit('input', fileList);
 
       },
       handleRemove(file, fileList) {
@@ -114,13 +113,13 @@
         if (re.code == 0) {
           this.fileList.push({
             // name: file.name,
-            id:re.result.id,
-            url: re.result.url+"&auth="+token,
+            id: re.result.id,
+            url: re.result.url + "&auth=" + token,
             uid: re.result.id
           });
           this.emitInput(this.fileList);
         } else {
-            msg("图片上传失败");
+          msg("图片上传失败");
         }
 
       },

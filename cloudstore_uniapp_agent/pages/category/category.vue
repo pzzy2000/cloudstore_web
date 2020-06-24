@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="navbar" :style="{ position: headerPosition, top: headerTop }">
+		<view class="navbar" :style="[{'margin-top': statusBarHeight+45+'px'}]">
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量优先</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
@@ -56,6 +56,7 @@ export default {
 	},
 	data() {
 		return {
+			statusBarHeight: '',
 			cateMaskState: 0, //分类面板展开状态
 			headerPosition: 'fixed',
 			headerTop: '0px',
@@ -70,8 +71,8 @@ export default {
 			goodsList: []
 		};
 	},
-
 	onLoad(options) {
+		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 		// #ifdef H5
 		//this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight + 'px';
 		// #endif
