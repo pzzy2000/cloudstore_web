@@ -24,7 +24,7 @@
 		</view>
 
 		<!--  分享 -->
-		<view class="share-section" @click="share">
+		<!-- <view class="share-section">
 			<view class="share-icon">
 				<text class="yticon icon-xingxing"></text>
 				返
@@ -35,7 +35,7 @@
 				立即分享
 				<text class="yticon icon-you"></text>
 			</view>
-		</view>
+		</view> -->
 
 		<view class="c-list">
 			<view class="c-row b-b" v-if="specList && specList.length > 0" @click="toggleSpec">
@@ -121,7 +121,7 @@
 
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="joinAgent">加入代理</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="addCart(goods)">加入收藏</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
 			</view>
 		</view>
 
@@ -222,6 +222,15 @@ export default {
 			specChildList: []
 		};
 	},
+	onShareAppMessage(res) {
+		console.log(res)
+		if (res.from === 'button') {// 来自页面内分享按钮
+		}
+		return {
+		  title: '商品',
+		  path: '/pages/goods/goodsDetail/goodsDetail?id=1'
+		}
+	},
 	async onLoad(ops) {
 		this.goodsId = ops.id;
 		if (this.goodsId) {
@@ -261,10 +270,11 @@ export default {
 		// 		var subImages = goods.albumPics;
 		// 		this.small = subImages.split(',');
 		// 		//await this.$api.json('detailData');
+		let shareList = await this.$api.json('shareList');
 		// 		let shareList = await this.$api.json('shareList');
 		// 		this.loaded = true;
 		// 		this.detailData = detailData;
-		// 		this.shareList = shareList;
+				this.shareList = shareList;
 		// 		this.specList = goods.productAttributeValueList;
 		// 		this.skuList = goods.skuStockList;
 		// 		if (this.specList){

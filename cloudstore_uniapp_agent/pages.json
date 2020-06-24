@@ -1,14 +1,6 @@
 {
 	"pages": [
 		{
-			"path": "pages/welcome/welcome",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-		}, 
-		{
 
 			"path": "pages/public/login",
 			"style": {
@@ -50,7 +42,7 @@
 		{
 			"path": "pages/category/category",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "分类",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
@@ -58,7 +50,7 @@
 		{
 			"path": "pages/goods/goodsDetail/goodsDetail",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "商品详情",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}

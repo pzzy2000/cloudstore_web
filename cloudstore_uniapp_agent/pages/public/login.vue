@@ -19,18 +19,15 @@
 				</view>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
-
 			<!-- <button v-if="isWeiXin == 1" class="confirm-btn" @click="wechatH5Login" :disabled="logining">微信授权登录</button>  -->
-
 			<view class="forget-section" @click="toForget">忘记密码?</view>
 			<!-- 
 			<view class="forget-section" @click="toLoginCode">验证码登录</view>
 			-->
-
 			<!-- #endif -->
 			<!-- #ifdef MP-WEIXIN -->
-			<button class="confirm-btn" open-type="getUserInfo" @getuserinfo="wxGetUserInfo" withCredentials="true" v-if="isGetPhone == false">微信登录</button>
-
+			<button class="confirm-btn" open-type="getUserInfo" @getuserinfo="wxGetUserInfo" withCredentials="true">微信登录</button>
+			<!-- <button class="confirm-btn" open-type="getUserInfo" @getuserinfo="wxGetUserInfo" withCredentials="true" v-if="isGetPhone == false">微信登录</button> -->
 			<!-- #endif -->
 
 			<!-- #ifdef APP-PLUS -->
@@ -64,11 +61,14 @@
 				isWeiXin: false,
 				sysInfo: '',
 				logining: false,
+				loginCode: '',//获取code
+				loginInfo: ''
 			};
 		},
 		onLoad() {
 			this.sysInfo = this.$db.get('sysInfo');
 			this.isWeiXin = this.$config.isWeiXin;
+			//this.getWxlogin()
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
@@ -106,54 +106,138 @@
 					escape(href) +
 					'&response_type=code&scope=snsapi_userinfo&state=mallplus#wechat_redirect';
 			},
-			wxGetUserInfo: function(res) {
-				if (!res.detail.iv) {
-					uni.showToast({
-						title: '您取消了授权,登录失败',
-						icon: 'none'
-					});
-					return false;
-				}
-				// this.login(res.detail.rawData);
-				const that = this;
-				let datas = '';
-				let errmsg = '';
+			getWxlogin () {
 				uni.login({
 					provider: 'weixin',
 					success: function(loginRes) {
-
-						var params = {
-							code: loginRes.code,
-							userInfo: res.detail.rawData,
-							cloudID: res.detail.cloudID,
-							encrypted_data: res.detail.encryptedData,
-							iv: res.detail.iv,
-							source: 2,
-							signature: res.detail.signature
-						};
-						that.loginByWeixinNoPhone(params);
+						this.loginCode = loginRes.code
+						console.log(this.loginCode)
 					}
 				});
 			},
-			loginByWeixinNoPhone(datas) {
+			checksession : function() {
 				var that = this;
-				wx.request({
-					url: Api.BASEURI + Api.index.appletLogin_by_weixin,
+				uni.checkSession({
+					success: function(res){
+						console.log("不需要重新登录");
+						// uni.switchTab({
+						// 	url: '/pages/index/index'
+						// });
+						let datas = '';
+						let errmsg = '';
+						uni.login({
+							provider: 'weixin',
+							success: function(loginRes) {
+								console.log(loginRes)
+								console.log(that.loginInfo)
+								var params = {
+									code: loginRes.code,
+									userInfo: that.loginInfo.detail.rawData,
+									cloudId: that.loginInfo.detail.cloudID,
+									encryptedData: that.loginInfo.detail.encryptedData,
+									iv: that.loginInfo.detail.iv,
+									source: 2,
+									signature: that.loginInfo.detail.signature,
+									userType:'agent',
+								};
+								console.log(params)
+								// uni.switchTab({
+								// 	url: '/pages/index/index'
+								// });
+								that.loginByWeixinNoPhone(params);
+							}
+						});
+			　　　　},
+					fail: function(res){
+						const that = this;
+						let datas = '';
+						let errmsg = '';
+						uni.login({
+							provider: 'weixin',
+							success: function(loginRes) {
+								console.log(loginRes)
+								console.log(that.loginInfo)
+								var params = {
+									code: loginRes.code,
+									userInfo: that.loginInfo.detail.rawData,
+									cloudID: that.loginInfo.detail.cloudID,
+									encrypted_data: that.loginInfo.detail.encryptedData,
+									iv: that.loginInfo.detail.iv,
+									source: 2,
+									signature: that.loginInfo.detail.signature,
+									userType:'agent',
+								};
+								console.log(params)
+								// uni.switchTab({
+								// 	url: '/pages/index/index'
+								// });
+								that.loginByWeixinNoPhone(params);
+							}
+						});
+					}
+				})
+			},
+			wxGetUserInfo : function(res) {
+				this.checksession (res)
+				this.loginInfo = res
+				// if (!res.detail.iv) {
+				// 	uni.showToast({
+				// 		title: '您取消了授权,登录失败',
+				// 		icon: 'none'
+				// 	});
+				// 	return false;
+				// }
+				// this.login(res.detail.rawData);
+				// const that = this;
+				// let datas = '';
+				// let errmsg = '';
+				// uni.login({
+				// 	provider: 'weixin',
+				// 	success: function(loginRes) {
+				// 		console.log(loginRes)
+				// 		var params = {
+				// 			code: loginRes.code,
+				// 			userInfo: res.detail.rawData,
+				// 			cloudID: res.detail.cloudID,
+				// 			encrypted_data: res.detail.encryptedData,
+				// 			iv: res.detail.iv,
+				// 			source: 2,
+				// 			signature: res.detail.signature
+				// 		};
+				// 		uni.switchTab({
+				// 			url: '/pages/index/index'
+				// 		});
+				// 		//that.loginByWeixinNoPhone(params);
+				// 	}
+				// });
+			},
+			loginByWeixinNoPhone(datas) {
+				console.log(datas)
+				// var that = this;
+				// let data =  Api.apiCall('post', Api.agent.wx, datas);
+				// if (data) {
+				// 	console.log(data)
+				// }
+				uni.request({
+					// url: 'http://120.24.156.254:18888/platform/'+Api.agent.wx,
+					url: 'http://192.168.0.27:8088/'+Api.agent.wx,
 					method: 'post',
 					data: datas,
 					success: function(res) {
 						uni.showToast({
-							title: '登录成功'
+							title: '请求已成功'
 						});
-						that.login(res.data.data);
-						that.$db.set('token', res.data.data.tokenHead + res.data.data.token);
-						that.$db.set('userInfos', res.data.data.userInfo);
+						console.log(res)
+						// console.log(res)
+						// that.login(res.data.data);
+						// that.$db.set('token', res.data.data.tokenHead + res.data.data.token);
+						// that.$db.set('userInfos', res.data.data.userInfo);
 
-						setTimeout(function() {
-							uni.switchTab({
-								url: '/pages/index/index'
-							});
-						}, 1000);
+						// setTimeout(function() {
+						// 	uni.switchTab({
+						// 		url: '/pages/index/index'
+						// 	});
+						// }, 1000);
 					}
 				});
 			},
@@ -162,7 +246,6 @@
 			 */
 			wxGetUserInfo1: function(res) {
 				let ress = res;
-				console.log('-----getUserInfo-----', ress);
 				if (!ress.detail.iv) {
 					uni.showToast({
 						title: '您取消了授权,登录失败',
@@ -176,7 +259,6 @@
 				uni.login({
 					provider: 'weixin',
 					success: function(loginRes) {
-						console.log('=====login=====', loginRes);
 						var params = {
 							code: loginRes.code,
 							userInfo: ress.detail.rawData,
@@ -186,9 +268,12 @@
 							source: 2,
 							signature: ress.detail.signature
 						};
-						that.getAppletOpenId(params);
+						//that.getAppletOpenId(params);
 					}
 				});
+				uni.navigateTo({
+					url: '/pages/index/index'
+				})
 			},
 			/**
 			 * 获取openid
@@ -377,12 +462,10 @@
 				let data = await Api.apiCall('post', Api.agent.userlogin, params);
 				//this.logining = false;
 				if (data) {
-					console.log(data);
 					this.$api.msg("登录成功");
 					that.login(data);
 					uni.setStorageSync('userInfo', data.result);
 					uni.setStorageSync('token', data.result.token);
-					console.log(uni.getStorageSync('token'));
 					uni.switchTab({
 						url: '/pages/index/index'
 					});

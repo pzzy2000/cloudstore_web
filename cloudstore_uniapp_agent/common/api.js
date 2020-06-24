@@ -16,11 +16,19 @@ export default {
 	/**
 	 * 接口名称
 	 */
-	 
+	index: {
+		bannerList: '',
+		selectNotRecive: ''
+	},
+	member: {
+		storeList: ''
+	},
 	agent:{//用户接口
 	   userinfo:"/agent/get",//获取用户信息	
 	   userlogin:"sys/manager/platform/login",
-	   reg:"sys/manager/platform/register/agent"
+	   reg:"sys/manager/platform/register/agent",
+	   list: '/agent/goods/list' ,//获取代理商代理的商品信息
+	   wx:'sys/manager/platform/weixin/login' //获取用户登录微信信息
 	},
 	goods: { //商品接口
 	   list: '/goods/list' ,//获取商品列表
