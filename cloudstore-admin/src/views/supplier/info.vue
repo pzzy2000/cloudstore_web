@@ -93,17 +93,19 @@
             </div>
           </el-form-item>
           <br />
+          <el-form-item label="营业执照照片：" required>
           <div v-if="rwDispatcherState =='read'">
-                     <el-form-item label="营业执照照片：" required> </el-form-item>
-
+                    <el-image  v-for=" (item,index) in licensePhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
+                         <div slot="placeholder" class="image-slot">
+                           加载中<span class="dot">...</span>
+                         </div>
+                    </el-image>
           </div>
 
           <div v-else>
-               <el-form-item label="营业执照照片：" required>
-                 <localmulti-upload v-model="blicense.goodsPics"></localmulti-upload>
-               </el-form-item>
+                   <localmulti-upload v-model="licensePhotos"></localmulti-upload>
           </div>
-
+         </el-form-item>
 
         </el-form>
         <div>
@@ -176,6 +178,7 @@
               cardPhoto:[],
         },
         cardPhotos:[],
+        licensePhotos:[],
         rwDispatcherState: 'write',
         shownUpdateButton: "none",
         shownUpdateSubelButton: "",
@@ -233,6 +236,7 @@
            this.blicense.cardType = response.result.result.supplierMainInfo.cardType;
            this.blicense.cardNo = response.result.result.supplierMainInfo.cardNo;
            this.cardPhotos =response.result.result.supplierMainInfo.cardPhotos;
+           this.licensePhotos = response.result.result.supplierMainInfo.licensePhotos;
           }
         });
       },
@@ -251,7 +255,16 @@
                       let  x = this.cardPhotos[i];
                       picId.push(this.cardPhotos[i].uid);
                 }
+
+
                 this.blicense.cardPhoto = picId;
+
+                let  licensePhotoId=[];
+                for(let  i=0; i<this.licensePhotos.length ; i++){
+                      let  x = this.licensePhotos[i];
+                      licensePhotoId.push(this.licensePhotos[i].uid);
+                }
+                this.blicense.licensePhoto = licensePhotoId;
                 saveSupplierInfo(this.baseinfo,this.blicense).then(response=>{
                   this.cardPhotos =response.result.result.supplierMainInfo.cardPhotos;
                   this.$message({
