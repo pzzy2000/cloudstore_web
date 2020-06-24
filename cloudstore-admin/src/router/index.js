@@ -88,6 +88,18 @@ export const asyncRouterMap = [
          meta: {title: '商品详情', icon: 'product-list'},
          hidden: true
        },{
+         path: 'skuinfo',
+         name: 'sku_info',
+         component: () => import('@/views/pms/product/sku/info'),
+         meta: {title: 'SKU管理', icon: 'product-list'},
+         hidden: true
+       },
+       {
+           path: 'category',
+           name: 'goods_category',
+           component: () => import('@/views/pms/productCate/index'),
+           meta: {title: '商品分类', icon: 'product-list'}
+         },{
            path: 'category',
            name: 'goods_category',
            component: () => import('@/views/pms/productCate/index'),
