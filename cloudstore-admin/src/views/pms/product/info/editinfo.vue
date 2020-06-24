@@ -12,7 +12,7 @@
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="商品图片：" prop="goodsName">
+          <el-form-item label="商品标题图片(只有1个)：" prop="goodsName">
             <div v-if="rwDispatcherState =='read'">
               <el-image v-for=" (item,index) in goodsPics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;">
                 <div slot="placeholder" class="image-slot">
@@ -22,6 +22,21 @@
             </div>
             <div v-else>
               <single-upload v-model="goodsPics"></single-upload>
+            </div>
+
+          </el-form-item>
+          <br />
+          <el-form-item label="商品详情图片(最多5个)：" prop="goodsName">
+            <div v-if="rwDispatcherState =='read'">
+              <el-image v-for=" (item,index) in goodsDetailPics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;">
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div>
+              </el-image>
+            </div>
+            <div v-else>
+
+              <multi-upload v-model="goodsDetailPics"></multi-upload>
             </div>
 
           </el-form-item>
@@ -158,6 +173,8 @@
 
   import SingleUpload from '@/components/Upload/singleUpload';
 
+    import MultiUpload from '@/components/Upload/multiUpload';
+
   export default {
     name: "goodBaseinfo",
     provide() {
@@ -166,7 +183,7 @@
       }
     },
     components: {
-      SingleUpload
+      SingleUpload,MultiUpload
     },
     data() {
       return {
@@ -194,7 +211,8 @@
         },
         goodsId: null,
         rwDispatcherState: 'write',
-        goodsPics: []
+        goodsPics: [],
+        goodsDetailPics:[]
       }
     },
     mounted() {
@@ -403,6 +421,7 @@
                    this.district.area = response1.result.result.records;
                    this.baseinfo = goodsinfo;
                    this.goodsPics = this.baseinfo.goodsPhotos;
+                   this.goodsDetailPics = this.baseinfo.goodsDetailPhotos;
                  });
             });
 
@@ -444,10 +463,19 @@
                 goodsPics.push(this.goodsPics[i].uid);
               }
               this.baseinfo.goodsPics = goodsPics;
+
+              let goodsDetailPics = [];
+              for (let i = 0; i < this.goodsDetailPics.length; i++) {
+                let x = this.goodsDetailPics[i];
+                goodsDetailPics.push(this.goodsDetailPics[i].uid);
+              }
+              this.baseinfo.goodsDetailPics = goodsDetailPics;
+
               createProduct(this.baseinfo).then(response => {
                 if (!response) return;
                 this.$refs['baseinfoFrom'].resetFields();
                 this.goodsPics = [];
+                this.goodsDetailPics=[],
                 this.$message({
                   message: '增加商品成功',
                   type: 'success',

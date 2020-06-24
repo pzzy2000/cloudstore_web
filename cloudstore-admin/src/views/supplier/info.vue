@@ -267,6 +267,7 @@
                 this.blicense.licensePhoto = licensePhotoId;
                 saveSupplierInfo(this.baseinfo,this.blicense).then(response=>{
                   this.cardPhotos =response.result.result.supplierMainInfo.cardPhotos;
+                  this.rwDispatcherState="read";
                   this.$message({
                     message: '修改成功',
                     type: 'success',

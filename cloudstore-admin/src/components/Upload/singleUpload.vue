@@ -113,10 +113,10 @@
         if (re.code == 0) {
           this.fileList.push({
             // name: file.name,
-            id: re.result.id,
+            id: re.result.uid,
             // url: re.result.url + "&auth=" + token,
-             url: re.result.url,
-            uid: re.result.id
+            url: re.result.url,
+            uid: re.result.uid
           });
           this.emitInput(this.fileList);
         } else {
