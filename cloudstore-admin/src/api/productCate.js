@@ -59,3 +59,19 @@ export function fetchListWithChildren(params) {
     method:'get',
   })
 }
+
+export function savegoodLevel(url, params) {
+  return request({
+    url: url,
+    method:'post',
+    data: switchForm(params)
+  })
+}
+
+export function deleteGoodlevel(url, params) {
+  return request({
+    url: url,
+    method:'post',
+    data: switchForm(params)
+  })
+}

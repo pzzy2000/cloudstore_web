@@ -87,23 +87,30 @@ export const asyncRouterMap = [
          component: () => import('@/views/pms/product/info/editinfo'),
          meta: {title: '商品详情', icon: 'product-list'},
          hidden: true
-       },
-
-       {
+       },{
          path: 'skuinfo',
          name: 'sku_info',
          component: () => import('@/views/pms/product/sku/info'),
-         meta: {title: '商品详情', icon: 'product-list'},
+         meta: {title: 'SKU管理', icon: 'product-list'},
          hidden: true
        },
-
-
        {
-         path: 'category',
-         name: 'goods_category',
-         component: () => import('@/views/pms/productCate/index'),
-         meta: {title: '商品分类', icon: 'product-list'}
-       },
+           path: 'category',
+           name: 'goods_category',
+           component: () => import('@/views/pms/productCate/index'),
+           meta: {title: '商品分类', icon: 'product-list'}
+         },{
+           path: 'category',
+           name: 'goods_category',
+           component: () => import('@/views/pms/productCate/index'),
+           meta: {title: '商品分类', icon: 'product-list'}
+         }, {
+           path: 'addlevel',
+           name: 'goods_category',
+           component: () => import('@/views/pms/productCate/addlevel'),
+           meta: {title: '添加分类', icon: 'product-list'},
+           hidden: true
+         },
        // {
        //  path: 'addProductAttrParm',
        //   name: 'addProductAttrParm',
@@ -132,7 +139,6 @@ export const asyncRouterMap = [
          meta: {title: '添加规格'},
          hidden: true
        },{
-
          path: 'property',
          name: 'goods_property',
          component: () => import('@/views/pms/productAttr/index'),
@@ -151,11 +157,10 @@ export const asyncRouterMap = [
         component: () => import('@/views/agent/list'),
         meta: {title: '代理列表', icon: 'product-list'}
      },{
-        path: 'info',
+        path: 'list',
         name: 'agent_info',
-        component: () => import('@/views/agent/info'),
-        meta: {title: '代理详情', icon: 'product-list'},
-          hidden: true
+        component: () => import('@/views/supplier/info'),
+        meta: {title: '代理详情', icon: 'product-list'}
      },{
         path: 'level',
         name: 'agent_level',
@@ -244,6 +249,13 @@ export const asyncRouterMap = [
           name: 'trackinglist',
           component: () => import('@/views/tracking/list'),
           meta: {title: '物流公司列表', icon: 'product-list'}
+        },
+        {
+          path: 'addlogistics',
+          name: 'addlogistics',
+          component: () => import('@/views/tracking/addlogistics'),
+          meta: {title: '添加物流公司', icon: 'product-list'},
+          hidden: true
         }
       ]
 

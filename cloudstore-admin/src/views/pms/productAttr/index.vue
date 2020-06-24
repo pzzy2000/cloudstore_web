@@ -74,9 +74,9 @@
       :title="dialogTitle"
       :visible.sync="dialogVisible"
       width="30%">
-      <el-table-column label="编号" width="100" align="center">
-        <template slot-scope="scope">{{scope.row.id}}</template>
-      </el-table-column>
+      <!--<el-table-column label="编号" width="100" align="center">-->
+        <!--<template slot-scope="scope">{{scope.row.id}}</template>-->
+      <!--</el-table-column>-->
       <el-form ref="productAttrCatForm":model="productAttrCate" :rules="rules" label-width="120px">
         <el-form-item label="类型名称" prop="name">
           <el-input v-model="productAttrCate.propertyName" auto-complete="off"></el-input>
