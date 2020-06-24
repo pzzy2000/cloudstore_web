@@ -12,16 +12,26 @@
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="商品图片："  prop="goodsName">
-                     <single-upload v-model="goodsPics"></single-upload>
+          <el-form-item label="商品图片：" prop="goodsName">
+            <div v-if="rwDispatcherState =='read'">
+              <el-image v-for=" (item,index) in goodsPics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;">
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div>
+              </el-image>
+            </div>
+            <div v-else>
+              <single-upload v-model="goodsPics"></single-upload>
+            </div>
+
           </el-form-item>
-          <br/>
+          <br />
           <el-form-item label="退货规则：" prop="returnRuleId">
             <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">
 
             </el-select-dispatcher>
           </el-form-item>
-
+          <br />
           <el-form-item label="运费规则：" prop="freightRuleId">
             <el-select-dispatcher v-model="baseinfo.freightRuleId" id="freightRuleId">
             </el-select-dispatcher>
@@ -51,7 +61,6 @@
           <br />
 
 
-
           <el-form-item label="地区：" required prop="provinceId">
             <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"
               v-on:change="selectDistrict($event, 1)">
@@ -73,7 +82,7 @@
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
-
+          <br />
           <el-form-item label="副标题：" required prop="goodsSubtitle">
             <el-input-dispatcher v-model="baseinfo.goodsSubtitle"></el-input-dispatcher>
           </el-form-item>
@@ -185,7 +194,7 @@
         },
         goodsId: null,
         rwDispatcherState: 'write',
-        goodsPics:[]
+        goodsPics: []
       }
     },
     mounted() {
@@ -280,6 +289,7 @@
           let list = response.result.result;
 
           this.district.province = list.records;
+
         });
       },
 
@@ -350,7 +360,12 @@
 
       },
 
+      getaction() {
+        let action = this.$route.query.action; //1:增加 2：编辑 0:查看,默认是查看
 
+        action = parseInt((typeof(action) == 'undefined') ? "1" : action);
+        return action;
+      },
 
       async loadInfo() {
 
@@ -360,17 +375,41 @@
         };
         let goodsId_ = this.goodsId;
         console.log("load  goods info  goodsid : " + goodsId_);
+
         await getProduct({
           id: goodsId_
         }).then(response => {
-          if (response) {
-            this.baseinfo = response.result.result;
-            this.goodsPics = this.baseinfo.goodsPics;
-          } else {
-            msg("系统错误,获得商品信息错误");
-          }
+          let  goodsinfo =response.result.result;
+          let action = this.getaction();
+          if (action == 0 || action == 2) {
+            fetchListWithChildren(goodsinfo.categoryOneId).then(response => {
+              let list = response.result.result;
+              this.category.two = list;
+            });
+            fetchListWithChildren(goodsinfo.categoryTwoId).then(response => {
+              let list = response.result.result;
+              this.category.three = list;
+            });
 
+            fetchDistrictList({
+              codeType: 'city',
+              parentId: goodsinfo.provinceId
+            }).then(response => {
+                 this.district.city = response.result.result.records;
+                 fetchDistrictList({
+                   codeType: 'district',
+                   parentId: goodsinfo.cityId
+                 }).then(response1 => {
+                   this.district.area = response1.result.result.records;
+                   this.baseinfo = goodsinfo;
+                   this.goodsPics = this.baseinfo.goodsPhotos;
+                 });
+            });
+
+          }
         });
+
+
       },
 
       cancelList() {
@@ -382,12 +421,12 @@
 
       },
 
-      updateProduct(){
-         msg("更新");
+      updateProduct() {
+        msg("更新");
       },
 
-      resetProduct(){
-         msg("重置form");
+      resetProduct() {
+        msg("重置form");
       },
 
       addProduct() {
@@ -399,16 +438,16 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              let goodsPics=[];
-             for(let  i=0; i<this.goodsPics.length ; i++){
-                   let  x = this.goodsPics[i];
-                   goodsPics.push(this.goodsPics[i].uid);
-             }
-             this.baseinfo.goodsPics = goodsPics;
+              let goodsPics = [];
+              for (let i = 0; i < this.goodsPics.length; i++) {
+                let x = this.goodsPics[i];
+                goodsPics.push(this.goodsPics[i].uid);
+              }
+              this.baseinfo.goodsPics = goodsPics;
               createProduct(this.baseinfo).then(response => {
                 if (!response) return;
                 this.$refs['baseinfoFrom'].resetFields();
-                this.goodsPics=[];
+                this.goodsPics = [];
                 this.$message({
                   message: '增加商品成功',
                   type: 'success',

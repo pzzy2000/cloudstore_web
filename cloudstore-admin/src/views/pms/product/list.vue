@@ -59,7 +59,7 @@
         <!-- <el-table-column label="商品图片" width="120" align="center">
           <template slot-scope="scope"><img style="height: 80px" :src="scope.row.pic"></template>
         </el-table-column> -->
-        <el-table-column label="商品名称" align="center">
+        <el-table-column label="商品名称" align="center" fixed="">
           <template slot-scope="scope">{{scope.row.goodsName}}</template>
         </el-table-column>
         <el-table-column label="商品品牌" align="center">
@@ -68,8 +68,20 @@
         <el-table-column label="商品货号" align="center">
           <template slot-scope="scope">{{scope.row.goodsNumber}}</template>
         </el-table-column>
+        <el-table-column label="产地" align="center" :formatter="showAddress">
+
+        </el-table-column>
+        <el-table-column label="商品分类" align="center" :formatter="goodsCategory">
+
+        </el-table-column>
         <el-table-column label="销售价格/市场价" width="150" align="left">
           <template slot-scope="scope"> ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>
+        </el-table-column>
+        <el-table-column label="所属店铺" width="150" align="left" :formatter="suppilerShop">
+
+        </el-table-column>
+        <el-table-column label="所属供应商" width="150" align="left" :formatter="suppiler">
+
         </el-table-column>
         <el-table-column label="商品图片" align="center">
           <template slot-scope="scope">
@@ -131,6 +143,7 @@
         </el-table-column>
       </el-table>
     </div>
+    <!--
     <div class="batch-operate-container">
       <el-select size="small" v-model="operateType" placeholder="批量操作">
         <el-option v-for="item in operates" :key="item.value" :label="item.label" :value="item.value">
@@ -140,9 +153,10 @@
         确定
       </el-button>
     </div>
+    -->
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listQuery.pageSize" :page-sizes="[5,10,15]" :current-page.sync="listQuery.pageNum" :total="total">
+        :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">
       </el-pagination>
     </div>
     <el-dialog title="编辑货品信息" :visible.sync="editSkuInfo.dialogVisible" width="40%">
@@ -210,7 +224,7 @@
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
-    pageSize: 5,
+    pageSize: 20,
     publishStatus: null,
     verifyStatus: null,
     productSn: null,
@@ -313,6 +327,34 @@
       }
     },
     methods: {
+      suppilerShop(row, column){
+       try {
+          return row.supplierShopBean.shopName;
+        } catch (e) {
+          return '数据读取错误';
+        }
+        },
+      suppiler(row, column){
+       try {
+          return row.supplierBean.name;
+        } catch (e) {
+          return '数据读取错误';
+        }
+        },
+      goodsCategory(row, column) {
+        try {
+          return row.categoryOneBean.name + "/" + row.categoryTwoBean.name + "/" + row.categoryThreeBean.name;
+        } catch (e) {
+          return '数据读取错误';
+        }
+      },
+      showAddress(row, column) {
+        try {
+          return row.provinceBean.name + " " + row.cityBean.name + " " + row.areaBean.name;
+        } catch (e) {
+          return '数据读取错误';
+        }
+      },
       addsku(index, row) {
         this.$router.push({
           path: "/sys/goods/skuinfo",
