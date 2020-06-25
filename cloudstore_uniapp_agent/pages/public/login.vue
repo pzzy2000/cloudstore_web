@@ -111,7 +111,6 @@
 					provider: 'weixin',
 					success: function(loginRes) {
 						this.loginCode = loginRes.code
-						console.log(this.loginCode)
 					}
 				});
 			},
@@ -119,17 +118,17 @@
 				var that = this;
 				uni.checkSession({
 					success: function(res){
-						console.log("不需要重新登录");
-						// uni.switchTab({
-						// 	url: '/pages/index/index'
-						// });
+						//console.log("不需要重新登录");
+            
+						uni.switchTab({
+							url: '/pages/index/index'
+						});
 						let datas = '';
 						let errmsg = '';
 						uni.login({
 							provider: 'weixin',
 							success: function(loginRes) {
-								console.log(loginRes)
-								console.log(that.loginInfo)
+								//console.log(loginRes)
 								var params = {
 									code: loginRes.code,
 									userInfo: that.loginInfo.detail.rawData,
@@ -147,7 +146,7 @@
 								that.loginByWeixinNoPhone(params);
 							}
 						});
-			　　　　},
+        },
 					fail: function(res){
 						const that = this;
 						let datas = '';
@@ -178,8 +177,14 @@
 				})
 			},
 			wxGetUserInfo : function(res) {
-				this.checksession (res)
-				this.loginInfo = res
+        this.loginInfo = res
+        console.log(this.loginInfo)
+        uni.setStorageSync('userInfo', this.loginInfo.detail.userInfo);
+        uni.setStorageSync('token', '1');
+        uni.switchTab({
+        	url: '/pages/index/index'
+        });
+				//this.checksession ()
 				// if (!res.detail.iv) {
 				// 	uni.showToast({
 				// 		title: '您取消了授权,登录失败',
@@ -212,22 +217,33 @@
 				// });
 			},
 			loginByWeixinNoPhone(datas) {
-				console.log(datas)
-				// var that = this;
-				// let data =  Api.apiCall('post', Api.agent.wx, datas);
-				// if (data) {
-				// 	console.log(data)
-				// }
+        var that = this;
 				uni.request({
 					// url: 'http://120.24.156.254:18888/platform/'+Api.agent.wx,
-					url: 'http://192.168.0.27:8088/'+Api.agent.wx,
+					url: 'http://120.24.156.254:18888/platform/'+Api.agent.wx,
 					method: 'post',
 					data: datas,
 					success: function(res) {
-						uni.showToast({
-							title: '请求已成功'
-						});
-						console.log(res)
+						let data = res.data.result.result
+            uni.setStorageSync('token', data.token);
+            let params = {
+              "accessKey": data.accessKey,
+              "encryptedData": that.loginInfo.detail.encryptedData,
+              "iv": that.loginInfo.detail.iv,
+              "openid": data.openid
+            }
+            // var demo = Api.apiCall('post', Api.agent.savePhone, params)
+            uni.request({
+              url: 'http://120.24.156.254:18888/platform/'+Api.agent.savePhone,
+              method: 'post',
+              header:{
+                'auth': uni.getStorageSync('token'),
+              },
+              data: params,
+              success: function(res) {
+                console.log(res)
+              }
+            })
 						// console.log(res)
 						// that.login(res.data.data);
 						// that.$db.set('token', res.data.data.tokenHead + res.data.data.token);

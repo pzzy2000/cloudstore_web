@@ -5,9 +5,9 @@
 		</view>
 		<view class="agency-main">
 			<view class="agency-header">
-				<image src="" mode="" alt='头像'></image>
+				<image :src="user.url" mode="" alt='头像'></image>
 				<view class="header-info">
-					<text class="title samp">{{userInfo.name}}</text>
+					<text class="title samp">{{user.name}}</text>
 					<text>回头率：50 &nbsp;&nbsp;&nbsp;&nbsp;收藏量： 40</text>
 				</view>
 			</view>
@@ -77,7 +77,7 @@
 	export default {
 		data() {
 			return {
-				userInfo: '',
+				user: '',
 				statusBarHeight: '',
 				height: '',
 				headerList: [
@@ -127,10 +127,16 @@
 		onLoad () {
 			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 			this.height = uni.getSystemInfoSync().windowHeight - (this.statusBarHeight+80)
+      let userInfo = uni.getStorageSync('userInfo');
+      if (userInfo) {
+      	this.user.name = userInfo.nickName
+        this.user.url = userInfo.avatarUrl
+        console.log(userInfo.nickName)
+      }
 		},
 		onShow () {
-			this.getUserInfo()
-			this.loadData()
+			// this.getUserInfo()
+			// this.loadData()
 		},
 		methods: {
 			search () {

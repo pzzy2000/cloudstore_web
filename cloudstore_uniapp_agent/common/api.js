@@ -28,7 +28,8 @@ export default {
 	   userlogin:"sys/manager/platform/login",
 	   reg:"sys/manager/platform/register/agent",
 	   list: '/agent/goods/list' ,//获取代理商代理的商品信息
-	   wx:'sys/manager/platform/weixin/login' //获取用户登录微信信息
+	   wx:'sys/manager/platform/weixin/login', //获取用户登录微信信息
+     savePhone: 'sys/manager/platform/weixin/savePhone'
 	},
 	goods: { //商品接口
 	   list: '/goods/list' ,//获取商品列表
