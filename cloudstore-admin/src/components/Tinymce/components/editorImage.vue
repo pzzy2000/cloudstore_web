@@ -5,8 +5,9 @@
     </el-button>
     <el-dialog append-to-body :visible.sync="dialogVisible">
       <el-upload class="editor-slide-upload"
-                 action="http://macro-oss.oss-cn-shenzhen.aliyuncs.com"
+                 action="http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update"
                  :data="dataObj"
+                 :headers="myHeaders"
                  :multiple="true"
                  :file-list="fileList"
                  :show-file-list="true"
@@ -14,8 +15,8 @@
                  :on-remove="handleRemove"
                  :on-success="handleSuccess"
                  :before-upload="beforeUpload">
-        <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
+       <el-button size="small" type="primary">点击上传</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
       <el-button type="primary" @click="handleSubmit">确 定</el-button>
     </el-dialog>
@@ -25,6 +26,11 @@
 <script>
   import {policy} from '@/api/oss'
 
+  import {
+    getToken
+  } from '@/utils/auth'
+
+    var token = getToken(); // 要保证取到
   export default {
     name: 'editorSlideUpload',
     props: {
@@ -38,6 +44,9 @@
         dialogVisible: false,
         listObj: {},
         fileList: [],
+        myHeaders: {
+          auth: token
+        },
         dataObj: {
           policy: '',
           signature: '',

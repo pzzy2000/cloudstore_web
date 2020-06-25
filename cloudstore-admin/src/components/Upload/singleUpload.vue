@@ -1,6 +1,6 @@
 <template> 
   <div>
-    <el-upload :action="minioUploadUrl" :data="null" list-type="picture-card" :file-list="fileList" :before-upload="beforeUpload"
+    <el-upload :action="minioUploadUrl" :data="type" list-type="picture-card" :file-list="fileList" :before-upload="beforeUpload"
       :on-remove="handleRemove" :on-success="handleUploadSuccess" :on-preview="handlePreview" :limit="maxCount"
       :on-exceed="handleExceed" :headers="myHeaders">
       <i class="el-icon-plus"></i>
@@ -30,6 +30,7 @@
     props: {
       //图片属性数组
       value: Array,
+      type:{},
       //最大上传图片数量
       maxCount: {
         type: Number,

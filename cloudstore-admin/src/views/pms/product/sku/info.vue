@@ -1,7 +1,9 @@
 <template>
 
   <div class="app-container">
-    <el-card class="filter-container" shadow="never">
+    <!--
+    <el-card  shadow="never" style="height: 1500px;">
+    -->
       <el-divider content-position="left"><i class="el-icon-search"></i>商品SKU信息</el-divider>
       <el-form :model="goodsku" ref="goodskuform" label-width="150px" size="small">
         <el-form-item label="商品名称：">
@@ -93,16 +95,24 @@
           <multi-upload v-model="goodsku.goodsPics"></multi-upload>
         </el-form-item>
         -->
-        <el-form-item label="规格参数：">
+
+        <el-form-item label="商品规格参数介绍：">
+          <quill-editor ref="text" v-model="goodsku.mobileHtml" class="myQuillEditor" />
+          <!--
           <tinymce :width="595" :height="300" v-model="goodsku.mobileHtml"></tinymce>
+          -->
         </el-form-item>
       </el-form>
-
-      <el-button style="float: right;margin-bottom: 10px;" @click="updateGoodsProperties" size="small">
-        更新
-      </el-button>
-
+      <br/>
+      <!--
     </el-card>
+    -->
+    <div style="width: 100%;text-align:center">
+ <br /> <br /> <br /> <br />
+    <el-button style="margin-bottom: 10px;" @click="updateGoodsProperties" size="small">
+      更新
+    </el-button>
+    </div>
   </div>
 </template>
 
@@ -126,14 +136,26 @@
 
   import SingleUpload from '@/components/Upload/singleUpload';
   import MultiUpload from '@/components/Upload/multiUpload';
-  import Tinymce from '@/components/Tinymce';
+  import {
+    getToken
+  } from '@/utils/auth';
+
+  //import Tinymce from '@/components/Tinymce';
+
+  import  { quillEditor } from 'vue-quill-editor'
+  import 'quill/dist/quill.core.css'
+  import 'quill/dist/quill.snow.css'
+  import 'quill/dist/quill.bubble.css'
+
+  var token = getToken(); // 要保证取到
 
   export default {
     name: "productsku",
     components: {
       SingleUpload,
       MultiUpload,
-      Tinymce
+      quillEditor
+      // Tinymce
     },
     provide() {
       return {
@@ -143,6 +165,9 @@
     data() {
       return {
         loading: false,
+        type: {
+          type: 1
+        },
         rwDispatcherState: 'write',
         goodsku: {
           goods: {},
@@ -159,7 +184,15 @@
         productAttributeCategoryOptions: {
 
         },
-
+        editorOption: {
+          // editorOption里是放图片上传配置参数用的，例如：
+             action:  'http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update',  // 必填参数 图片上传地址
+             methods: 'post',  // 必填参数 图片上传方式
+             token: token,  // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
+             name: 'goods_info',  // 必填参数 文件的参数名
+             size: 128,  // 可选参数   图片大小，单位为Kb, 1M = 1024Kb
+             accept: 'multipart/form-data, image/png, image/gif, image/jpeg, image/bmp, image/x-icon,image/jpg'  // 可选 可上传的图片格式
+        }
 
       }
     },
@@ -189,6 +222,8 @@
           data.attr.push(xx);
         });
 
+        data.mobileHtml=good_sku.mobileHtml
+
         updateGoodsAttr(data).then(response => {
           this.loading = false;
           msg("更新商品SKU成功");
@@ -209,6 +244,7 @@
           if (goods.propertyId == null) {
             this.loading = false;
             this.getproductAttributeCategory();
+            this.goodsku.goods = goods;
           } else {
             getAttributetypes(0).then(response => {
               this.loading = false;
@@ -236,6 +272,7 @@
                   }
                   //TABLE
                   goodsku_.skuStockList = tr.goodsSku;
+                  goodsku_.mobileHtml =goods.mobileHtml;
                 }
               });
             });
@@ -391,4 +428,7 @@
   .cardBg {
     #background: #F8F9FC;
   }
+.quill-editor{
+         height:600px;
+     }
 </style>

@@ -36,7 +36,25 @@ export const constantRouterMap = [
 
 export const asyncRouterMap = [
 
-
+ {
+    path:'/sys/activity',
+    component: Layout,
+    redirect: '/sys/activity/list',
+    name: 'activity',
+    meta: {title: '活动管理', icon: 'product-list'},
+     children: [{
+       path: 'list',
+       name: 'activity_list',
+       component: () => import('@/views/activity/list'),
+       meta: {title: '活动列表', icon: 'product-list'}
+     },
+     {
+       path: 'apply',
+       name: 'activity_apply',
+       component: () => import('@/views/activity/apply'),
+       meta: {title: '申请活动', icon: 'product-list'}
+     }]
+  },
   {
     path:'/sys/supplier',
     component: Layout,
@@ -105,7 +123,7 @@ export const asyncRouterMap = [
          //   name: 'goods_category',
          //   component: () => import('@/views/pms/productCate/index'),
          //   meta: {title: '商品分类', icon: 'product-list'}
-         // }, 
+         // },
          {
            path: 'addlevel',
            name: 'add_level',
