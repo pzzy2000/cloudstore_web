@@ -45,7 +45,7 @@
     <div class="table-container">
       <el-table ref="productTable"
                 :data="list"
-                style="width: 80%"
+                style="width:100%"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
                 border>

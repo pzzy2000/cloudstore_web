@@ -48,7 +48,7 @@
                 </el-table-column>
                 <el-table-column label="库存预警值" width="100" align="center">
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row.lowStock"></el-input>
+                    <el-input v-model="scope.row.warnQuantity"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="SKU编号" width="100" align="center">
@@ -58,7 +58,7 @@
                 </el-table-column>
                 <el-table-column label="属性图片：" align="left" width="400">
                   <template slot-scope="scope">
-                    <single-upload v-model="scope.row.pic" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
+                    <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
                   </template>
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" width="80" align="center">
@@ -88,16 +88,17 @@
             </div>
           </el-card>
         </el-form-item>
+        <!--
         <el-form-item label="商品相册：">
           <multi-upload v-model="goodsku.goodsPics"></multi-upload>
         </el-form-item>
+        -->
         <el-form-item label="规格参数：">
           <tinymce :width="595" :height="300" v-model="goodsku.mobileHtml"></tinymce>
         </el-form-item>
       </el-form>
 
-      <el-button style="float: right;margin-bottom: 10px;" @click="updateGoodsProperties"
-        size="small">
+      <el-button style="float: right;margin-bottom: 10px;" @click="updateGoodsProperties" size="small">
         更新
       </el-button>
 
@@ -111,7 +112,11 @@
   } from '@/api/productAttrCate';
 
   import {
-    getProduct,
+    msg
+  } from '@/api/iunits';
+
+  import {
+    getGoodsInfoByGoodsId,
     updateGoodsAttr
   } from '@/api/product';
 
@@ -141,7 +146,7 @@
         rwDispatcherState: 'write',
         goodsku: {
           goods: {},
-          goodsPics: [],
+          //goodsPics: [],
           skuStockList: [], //table 显示的  规格头
           //paramsList: [], //参数列表
           guige: [], //分类 的 规格
@@ -172,36 +177,73 @@
 
         let data = {};
         data.propertyId = good_sku.propertyId;
-        data.skuStockList  = good_sku.skuStockList;
+        data.skuStockList = good_sku.skuStockList;
         data.goodsId = good_sku.goods.id;
-        data.goodsPics = good_sku.goodsPics;
-        data.attr =[];
-        good_sku.attr.forEach(function(value,index,array){
-          let xx={attrid:value.attr.id, value:value.value }
+        //data.goodsPics = good_sku.goodsPics;
+        data.attr = [];
+        good_sku.attr.forEach(function(value, index, array) {
+          let xx = {
+            attrid: value.attr.id,
+            value: value.value
+          }
           data.attr.push(xx);
         });
 
         updateGoodsAttr(data).then(response => {
           this.loading = false;
-          let list = response.result.result;
-          this.goodsku.goods = list;
-          this.getproductAttributeCategory();
+          msg("更新商品SKU成功");
+          // let list = response.result.result;
+          // this.goodsku.goods = list;
+          // this.getproductAttributeCategory();
         });
       },
 
-      getgoodsInfo() {
+      async getgoodsInfo() {
         let gooodsId = this.$route.query.goodsid;
-        getProduct({
-          id: gooodsId
+        getGoodsInfoByGoodsId({
+          goodsId: gooodsId
         }).then(response => {
-          this.loading = false;
-          let list = response.result.result;
-          this.goodsku.goods = list;
-          this.getproductAttributeCategory();
+          let tr = response.result.result;
+          let goods = tr.goods;
+
+          if (goods.propertyId == null) {
+            this.loading = false;
+            this.getproductAttributeCategory();
+          } else {
+            getAttributetypes(0).then(response => {
+              this.loading = false;
+              let list = response.result.result;
+              this.productAttributeCategoryOptions = list.records;
+              this.goodsku.goods = goods;
+              this.goodsku.propertyId = goods.propertyId;
+              let goodsku_ = this.goodsku;
+              this.handleProductAttrChange(goods.propertyId, function() {
+                let goodsPropertyValue = tr.goodsPropertyValue;
+                for (let ix in goodsPropertyValue) {
+                  let pv = goodsPropertyValue[ix];
+                  if (pv.propertyType == 0) {
+                    let gkv = pv.propertyValue.split(",");
+                    for (let gkvix in gkv) {
+                      goodsku_.guigeValue[pv.goodsSkuId].push(gkv[gkvix]);
+                    }
+                  } else {
+                    //参数
+                    for (let attix in goodsku_.attr) {
+                      if (goodsku_.attr[attix].attr.id == pv.goodsSkuId) {
+                        goodsku_.attr[attix].value = pv.propertyValue;
+                      }
+                    }
+                  }
+                  //TABLE
+                  goodsku_.skuStockList = tr.goodsSku;
+                }
+              });
+            });
+          }
         });
 
       },
-      handleProductAttrChange(productId) {
+      handleProductAttrChange(propertyId, backcall) {
         this.loading = true;
         this.goodsku.guige = [];
         this.goodsku.guigeValue = {};
@@ -210,7 +252,7 @@
         this.goodsku.addGuige = {};
         this.goodsku.skuStockList = [];
         fetchPropertisParamsSelectList({
-          goodsPropertyId: productId
+          goodsPropertyId: propertyId
         }).then(response => {
           this.loading = false;
           let list = response.result.result.records;
@@ -229,15 +271,21 @@
             }
           }
 
+          if (typeof(backcall) == 'function') {
+            backcall();
+          }
 
         });
       },
-      getproductAttributeCategory() {
+      getproductAttributeCategory(backcall) {
         this.loading = true;
         getAttributetypes(0).then(response => {
           this.loading = false;
           let list = response.result.result;
           this.productAttributeCategoryOptions = list.records;
+          if (typeof(backcall) != 'undefined') {
+            backcall();
+          }
         });
       },
       handleAddProductAttrValue(Attrid, attrName) {

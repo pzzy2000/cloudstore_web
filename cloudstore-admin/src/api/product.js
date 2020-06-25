@@ -76,6 +76,13 @@ export function getProduct(params) {
     data:switchForm(params)
   })
 }
+export function getGoodsInfoByGoodsId(params) {
+  return request({
+    url:'/goods/getGoodsInfoByGoodsId',
+    method:'post',
+    params:params
+  })
+}
 
 
 export function updateProduct(id,data) {

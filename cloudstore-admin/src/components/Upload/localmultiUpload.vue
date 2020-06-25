@@ -134,5 +134,15 @@
   }
 </script>
 <style>
-
+.el-upload--picture-card {
+    background-color: #fbfdff;
+    border: 1px dashed #c0ccda;
+    border-radius: 6px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 58px;
+    height: 58px;
+    line-height: 66px;
+    vertical-align: top;
+    }
 </style>

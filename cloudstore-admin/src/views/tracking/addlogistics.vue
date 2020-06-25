@@ -31,7 +31,7 @@
       data() {
         return {
           logisticsList: {},
-          rwDispatcherState: '',
+          rwDispatcherState: 'read',
           rules: {
             name: [{required: true, message: '请输入公司名称', trigger: 'blur'}],
             ide: [{required: true, message: '请输入公司编码', trigger: 'blur'}],
@@ -42,14 +42,10 @@
       created() {
         this.rwDispatcherState = this.$route.query.rds;
         this.logisId = this.$route.query.id;
-        this.getList();
+
       },
       methods: {
-        getList() {
-          getOnelogis({id: this.logisId}).then(res => {
-            console.log(res);
-          })
-        },
+
         addLogis() {
           let obj = {
             name: this.logisticsList.name,

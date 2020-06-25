@@ -59,19 +59,21 @@
         <!-- <el-table-column label="商品图片" width="120" align="center">
           <template slot-scope="scope"><img style="height: 80px" :src="scope.row.pic"></template>
         </el-table-column> -->
-        <el-table-column label="商品名称" align="center" fixed="">
+        <el-table-column label="商品名称" width="150" align="center" fixed="">
           <template slot-scope="scope">{{scope.row.goodsName}}</template>
         </el-table-column>
-        <el-table-column label="商品品牌" align="center">
+        <el-table-column label="商品品牌" width="150" align="center">
           <template slot-scope="scope">{{scope.row.goodsBrand}}</template>
         </el-table-column>
-        <el-table-column label="商品货号" align="center">
+        <el-table-column label="商品货号" width="150" align="center">
           <template slot-scope="scope">{{scope.row.goodsNumber}}</template>
         </el-table-column>
-        <el-table-column label="产地" align="center" :formatter="showAddress">
+        <el-table-column label="商品规格类别" width="150" align="center" :formatter="propertyBean">
+        </el-table-column>
+        <el-table-column label="产地" width="250" align="center" :formatter="showAddress">
 
         </el-table-column>
-        <el-table-column label="商品分类" align="center" :formatter="goodsCategory">
+        <el-table-column label="商品分类" width="200" align="center" :formatter="goodsCategory">
 
         </el-table-column>
         <el-table-column label="销售价格/市场价" width="150" align="left">
@@ -83,14 +85,14 @@
         <el-table-column label="所属供应商" width="150" align="left" :formatter="suppiler">
 
         </el-table-column>
-        <el-table-column label="商品图片" align="center">
+        <el-table-column label="商品图片" width="100" align="center">
           <template slot-scope="scope">
-           <el-image  v-for=" (item,index) in scope.row.goodsPhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
-                <div slot="placeholder" class="image-slot">
-                  加载中<span class="dot">...</span>
-                </div>
-           </el-image>
-           </template>
+            <el-image v-for=" (item,index) in scope.row.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">
+              <div slot="placeholder" class="image-slot">
+                加载中<span class="dot">...</span>
+              </div>
+            </el-image>
+          </template>
         </el-table-column>
         <el-table-column label="状态" width="140" align="center">
           <template slot-scope="scope">
@@ -327,25 +329,32 @@
       }
     },
     methods: {
-      suppilerShop(row, column){
-       try {
+      suppilerShop(row, column) {
+        try {
           return row.supplierShopBean.shopName;
         } catch (e) {
           return '数据读取错误';
         }
-        },
-      suppiler(row, column){
-       try {
+      },
+      suppiler(row, column) {
+        try {
           return row.supplierBean.name;
         } catch (e) {
           return '数据读取错误';
         }
-        },
+      },
       goodsCategory(row, column) {
         try {
           return row.categoryOneBean.name + "/" + row.categoryTwoBean.name + "/" + row.categoryThreeBean.name;
         } catch (e) {
           return '数据读取错误';
+        }
+      },
+      propertyBean(row, column) {
+        try {
+          return row.propertyBean.propertyName;
+        } catch (e) {
+          return null;
         }
       },
       showAddress(row, column) {

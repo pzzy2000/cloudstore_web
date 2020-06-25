@@ -11,7 +11,7 @@ export function fetchList(params) {
 
 export function addlogis(params) {
   return request({
-    url: '/sys/tracking/save',
+    url: '/sys/tracking/save?openType=save',
     method: 'POST',
     data: switchForm(params)
   })
