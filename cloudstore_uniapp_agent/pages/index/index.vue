@@ -296,21 +296,21 @@
 		onReachBottom() {
 			this.pageNum = this.pageNum + 1;
 
-			this.getNewProductList();
+			//this.getNewProductList();
 		},
 		onPullDownRefresh() {
 			this.pageNum = this.pageNum + 1;
-			this.getNewProductList('refresh');
+			//this.getNewProductList('refresh');
 
-			this.loadData();
+			//this.loadData();
 			setTimeout(function() {
-				uni.stopPullDownRefresh();
+				//uni.stopPullDownRefresh();
 			}, 2000);
 		},
 		onShareAppMessage() {},
 		onLoad(ops) {
 			let isWeiXin = this.$common.isWeiXinBrowser();
-			this.getNewProductList('refresh');
+			//this.getNewProductList('refresh');
 			if (ops.invitecode) {
 				this.$db.set('invitecode', ops.invitecode);
 			}
@@ -419,13 +419,13 @@
 			 * 加载首页数据
 			 */
 			async loadData() {
-				this.getBanner();
-				this.getHotGoodsList();
-				//this.getFlashPromotion();
-				this.getCouponList();
-				this.getStoreList();
-				this.homeNewProduct();
-				this.homeRecommendProduct();
+				// this.getBanner();
+				// this.getHotGoodsList();
+				// //this.getFlashPromotion();
+				// this.getCouponList();
+				// this.getStoreList();
+				// this.homeNewProduct();
+				// this.homeRecommendProduct();
 			},
 
 			/**

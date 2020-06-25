@@ -18,7 +18,7 @@
 						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toLogin">{{user.name}}</image>
 						<!-- #endif -->
 						<!-- #ifdef MP-WEIXIN -->
-						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toWeChatLogin">{{user.name}}</image>
+						<image class="portrait" mode="aspectFill" :src="user.url" @click="toWeChatLogin">{{user.name}}</image>
                         <!-- #endif -->
 						<!-- #ifdef MP-ALIPAY -->
 						<view class="portrait"></view>
@@ -142,7 +142,7 @@ import { mapState,mapMutations } from 'vuex';
 			couponList: [],
 			viewList: [],
 			user:{
-				name: null || '未登录'
+        name: null || '未登录'
 			}
 		};
 	},
@@ -207,10 +207,12 @@ import { mapState,mapMutations } from 'vuex';
 			// this.getHistory();
 		},
 		// 获取用户信息
-		getuserinfo(){
+		async getuserinfo(){
 			let userInfo = uni.getStorageSync('userInfo');
 			if (userInfo) {
-				this.user = userInfo
+				this.user.name = userInfo.nickName
+        this.user.url = userInfo.avatarUrl
+        console.log(userInfo.nickName)
 			}
 		},
 		// 	let params = {  };
