@@ -47,6 +47,18 @@ export const asyncRouterMap = [
        name: 'activity_list',
        component: () => import('@/views/activity/list'),
        meta: {title: '活动列表', icon: 'product-list'}
+     },{
+       path: 'addact',
+       name: 'add_activity',
+       component: () => import('@/views/activity/addactivity'),
+       meta: {title: '添加活动', icon: 'product-list'},
+       hidden: true
+     },{
+       path: 'assogoods',
+       name: 'asso_goods',
+       component: () => import('@/views/activity/assogoods'),
+       meta: {title: '关联商品', icon: 'product-list'},
+       hidden: true
      },
      {
        path: 'apply',
@@ -184,7 +196,7 @@ export const asyncRouterMap = [
      },{
         path: 'info',
         name: 'agent_info',
-        component: () => import('@/views/agent/info'),
+        component: () => import('@/views/agent/agentInfo'),
         meta: {title: '代理详情', icon: 'product-list'}
      },{
         path: 'level',

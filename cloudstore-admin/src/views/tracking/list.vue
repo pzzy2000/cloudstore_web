@@ -59,7 +59,7 @@
         <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="editlogis(scope.$index, scope.row)">编辑</el-button>
-            <el-button type="danger" size="mini">删除</el-button>
+            <el-button type="danger" size="mini" @click="delLogis(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -82,7 +82,7 @@
   </div>
 </template>
 <script>
-   import { fetchList } from '@/api/tracking'
+   import { getLogistics,deleteLogis } from '@/api/tracking'
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
@@ -126,7 +126,7 @@
     methods: {
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
+        getLogistics(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
@@ -162,13 +162,20 @@
       addLogistics() {
         this.$router.push({
           path: "/sys/tracking/addlogistics",
-          query: {rds: "write"}
+          query: {optType: "save"}
         })
       },
       editlogis(index, row) {
         this.$router.push({
           path: "/sys/tracking/addlogistics",
-          query: {rds: "write", id: row.id}
+          query: {rds: "write", id: row.id, name: row.name, code: row.code, optType: "update"}
+        })
+      },
+      delLogis(row) {
+        deleteLogis({ids: row.id}).then(res => {
+          if (res.result.code == 0) {
+            this.getList();
+          }
         })
       }
     }

@@ -6,13 +6,12 @@
         <el-form-item label="物流公司：" prop="name">
           <el-input-dispatcher placeholder="请输入物流公司" v-model="logisticsList.name"></el-input-dispatcher>
         </el-form-item>
-        <el-form-item label="物流公司编码：" prop="ide">
-          <el-input-dispatcher placeholder="请输入物流公司编码" v-model="logisticsList.ide"></el-input-dispatcher>
+        <el-form-item label="物流公司编码：" prop="code">
+          <el-input-dispatcher placeholder="请输入物流公司编码" v-model="logisticsList.code"></el-input-dispatcher>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="addLogis" v-show="rwDispatcherState === 'write'">添加</el-button>
-          <el-button v-show="rwDispatcherState === 'write'" @click="toggleRds">取消</el-button>
-          <el-button v-show="rwDispatcherState === 'read'" @click="toggleRds">编辑</el-button>
+          <el-button type="primary" @click="addLogis" v-show="rwDispatcherState === 'write'">提交</el-button>
+          <el-button v-show="rwDispatcherState === 'write'" @click="backLastpage">取消</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -30,38 +29,50 @@
       },
       data() {
         return {
-          logisticsList: {},
-          rwDispatcherState: 'read',
+          logisticsList: {
+            name: '',
+            code: ''
+          },
+          rwDispatcherState: 'write',
           rules: {
             name: [{required: true, message: '请输入公司名称', trigger: 'blur'}],
-            ide: [{required: true, message: '请输入公司编码', trigger: 'blur'}],
+            code: [{required: true, message: '请输入公司编码', trigger: 'blur'}],
           },
           logisId: ''
         }
       },
       created() {
-        this.rwDispatcherState = this.$route.query.rds;
-        this.logisId = this.$route.query.id;
-
+        if (this.$route.query.rds !== undefined){
+          this.logisticsList.name = this.$route.query.name;
+          this.logisticsList.code = this.$route.query.code;
+        }
       },
       methods: {
-
         addLogis() {
           let obj = {
             name: this.logisticsList.name,
-            code: this.logisticsList.ide
-          };
+            code: this.logisticsList.code,
+            optType: this.$route.query.optType
+          }
+          if (this.$route.query.id !== undefined){
+            obj.id = this.$route.query.id
+          }
           addlogis(obj).then(res => {
-            console.log(res);
+            if (res.result.code == 0){
+              this.$router.push("/sys/tracking/list")
+            }
           })
         },
-        toggleRds() {
-          if (this.rwDispatcherState === 'write'){
-            this.rwDispatcherState = "read";
-          }else {
-            this. rwDispatcherState = "write";
-          }
+        backLastpage() {
+          this.$router.push("/sys/tracking/list")
         }
+        // toggleRds() {
+        //   if (this.rwDispatcherState === 'write'){
+        //     this.rwDispatcherState = "read";
+        //   }else {
+        //     this. rwDispatcherState = "write";
+        //   }
+        // }
       }
     }
 </script>

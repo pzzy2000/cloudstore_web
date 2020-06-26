@@ -6,7 +6,7 @@
           <!--基本信息--></span>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="baseinfo" ref="baseinfoFrom" size="small" label-width="130px">
+        <el-form :inline="true" :model="baseinfo" ref="baseinfoFrom" size="small" label-width="130px" :rules="rules">
           <el-divider content-position="left"><i class="el-icon-search"></i>商品基本信息</el-divider>
           <el-form-item label="商品名称：" required prop="goodsName">
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
