@@ -8,6 +8,8 @@ export function msg(msg) {
        })
   }
 
+
+
 export function switchForm(data) {
 let formData = new FormData();
       for (let key in data) {

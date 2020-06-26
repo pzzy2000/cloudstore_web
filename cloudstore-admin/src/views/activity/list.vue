@@ -20,19 +20,19 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="物流公司：">
+          <el-form-item label="活动名称：">
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
           </el-form-item>
           <el-form-item label="物流编码：">
             <el-input style="width: 214px" v-model="listQuery.access" placeholder="访问账号"></el-input>
           </el-form-item>
-           </el-form>
+        </el-form>
       </div>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right" @click="add">添加</el-button>
+      <el-button size="mini" style="float: right" @click="addactivity">添加活动</el-button>
       <!--
       <el-button
         class="btn-add"
@@ -50,17 +50,19 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="物流公司" width="400px" align="center" fixed>
+        <el-table-column label="活动名称" width="400px" align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
          </el-table-column>
-        <el-table-column label="物流公司编码" width="400px" align="center">
-          <template slot-scope="scope">{{scope.row.code}}</template>
+        <el-table-column label="是否显示在首页" align="center">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">
+            </el-switch>
+          </template>
         </el-table-column>
         <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="edit(scope.$index, scope.row)">编辑</el-button>
-            <el-button type="danger" size="mini">删除</el-button>
-             <el-button type="danger" size="mini" @click="addgoods(scope.$index, scope.row)">删除</el-button>
+            <el-button type="primary" size="mini" @click="associatedGood(scope.row)">活动商品</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -73,7 +75,7 @@
              @current-change="handleCurrentChange"
              layout="total, sizes,prev, pager, next,jumper"
              :page-size="listQuery.pageSize"
-             :page-sizes="[10]"
+             :page-sizes="[20]"
              :current-page.sync="listQuery.pageNum"
              :total="total">
            </el-pagination>
@@ -83,11 +85,11 @@
   </div>
 </template>
 <script>
-   import { fetchList } from '@/api/tracking'
+   import { fetchList } from '@/api/activity'
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
-    pageSize: 10,
+    pageSize: 20,
     optType:'search'
   };
   export default {
@@ -99,7 +101,7 @@
         list: null,
         total: null,
         listLoading: true,
-        multipleSelection: [],
+        multipleSelection: []
       }
     },
     created() {
@@ -128,6 +130,7 @@
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
+          console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
@@ -137,7 +140,9 @@
         this.listQuery.pageNum = 1;
         this.getList();
       },
+      changeSwitch(){
 
+      },
       handleSelectionChange(val){
         this.multipleSelection = val;
       },
@@ -160,17 +165,20 @@
               this.listQuery.pageSize = val;
               this.getList();
       },
-      add() {
+      addactivity() {
         this.$router.push({
-          path: "/sys/tracking/addlogistics",
-          query: {rds: "write"}
+          path: "/sys/activity/addact"
+          // query: {rds: "write"}
         })
       },
-      edit(index, row) {
+      associatedGood(row) {
         this.$router.push({
-          path: "/sys/tracking/addlogistics",
-          query: {rds: "write", id: row.id}
+          path: "/sys/activity/assogoods",
+          query: {name: row.name, activityid: row.id}
         })
+      },
+      handeldelGoods() {
+
       }
     }
   }

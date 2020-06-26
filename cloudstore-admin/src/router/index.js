@@ -6,6 +6,14 @@ Vue.use(Router)
 /* Layout */
 import Layout from '../views/layout/Layout'
 
+export  function back(){
+	 if (window.history.length > 1) {
+         this.$router.back()
+       } else {
+         this.$router.push('/sys/goods/list')
+       }
+}
+
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -36,25 +44,39 @@ export const constantRouterMap = [
 
 export const asyncRouterMap = [
 
- {
-    path:'/sys/activity',
-    component: Layout,
-    redirect: '/sys/activity/list',
-    name: 'activity',
-    meta: {title: '活动管理', icon: 'product-list'},
-     children: [{
-       path: 'list',
-       name: 'activity_list',
-       component: () => import('@/views/activity/list'),
-       meta: {title: '活动列表', icon: 'product-list'}
-     },
-     {
-       path: 'apply',
-       name: 'activity_apply',
-       component: () => import('@/views/activity/apply'),
-       meta: {title: '申请活动', icon: 'product-list'}
-     }]
-  },
+
+
+	 {
+		    path:'/sys/activity',
+		    component: Layout,
+		    redirect: '/sys/activity/list',
+		    name: 'activity',
+		    meta: {title: '活动管理', icon: 'product-list'},
+		     children: [{
+		       path: 'list',
+		       name: 'activity_list',
+		       component: () => import('@/views/activity/list'),
+		       meta: {title: '活动列表', icon: 'product-list'}
+		     },{
+		       path: 'addact',
+		       name: 'add_activity',
+		       component: () => import('@/views/activity/addactivity'),
+		       meta: {title: '添加活动', icon: 'product-list'},
+		       hidden: true
+		     },{
+		       path: 'assogoods',
+		       name: 'asso_goods',
+		       component: () => import('@/views/activity/activitygoods'),
+		       meta: {title: '活动商品', icon: 'product-list'},
+		       hidden: true
+		     },
+		     {
+		       path: 'apply',
+		       name: 'activity_apply',
+		       component: () => import('@/views/activity/assoGoods'),
+		       meta: {title: '申请活动', icon: 'product-list'}
+		     }]
+		  },
   {
     path:'/sys/supplier',
     component: Layout,
