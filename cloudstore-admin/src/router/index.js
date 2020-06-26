@@ -163,8 +163,13 @@ export const asyncRouterMap = [
          name: 'goods_property',
          component: () => import('@/views/pms/productAttr/index'),
          meta: {title: '商品规格参数', icon: 'product-list'}
-       }]
-
+       },{
+           path: 'addspec',
+           name: 'goods_addspec',
+           component: () => import('@/views/pms/productAttr/addspecification'),
+           meta: {title: '添加商品规格', icon: 'product-list'},
+           hidden: true
+         }]
   },{
     path:'/sys/agent',
     component: Layout,

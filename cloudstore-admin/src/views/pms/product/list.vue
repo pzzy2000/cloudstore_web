@@ -481,7 +481,7 @@
       },
       handleAddProduct() {
         this.$router.push({
-          path: '/sys/goods/addProduct'
+          path: '/sys/goods/add'
         });
       },
       handleBatchOperate() {

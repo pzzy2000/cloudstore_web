@@ -70,30 +70,10 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog
-      :title="dialogTitle"
-      :visible.sync="dialogVisible"
-      width="30%">
-      <!--<el-table-column label="编号" width="100" align="center">-->
-        <!--<template slot-scope="scope">{{scope.row.id}}</template>-->
-      <!--</el-table-column>-->
-      <el-form ref="productAttrCatForm":model="productAttrCate" :rules="rules" label-width="120px">
-        <el-form-item label="类型名称" prop="name">
-          <el-input v-model="productAttrCate.propertyName" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="描述" prop="descs">
-          <el-input v-model="productAttrCate.descs" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm('productAttrCatForm')">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
-  import {fetchList,createProductAttrCate,deleteProductAttrCate,updateProductAttrCate} from '@/api/productAttrCate'
+  import {fetchList,deleteProductAttrCate} from '@/api/productAttrCate'
 
   export default {
     name: 'productAttrCateList',
@@ -107,16 +87,7 @@
           pageSize: 5
         },
         dialogVisible: false,
-        dialogTitle:'',
-        productAttrCate:{
-          propertyName:'',
-          id:null
-        },
-        rules: {
-          propertyName: [
-            { required: true, message: '请输入类型名称', trigger: 'blur' }
-          ]
-        }
+        dialogTitle:''
       }
     },
     created() {
@@ -132,8 +103,7 @@
         });
       },
       addProductAttrCate() {
-        this.dialogVisible = true;
-        this.dialogTitle = "添加类型";
+        this.$router.push("/sys/goods/addspec");
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
@@ -161,47 +131,18 @@
         });
       },
       handleUpdate(index, row) {
-        this.dialogVisible = true;
-        this.dialogTitle = "编辑类型";
-        this.productAttrCate.propertyName = row.propertyName;
-        this.productAttrCate.descs = row.descs;
-         this.productAttrCate.id = row.id;
+        // this.dialogVisible = true;
+        // this.dialogTitle = "编辑类型";
+        // this.productAttrCate.propertyName = row.propertyName;
+        // this.productAttrCate.descs = row.descs;
+        // this.productAttrCate.id = row.id;
+        this.$router.push({path: "/sys/goods/addspec", query: {propertyName: row.propertyName, descs: row.descs, id: row.id}});
       },
       getAttrList(index, row) {
         this.$router.push({path: '/sys/goods/param',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:0}})
       },
       getParamList(index, row) {
         this.$router.push({path: '/sys/goods/param',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:1}})
-      },
-      handleConfirm(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if(this.dialogTitle==="添加类型"){
-              createProductAttrCate({'propertyName':this.productAttrCate.propertyName,'descs':this.productAttrCate.descs,'optType':'save'}).then(response=>{
-                this.$message({
-                  message: '添加成功',
-                  type: 'success',
-                  duration:1000
-                });
-                this.dialogVisible = false;
-                this.getList();
-              });
-            }else{
-              updateProductAttrCate({'id':this.productAttrCate.id,'propertyName':this.productAttrCate.propertyName,'descs':this.productAttrCate.descs,'optType':'update'}).then(response=>{
-                this.$message({
-                  message: '修改成功',
-                  type: 'success',
-                  duration:1000
-                });
-                this.dialogVisible = false;
-                this.getList();
-              });
-            }
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
       }
     }
   }

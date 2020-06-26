@@ -28,7 +28,6 @@
           </el-form-item>
           <el-form-item label="电话号码：">
             <el-input style="width: 214px" v-model="listQuery.phone" placeholder="电话号码"></el-input>
-            </el-form-item>
           </el-form-item>
           <el-form-item label="用户类型：">
             <el-select v-model="listQuery.userType" placeholder="全部" clearable>
@@ -245,7 +244,6 @@
         this.getList();
       },
       handleUpdateUserInfo(index, row){
-
         let  pageNum = this.listQuery.pageNum;
         let  pageSize =this.listQuery.pageSize;
         let   userId = row.id;
