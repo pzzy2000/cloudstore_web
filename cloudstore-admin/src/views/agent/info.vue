@@ -293,11 +293,7 @@
       category1(e) {
 
       },
-
-
-
       async loadInfo() {
-
         if (this.agentId === null) {
           msg("系统错误,没有发现商品信息[id]");
           return;
@@ -313,10 +309,8 @@
           } else {
             msg("系统错误,获得商品信息错误");
           }
-
         });
       },
-
       cancelList() {
         if (window.history.length > 1) {
           this.$router.back()

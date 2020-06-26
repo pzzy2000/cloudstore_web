@@ -22,6 +22,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button size="mini" style="float: right" @click="addagency">添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
@@ -92,13 +93,11 @@
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 5,
-
   };
   export default {
     name: "agentlist",
     data() {
       return {
-
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,
@@ -161,7 +160,9 @@
           return '数据读取错误';
         }
       },
-
+      addagency() {
+        this.$router.push({path: '/sys/agent/info'})
+      },
       showStatus(row, column) {
         let status = row.status;
         switch (status) {
