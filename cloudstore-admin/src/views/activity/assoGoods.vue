@@ -19,49 +19,25 @@
         <!--@selection-change="handleSelectionChange"-->
         <el-table-column type="selection" width="50">
         </el-table-column>
-        <el-table-column label="商品名称">
-          <template slot-scope="scope">{{ scope.row.goodsBean.goodsName }}</template>
+        <el-table-column label="商品名称" align="center" :formatter="goodsinfo" column-key='goodsName' fixed="">
         </el-table-column>
-        <!--<el-table-column-->
-        <!--prop="name"-->
-        <!--label="商品品牌">-->
-        <!--<template slot-scope="scope">{{ scope.row.goodsBrand }}</template>-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-        <!--prop="address"-->
-        <!--label="商品货号">-->
-        <!--<template slot-scope="scope">{{ scope.row.goodsNumber }}</template>-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-        <!--prop="address"-->
-        <!--label="商品规格类别">-->
-        <!--<template slot-scope="scope">{{ scope.row.goodsName }}</template>-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-        <!--prop="address"-->
-        <!--label="产地">-->
-        <!--<template slot-scope="scope">{{ scope.row.goodsName }}</template>-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-        <!--prop="address"-->
-        <!--label="商品分类">-->
-        <!--<template slot-scope="scope">{{ scope.row.goodsName }}</template>-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-        <!--prop="address"-->
-        <!--label="销售价格/市场价">-->
-        <!--<template slot-scope="scope">￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-        <!--prop="address"-->
-        <!--label="所属店铺">-->
-        <!--<template slot-scope="scope">{{ scope.row.goodsName }}</template>-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-        <!--prop="address"-->
-        <!--label="所属供应商">-->
-        <!--<template slot-scope="scope">{{ scope.row.goodsName }}</template>-->
-        <!--</el-table-column>-->
+        <el-table-column label="商品分类" align="center" fixed :formatter="goodsinfo" column-key="category">
+        </el-table-column>
+        <el-table-column label="销售价/市场价" align="center" fixed :formatter="goodsinfo" column-key="pics">
+        </el-table-column>
+        <el-table-column label="商品图片" align="center"  column-key="goodsPhotos">
+          <template slot-scope="scope">
+            <el-image v-for=" (item,index) in scope.row.goodsPicesBean.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">
+              <div slot="placeholder" class="image-slot">
+                加载中<span class="dot">...</span>
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column label="供应商" align="center" fixed :formatter="goodsinfo" column-key="supplierBean">
+        </el-table-column>
+        <el-table-column label="供应商店铺" align="center" fixed :formatter="goodsinfo" column-key="supplierShopBean">
+        </el-table-column>
         <el-table-column prop="address" label="是否关联">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#13ce66"
@@ -115,6 +91,47 @@
       // this.getList();
     },
     methods: {
+      goodsinfo(row, column) {
+        let goods = row.goodsPicesBean;
+        switch (column.columnKey) {
+          case 'goodsName':
+            {
+              return goods.goodsName;
+            }
+          case 'category':
+            {
+              try {
+                return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
+              } catch (e) {
+                return '数据读取错误';
+              }
+            }
+          case 'pics':
+            {
+              try {
+                return '￥' + goods.salePrice + '/' + goods.martPrice;
+              } catch (e) {
+                return '数据读取错误';
+              }
+            }
+          case 'supplierBean':
+            {
+              try {
+                return goods.supplierBean.name;
+              } catch (e) {
+                return '数据读取错误';
+              }
+            }
+          case 'supplierShopBean':
+            {
+              try {
+                return goods.supplierShopBean.shopName;
+              } catch (e) {
+                return '数据读取错误';
+              }
+            }
+        }
+      },
       activityList() {
         this.loading = true;
         fetchActivityList({
@@ -130,7 +147,7 @@
         this.getList(activityId);
       },
       getList(activityId) {
-
+         this.list=[];
         fetchAllgoods(this.listQuery).then(response => {
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
