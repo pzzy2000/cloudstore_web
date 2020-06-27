@@ -57,11 +57,27 @@
           if (this.$route.query.id !== undefined){
             obj.id = this.$route.query.id
           }
-          addlogis(obj).then(res => {
-            if (res.result.code == 0){
-              this.$router.push("/sys/tracking/list")
-            }
-          })
+          if (this.$route.query.optType == "save"){
+            addlogis(obj).then(res => {
+              if (res.result.code == 0){
+                this.$message({
+                  message: '添加成功',
+                  type: 'success'
+                });
+                this.$router.push("/sys/tracking/list")
+              }
+            })
+          }else {
+            addlogis(obj).then(res => {
+              if (res.result.code == 0){
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                });
+                this.$router.push("/sys/tracking/list")
+              }
+            })
+          }
         },
         backLastpage() {
           this.$router.push("/sys/tracking/list")

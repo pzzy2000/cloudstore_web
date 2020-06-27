@@ -50,8 +50,8 @@
           }).then(res => {
             console.log(res);
             if (res.result.code == 0) {
-              msg("添加活动成功")
-              // this.$router.push("/sys/activity/list")
+              msg("添加活动成功");
+              this.$router.push("/sys/activity/list")
             }
           })
         }

@@ -80,3 +80,11 @@ export function outAssogoods(params) {
     data: switchForm(params)
   })
 }
+
+export function searchLogis(params) {
+  return request({
+    url: '/sys/tracking/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

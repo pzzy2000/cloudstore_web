@@ -150,9 +150,7 @@
           outAssogoods({
             ids: row.activityGoodsId
           }).then(res => {
-
             if (res.result.code == 0) {
-
               msg('商品:['+goods.name+']申请退出活动成功');
             }
           })
@@ -164,7 +162,6 @@
           }).then(res => {
             if (res.result.code == 0) {
                msg('商品:['+goods.name+']申请加入出活动成功');
-
             }
           })
         }

@@ -101,7 +101,7 @@
         list: null,
         total: null,
         listLoading: true,
-        multipleSelection: [],
+        multipleSelection: []
       }
     },
     created() {
@@ -130,6 +130,7 @@
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
+          console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
@@ -139,7 +140,9 @@
         this.listQuery.pageNum = 1;
         this.getList();
       },
+      changeSwitch(){
 
+      },
       handleSelectionChange(val){
         this.multipleSelection = val;
       },
@@ -162,17 +165,20 @@
               this.listQuery.pageSize = val;
               this.getList();
       },
-      add() {
+      addactivity() {
         this.$router.push({
-          path: "/sys/tracking/addlogistics",
-          query: {rds: "write"}
+          path: "/sys/activity/addact"
+          // query: {rds: "write"}
         })
       },
-      edit(index, row) {
+      associatedGood(row) {
         this.$router.push({
-          path: "/sys/tracking/addlogistics",
-          query: {rds: "write", id: row.id}
+          path: "/sys/activity/assogoods",
+          query: {name: row.name, id: row.id}
         })
+      },
+      handeldelGoods() {
+
       }
     }
   }

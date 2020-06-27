@@ -40,3 +40,11 @@ export function saveUpate(params) {
     data: switchForm(params)
   })
 }
+
+export function searchDictionaries(params) {
+  return request({
+    url: '/sys/dict/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

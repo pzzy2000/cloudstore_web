@@ -21,10 +21,10 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="物流公司：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="物流公司名字"></el-input>
           </el-form-item>
           <el-form-item label="物流编码：">
-            <el-input style="width: 214px" v-model="listQuery.access" placeholder="访问账号"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.code" placeholder="物流编码"></el-input>
           </el-form-item>
            </el-form>
       </div>
@@ -82,7 +82,7 @@
   </div>
 </template>
 <script>
-   import { getLogistics,deleteLogis } from '@/api/tracking'
+   import { getLogistics,deleteLogis,searchLogis } from '@/api/tracking'
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
@@ -133,8 +133,18 @@
         });
       },
       handleSearchList() {
-        this.listQuery.pageNum = 1;
-        this.getList();
+        // this.listQuery.pageNum = 1;
+        // this.getList();
+        searchLogis(this.listQuery).then(res => {
+          if (res.result.code == 0){
+            this.$message({
+              message: '查询成功',
+              type: 'success'
+            });
+            this.list = res.result.result.records;
+            this.total = parseInt(res.result.result.total);
+          }
+        })
       },
 
       handleSelectionChange(val){
@@ -155,9 +165,9 @@
         this.listQuery = Object.assign({}, defaultListQuery);
       },
       handleSizeChange(val) {
-              this.listQuery.pageNum = 1;
-              this.listQuery.pageSize = val;
-              this.getList();
+        this.listQuery.pageNum = 1;
+        this.listQuery.pageSize = val;
+        this.getList();
       },
       addLogistics() {
         this.$router.push({
@@ -174,6 +184,10 @@
       delLogis(row) {
         deleteLogis({ids: row.id}).then(res => {
           if (res.result.code == 0) {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
             this.getList();
           }
         })

@@ -20,14 +20,30 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="用11户名字：">
-            <el-input style="width: 203px" v-model="listQuery.name" placeholder="商品名称"></el-input>
+          <el-form-item label="字典code：">
+            <el-input style="width: 203px" v-model="listQuery.code" placeholder="字典code"></el-input>
           </el-form-item>
-          <el-form-item label="访问账号：">
-            <el-input style="width: 203px" v-model="listQuery.phone" placeholder="商品货号"></el-input>
+          <el-form-item label="字典名称：">
+            <el-input style="width: 203px" v-model="listQuery.name" placeholder="字典名称"></el-input>
           </el-form-item>
-
-
+          <el-form-item label="字典类型：">
+            <el-select v-model="listQuery.dirctType" placeholder="字典类型">
+              <el-option label="服务保证" value="fubz"></el-option>
+              <el-option label="行政划分" value="area"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否有子类：">
+            <el-select v-model="listQuery.childs" placeholder="是否有子类">
+              <el-option label="有子类" value="1"></el-option>
+              <el-option label="无子类" value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否删除：">
+            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除">
+              <el-option label="未删除" value="0"></el-option>
+              <el-option label="已删除" value="1"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -56,7 +72,7 @@
         <el-table-column label="字典名称" align="center">
          <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        
+
         <el-table-column label="字典类型" align="center">
          <template slot-scope="scope">{{scope.row.dirctType.name}}</template>
         </el-table-column>
@@ -114,7 +130,7 @@
   </div>
 </template>
 <script>
-  import {fetchList} from '@/api/sysdict'
+  import {fetchList,searchDictionaries} from '@/api/sysdict'
 
   const defaultListQuery = {
     pageNum: 1,
@@ -131,6 +147,7 @@
         total: null,
         listLoading: true,
         multipleSelection: [],
+        verifyList: {}
       }
     },
     created() {
@@ -153,10 +170,10 @@
        }
     },
     methods: {
-
       resetParentId(){
         this.listQuery.pageNum = 1;
         if (this.$route.query.parentId != null) {
+          console.log(this.$route.query.parentId);
           this.listQuery.parentId = this.$route.query.parentId;
         } else {
           this.listQuery.parentId = 0;
@@ -164,9 +181,9 @@
       },
 
       tochild(index, row){
-          this.$router.push({path: '/sys/manager/dict/list', query: {parentId: row.id}});
+        this.listQuery = Object.assign({}, defaultListQuery);
+        this.$router.push({path: '/sys/manager/dict/list', query: {parentId: row.id}});
       },
-
       haveChild(row, column){
         let  childs  = row.childs;
         switch(childs){
@@ -198,13 +215,27 @@
           this.total = parseInt(response.result.result.total);
         });
       },
-
-
-
-
       handleSearchList() {
-        this.listQuery.pageNum = 1;
-        this.getList();
+        // this.listQuery.pageNum = 1;
+        // this.getList();
+        // let obj = {
+        //   code: this.verifyList.dictcode,
+        //   province: this.verifyList.dictname,
+        //   codeType: this.verifyList.dicttype,
+        //   childs: this.verifyList.ischildren,
+        //   isDelete: this.verifyList.isdelete
+        // }
+        // if (this.listQuery.)
+        searchDictionaries(this.listQuery).then(res => {
+          if (res.result.code == 0) {
+            this.$message({
+              message: '查询成功',
+              type: 'success'
+            })
+            this.list = res.result.result.records;
+            this.total = parseInt(res.result.result.total);
+          }
+        })
       },
 
       handleSizeChange(val) {
@@ -219,11 +250,10 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-
-
       handleResetSearch() {
-        this.selectProductCateValue = [];
-        this.listQuery = Object.assign({}, defaultListQuery);
+        // this.selectProductCateValue = [];
+        // this.listQuery = Object.assign({}, defaultListQuery);
+        this.listQuery = {};
       },
       handleDelete(index, row){
         this.$confirm('是否要进行删除操作?', '提示', {
