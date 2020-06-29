@@ -31,16 +31,16 @@
 				</view>
 			</view>
 			<!-- 分类 -->
-			<view class="cate-section">
-				<view class="cate-item" @click="navToTabPage('../../pagesA/product/groupActivityList')">
+			<view class="cate-section" v-for="(item,index) in hotList" :key="index">
+				<view class="cate-item" @click="navToHotDetail(item)">
 					<image src="/static/temp/c3.png"></image>
-					<text>套餐商品</text>
+					<text>{{item.name}}</text>
 				</view>
-				<view class="cate-item" @click="navToTabPage('../../pagesA/product/groupList')">
-					<image src="/static/temp/c5.png"></image>
-					<text>拼团活动</text>
+				<view class="cate-item" v-for="(item,index) in oldHotList" :key="index">
+					<image :src="item.url"></image>
+					<text>{{item.name}}</text>
 				</view>
-				<view class="cate-item" @click="navToTabPage('../../pagesA/product/giftList')">
+				<!-- <view class="cate-item" @click="navToTabPage('../../pagesA/product/giftList')">
 					<image src="/static/temp/c6.png"></image>
 					<text>积分商城</text>
 				</view>
@@ -51,9 +51,9 @@
 				<view class="cate-item" @click="navToTabPage('../../pagesA/build/communityList')">
 					<image src="/static/temp/c8.png"></image>
 					<text>社区商城</text>
-				</view>
+				</view> -->
 			</view>
-			<view class="cate-section">
+			<!-- <view class="cate-section">
 				<view class="cate-item" @click="navToTabPage('../../pagesA/product/list?isFenxiao=1')">
 					<image src="/static/temp/c3.png"></image>
 					<text>分销商品</text>
@@ -74,10 +74,10 @@
 					<image src="/static/temp/c8.png"></image>
 					<text>精选标签</text>
 				</view>
-			</view>
+			</view> -->
 
 			<!-- 秒杀楼层 https://s.click.taobao.com/Wds7c1w -->
-			<view class="seckill-section m-t" v-if="homeFlashPromotion.flashSessionInfoList && homeFlashPromotion.flashSessionInfoList.length > 0">
+			<!-- <view class="seckill-section m-t" v-if="homeFlashPromotion.flashSessionInfoList && homeFlashPromotion.flashSessionInfoList.length > 0">
 				<view class="s-header">
 					<view class="" style="width: 80%;display: flex;flex-direction: row;align-items: center;">
 						<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix" @click="navToDetailPageL('https://s.click.taobao.com/Wds7c1w')"></image>
@@ -117,8 +117,36 @@
 					<image v-else src="/static/missing-face.png"></image>
 					<text>{{ item1.name |formatLongText }}</text>
 				</view>
+			</view> -->
+			<!-- 热门活动 -->
+			<view v-for="(item, index) in hotList" :key='index'>
+				<view class="f-header m-t" @click="navToHotDetail(item)">
+					<image src="/static/temp/c3.png"></image>
+					<view class="tit-box">
+						<text class="tit">{{item.name}}</text>
+						<text class="tit2">Guess You Like It</text>
+					</view>
+					<text class="yticon icon-you"></text>
+				</view>
+				<view class="hot-list">
+					<view v-for="(item1, index) in hotGoodsList" :key="index" class="goods-item" @click="navToDetailPage(item1)" v-if="item.id === item1.activityId">
+						<view class="image-wrapper"><image src="" mode="aspectFill"></image></view>
+						<view class="goods-detail" >
+							<text class="title clamp">{{item1.goodsBean.goodsName}}</text>
+							<text class="title clamp subhead ">{{item1.goodsBean.goodsSubtitle}}</text>
+							<view class="price-box">
+								<view class="price">
+									<text class="priceSale">{{item1.goodsBean.salePrice}}</text>
+									/
+									<text class="pricemart">{{item1.goodsBean.martPrice}}</text>
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
 			</view>
-
+			
+			
 			<!-- 优惠券  https://s.click.taobao.com/OPh3c1w -->
 			<coupon v-for="(item, index) in couponList" :key="index" v-bind:item="item" theme="#ff0000"></coupon>
 
@@ -131,7 +159,7 @@
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
-			<view class="group-section">
+			<!-- <view class="group-section">
 				<swiper class="g-swiper" :duration="500">
 					<swiper-item class="g-swiper-item" v-for="(item, index) in groupHotGoodsList" :key="index" v-if="index % 2 === 0"
 					 @click="navToGroupDetailPage(item)">
@@ -151,7 +179,7 @@
 						</view>
 					</swiper-item>
 				</swiper>
-			</view>
+			</view> -->
 
 			<!-- 分类推荐楼层 -->
 			<view class="f-header m-t" @click="navToTabPage('../../pagesA/product/list')" v-if="false">
@@ -224,7 +252,7 @@
 
 			</view>
 			<!-- 新品上市 -->
-			<view class="f-header m-t" @click="navToTabPage('../../pagesA/product/list')">
+			<!-- <view class="f-header m-t" @click="navToTabPage('../../pagesA/product/list')">
 				<image src="/static/temp/h1.png"></image>
 				<view class="tit-box">
 					<text class="tit">新品上市</text>
@@ -243,7 +271,7 @@
 					<text>【{{ item.storeName }}】</text>
 				</view>
 				<uni-load-more :status="loadingType"></uni-load-more>
-			</view>
+			</view> -->
 			<mallplusCopyright></mallplusCopyright>
 		</view>
 	</view>
@@ -288,6 +316,46 @@
 				groupHotGoodsList: [],
 				couponList: [],
 				storeList: [],
+				hotList: [],
+				oldHotList: [
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					},
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					},
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					},
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					},
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					},
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					},
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					},
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					},
+					{
+						name: '敬请期待',
+						url: '/static/temp/c5.png'
+					}
+				],
+				hotGoodsList: [],
 				newProductList: []
 			};
 		},
@@ -421,6 +489,7 @@
 			async loadData() {
 				// this.getBanner();
 				// this.getHotGoodsList();
+				this.homeHotEvents()
 				// //this.getFlashPromotion();
 				// this.getCouponList();
 				// this.getStoreList();
@@ -438,8 +507,46 @@
 				if (groupHotGoodsList) {
 					this.homeNewProductList = groupHotGoodsList.records;
 				}
-
-
+			},
+			// 热门活动
+			async homeHotEvents () {
+				let hotEventsGoodsList = await Api.apiCall('post', Api.home.activity);
+				if (hotEventsGoodsList) {
+					this.hotList = hotEventsGoodsList.result.records
+					console.log(this.hotList)
+					for (let data in this.hotList) {
+						var params = {
+							activityId: this.hotList[data].id,
+							pageNum: '1',
+							pageSize: '2'
+						}
+						let list = await Api.apiCall('post', Api.home.activityGoodList, params, 0);
+						if (list) {
+							var goodsList = list.result.records
+							for (let data in goodsList) {
+								this.hotGoodsList.push({
+									activityId: goodsList[data].activityId,
+									goodsBean: goodsList[data].goodsBean,
+									goodsId: goodsList[data].goodsId,
+									id: goodsList[data].id,
+									isDelete: goodsList[data].isDelete,
+									userId: goodsList[data].userId,
+									userType: goodsList[data].userType,
+								})
+							}
+						}
+						console.log(this.hotGoodsList)
+					}
+				}
+				// let params = {
+				// 	pageNum: '1',
+				// 	pageSize: '10'
+				// };
+				// let list = await Api.apiCall('post', Api.goods.list, params);
+				// if (list) {				
+				// 	this.hotList = list.result.records
+				// 	console.log(this.hotList)
+				// }
 			},
 			/**
 			 * 获取人气推荐
@@ -653,12 +760,18 @@
 					url: `../../pagesC/store/businessDetails?id=${id}`
 				});
 			},
-			//详情页
+			//热门活动去详情
 			navToDetailPage(item) {
-				//测试数据没有写id，用title代替
+				let id = item.goodsId;
+				uni.navigateTo({
+					url: '../goods/goodsDetail/goodsDetail?id='+id
+				});
+			},
+			//去热门活动列表
+			navToHotDetail (item) {
 				let id = item.id;
 				uni.navigateTo({
-					url: `../../pagesA/product/product?id=${id}`
+					url: '../goods/hotGoodsList/hotGoodsList?id='+id
 				});
 			},
 			//详情页
@@ -903,7 +1016,7 @@
 	/* 分类 */
 	.cate-section {
 		display: flex;
-		justify-content: space-around;
+		flex-wrap: wrap;
 		align-items: center;
 		flex-wrap: wrap;
 		padding: 30upx 22upx;
@@ -912,6 +1025,8 @@
 		.cate-item {
 			display: flex;
 			flex-direction: column;
+			width: 20%;
+			padding: 10rpx 0;
 			align-items: center;
 			font-size: $font-sm + 2upx;
 			color: $font-color-dark;
@@ -939,7 +1054,87 @@
 			height: 100%;
 		}
 	}
-
+	
+	//热门活动
+	.hot-list {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 0 30upx;
+		background: #fff;
+		.goods-item {
+			display: flex;
+			flex-direction: column;
+			flex-flow: nowrap;
+			width: 100%;
+			padding-bottom: 40upx;
+			// &:nth-child(2n + 1) {
+			// 	margin-right: 4%;
+			// }
+		}
+		.image-wrapper {
+			border-radius: 3px;
+			overflow: visible;
+			image {
+				width: 200upx;
+				height: 200upx;
+				overflow: visible;
+				opacity: 1;
+			}
+		}
+		.goods-detail {
+			display: inline-block;
+			width: 100%;
+			padding: 0 30rpx;
+			.title {
+				font-size: $font-lg;
+				color: $font-color-dark;
+				line-height: 65upx;
+			}
+			.subhead {
+				color: #333;
+				font-size: 30upx;
+			}
+			.price-box {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding-right: 10upx;
+				font-size: 24upx;
+				color: $font-color-light;
+				.price {
+					.priceSale {
+						font-size: 40upx;
+						color: $uni-color-primary;
+						line-height: 1;
+						&:before {
+							// content: '￥';
+							font-size: 26upx;
+						}	
+					}
+					.pricemart {
+						font-size: 25upx;
+						color: #000;
+						text-decoration:line-through;
+						line-height: 1;
+						&:before {
+							content: '￥';
+							font-size: 26upx;
+						}	
+					}
+				}
+				.goodsBtn {
+					font-size: 30upx;
+					color: #fff;
+					background: red;
+					height: 70upx;
+					line-height: 70upx;
+					width: 150upx;
+					padding: 0;
+					margin: 0;
+				}
+			}
+		}
+	}
 	/* 秒杀专区 */
 	.seckill-section {
 		padding: 0upx 20upx 20upx;
@@ -1053,7 +1248,7 @@
 		background: #fff;
 
 		.g-swiper {
-			height: 650upx;
+			// height: 650upx;
 			padding-bottom: 20upx;
 		}
 

@@ -5,7 +5,6 @@
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<!-- #ifdef H5 -->
 			<view class="left-top-sign">{{ sysInfo.name }}LOGIN</view>
 			<view class="welcome">代理登录</view>
 			<view class="input-content">
@@ -19,20 +18,24 @@
 				</view>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
-			<!-- <button v-if="isWeiXin == 1" class="confirm-btn" @click="wechatH5Login" :disabled="logining">微信授权登录</button>  -->
+			<!-- <button v-if="isWeiXin == 1" class="confirm-btn" @click="wechatH5Login" :disabled="logining">微信授权登录</button> -->
+			<!-- <button class="confirm-btn" @click="wechatH5Login" :disabled="logining">微信授权登录</button> -->
+			<!-- #ifdef MP-WEIXIN -->
+				<button open-type="getUserInfo" @getuserinfo='getWxInfo' class="vx-btn">
+					<image src="../../static/temp/share_wechat.png" mode="" class="wxLogin"></image>
+				</button>
+			<!-- #endif -->
 			<view class="forget-section" @click="toForget">忘记密码?</view>
 			<!-- 
 			<view class="forget-section" @click="toLoginCode">验证码登录</view>
 			-->
-			<!-- #endif -->
-			<!-- #ifdef MP-WEIXIN -->
-			<button class="confirm-btn" open-type="getUserInfo" @getuserinfo="wxGetUserInfo" withCredentials="true">微信登录</button>
+			<!-- <button class="confirm-btn" open-type="getUserInfo" @getuserinfo='getWxInfo' withCredentials="true">微信授权用户信息</button>
+			<button class="confirm-btn" open-type="getPhoneNumber" @getphonenumber='getPhoneNumber' withCredentials="true">微信授权手机号</button> -->
 			<!-- <button class="confirm-btn" open-type="getUserInfo" @getuserinfo="wxGetUserInfo" withCredentials="true" v-if="isGetPhone == false">微信登录</button> -->
-			<!-- #endif -->
 
-			<!-- #ifdef APP-PLUS -->
-			<button class="confirm-btn" type="primary" open-type="getUserInfo" @click="getuserinfoh5appwx" withCredentials="true">微信登录</button>
-			<!-- #endif -->
+			<!-- 这里是app -->
+			<!-- <button class="confirm-btn" type="primary" open-type="getUserInfo" @click="getuserinfoh5appwx" withCredentials="true">微信登录</button> -->
+
 		</view>
 		<view class="register-section">
 			还没有账号?<text @click="toRegist">马上注册</text> <text @click="regagent">代理注册111</text>
@@ -61,14 +64,14 @@
 				isWeiXin: false,
 				sysInfo: '',
 				logining: false,
-				loginCode: '',//获取code
+				wxloginCode: '',//获取code
 				loginInfo: ''
 			};
 		},
 		onLoad() {
 			this.sysInfo = this.$db.get('sysInfo');
 			this.isWeiXin = this.$config.isWeiXin;
-			//this.getWxlogin()
+			// this.getWxlogin()
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
@@ -106,144 +109,102 @@
 					escape(href) +
 					'&response_type=code&scope=snsapi_userinfo&state=mallplus#wechat_redirect';
 			},
-			getWxlogin () {
+			
+			async login(params){
+				let data = await Api.apiCall('post', Api.agent.userlogin, params);
+				return data;
+				
+			},
+			  getWxInfo () {
+			// getWxlogin () { //获取code
+				var that = this;
 				uni.login({
 					provider: 'weixin',
-					success: function(loginRes) {
-						this.loginCode = loginRes.code
+					success: function (loginRes) {
+					    console.log(loginRes.code)
+						var code = loginRes.code
+						let  params = {
+							'logintype': 'weixin',
+							'password': code,
+							'access':code
+						}
+						let data = that.login(params);
+						if(data){
+							
+						}else{
+							
+						}
+						
+						
 					}
 				});
-			},
-			checksession : function() {
-				var that = this;
-				uni.checkSession({
-					success: function(res){
-						//console.log("不需要重新登录");
-            
-						uni.switchTab({
-							url: '/pages/index/index'
-						});
-						let datas = '';
-						let errmsg = '';
-						uni.login({
-							provider: 'weixin',
-							success: function(loginRes) {
-								//console.log(loginRes)
-								var params = {
-									code: loginRes.code,
-									userInfo: that.loginInfo.detail.rawData,
-									cloudId: that.loginInfo.detail.cloudID,
-									encryptedData: that.loginInfo.detail.encryptedData,
-									iv: that.loginInfo.detail.iv,
-									source: 2,
-									signature: that.loginInfo.detail.signature,
-									userType:'agent',
-								};
-								console.log(params)
-								// uni.switchTab({
-								// 	url: '/pages/index/index'
-								// });
-								that.loginByWeixinNoPhone(params);
-							}
-						});
-        },
-					fail: function(res){
-						const that = this;
-						let datas = '';
-						let errmsg = '';
-						uni.login({
-							provider: 'weixin',
-							success: function(loginRes) {
-								console.log(loginRes)
-								console.log(that.loginInfo)
-								var params = {
-									code: loginRes.code,
-									userInfo: that.loginInfo.detail.rawData,
-									cloudID: that.loginInfo.detail.cloudID,
-									encrypted_data: that.loginInfo.detail.encryptedData,
-									iv: that.loginInfo.detail.iv,
-									source: 2,
-									signature: that.loginInfo.detail.signature,
-									userType:'agent',
-								};
-								console.log(params)
-								// uni.switchTab({
-								// 	url: '/pages/index/index'
-								// });
-								that.loginByWeixinNoPhone(params);
-							}
-						});
-					}
-				})
-			},
-			wxGetUserInfo : function(res) {
-        this.loginInfo = res
-        console.log(this.loginInfo)
-        uni.setStorageSync('userInfo', this.loginInfo.detail.userInfo);
-        uni.setStorageSync('token', '1');
-        uni.switchTab({
-        	url: '/pages/index/index'
-        });
-				//this.checksession ()
-				// if (!res.detail.iv) {
-				// 	uni.showToast({
-				// 		title: '您取消了授权,登录失败',
-				// 		icon: 'none'
-				// 	});
-				// 	return false;
-				// }
-				// this.login(res.detail.rawData);
-				// const that = this;
-				// let datas = '';
-				// let errmsg = '';
-				// uni.login({
-				// 	provider: 'weixin',
-				// 	success: function(loginRes) {
-				// 		console.log(loginRes)
-				// 		var params = {
-				// 			code: loginRes.code,
-				// 			userInfo: res.detail.rawData,
-				// 			cloudID: res.detail.cloudID,
-				// 			encrypted_data: res.detail.encryptedData,
-				// 			iv: res.detail.iv,
-				// 			source: 2,
-				// 			signature: res.detail.signature
-				// 		};
-				// 		uni.switchTab({
-				// 			url: '/pages/index/index'
-				// 		});
-				// 		//that.loginByWeixinNoPhone(params);
+				// uni.checkSession({
+				// 	success(res) {
+				// 		console.log(res)
+				// 		console.log('状态未过期')
+				// 		// uni.switchTab({
+				// 		// 	url: '/pages/index/index',
+				// 		// });
+				// 	},
+				// 	fail(res) {
+				// 		console.log(res)
+				// 		console.log('状态已过期')
+				// 		// uni.login({
+				// 		//   provider: 'weixin',
+				// 		//   success: function (loginRes) {
+				// 		// 	   console.log(loginRes)
+				// 		// 	   that.wxloginCode = loginRes.code
+				// 		//   }
+				// 		// });
 				// 	}
-				// });
+				// })
 			},
+			// getWxInfo () { //获取微信用户信息
+			// 	var that = this;
+			// 	uni.getUserInfo({
+			// 	    provider: 'weixin',
+			// 	    success: function (infoRes) {
+			// 			console.log(infoRes)
+			// 			// var userInfo = {
+			// 			// 	name: infoRes.userInfo.nickName,
+			// 			// 	url: infoRes.userInfo.avatarUrl
+			// 			// }
+			// 		 //    uni.setStorageSync('userInfo', userInfo)
+			// 			// uni.setStorageSync('wxInfo', infoRes)
+			// 			// uni.navigateTo({
+			// 			// 	url: '/pages/public/getVxPhone?code='+that.wxloginCode,
+			// 			// });
+			// 	   }
+			// 	});
+			// },
 			loginByWeixinNoPhone(datas) {
-        var that = this;
+				var that = this;
 				uni.request({
 					// url: 'http://120.24.156.254:18888/platform/'+Api.agent.wx,
 					url: 'http://120.24.156.254:18888/platform/'+Api.agent.wx,
 					method: 'post',
 					data: datas,
 					success: function(res) {
-						let data = res.data.result.result
-            uni.setStorageSync('token', data.token);
-            let params = {
-              "accessKey": data.accessKey,
-              "encryptedData": that.loginInfo.detail.encryptedData,
-              "iv": that.loginInfo.detail.iv,
-              "openid": data.openid
-            }
-            // var demo = Api.apiCall('post', Api.agent.savePhone, params)
-            uni.request({
-              url: 'http://120.24.156.254:18888/platform/'+Api.agent.savePhone,
-              method: 'post',
-              header:{
-                'auth': uni.getStorageSync('token'),
-              },
-              data: params,
-              success: function(res) {
-                console.log(res)
-              }
-            })
+					let data = res.data.result.result
+					uni.setStorageSync('token', data.token);
+					let params = {
+					  "accessKey": data.accessKey,
+					  "encryptedData": that.loginInfo.detail.encryptedData,
+					  "iv": that.loginInfo.detail.iv,
+					  "openid": data.openid
+					}
+					// var demo = Api.apiCall('post', Api.agent.savePhone, params)
+					uni.request({
+					  url: 'http://120.24.156.254:18888/platform/'+Api.agent.savePhone,
+					  method: 'post',
+					  header:{
+						'auth': uni.getStorageSync('token'),
+					  },
+					  data: params,
+					  success: function(res) {
+						console.log(res)
+					  }
+					})
 						// console.log(res)
 						// that.login(res.data.data);
 						// that.$db.set('token', res.data.data.tokenHead + res.data.data.token);
@@ -257,39 +218,18 @@
 					}
 				});
 			},
-			/**
-			 * 微信登录
-			 */
-			wxGetUserInfo1: function(res) {
-				let ress = res;
-				if (!ress.detail.iv) {
-					uni.showToast({
-						title: '您取消了授权,登录失败',
-						icon: 'none'
-					});
-					return false;
-				}
-
-				const that = this;
-				let datas = '';
-				uni.login({
-					provider: 'weixin',
-					success: function(loginRes) {
-						var params = {
-							code: loginRes.code,
-							userInfo: ress.detail.rawData,
-							cloudID: ress.detail.cloudID,
-							encrypted_data: ress.detail.encryptedData,
-							iv: ress.detail.iv,
-							source: 2,
-							signature: ress.detail.signature
-						};
-						//that.getAppletOpenId(params);
+			//微信获取手机号
+			getPhoneNumber (res) {
+				if (res) {
+					let ress = res;
+					if (!ress.detail.iv) {
+						uni.showToast({
+							title: '您取消了授权,登录失败',
+							icon: 'none'
+						});
+						return false;
 					}
-				});
-				uni.navigateTo({
-					url: '/pages/index/index'
-				})
+				}
 			},
 			/**
 			 * 获取openid
@@ -355,34 +295,6 @@
 					}
 				});
 			},
-			/**
-			 * 微信获取手机号
-			 */
-			getPhoneNumber(params) {
-				var that = this;
-				wx.request({
-					url: Api.BASEURI + Api.index.getWxPhone,
-					method: 'post',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded'
-					},
-					data: {
-						openid: uni.getStorageSync('openId'),
-						keyStr: uni.getStorageSync('session_key'),
-						ivStr: params.detail.iv,
-						encDataStr: params.detail.encryptedData
-					},
-					success: function(res) {
-						console.log('--getPhoneNumber--', res);
-						if (res.data.code == 200) {
-							uni.setStorageSync('phone', res.data.data);
-							that.info['phone'] = res.data.data;
-							that.loginByWeixin(that.info);
-						}
-					}
-				});
-			},
-
 			appLogin() {
 				uni.getProvider({
 					service: 'oauth',
@@ -475,12 +387,21 @@
 					'access': this.access,
 					'password': this.password
 				};
+				uni.showLoading({
+					title: '请稍候',
+					mask: true
+				});
 				let data = await Api.apiCall('post', Api.agent.userlogin, params);
 				//this.logining = false;
 				if (data) {
+					uni.hideLoading();
 					this.$api.msg("登录成功");
 					that.login(data);
-					uni.setStorageSync('userInfo', data.result);
+					var userInfo = {
+						nickName:  data.result.name,
+						url: data.result.url
+					}
+					uni.setStorageSync('userInfo', userInfo);
 					uni.setStorageSync('token', data.result.token);
 					uni.switchTab({
 						url: '/pages/index/index'
@@ -560,7 +481,7 @@
 	}
 
 	.container {
-		padding-top: 115px;
+		padding-top: 65px;
 		position: relative;
 		width: 100vw;
 		height: 100vh;
@@ -673,13 +594,26 @@
 			width: 100%;
 		}
 	}
-
+	.vx-btn{
+		background: #fff;
+		&:after {
+			border-radius: 100px;
+			border: none;
+		}
+	}
+	.wxLogin {
+		height: 80upx;
+		width: 80upx;
+		display: block;
+		margin: 0 auto;
+	}
 	.confirm-btn {
 		width: 630upx;
 		height: 76upx;
 		line-height: 76upx;
 		border-radius: 50px;
 		margin-top: 70upx;
+		margin-bottom: 70upx;
 		background: $uni-color-primary;
 		color: #fff;
 		font-size: $font-lg;
@@ -699,7 +633,7 @@
 	.register-section {
 		position: absolute;
 		left: 0;
-		bottom: 50upx;
+		bottom: 100upx;
 		width: 100%;
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;

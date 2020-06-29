@@ -1,5 +1,8 @@
 <template>
 	<view class="container">
+    <!-- #ifdef MP-WEIXIN -->
+    <nav-bar backState="1000" fontColor="#FFF" :titleCenter="false" type="transparentFixed"></nav-bar>
+    <!-- #endif -->
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
 				<swiper-item class="swiper-item" v-for="(item, index) in small" :key="index">
@@ -39,7 +42,7 @@
 
 		<view class="c-list">
 			<view class="c-row b-b" v-if="specList && specList.length > 0" @click="toggleSpec">
-				<text class="tit">购买类型</text>
+				<text class="tit">规格类型</text>
 				<view class="con">
 					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
 				</view>
@@ -120,7 +123,7 @@
 			</view>
 
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="joinAgent">加入代理</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="openAgent">加入代理</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
 			</view>
 		</view>
@@ -131,7 +134,7 @@
 			<view class="mask"></view>
 			<view class="layer attr-content" @click.stop="stopPrevent">
 				<view class="a-t">
-					<image :src="sku.pic"></image>
+					<image :src="sku.photos[0].url"></image>
 					<view class="right">
 						<text class="price">¥{{ sku.price }}</text>
 						<text class="stock">库存：{{ sku.stock }}件</text>
@@ -166,48 +169,51 @@
 						>
 							{{childItem[index]}}
 						</text>
-					</view>
+					</view>open
 				</view> -->
-				<button class="btn" @click="joinAgent">加入代理</button>
+				<button class="btn" @click="openAgent">加入代理</button>
 			</view>
 		</view>
 		<!-- 分享 -->
 		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
+		<uni-popup ref="popup" type="dialog">
+		    <uni-popup-dialog type="warn" content="是否加入代理？" :duration="2000" :before-close="true" @close="closeAgentDialog" @confirm="confirmAgentDialog"></uni-popup-dialog>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
 import Api from '@/common/api';
+import navBar from '@/components/zhouWei-navBar';
 import share from '@/components/share';
 import { mapState } from 'vuex';
+import uniPopup from '@/components/uni-popup/uni-popup'
+import uniPopupMessage from '@/components/uni-popup/uni-popup-message'
+import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog'
 let userInfo = uni.getStorageSync('userInfo');
 export default {
 	components: {
-		share
+		share, uniPopup, uniPopupMessage, uniPopupDialog, navBar
 	},
 	data() {
 		return {
+      statusBarHeight: '',
 			specClass: 'none',
 			specSelected: [],
-			small: null,
+			small: [],
 			sku: [],
 			detailData: [],
 			basicMarkingList:[],
 			basicGiftsList:[],
 			goods: [],
 			favorite: true,
-			shareList: [],
-			imgList: [
-				{
-					src: 'https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg'
-				},
-				{
-					src: 'https://gd3.alicdn.com/imgextra/i3/TB1RPFPPFXXXXcNXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
-				},
-				{
-					src: 'https://gd2.alicdn.com/imgextra/i2/38832490/O1CN01IYq7gu1UGShvbEFnd_!!38832490.jpg_400x400.jpg'
-				}
-			],
+			shareList: [
+        {
+          icon: "/static/temp/share_wechat.png",
+          text: "微信好友",
+          type: 1
+        }
+      ],
 			desc: ``,
 			skuList: [],
 			consultList: [],
@@ -232,13 +238,19 @@ export default {
 		}
 	},
 	async onLoad(ops) {
+		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+		uni.showLoading({
+			title: '请稍候',
+			mask: true
+		});
 		this.goodsId = ops.id;
 		if (this.goodsId) {
 			let params = { goodsId: this.goodsId };
 			let data = await Api.apiCall('post', Api.goods.detail, params, false, false);
 			if (data) {
-				console.log(data)
-				this.goods = data.result.goods
+				this.goods = data.result.goodsPicesBean
+				console.log(this.goods)
+				//遍历商品数据展示规格
 				for (let index in data.result.goodsPropertyValue) {
 					if (data.result.goodsPropertyValue[index].propertyType == 0) {
 						this.specList.push(data.result.goodsPropertyValue[index])
@@ -256,8 +268,20 @@ export default {
 							}
 						}
 					});
-					console.log(this.specChildList)
 				}
+				uni.hideLoading();
+				//遍历数据获取图片
+				if (data.result.goodsSku) {
+					let goodsImg = data.result.goodsSku
+					this.skuList = data.result.goodsSku
+					console.log(this.skuList)
+					for (let data in goodsImg) {
+						if (goodsImg[data].photos[0].url != false) {
+							this.small.push(goodsImg[data].photos[0].url)
+						}
+					}
+				}
+
 			}
 		}
 		// 	if (data.data) {
@@ -270,11 +294,12 @@ export default {
 		// 		var subImages = goods.albumPics;
 		// 		this.small = subImages.split(',');
 		// 		//await this.$api.json('detailData');
-		let shareList = await this.$api.json('shareList');
+				//let shareList = await this.$api.json('shareList');
+        //console.log(shareList)
 		// 		let shareList = await this.$api.json('shareList');
 		// 		this.loaded = true;
 		// 		this.detailData = detailData;
-				this.shareList = shareList;
+				//this.shareList = shareList;
 		// 		this.specList = goods.productAttributeValueList;
 		// 		this.skuList = goods.skuStockList;
 		// 		if (this.specList){
@@ -356,6 +381,16 @@ export default {
 	},
 
 	methods: {
+		openAgent () {
+			this.$refs.popup.open()
+		},
+		closeAgentDialog () {
+			this.$refs.popup.close()
+		},
+		confirmAgentDialog () {
+			this.joinAgent()
+			this.$refs.popup.close()
+		},
 		async joinAgent () {
 			let params = {
 				goodsId: this.goodsId,
@@ -411,9 +446,30 @@ export default {
 						specs = item.name + ',' + specs;
 					}
 				});
+				console.log(this.specSelected)
+				// let specArray  = [];
+				// for (let data in this.specSelected) {
+				// 	specArray.push(this.specSelected[data].name)
+				// }
+				// specArray.join(',')
+				//console.log(specArray)
+				// for (let data in this.skuList) {
+				// 	if (specArray == this.skuList[data].skuValue.split(',')) {
+				// 		this.sku.stock = this.skuList[data].stock
+				// 		this.sku.price = this.skuList[data].price
+				// 		console.log(1)
+				// 	}else{
+				// 		console.log(2)
+				// 		console.log(specArray)
+				// 		console.log(this.skuList[data].skuValue.split(','))
+				// 	}
+				// }
 				let valuesA = specs.substr(0, specs.length - 1).split(',');
-
+				console.log(valuesA)
+				// this.goods = this.skuList
 				this.skuList.forEach(item => {
+					this.sku = item;
+          console.log(this.sku)
 					if (valuesA.length == 1 && item.sp1 == valuesA[0]) {
 						this.sku = item;
 					}
@@ -424,7 +480,7 @@ export default {
 						this.sku = item;
 					}
 					if (!this.sku.pic) {
-						this.sku.pic = this.goods.pic;
+						this.sku.pic = this.goods.photos.url;
 					}
 					if (!this.sku.stock) {
 						this.sku.stock = 0;
@@ -852,7 +908,7 @@ page {
 			border-radius: 100upx;
 			min-width: 60upx;
 			height: 60upx;
-			padding: 0 20upx;
+			padding: 0 40upx;
 			font-size: $font-base;
 			color: $font-color-dark;
 		}
