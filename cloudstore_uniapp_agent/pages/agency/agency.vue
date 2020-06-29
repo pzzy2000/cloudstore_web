@@ -1,11 +1,19 @@
 <template>
 	<view>
+
+		<!-- #ifdef H5 -->
+		<view class="" @click="search()" style="background: #FFFFFF;height: 80upx;display: flex;justify-content: center;align-items: center;">
+			<input class="" type="text" value="" placeholder="输入关键字搜索" style="font-size: 28upx;background: #F5F5F5;height: 60upx;width: 90%;border-radius: 50upx;text-align: center;" />
+		</view>
+		<!-- #endif -->
+		<!-- #ifdef MP-WEIXIN -->
 		<view class="" @click="search()" style="background: #FFFFFF;height: 80upx;display: flex;justify-content: center;align-items: center;" :style="[{'margin-top': statusBarHeight+45+'px'}]">
 			<input class="" type="text" value="" placeholder="输入关键字搜索" style="font-size: 28upx;background: #F5F5F5;height: 60upx;width: 90%;border-radius: 50upx;text-align: center;" />
 		</view>
+		<!-- #endif -->
 		<view class="agency-main">
 			<view class="agency-header">
-				<image :src="user.url" mode="" alt='头像'></image>
+				<image :src="user.url" mode="" alt='头像' class="info-img"></image>
 				<view class="header-info">
 					<text class="title samp">{{user.name}}</text>
 					<text>回头率：50 &nbsp;&nbsp;&nbsp;&nbsp;收藏量： 40</text>
@@ -21,7 +29,7 @@
 				<text class="agency-apply-title">常用应用</text>
 				<view class="agency-apply-main">
 					<view class="apply-detail" v-for="(item, index) in apply" :key='index'>
-						<image src="../../static/emptyCart.jpg" mode=""></image>
+						<image src="../../static/emptyCart.jpg" mode="" class="apply-img"></image>
 						<text>{{item.name}}</text>
 					</view>
 				</view>
@@ -77,7 +85,11 @@
 	export default {
 		data() {
 			return {
-				user: '',
+				user: {
+					name:'',
+					url:'',
+          detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
+				},
 				statusBarHeight: '',
 				height: '',
 				headerList: [
@@ -127,27 +139,41 @@
 		onLoad () {
 			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 			this.height = uni.getSystemInfoSync().windowHeight - (this.statusBarHeight+80)
-      let userInfo = uni.getStorageSync('userInfo');
-      if (userInfo) {
-      	this.user.name = userInfo.nickName
-        this.user.url = userInfo.avatarUrl
-        console.log(userInfo.nickName)
-      }
+			// #ifdef H5
+				this.getH5info()
+			// #endif
+			// #ifdef MP-WEIXIN
+				this.getuserInfo();
+			// #endif
 		},
 		onShow () {
 			// this.getUserInfo()
 			// this.loadData()
 		},
 		methods: {
-			search () {
-				
+			// 获取微信用户信息
+			getuserInfo(){
+				let userInfo = uni.getStorageSync('userInfo');
+					if (userInfo) {
+					    if (userInfo.name) {
+						 this.user.name = userInfo.name
+					    }else {
+						   this.user.name = userInfo.nickName
+					    }
+					    if (!userInfo.url) {
+					    	this.user.url = this.user.detailUrl
+					    }
+				}
 			},
-			getUserInfo () {
+			// 获取h5用户信息
+			getH5info () {
 				let userInfo = uni.getStorageSync('userInfo');
 				if (userInfo) {
-					this.userInfo = userInfo
-					console.log(this.userInfo)
+					this.user.name = userInfo.name
+					console.log(this.user.name)
 				}
+			},
+			search () {
 			},
 			async loadData(type = 'add', loading) {
 				let params = {
@@ -176,6 +202,10 @@
 			height: 150upx;
 			width: 150upx;
 			background-color: red;
+		}
+		.info-img {
+			width: 150upx;
+			height: 150upx;
 		}
 		.header-info {
 			width: 60%;
@@ -222,6 +252,12 @@
 				font-size: $font-lg;
 				text-align: center;
 				padding: 20upx 0;
+			}
+			.apply-img{
+				height: 100upx;
+				width: 100upx;
+				display: block;
+				margin: 0 auto;
 			}
 			span {
 				display: block;

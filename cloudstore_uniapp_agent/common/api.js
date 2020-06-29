@@ -4,6 +4,7 @@ export default {
 	//BASEURI: 'http://localhost:8083/api/',
 	// BASEURI: 'http://51wangshi.com:8083/api/',
 	BASEURI: 'http://120.24.156.254:18888/platform/',
+	//BASEURI: 'http://192.168.191.1:8088/',
 
 	// ADMINURI: 'http://51wangshi.com:8085/',
 	// ESURI: 'http://192.168.1.169:8081/',
@@ -28,15 +29,26 @@ export default {
 	   userlogin:"sys/manager/platform/login",
 	   reg:"sys/manager/platform/register/agent",
 	   list: '/agent/goods/list' ,//获取代理商代理的商品信息
-	   wx:'sys/manager/platform/weixin/login', //获取用户登录微信信息
-     savePhone: 'sys/manager/platform/weixin/savePhone'
+	   wx:'sys/manager/platform/weixin/auth', //获取用户登录微信信息
+	   wxLogin: 'sys/manager/platform/login', //微信一键登录
+       savePhone: 'sys/manager/platform/weixin/login'
 	},
 	goods: { //商品接口
-	   list: '/goods/list' ,//获取商品列表
+	   list: 'goods/list' ,//获取商品列表
 	   detail: '/goods/getGoodsInfoByGoodsId',
 	   save:'agent/goods/save' //代理商将商品加入代理
 	},
-	
+	category: {
+		list: 'goods/category/list',
+		getchildId: 'goods/category/get'
+	},
+	home: {
+		activity: 'activity/app/ilist', //活动名称列表
+		activityGoodList: 'activity/app/activityGoodList' //活动名称下对应的商品
+	},
+	hot: {
+		hotList: 'activity/app/allActivityGoodList'
+	},
 	/**
 	 * 封装请求（async await 封装uni.request） 对应portal 项目
 	 * method	   post/get
@@ -57,6 +69,7 @@ export default {
 		}
 
 		let token = uni.getStorageSync('token') || null;
+		console.log('这是token='+token)
 		if (token == null && (endpoint != this.agent.reg  &&  endpoint != this.agent.userlogin) ) {
 			uni.showToast({
 				title: '请先登录',

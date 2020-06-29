@@ -15,11 +15,14 @@
 					</template>
 					<template v-else>
 						<!-- #ifdef H5 || APP-PLUS -->
-						<image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toLogin">{{user.name}}</image>
+						<!-- <image class="portrait" mode="aspectFill" src="/static/missing-face.png" @click="toLogin">{{user.name}}</image> -->
 						<!-- #endif -->
 						<!-- #ifdef MP-WEIXIN -->
 						<image class="portrait" mode="aspectFill" :src="user.url" @click="toWeChatLogin">{{user.name}}</image>
                         <!-- #endif -->
+						<!-- #ifdef H5 -->
+						<image class="portrait" mode="aspectFill" :src="user.url" @click="toLogin">{{user.name}}</image>
+						<!-- #endif -->
 						<!-- #ifdef MP-ALIPAY -->
 						<view class="portrait"></view>
 						<view><button class="login-btn" open-type="getAuthorize" @click="getALICode" hover-class="btn-hover">授权登录</button></view>
@@ -142,7 +145,9 @@ import { mapState,mapMutations } from 'vuex';
 			couponList: [],
 			viewList: [],
 			user:{
-        name: null || '未登录'
+				name: null || '未登录',
+				url: '',
+				detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
 			}
 		};
 	},
@@ -202,17 +207,33 @@ import { mapState,mapMutations } from 'vuex';
 			that.$api.msg('修改成功');
 			that.userInfos[that.feild] = that.inputContent
 		},
-		async getData(){
-			this.getuserinfo();
+		getData(){
+			// #ifdef H5
+				this.getH5info()
+			// #endif
+			//this.getH5info()
+			// #ifdef MP-WEIXIN
+				this.getuserinfo();
+			// #endif
 			// this.getHistory();
 		},
-		// 获取用户信息
-		async getuserinfo(){
+		// 获取微信用户信息
+		getuserinfo(){
 			let userInfo = uni.getStorageSync('userInfo');
 			if (userInfo) {
-				this.user.name = userInfo.nickName
-        this.user.url = userInfo.avatarUrl
-        console.log(userInfo.nickName)
+				console.log(userInfo)
+				this.user.name = userInfo.name || userInfo.nickName
+				this.user.url = userInfo.url || userInfo.detailUrl
+				if (!userInfo.url) {
+					this.user.url = this.user.detailUrl
+				}
+			}
+		},
+		// 获取h5用户信息
+		async getH5info () {
+			let userInfo = uni.getStorageSync('userInfo');
+			if (userInfo) {
+				this.user.name = userInfo.name
 			}
 		},
 		// 	let params = {  };
@@ -249,6 +270,7 @@ import { mapState,mapMutations } from 'vuex';
 			});
 		},
 		toWeChatLogin(){
+      uni.clearStorageSync();
 			uni.navigateTo({
 				url: '/pages/public/login',
 			});

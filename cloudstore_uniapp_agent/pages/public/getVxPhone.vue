@@ -1,0 +1,135 @@
+<template>
+	<view class="container">
+		<view class="wrapper">
+			<button class="confirm-btn" open-type="getPhoneNumber" @getphonenumber='getPhoneNumber'>微信授权手机号</button>
+		</view>
+	</view>
+</template>
+
+<script>
+	import Api from '@/common/api';
+	export default {
+		data() {
+			return {
+				vxCode: '',
+				vxOpenid: '',
+				vxPhoneData: ''
+			}
+		},
+		onLoad (option) {
+			this.vxCode = option.code
+			this.getVxLoginCode()
+		},
+		methods: {
+			getVxLoginCode () {
+				var that = this;
+				let vxInfo = uni.getStorageSync('wxInfo')
+				console.log(vxInfo)
+				if (vxInfo) {
+					let params = {
+						code: that.vxCode,
+						userInfo: vxInfo.rawData,
+						encryptedData: vxInfo.encryptedData,
+						iv: vxInfo.iv,
+						source: 2,
+						signature: vxInfo.signature
+					}
+					uni.request({
+						url: Api.BASEURI + Api.agent.wx,
+						method: 'post',
+						data: params,
+						success: function(res) {
+							if (res){
+								that.vxOpenid = res.data.result.result.openId
+								if (res.data.result.result.authResult !== 0) {
+									var codeInfo = res.data.result.result
+										let params = {
+											openId: codeInfo.openId,
+											authResult: codeInfo.authResult
+										}
+										uni.request({
+											url: Api.BASEURI + Api.agent.savePhone,
+											method: 'post',
+											data: params,
+											success: function(res) {
+												var token = res.data.result.result.token
+												if (token) {
+													uni.setStorageSync('token',token)
+													uni.switchTab({
+														url: '/pages/index/index',
+													});
+												}
+											}
+										})
+									}
+								}
+						}
+					})
+				}
+			},
+			getPhoneNumber (res) {
+				console.log(res)
+				var that = this;
+				
+				let params = {
+					authResult: 0,
+					encryptedData: res.detail.encryptedData,
+					iv: res.detail.iv,
+					userType: 'agent',
+					openId: that.vxOpenid
+				}
+				uni.request({
+					url: Api.BASEURI + Api.agent.savePhone,
+					method: 'post',
+					data: params,
+					success: function(res) {
+						var token = res.data.result.result.token
+						if (token) {
+							uni.setStorageSync('token',token)
+							uni.switchTab({
+								url: '/pages/index/index',
+							});
+						}
+					}
+				})
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	page {
+		background: #fff;
+	}
+
+	.container {
+		padding-top: 65px;
+		position: relative;
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
+		background: #fff;
+	}
+	.wrapper {
+		position: relative;
+		z-index: 90;
+		background: #fff;
+		padding-bottom: 40upx;
+	}
+	.confirm-btn {
+		width: 630upx;
+		height: 76upx;
+		line-height: 76upx;
+		border-radius: 50px;
+		margin-top: 70upx;
+		margin-bottom: 70upx;
+		background: $uni-color-primary;
+		color: #fff;
+		font-size: $font-lg;
+	
+		&:after {
+			border-radius: 100px;
+		}
+	}
+
+</style>

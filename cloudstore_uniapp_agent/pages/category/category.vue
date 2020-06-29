@@ -1,6 +1,15 @@
 <template>
 	<view class="content">
+    <!-- 小程序头部兼容 -->
+    <!-- #ifdef MP -->
+    <nav-bar>商品分类</nav-bar>
+    <!-- #endif -->
+		<!-- #ifdef H5 -->
+		<view class="navbar">
+		<!-- #endif -->
+		<!-- #ifdef MP-WEIXIN -->
 		<view class="navbar" :style="[{'margin-top': statusBarHeight+45+'px'}]">
+		<!-- #endif -->
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量优先</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
@@ -14,7 +23,9 @@
 		</view>
 		<view class="goods-list">
 			<view v-for="(item, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(item)">
-				<view class="image-wrapper"><image :src="item.pic" mode="aspectFill"></image></view>
+				<view class="image-wrapper">
+					<image :src="item.goodsPhotos[0].url" mode="aspectFill" v-if="item.goodsPhotos[0]"></image>
+				</view>
 				<view class="goods-detail">
 					<text class="title clamp">{{ item.goodsName }}</text>
 					<text class="title clamp subhead ">{{item.goodsSubtitle}}</text>
@@ -31,14 +42,15 @@
 		</view>
 		<uni-load-more :status="loadingType"></uni-load-more>
 
-		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask">
+		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+45+'px'}]">
 			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
 				<scroll-view scroll-y class="cate-list">
 					<view v-for="item in cateList" :key="item.id">
-						<view class="cate-item b-b two">{{ item.name }}</view>
+						<!-- <view class="cate-item b-b two">{{ item.name }}</view>
 						<view v-for="tItem in item.child" :key="tItem.id" class="cate-item b-b" :class="{ active: tItem.id == cateId }" @click="changeCate(tItem)">
 							{{ tItem.name }}
-						</view>
+						</view> -->
+						<view class="cate-item b-b two" @click="changeCate(item)">{{ item.name }}</view>
 					</view>
 				</scroll-view>
 			</view>
@@ -48,11 +60,12 @@
 
 <script>
 import Api from '@/common/api';
+import navBar from '@/components/zhouWei-navBar';
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 let userInfo = uni.getStorageSync('userInfo');
 export default {
 	components: {
-		uniLoadMore
+		uniLoadMore, navBar
 	},
 	data() {
 		return {
@@ -63,12 +76,20 @@ export default {
 			keyword: '',
 			loadingType: 'more', //加载更多状态
 			filterIndex: 0,
-			cateId: 0, //已选三级分类id
+			typeId: 0, //已选三级分类id
 			pageNum: 1,
 			cid: null,
 			priceOrder: 0, //1 价格从低到高 2价格从高到低
 			cateList: [],
-			goodsList: []
+			goodsList: [
+				{
+					goodsPhotos: [
+						{
+							url: ''
+						}
+					]
+				}
+			]
 		};
 	},
 	onLoad(options) {
@@ -79,6 +100,7 @@ export default {
 		this.keyword = options.keyword;
 		this.cateId = options.sid;
 		//this.loadCateList(options.fid, options.sid);
+		this.loadCateList()
 		this.loadData();
 	},
 	onPageScroll(e) {
@@ -92,7 +114,11 @@ export default {
 	//下拉刷新
 	onPullDownRefresh() {
 		this.pageNum = this.pageNum + 1;
-		this.loadData('refresh');
+		//this.loadData('refresh');
+		this.loadData();
+		setTimeout(function () {
+			uni.stopPullDownRefresh();
+		}, 1000);
 	},
 	//加载更多
 	onReachBottom() {
@@ -104,19 +130,28 @@ export default {
 		async loadCateList(fid, sid) {
 			let params = {
 				pageNum: '1',
-				pageSize: '10'
+				pageSize: '20',
+				parentId: 0
 			};
-			let list = await Api.apiCall('get', Api.goods.list, params);
+			uni.showLoading({
+				title: '请稍候',
+				mask: true
+			});
+			let list = await Api.apiCall('post', Api.category.list, params);
 			console.log(list)
 			if (list) {
-				let cateList = list.data.filter(item => item.pid == null);
-				
-				cateList.forEach(item => {
-					let tempList = list.filter(val => val.pid == item.id);
-					item.child = tempList;
-				});
-				this.cateList = cateList;
+				this.cateList = list.result.records
+				uni.hideLoading();
 			}
+			// if (list) {
+			// 	let cateList = list.data.filter(item => item.pid == null);
+				
+			// 	cateList.forEach(item => {
+			// 		let tempList = list.filter(val => val.pid == item.id);
+			// 		item.child = tempList;
+			// 	});
+			// 	this.cateList = cateList;
+			// }
 		},
 		//加载商品 ，带下拉刷新和上滑加载
 		async loadData(type = 'add', loading) {
@@ -125,9 +160,9 @@ export default {
 				pageSize: '10'
 			};
 			let list = await Api.apiCall('post', Api.goods.list, params);
-			if (list) {
-				console.log(list)
+			if (list) {				
 				this.goodsList = list.result.records
+				uni.hideLoading();
 			}
 			//没有更多直接返回
 			// if (type === 'add') {
@@ -214,19 +249,38 @@ export default {
 				this.cateMaskState = state;
 			}, timer);
 		},
+		demo () {
+			console.log(1)
+		},
 		//分类点击
 		changeCate(item) {
 			this.pageNum = 1;
-			this.cateId = item.id;
+			this.typeId = item.id;
+			//console.log(item)
 			this.toggleCateMask();
+			this.searchtype()
 			uni.pageScrollTo({
 				duration: 300,
 				scrollTop: 0
 			});
-			this.loadData('refresh', 1);
+			//this.loadData('refresh', 1);
 			uni.showLoading({
 				title: '正在加载'
 			});
+		},
+		//查询分类的具体数据
+		async searchtype () {
+			let params = {
+				pageNum: '1',
+				pageSize: '10',
+				categoryOneId: this.typeId
+			};
+			let list = await Api.apiCall('post', Api.goods.list, params);
+			if (list) {				
+				this.goodsList = list.result.records
+				console.log(this.goodsList)
+				uni.hideLoading();
+			}
 		},
 		//详情
 		navToDetailPage(item) {
@@ -369,7 +423,7 @@ page,
 		position: relative;
 	}
 	.two {
-		height: 64upx;
+		height: 120upx;
 		color: #303133;
 		font-size: 30upx;
 		background: #f8f8f8;
@@ -396,21 +450,21 @@ page,
 		// }
 	}
 	.image-wrapper {
-		width: 55%;
-		height: 250upx;
+		width: 200upx;
+		height: 200upx;
 		border-radius: 3px;
-		overflow: hidden;
-		padding: 10upx;
+		overflow: visible;
 		image {
-			width: 100%;
-			height: 100%;
+			width: 200upx;
+			height: 200upx;
 			opacity: 1;
+			overflow: visible;
 		}
 	}
 	.goods-detail {
 		display: inline-block;
 		width: 100%;
-		padding: 10upx;
+		padding: 0 30rpx;
 		.title {
 			font-size: $font-lg;
 			color: $font-color-dark;
@@ -418,7 +472,7 @@ page,
 		}
 		.subhead {
 			color: #333;
-			font-size: 18upx;
+			font-size: 30upx;
 		}
 		.price-box {
 			display: flex;
@@ -438,7 +492,7 @@ page,
 					}	
 				}
 				.pricemart {
-					font-size: 16upx;
+					font-size: 25upx;
 					color: #000;
 					text-decoration:line-through;
 					line-height: 1;
