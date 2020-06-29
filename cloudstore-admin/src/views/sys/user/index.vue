@@ -20,17 +20,17 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="用户名字：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
+          <el-form-item label="用户名称：">
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名称"></el-input>
           </el-form-item>
-          <el-form-item label="访问账号：">
-            <el-input style="width: 214px" v-model="listQuery.access" placeholder="访问账号"></el-input>
+          <el-form-item label="登录名：">
+            <el-input style="width: 214px" v-model="listQuery.access" placeholder="登录名"></el-input>
           </el-form-item>
-          <el-form-item label="电话号码：">
-            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="电话号码"></el-input>
+          <el-form-item label="注册电话：">
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="注册电话"></el-input>
           </el-form-item>
           <el-form-item label="用户类型：">
-            <el-select v-model="listQuery.userType" placeholder="全部" clearable>
+            <el-select v-model="listQuery.userType" placeholder="用户类型" clearable>
               <el-option
                 v-for="item in userTypes"
                 :key="item.value"
@@ -39,9 +39,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-
-          <el-form-item label="用户状态：">
-            <el-select v-model="listQuery.status" placeholder="全部" clearable>
+          <el-form-item label="审核状态：">
+            <el-select v-model="listQuery.status" placeholder="审核状态" clearable>
               <el-option
                 v-for="item in userStatuses"
                 :key="item.value"
@@ -92,7 +91,6 @@
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-              <!--
               <el-button
                 size="mini"
                 @click="handleShowProduct(scope.$index, scope.row)">查看
@@ -101,7 +99,6 @@
                 size="mini"
                 @click="handleUpdateUserInfo(scope.$index, scope.row)">编辑
               </el-button>
-              -->
               <el-button
                 size="mini"
                 type="danger"
@@ -150,7 +147,7 @@
   </div>
 </template>
 <script>
-  import { fetchList } from '@/api/sysuser'
+  import { fetchList, updateDeleteStatus } from '@/api/sysuser'
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
@@ -161,7 +158,6 @@
     name: "productList",
     data() {
       return {
-
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,
@@ -234,6 +230,7 @@
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
+          console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt( response.result.result.total);
@@ -247,8 +244,7 @@
         let  pageNum = this.listQuery.pageNum;
         let  pageSize =this.listQuery.pageSize;
         let   userId = row.id;
-
-       this.$router.push({path:'/sys/manager/user/edit',query: {userId: userId,pageNum:pageNum,pageSize:pageSize}});
+       this.$router.push({path:'/sys/manager/user/edit',query: {type: 'update', rds: 'write', userId: userId, pageNum:pageNum, pageSize:pageSize}});
       },
 
       handleSizeChange(val) {
@@ -288,11 +284,19 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let ids = [];
-          ids.push(row.id);
-          this.updateDeleteStatus(1,ids);
+          updateDeleteStatus({ids: row.id}).then(res => {
+            console.log(res);
+          });
         });
       },
+      handleShowProduct(index, row) {
+        let  pageNum = this.listQuery.pageNum;
+        let  pageSize =this.listQuery.pageSize;
+        this.$router.push({path:'/sys/manager/user/edit',query: {type: 'read', rds: 'read', userId: row.id, pageNum:pageNum, pageSize:pageSize}});
+      },
+      handleAddProduct() {
+        this.$router.push({path:'/sys/manager/user/edit',query: {type: 'add', rds: 'write'}})
+      }
       // handleUpdateProduct(index,row){
       //   this.$router.push({path:'/pms/updateProduct',query:{id:row.id}});
       // },

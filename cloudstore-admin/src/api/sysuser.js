@@ -8,3 +8,19 @@ export function fetchList(params) {
     data: switchForm(params)
   })
 }
+
+export function updateDeleteStatus(params) {
+  return request({
+    url: '/sys/manager/user/delete',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function getOneuser(params) {//获取单个用户
+  return request({
+    url: '/sys/manager/user/get',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
