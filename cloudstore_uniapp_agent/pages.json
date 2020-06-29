@@ -56,6 +56,14 @@
 			}
 		},
 		{
+			"path": "pages/goods/hotGoodsList/hotGoodsList",
+			"style": {
+				"navigationBarTitleText": "热门活动商品列表",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
             "path" : "pages/agency/agency",
             "style" : {
 				"navigationBarTitleText": "",
@@ -70,7 +78,15 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-        }
+        },
+		{
+		    "path" : "pages/public/getVxPhone",
+		    "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

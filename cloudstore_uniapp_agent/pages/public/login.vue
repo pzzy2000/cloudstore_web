@@ -21,7 +21,7 @@
 			<!-- <button v-if="isWeiXin == 1" class="confirm-btn" @click="wechatH5Login" :disabled="logining">微信授权登录</button> -->
 			<!-- <button class="confirm-btn" @click="wechatH5Login" :disabled="logining">微信授权登录</button> -->
 			<!-- #ifdef MP-WEIXIN -->
-				<button open-type="getUserInfo" @getuserinfo='getWxInfo' class="vx-btn">
+				<button open-type="getUserInfo" @getuserinfo='getWxInfo' class="vx-btn" @click="">
 					<image src="../../static/temp/share_wechat.png" mode="" class="wxLogin"></image>
 				</button>
 			<!-- #endif -->
@@ -38,7 +38,7 @@
 
 		</view>
 		<view class="register-section">
-			还没有账号?<text @click="toRegist">马上注册</text> <text @click="regagent">代理注册111</text>
+			还没有账号?<text @click="toRegist">马上注册</text> <text @click="toRegist">代理注册</text>
 		</view>
 
 		<mallplusCopyright></mallplusCopyright>
@@ -71,6 +71,7 @@
 		onLoad() {
 			this.sysInfo = this.$db.get('sysInfo');
 			this.isWeiXin = this.$config.isWeiXin;
+			//this.vxCheckSession() //判断登录是否过期
 			// this.getWxlogin()
 		},
 		computed: {
@@ -109,33 +110,73 @@
 					escape(href) +
 					'&response_type=code&scope=snsapi_userinfo&state=mallplus#wechat_redirect';
 			},
-			
-			async login(params){
-				let data = await Api.apiCall('post', Api.agent.userlogin, params);
-				return data;
-				
-			},
-			  getWxInfo () {
-			// getWxlogin () { //获取code
+			// vxCheckSession () {
+			// 	uni.checkSession({
+			// 		success() {
+			// 			console.log('状态未过期')
+						
+			// 		},
+			// 		fail() {
+			// 			this.getWxInfo()
+			// 		}
+			// 	})
+			// },
+			getWxInfo () { //获取code
 				var that = this;
 				uni.login({
 					provider: 'weixin',
 					success: function (loginRes) {
-					    console.log(loginRes.code)
+						//uni.setStorageSync('code',loginRes.code)
 						var code = loginRes.code
 						let  params = {
-							'logintype': 'weixin',
-							'password': code,
-							'access':code
+							'bean.logintype': 'weixin',
+							'bean.password': code,
+							'bean.access':code
 						}
-						let data = that.login(params);
-						if(data){
-							
-						}else{
-							
-						}
-						
-						
+						uni.getUserInfo({
+						    provider: 'weixin',
+						    success: function (infoRes) {
+								if (infoRes) {
+									uni.setStorageSync('vxInfo',infoRes.rawData)
+								}
+						    }
+						});
+						uni.request({
+							url: Api.BASEURI + Api.agent.wxLogin,
+							method: 'post',
+							header: {
+								'content-type': 'application/x-www-form-urlencoded'
+							},
+							data: params,
+							success: function(res) {
+								console.log(res)
+								if (res.data.result.code === 100006) {
+									uni.navigateTo({
+										url: '/pages/public/getVxPhone?openId='+res.data.result.msg
+									});
+								}else if (res.data.result.code === 0){
+								    var userInfo = {
+										name: res.data.result.result.name,
+										url: res.data.result.result.url
+									}
+									uni.setStorageSync('userInfo',userInfo)
+									uni.setStorageSync('token',res.data.result.result.token)
+									uni.switchTab({
+										url: '/pages/index/index'
+									});
+								}else {
+									console.log('请求失败')
+								}
+							}
+						})
+						// let data = that.login(params);
+						// if(data){
+						// 	if (data.result.code === '10006') {
+						// 		uni.navigateTo({
+						// 			url: '/pages/public/getVxPhone?code='+code
+						// 		});
+						// 	}
+						// }
 					}
 				});
 				// uni.checkSession({
@@ -385,7 +426,8 @@
 				this.logining = false;
 				let params = {
 					'access': this.access,
-					'password': this.password
+					'password': this.password,
+					'logintype': 'defaults'
 				};
 				uni.showLoading({
 					title: '请稍候',

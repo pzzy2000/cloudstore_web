@@ -103,7 +103,12 @@
 		</view>
 
 		<view class="detail-desc">
-			<view class="d-header"><text>图文详情</text></view>
+			<view class="detail-desc">
+			   <view class="d-header"><text>图文详情</text></view>
+			   <view class="ricetext">
+			     <rich-text :nodes="goods.mobileHtml"></rich-text>
+			   </view>
+			  </view>
 			<rich-text :nodes="desc"></rich-text>
 		</view>
 
@@ -825,37 +830,6 @@ page {
 		}
 	}
 }
-/*  详情 */
-.detail-desc {
-	background: #fff;
-	margin-top: 16upx;
-	.d-header {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 80upx;
-		font-size: $font-base + 2upx;
-		color: $font-color-dark;
-		position: relative;
-
-		text {
-			padding: 0 20upx;
-			background: #fff;
-			position: relative;
-			z-index: 1;
-		}
-		&:after {
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translateX(-50%);
-			width: 300upx;
-			height: 0;
-			content: '';
-			border-bottom: 1px solid #ccc;
-		}
-	}
-}
 
 /* 规格选择弹窗 */
 .attr-content {
@@ -1157,5 +1131,46 @@ page {
 			margin-bottom: 4upx;
 		}
 	}
+}
+/*  详情 */
+.detail-desc {
+ background: #fff;
+ //margin-top: 16upx;
+ width: 100%;
+ //margin:5px auto 20px;
+ text-align: justify;
+ font-size: 16px;
+ .d-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80upx;
+  font-size: $font-base + 2upx;
+  color: $font-color-dark;
+  position: relative;
+
+  text {
+   padding: 0 20upx;
+   background: #fff;
+   position: relative;
+   z-index: 1;
+  }
+  &:after {
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   transform: translateX(-50%);
+   width: 300upx;
+   height: 0;
+   content: '';
+   border-bottom: 1px solid #ccc;
+  }
+ }
+ .ricetext {
+  width: 90%;
+  margin:5px auto 20px;
+  text-align: justify;
+  font-size: 17px;
+ }
 }
 </style>

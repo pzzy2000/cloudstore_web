@@ -30,8 +30,8 @@ export default {
 	   reg:"sys/manager/platform/register/agent",
 	   list: '/agent/goods/list' ,//获取代理商代理的商品信息
 	   wx:'sys/manager/platform/weixin/auth', //获取用户登录微信信息
-	   wxLogin: 'sys/manager/platform/login', //微信一键登录
-       savePhone: 'sys/manager/platform/weixin/login'
+	   wxLogin: 'sys/manager/platform/login', //判断微信登录
+       savePhone: 'sys/manager/platform/weixin/login' //微信登录
 	},
 	goods: { //商品接口
 	   list: 'goods/list' ,//获取商品列表
@@ -44,7 +44,7 @@ export default {
 	},
 	home: {
 		activity: 'activity/app/ilist', //活动名称列表
-		activityGoodList: 'activity/app/activityGoodList' //活动名称下对应的商品
+		activityGoodList: 'activity/app/indexShowActivityGoodList' //活动名称下对应的商品
 	},
 	hot: {
 		hotList: 'activity/app/allActivityGoodList'

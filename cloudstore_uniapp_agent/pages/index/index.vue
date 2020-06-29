@@ -130,15 +130,15 @@
 				</view>
 				<view class="hot-list">
 					<view v-for="(item1, index) in hotGoodsList" :key="index" class="goods-item" @click="navToDetailPage(item1)" v-if="item.id === item1.activityId">
-						<view class="image-wrapper"><image src="" mode="aspectFill"></image></view>
+						<view class="image-wrapper"><image :src="item1.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 						<view class="goods-detail" >
-							<text class="title clamp">{{item1.goodsBean.goodsName}}</text>
-							<text class="title clamp subhead ">{{item1.goodsBean.goodsSubtitle}}</text>
+							<text class="title clamp">{{item1.goodsPicesBean.goodsName}}</text>
+							<text class="title clamp subhead ">{{item1.goodsPicesBean.goodsSubtitle}}</text>
 							<view class="price-box">
 								<view class="price">
-									<text class="priceSale">{{item1.goodsBean.salePrice}}</text>
+									<text class="priceSale">{{item1.goodsPicesBean.salePrice}}</text>
 									/
-									<text class="pricemart">{{item1.goodsBean.martPrice}}</text>
+									<text class="pricemart">{{item1.goodsPicesBean.martPrice}}</text>
 								</view>
 							</view>
 						</view>
@@ -523,6 +523,7 @@
 						let list = await Api.apiCall('post', Api.home.activityGoodList, params, 0);
 						if (list) {
 							var goodsList = list.result.records
+							console.log(goodsList)
 							for (let data in goodsList) {
 								this.hotGoodsList.push({
 									activityId: goodsList[data].activityId,
@@ -532,6 +533,7 @@
 									isDelete: goodsList[data].isDelete,
 									userId: goodsList[data].userId,
 									userType: goodsList[data].userType,
+									goodsPicesBean: goodsList[data].goodsPicesBean
 								})
 							}
 						}
@@ -763,15 +765,17 @@
 			//热门活动去详情
 			navToDetailPage(item) {
 				let id = item.goodsId;
+				console.log(item)
 				uni.navigateTo({
-					url: '../goods/goodsDetail/goodsDetail?id='+id
+					url: '/pages/goods/goodsDetail/goodsDetail?id='+id
 				});
 			},
 			//去热门活动列表
 			navToHotDetail (item) {
+				console.log(item)
 				let id = item.id;
 				uni.navigateTo({
-					url: '../goods/hotGoodsList/hotGoodsList?id='+id
+					url: '/pages/goods/hotGoodsList/hotGoodsList?id='+id
 				});
 			},
 			//详情页
