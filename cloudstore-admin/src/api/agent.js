@@ -15,3 +15,11 @@ export function getAgentInfo(params){
      data: switchForm(params)
     })
 }
+
+export function getOneagent(params) {
+  return request({
+    url: '/agent/goods/get',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

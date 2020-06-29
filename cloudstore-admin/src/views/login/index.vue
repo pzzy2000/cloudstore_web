@@ -90,6 +90,7 @@
         loginForm: {
           'bean.access': '',
           'bean.password': '',
+          'bean.logintype': 'defaults'
         },
         loginRules: {
           'bean.access': [{required: true, trigger: 'blur', validator: validateUsername}],

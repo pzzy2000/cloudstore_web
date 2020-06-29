@@ -18,12 +18,12 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-button class="btn-add" @click="add()" size="mini">添加
-      </el-button>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button style="float: right" @click="add()" size="mini">添加
+      </el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
@@ -157,7 +157,6 @@
             return '正常';
         }
       },
-
       getList() {
         this.listLoading = true;
         // fetchList(this.listQuery).then(response => {

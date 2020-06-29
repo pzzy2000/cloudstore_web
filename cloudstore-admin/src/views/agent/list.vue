@@ -60,6 +60,10 @@
           <template slot-scope="scope">
             <el-button size="mini" @click="showinfo(scope.$index, scope.row)">查看
             </el-button>
+            <el-button size="mini" @click="editinfo(scope.$index, scope.row)">编辑
+            </el-button>
+            <el-button type="danger" size="mini" @click="deleteinfo(scope.$index, scope.row)">删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,12 +88,8 @@
   </div>
 </template>
 <script>
-  import {
-    fetchList
-  } from '@/api/agent'
-  import {
-    msg
-  } from '@/api/iunits'
+  import { fetchList } from '@/api/agent'
+  import { msg } from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 5,
@@ -161,7 +161,7 @@
         }
       },
       addagency() {
-        this.$router.push({path: '/sys/agent/info'})
+        this.$router.push({path: '/sys/agent/info', query: {type: 'add', rds: 'write'}})
       },
       showStatus(row, column) {
         let status = row.status;
@@ -204,22 +204,24 @@
         this.getList();
       },
       showinfo(index, row) {
-
         let pageNum = this.listQuery.pageNum;
         let pageSize = this.listQuery.pageSize;
         let id = row.id;
-
         this.$router.push({
           path: '/sys/agent/info',
           query: {
             agentId: id,
             action:0,
             pageNum: pageNum,
-            pageSize: pageSize
+            pageSize: pageSize,
+            type: 'read',
+            ids: 'read'
           }
         });
       },
-
+      editinfo(index, row) {
+        this.$router.push({path: '/sys/agent/info', query: {agentId: row.id, type: 'update', rds: 'write'}})
+      },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;

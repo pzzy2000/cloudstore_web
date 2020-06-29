@@ -10,7 +10,7 @@
           <el-input-dispatcher placeholder="请输入物流公司编码" v-model="logisticsList.code"></el-input-dispatcher>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="addLogis" v-show="rwDispatcherState === 'write'">提交</el-button>
+          <el-button type="primary" @click="addLogis('logisticsList')" v-show="rwDispatcherState === 'write'">提交</el-button>
           <el-button v-show="rwDispatcherState === 'write'" @click="backLastpage">取消</el-button>
         </el-form-item>
       </el-form>
@@ -28,6 +28,30 @@
         }
       },
       data() {
+        function checkSpecialKey(str) {
+          var specialKey = "[`~!#$^&*()=|{}':;'\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]‘'";
+          for (var i = 0; i < str.length; i++) {
+            if (specialKey.indexOf(str.substr(i, 1)) != -1) {
+              return false;
+            }
+          }
+          return true;
+        };
+        var validateInput = (rule, value, callback) => {
+          if (!checkSpecialKey(value)) {
+            callback(new Error("不能含有特殊字符！！"));
+          } else {
+            callback();
+          }
+        };
+        var validateSurnmae = (rule, value, callback) => {
+          let reg = /^[A-Za-z]+$/
+          if (!reg.test(value)) {
+            callback(new Error("只能输入英文"))
+          } else {
+            callback()
+          }
+        };
         return {
           logisticsList: {
             name: '',
@@ -35,8 +59,16 @@
           },
           rwDispatcherState: 'write',
           rules: {
-            name: [{required: true, message: '请输入公司名称', trigger: 'blur'}],
-            code: [{required: true, message: '请输入公司编码', trigger: 'blur'}],
+            name: [
+              {required: true, message: '请输入公司名称', trigger: 'blur'},
+              { min: 3, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur'},
+              { validator: validateInput, trigger: 'blur' }
+            ],
+            code: [
+              {required: true, message: '请输入公司编码', trigger: 'blur'},
+              { min: 3, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur' },
+              { validator: validateSurnmae, trigger: 'blur' }
+            ],
           },
           logisId: ''
         }
@@ -48,36 +80,42 @@
         }
       },
       methods: {
-        addLogis() {
-          let obj = {
-            name: this.logisticsList.name,
-            code: this.logisticsList.code,
-            optType: this.$route.query.optType
-          }
-          if (this.$route.query.id !== undefined){
-            obj.id = this.$route.query.id
-          }
-          if (this.$route.query.optType == "save"){
-            addlogis(obj).then(res => {
-              if (res.result.code == 0){
-                this.$message({
-                  message: '添加成功',
-                  type: 'success'
-                });
-                this.$router.push("/sys/tracking/list")
+        addLogis(formName) {
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              let obj = {
+                name: this.logisticsList.name,
+                code: this.logisticsList.code,
+                optType: this.$route.query.optType
               }
-            })
-          }else {
-            addlogis(obj).then(res => {
-              if (res.result.code == 0){
-                this.$message({
-                  message: '修改成功',
-                  type: 'success'
-                });
-                this.$router.push("/sys/tracking/list")
+              if (this.$route.query.id !== undefined){
+                obj.id = this.$route.query.id
               }
-            })
-          }
+              if (this.$route.query.optType == "save"){
+                addlogis(obj).then(res => {
+                  if (res.result.code == 0){
+                    this.$message({
+                      message: '添加成功',
+                      type: 'success'
+                    });
+                    this.$router.push("/sys/tracking/list")
+                  }
+                })
+              }else {
+                addlogis(obj).then(res => {
+                  if (res.result.code == 0){
+                    this.$message({
+                      message: '修改成功',
+                      type: 'success'
+                    });
+                    this.$router.push("/sys/tracking/list")
+                  }
+                })
+              }
+            }else {
+              return false;
+            }
+          })
         },
         backLastpage() {
           this.$router.push("/sys/tracking/list")
