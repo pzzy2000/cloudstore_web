@@ -9,7 +9,7 @@
 				</swiper-item>
 			</swiper>
 		</view>
-
+ 
 		<view class="introduce-section">
 			<text class="title">{{ goods.goodsName }}</text>
 			<view class="price-box">

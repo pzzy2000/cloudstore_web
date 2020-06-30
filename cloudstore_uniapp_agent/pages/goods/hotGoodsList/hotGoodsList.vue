@@ -237,9 +237,10 @@ export default {
 		//详情
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
-			let id = item.id;
+			let activitId = item.activityId;
+			let id = item.goodsId;
 			uni.navigateTo({
-				url: `/pages/product/groupActivityDetail?id=${id}`
+				url: `/pages/goods/agent/detail?id=${id}&activityId=${activitId}`
 			});
 		},
 		stopPrevent() {}
