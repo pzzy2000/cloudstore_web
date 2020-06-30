@@ -437,68 +437,68 @@ page,
 .goods-list {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 0 30upx;
+	padding: 0 15upx;
 	background: #fff;
 	.goods-item {
 		display: flex;
 		flex-direction: column;
 		flex-flow: nowrap;
 		width: 100%;
-		padding-bottom: 40upx;
-		// &:nth-child(2n + 1) {
-		// 	margin-right: 4%;
-		// }
+		height: 100px;
 	}
 	.image-wrapper {
-		width: 200upx;
-		height: 200upx;
+		width: 100px;
+		height:100px;
 		border-radius: 3px;
-		overflow: visible;
+		overflow: hidden;
 		image {
-			width: 200upx;
-			height: 200upx;
 			opacity: 1;
-			overflow: visible;
 		}
 	}
 	.goods-detail {
 		display: inline-block;
-		width: 100%;
-		padding: 0 30rpx;
+		width: 75%;
+		padding: 1px;
 		.title {
-			font-size: $font-lg;
+			font-size: 16px;
 			color: $font-color-dark;
-			line-height: 80upx;
+			//line-height: 80upx;
 		}
 		.subhead {
 			color: #333;
-			font-size: 30upx;
+			font-size: 25upx;
 		}
 		.price-box {
 			display: flex;
-			align-items: center;
+			align-items: left;
 			justify-content: space-between;
-			padding-right: 10upx;
-			font-size: 24upx;
+			padding: 30px 0px 0px 0px;
+			font-size: 14upx;
 			color: $font-color-light;
+			.price1 {
+				font-size: 14px;
+				color: $uni-color-primary;
+				line-height: 1;
+				}
 			.price {
+				 bottom: 0px; 
 				.priceSale {
-					font-size: 40upx;
+					font-size: 14px;
 					color: $uni-color-primary;
 					line-height: 1;
 					&:before {
 						content: '￥';
-						font-size: 26upx;
+						font-size: 14px;
 					}	
 				}
 				.pricemart {
-					font-size: 25upx;
+					font-size: 12px;
 					color: #000;
 					text-decoration:line-through;
 					line-height: 1;
 					&:before {
 						content: '￥';
-						font-size: 26upx;
+						font-size: 12px;
 					}	
 				}
 			}
@@ -507,7 +507,7 @@ page,
 				color: #fff;
 				background: red;
 				height: 70upx;
-				line-height: 70upx;
+				line-height: 40upx;
 				width: 150upx;
 				padding: 0;
 				margin: 0;

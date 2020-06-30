@@ -33,16 +33,16 @@
 
 			<!-- 活动 -->
 			<view class="cate-section">
-				<view class="cate-item" v-for="item in activity.nav.one" :key="item.id" @click="navToTabPage('../../pagesA/product/groupActivityList')">
-					<image v-if="item.isadd == 1" src="/static/temp/c5.png"></image>
-					<image v-else src="/static/temp/c3.png"></image>
+				<view class="cate-item" v-for="item in activity.nav.one" :key="item.id">
+					<image v-if="item.isadd == 0" src="/static/temp/c1.png" @click="navToCategory(item)"></image>
+					<image v-else src="/static/temp/c5.png"></image>
 					<text>{{item.name}}</text>
 				</view>
 			</view>
 			<view class="cate-section">
-				<view class="cate-item" v-for="item in activity.nav.two" :key="item.id" @click="navToTabPage('../../pagesA/product/groupActivityList')">
-					<image v-if="item.isadd == 1" src="/static/temp/c5.png"></image>
-					<image v-else src="/static/temp/c3.png"></image>
+				<view class="cate-item" v-for="item in activity.nav.two" :key="item.id" >
+					<image v-if="item.isadd == 0" src="/static/temp/c1.png"  @click="navToCategory(item)"></image>
+					<image v-else src="/static/temp/c5.png"></image>
 					<text>{{item.name}}</text>
 				</view>
 			</view>
@@ -311,8 +311,8 @@
 			
 			navToCategory(item) {
 				let activitId = item.id;
-				uni.switchTab({
-					url: `/pages/category/category?activitId=121`
+				uni.navigateTo({
+						url: '/pages/goods/hotGoodsList/hotGoodsList?id='+activitId
 				});
 			},
 			search() {
@@ -663,7 +663,7 @@
 			display: flex;
 			align-items: left;
 			justify-content: space-between;
-			padding: 48px 0px 0px 0px;
+			padding: 30px 0px 0px 0px;
 			font-size: 14upx;
 			color: $font-color-light;
 			.price1 {
