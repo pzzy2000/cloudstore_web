@@ -52,7 +52,7 @@
       <span>数据列表</span>
       <el-button
         class="btn-add"
-        @click="addDict(-1,null)"
+        @click="addDict"
         size="mini">
         添加
       </el-button>
@@ -179,7 +179,6 @@
           this.listQuery.parentId = 0;
         }
       },
-
       tochild(index, row){
         this.listQuery = Object.assign({}, defaultListQuery);
         this.$router.push({path: '/sys/manager/dict/list', query: {parentId: row.id}});
@@ -194,7 +193,6 @@
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },
-
       showStatus(row, column){
         let  isDelete  = row.isDelete;
         switch(isDelete){
@@ -204,9 +202,7 @@
           return '未删除';
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
-
       },
-
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
@@ -237,7 +233,6 @@
           }
         })
       },
-
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
@@ -265,6 +260,10 @@
           ids.push(row.id);
           this.updateDeleteStatus(1,ids);
         });
+      },
+      addDict() {
+        console.log("添加事件");
+        this.$router.push('/sys/manager/dict/add');
       }
     }
   }
