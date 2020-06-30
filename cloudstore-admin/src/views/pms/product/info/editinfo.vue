@@ -8,7 +8,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="baseinfo" ref="baseinfoFrom" size="small" label-width="130px" :rules="rules">
           <el-divider content-position="left"><i class="el-icon-search"></i>商品基本信息</el-divider>
-          <el-form-item label="商品名称：" required prop="goodsName">
+          <el-form-item label="商品名称：" prop="goodsName">
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
           </el-form-item>
           <br />
@@ -52,21 +52,21 @@
             </el-select-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="商品分类：" required prop="categoryOneId">
+          <el-form-item label="商品分类：" prop="categoryOneId">
             <el-select-dispatcher v-model="baseinfo.categoryOneId" :options="category1" remote placeholder="一级分类"
               :loading="loading" v-on:change="seclectCategory($event, 1)">
               <el-option v-for="item in category.one" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
-          <el-form-item required prop="categoryTwoId">
+          <el-form-item prop="categoryTwoId">
             <el-select-dispatcher v-model="baseinfo.categoryTwoId" :options="category1" remote v-on:change="seclectCategory($event, 2)"
               placeholder="二级分类" :loading="loading">
               <el-option v-for="item in category.two" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
-          <el-form-item required prop="categoryThreeId">
+          <el-form-item prop="categoryThreeId">
             <el-select-dispatcher v-model="baseinfo.categoryThreeId" :options="category1" remote v-on:change="seclectCategory($event, 3)"
               placeholder="三级分类" :loading="loading">
               <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
@@ -76,21 +76,21 @@
           <br />
 
 
-          <el-form-item label="地区：" required prop="provinceId">
+          <el-form-item label="地区：" prop="provinceId">
             <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"
               v-on:change="selectDistrict($event, 1)">
               <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
-          <el-form-item required prop="cityId">
+          <el-form-item prop="cityId">
             <el-select-dispatcher v-model="baseinfo.cityId" :options="category1" remote placeholder="市" :loading="loading"
               v-on:change="selectDistrict($event, 2)">
               <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
-          <el-form-item required prop="areaId">
+          <el-form-item prop="areaId">
             <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"
               v-on:change="selectDistrict($event, 3)">
               <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">
@@ -98,7 +98,7 @@
             </el-select-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="副标题：" required prop="goodsSubtitle">
+          <el-form-item label="副标题：" prop="goodsSubtitle">
             <el-input-dispatcher v-model="baseinfo.goodsSubtitle"></el-input-dispatcher>
           </el-form-item>
           <br />
@@ -110,11 +110,11 @@
             <el-input-dispatcher v-model="baseinfo.goodsNumber"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="商品售价：" required prop="salePrice">
+          <el-form-item label="商品售价：" prop="salePrice">
             <el-input-dispatcher v-model="baseinfo.salePrice"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="市场价：" required prop="martPrice">
+          <el-form-item label="市场价：" prop="martPrice">
             <el-input-dispatcher v-model="baseinfo.martPrice"></el-input-dispatcher>
           </el-form-item>
           <br />
@@ -192,6 +192,9 @@
         baseinfo: {
           id: null,
           // goodsPics:[],
+          categoryOneId: '',
+          categoryTwoId: '',
+          categoryThreeId: ''
         },
         category: {
           one: [],
@@ -215,9 +218,9 @@
         goodsDetailPics:[],
         rules: {
           goodsName: [{required: true, message: '请输入商品名称', trigger: 'blur'}],
-          categoryOneId: [{required: true, message: '请输入一级分类', trigger: 'blur'}],
-          categoryTwoId: [{required: true, message: '请输入二级分类', trigger: 'blur'}],
-          categoryThreeId: [{required: true, message: '请输入三级分类', trigger: 'blur'}],
+          categoryOneId: [{required: true, message: '请输入一级分类', trigger: 'change'}],
+          categoryTwoId: [{required: true, message: '请输入二级分类', trigger: 'change'}],
+          categoryThreeId: [{required: true, message: '请输入三级分类', trigger: 'change'}],
           provinceId: [{required: true, message: '请输入省', trigger: 'blur'}],
           cityId: [{required: true, message: '请输入市', trigger: 'blur'}],
           areaId: [{required: true, message: '请输入区/县', trigger: 'blur'}],
@@ -324,7 +327,6 @@
       },
 
       seclectCategory(event, item) {
-
         switch (item) {
           case 1:
             { //一级分类

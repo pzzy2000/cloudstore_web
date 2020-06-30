@@ -2,55 +2,44 @@
   <div class="app-container">
     <el-card class="filter-container" shadow="never">
       <div>
-        <span>
-          <!--基本信息--></span>
+        <span><!--基本信息--></span>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="bean" ref="baseinfoFrom" size="small" label-width="130px" @submit.native.prevent>
-          <el-divider content-position="left"><i class="el-icon-search"></i></el-divider>
-          <el-form-item label="上一级:" required>
-             <span class="demonstration">默认</span>
-             <el-select v-model="bean.dirctType" placeholder="请选择">
-                 <el-option
-                   v-for="item in dirctTypes"
-                   :key="item.value"
-                   :label="item.label"
-                   :value="item.value">
-                 </el-option>
-               </el-select>
+        <el-form :inline="true" :model="bean" ref="baseinfoFrom" size="small" label-width="130px">
+          <el-divider content-position="left"><i class="el-icon-search"></i>添加数字字典</el-divider>
+          <el-form-item label="字典CODE：" required>
+            <el-input style="width: 214px" v-model="bean.code" placeholder="字典CODE"></el-input>
           </el-form-item>
            <br/>
           <el-form-item label="字典名称：" required>
             <el-input style="width: 214px" v-model="bean.name" placeholder="字典名称"></el-input>
           </el-form-item>
-
-          <el-form-item label="字典CODE：" required>
-            <el-input style="width: 214px" v-model="bean.code" placeholder="字典CODE"></el-input>
+          <br />
+          <el-form-item label="字典类型:" required>
+            <el-select v-model="bean.dirctType" placeholder="字典类型">
+              <el-option
+                v-for="item in dirctTypes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
-
-           <br/>
-
+          <br/>
           <el-form-item label="描述：">
             <el-input style="width: 900px" v-model="bean.desc" placeholder="描述"></el-input>
           </el-form-item>
-
-
-
         </el-form>
       </div>
     </el-card>
     <el-card class="filter-container" shadow="never">
-
         <div>
           <el-button style="float: right;margin-bottom: 10px; margin-right: 20px;"
             @click="saveUpdate('baseinfoFrom')" type="primary"
             size="small">
             提交
           </el-button>
-
         </div>
-
-
     </el-card>
   </div>
 </template>
@@ -62,10 +51,7 @@
   import {msg} from '@/api/iunits';
   export default {
     name: "addDict",
-
-
     data() {
-
       return {
         // rwDispatcherState: 'write',
         bean: {
@@ -77,10 +63,9 @@
           label: "服务保证",
           value: "fubz"
         },{
-          label: "地理位置",
-          value: "district"
+          label: "行政划分",
+          value: "area"
         }]
-
       }
     },
      mounted() {
@@ -90,11 +75,6 @@
       this.bean.optType = this.$route.query.opt ==0?'save':"update",
       this.bean.parentId =typeof(this.$route.query.parentId) == 'undefined' ? 0 : this.$route.query.parentId;
       this.loadInfo();
-
-    },
-
-    mounted() {
-
     },
     methods: {
       async loadInfo() {
@@ -105,18 +85,14 @@
              this.parent.name="www";
            });
         }
-
       },
-
       saveUpdate(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-              saveUpate(this.bean).then(response => {
-              msg('保存数据成功');
+            saveUpate(this.bean).then(response => {
+            msg('保存数据成功');
         });
-
            } else {
-
             return false;
           }
         });
