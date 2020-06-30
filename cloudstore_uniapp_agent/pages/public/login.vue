@@ -18,23 +18,12 @@
 				</view>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
-			<!-- <button v-if="isWeiXin == 1" class="confirm-btn" @click="wechatH5Login" :disabled="logining">微信授权登录</button> -->
-			<!-- <button class="confirm-btn" @click="wechatH5Login" :disabled="logining">微信授权登录</button> -->
 			<!-- #ifdef MP-WEIXIN -->
-				<button open-type="getUserInfo" @getuserinfo='getWxInfo' class="vx-btn" @click="">
-					<image src="../../static/temp/share_wechat.png" mode="" class="wxLogin"></image>
-				</button>
+			<button open-type="getUserInfo" @getuserinfo='getWxInfo' class="vx-btn" @click="">
+				<image src="../../static/temp/share_wechat.png" mode="" class="wxLogin"></image>
+			</button>
 			<!-- #endif -->
 			<view class="forget-section" @click="toForget">忘记密码?</view>
-			<!-- 
-			<view class="forget-section" @click="toLoginCode">验证码登录</view>
-			-->
-			<!-- <button class="confirm-btn" open-type="getUserInfo" @getuserinfo='getWxInfo' withCredentials="true">微信授权用户信息</button>
-			<button class="confirm-btn" open-type="getPhoneNumber" @getphonenumber='getPhoneNumber' withCredentials="true">微信授权手机号</button> -->
-			<!-- <button class="confirm-btn" open-type="getUserInfo" @getuserinfo="wxGetUserInfo" withCredentials="true" v-if="isGetPhone == false">微信登录</button> -->
-
-			<!-- 这里是app -->
-			<!-- <button class="confirm-btn" type="primary" open-type="getUserInfo" @click="getuserinfoh5appwx" withCredentials="true">微信登录</button> -->
 
 		</view>
 		<view class="register-section">
@@ -59,18 +48,16 @@
 		},
 		data() {
 			return {
-				access: '13312121212',
-				password: '1212',
-				isWeiXin: false,
+				access: '',
+				password: '',
 				sysInfo: '',
 				logining: false,
-				wxloginCode: '',//获取code
+				wxloginCode: '', //获取code
 				loginInfo: ''
 			};
 		},
 		onLoad() {
 			this.sysInfo = this.$db.get('sysInfo');
-			this.isWeiXin = this.$config.isWeiXin;
 			//this.vxCheckSession() //判断登录是否过期
 			// this.getWxlogin()
 		},
@@ -83,7 +70,7 @@
 			// 	const key = e.currentTarget.dataset.key;
 			// 	this[key] = e.detail.value;
 			// },
-			navBack () {
+			navBack() {
 				uni.switchTab({
 					url: '/pages/index/index'
 				});
@@ -93,53 +80,48 @@
 					url: '/pages/public/reg'
 				});
 			},
-			wechatH5Login() {
-				const that = this;
-				let href = window.location.origin;
-				let page = that.$api.prePage();
-				let prePath = '/pages/index/index';
-				if (page) {
-					prePath = page.__page__.path;
-				}
 
-				window.location =
-					'https://open.weixin.qq.com/connect/oauth2/authorize?' +
-					'appid=' +
-					Api.h5Appid +
-					'&redirect_uri=' +
-					escape(href) +
-					'&response_type=code&scope=snsapi_userinfo&state=mallplus#wechat_redirect';
-			},
 			// vxCheckSession () {
 			// 	uni.checkSession({
 			// 		success() {
 			// 			console.log('状态未过期')
-						
+
 			// 		},
 			// 		fail() {
 			// 			this.getWxInfo()
 			// 		}
 			// 	})
 			// },
-			getWxInfo () { //获取code
+			getWxInfo() { //获取code
 				var that = this;
+				uni.showLoading({
+					title: '微信登录中',
+					mask: true
+				});
 				uni.login({
 					provider: 'weixin',
-					success: function (loginRes) {
+					fail: function() {
+						uni.hideLoading();
+						uni.showToast({
+							title: '微信登录失败',
+							icon: 'none'
+						});
+					},
+					success: function(loginRes) {
 						//uni.setStorageSync('code',loginRes.code)
 						var code = loginRes.code
-						let  params = {
+						let params = {
 							'bean.logintype': 'weixin',
 							'bean.password': code,
-							'bean.access':code
+							'bean.access': code
 						}
 						uni.getUserInfo({
-						    provider: 'weixin',
-						    success: function (infoRes) {
+							provider: 'weixin',
+							success: function(infoRes) {
 								if (infoRes) {
-									uni.setStorageSync('vxInfo',infoRes.rawData)
+									uni.setStorageSync('vxInfo', infoRes.rawData)
 								}
-						    }
+							}
 						});
 						uni.request({
 							url: Api.BASEURI + Api.agent.wxLogin,
@@ -148,264 +130,50 @@
 								'content-type': 'application/x-www-form-urlencoded'
 							},
 							data: params,
+							fail: function() {
+								uni.hideLoading();
+								uni.showToast({
+									title: '微信登录失败',
+									icon: 'none'
+								});
+							},
 							success: function(res) {
-								console.log(res)
+								uni.hideLoading();
 								if (res.data.result.code === 100006) {
-									uni.navigateTo({
-										url: '/pages/public/getVxPhone?openId='+res.data.result.msg
+									uni.showToast({
+										title: '请微信绑定代理手机号',
+										icon: 'none'
 									});
-								}else if (res.data.result.code === 0){
-								    var userInfo = {
+									uni.navigateTo({
+										url: '/pages/public/getVxPhone?openId=' + res.data.result.msg
+									});
+								} else if (res.data.result.code === 0) {
+									uni.showToast({
+										title: '登录成功',
+										icon: 'none'
+									});
+									var userInfo = {
 										name: res.data.result.result.name,
 										url: res.data.result.result.url
 									}
-									uni.setStorageSync('userInfo',userInfo)
-									uni.setStorageSync('token',res.data.result.result.token)
+									uni.setStorageSync('userInfo', userInfo)
+									uni.setStorageSync('token', res.data.result.result.token)
 									uni.switchTab({
 										url: '/pages/index/index'
 									});
-								}else {
-									console.log('请求失败')
+								} else {
+									uni.showToast({
+										title: '微信登录失败',
+										icon: 'none'
+									});
 								}
 							}
 						})
-						// let data = that.login(params);
-						// if(data){
-						// 	if (data.result.code === '10006') {
-						// 		uni.navigateTo({
-						// 			url: '/pages/public/getVxPhone?code='+code
-						// 		});
-						// 	}
-						// }
 					}
 				});
-				// uni.checkSession({
-				// 	success(res) {
-				// 		console.log(res)
-				// 		console.log('状态未过期')
-				// 		// uni.switchTab({
-				// 		// 	url: '/pages/index/index',
-				// 		// });
-				// 	},
-				// 	fail(res) {
-				// 		console.log(res)
-				// 		console.log('状态已过期')
-				// 		// uni.login({
-				// 		//   provider: 'weixin',
-				// 		//   success: function (loginRes) {
-				// 		// 	   console.log(loginRes)
-				// 		// 	   that.wxloginCode = loginRes.code
-				// 		//   }
-				// 		// });
-				// 	}
-				// })
-			},
-			// getWxInfo () { //获取微信用户信息
-			// 	var that = this;
-			// 	uni.getUserInfo({
-			// 	    provider: 'weixin',
-			// 	    success: function (infoRes) {
-			// 			console.log(infoRes)
-			// 			// var userInfo = {
-			// 			// 	name: infoRes.userInfo.nickName,
-			// 			// 	url: infoRes.userInfo.avatarUrl
-			// 			// }
-			// 		 //    uni.setStorageSync('userInfo', userInfo)
-			// 			// uni.setStorageSync('wxInfo', infoRes)
-			// 			// uni.navigateTo({
-			// 			// 	url: '/pages/public/getVxPhone?code='+that.wxloginCode,
-			// 			// });
-			// 	   }
-			// 	});
-			// },
-			loginByWeixinNoPhone(datas) {
-				var that = this;
-				uni.request({
-					// url: 'http://120.24.156.254:18888/platform/'+Api.agent.wx,
-					url: 'http://120.24.156.254:18888/platform/'+Api.agent.wx,
-					method: 'post',
-					data: datas,
-					success: function(res) {
-					let data = res.data.result.result
-					uni.setStorageSync('token', data.token);
-					let params = {
-					  "accessKey": data.accessKey,
-					  "encryptedData": that.loginInfo.detail.encryptedData,
-					  "iv": that.loginInfo.detail.iv,
-					  "openid": data.openid
-					}
-					// var demo = Api.apiCall('post', Api.agent.savePhone, params)
-					uni.request({
-					  url: 'http://120.24.156.254:18888/platform/'+Api.agent.savePhone,
-					  method: 'post',
-					  header:{
-						'auth': uni.getStorageSync('token'),
-					  },
-					  data: params,
-					  success: function(res) {
-						console.log(res)
-					  }
-					})
-						// console.log(res)
-						// that.login(res.data.data);
-						// that.$db.set('token', res.data.data.tokenHead + res.data.data.token);
-						// that.$db.set('userInfos', res.data.data.userInfo);
 
-						// setTimeout(function() {
-						// 	uni.switchTab({
-						// 		url: '/pages/index/index'
-						// 	});
-						// }, 1000);
-					}
-				});
 			},
-			//微信获取手机号
-			getPhoneNumber (res) {
-				if (res) {
-					let ress = res;
-					if (!ress.detail.iv) {
-						uni.showToast({
-							title: '您取消了授权,登录失败',
-							icon: 'none'
-						});
-						return false;
-					}
-				}
-			},
-			/**
-			 * 获取openid
-			 */
-			getAppletOpenId(params) {
-				var that = this;
-				wx.request({
-					url: Api.BASEURI + Api.index.getAppletOpenId,
-					data: params,
-					method: 'post',
-					success: function(info) {
-						// openid seession_key 存入缓存
-						that.$db.set('openId', info.data.data.openid);
-						that.$db.set('session_key', info.data.data.session_key);
 
-						that.info = {
-							openid: info.data.data.openid,
-							code: params.code,
-							userInfo: params.userInfo,
-							cloudID: params.cloudID,
-							encrypted_data: params.encryptedData,
-							iv: params.iv,
-							source: 2,
-							signature: params.signature
-						};
-						that.loginByWeixin(that.info);
-					},
-					fail: function(e) {
-						console.log(e);
-					}
-				});
-			},
-			loginByWeixin(datas) {
-				var that = this;
-				wx.request({
-					url: Api.BASEURI + Api.index.appletLogin_by_weixin,
-					method: 'post',
-					data: datas,
-					success: function(res) {
-						console.log('--loginByWeixin--', res);
-						if (res.data.code == 500) {
-							if (res.data.data == '登录失败 请先绑定手机号') {
-								uni.showToast({
-									title: res.data.data,
-									icon: 'none'
-								});
-								that.isGetPhone = true;
-							}
-						} else {
-							uni.showToast({
-								title: '登录成功'
-							});
-							that.login(res.data.data);
-							that.$db.set('token', res.data.data.tokenHead + res.data.data.token);
-							that.$db.set('userInfos', res.data.data.userInfo);
-
-							setTimeout(function() {
-								uni.switchTab({
-									url: '/pages/index/index'
-								});
-							}, 1000);
-						}
-					}
-				});
-			},
-			appLogin() {
-				uni.getProvider({
-					service: 'oauth',
-					success: function(res) {
-						console.log(res.provider);
-						//支持微信、qq和微博等
-						if (~res.provider.indexOf('weixin')) {
-							uni.login({
-								provider: 'weixin',
-								success: function(loginRes) {
-									console.log('-------获取openid(unionid)-----');
-									console.log(JSON.stringify(loginRes));
-									// 获取用户信息
-									uni.getUserInfo({
-										provider: 'weixin',
-										success: function(info) {
-											console.log('-------获取微信用户所有-----');
-											console.log(JSON.stringify(info.userInfo));
-											let logparams1 = {
-												logs: JSON.stringify(info.userInfo)
-											};
-											Api.apiCall('get', Api.index.logs, logparams1);
-											// 与服务器交互将数据提交到服务端数据库
-											uni.request({
-												url: Api.BASEURI + Api.index.appLogin,
-												method: 'POST',
-												header: {
-													'content-type': 'application/x-www-form-urlencoded'
-												},
-												data: {
-													sex: info.userInfo.gender,
-													city: info.userInfo.country + '-' + info.userInfo.province + '-' + info.userInfo.city,
-													source: 1,
-													openid: info.userInfo.openId,
-													unionid: info.userInfo.openId,
-													nickname: info.userInfo.nickName,
-													headimgurl: info.userInfo.avatarUrl
-												},
-												success: res => {
-													console.log(JSON.stringify(res));
-
-													// 登录成功 记录会员信息到本地
-													if (res) {
-														uni.setStorageSync('userInfo', res.data.userInfo);
-														uni.setStorageSync('token', res.data.tokenHead + res.data.token);
-														uni.switchTab({
-															url: '/pages/index/index'
-														});
-													} else {
-														uni.showToast({
-															title: res.data
-														});
-													}
-												},
-												fail: e => {
-													console.log(JSON.stringify(e));
-												}
-											});
-											let logparams = {
-												logs: JSON.stringify(info.userInfo)
-											};
-											Api.apiCall('get', Api.index.logs, logparams);
-										}
-									});
-								}
-							});
-						}
-					}
-				});
-			},
 			async toLogin() {
 				var that = this;
 				// let phoneReg = /^1[1-9][0-9]\d{8}$/;
@@ -440,7 +208,7 @@
 					this.$api.msg("登录成功");
 					that.login(data);
 					var userInfo = {
-						nickName:  data.result.name,
+						nickName: data.result.name,
 						url: data.result.url
 					}
 					uni.setStorageSync('userInfo', userInfo);
@@ -450,69 +218,6 @@
 					});
 				}
 			},
-			getuserinfoh5appwx() {
-				var that = this;
-				uni.login({
-					success: res => {
-						// res 对象格式
-
-						uni.getUserInfo({
-							success: info => {
-								// 与服务器交互将数据提交到服务端数据库
-								uni.request({
-									url: Api.BASEURI + Api.index.appLogin,
-									method: 'POST',
-									header: {
-										'content-type': 'application/x-www-form-urlencoded'
-									},
-									data: {
-										sex: info.userInfo.gender,
-										city: info.userInfo.country + '-' + info.userInfo.province + '-' + info.userInfo.city,
-
-										source: 1,
-										unionid: info.userInfo.openId,
-										openid: info.userInfo.openId,
-										nickname: info.userInfo.nickName,
-										headimgurl: info.userInfo.avatarUrl
-									},
-									success: res => {
-										console.log(JSON.stringify(res.data.data));
-										// 登录成功 记录会员信息到本地
-										if (res) {
-											console.log(res);
-											that.login(res.data.data);
-											uni.setStorageSync('userInfos', res.data.data.userInfo);
-											uni.setStorageSync('token', res.data.data.tokenHead + res.data.data.token);
-
-											uni.switchTab({
-												url: '/pages/index/index'
-											});
-										} else {
-											uni.showToast({
-												title: res.data
-											});
-										}
-									},
-									fail: e => {
-										console.log(JSON.stringify(e));
-									}
-								});
-							},
-							fail: () => {
-								uni.showToast({
-									title: '微信登录授权失败'
-								});
-							}
-						});
-					},
-					fail: () => {
-						uni.showToast({
-							title: '微信登录授权失败'
-						});
-						uni.hideLoading();
-					}
-				});
-			}
 		}
 	};
 </script>
@@ -636,19 +341,23 @@
 			width: 100%;
 		}
 	}
-	.vx-btn{
+
+	.vx-btn {
 		background: #fff;
+
 		&:after {
 			border-radius: 100px;
 			border: none;
 		}
 	}
+
 	.wxLogin {
 		height: 80upx;
 		width: 80upx;
 		display: block;
 		margin: 0 auto;
 	}
+
 	.confirm-btn {
 		width: 630upx;
 		height: 76upx;
