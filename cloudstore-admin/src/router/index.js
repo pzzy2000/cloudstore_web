@@ -186,12 +186,18 @@ export const asyncRouterMap = [
          component: () => import('@/views/pms/productAttr/index'),
          meta: {title: '商品规格参数', icon: 'product-list'}
        },{
-           path: 'addspec',
-           name: 'goods_addspec',
-           component: () => import('@/views/pms/productAttr/addspecification'),
-           meta: {title: '添加商品规格', icon: 'product-list'},
-           hidden: true
-         }]
+         path: 'addspec',
+         name: 'goods_addspec',
+         component: () => import('@/views/pms/productAttr/addspecification'),
+         meta: {title: '添加商品规格', icon: 'product-list'},
+         hidden: true
+       },{
+         path: 'addspectypes',
+         name: 'goods_addspectypes',
+         component: () => import('@/views/pms/productAttr/addspectypes'),
+         meta: {title: '添加商品规格类型', icon: 'product-list'},
+         hidden: true
+       }]
   },{
     path:'/sys/agent',
     component: Layout,

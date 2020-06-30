@@ -24,3 +24,11 @@ export function getOneuser(params) {//获取单个用户
     data: switchForm(params)
   })
 }
+
+export function submitUser(params) {//保存用户
+  return request({
+    url: '',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
