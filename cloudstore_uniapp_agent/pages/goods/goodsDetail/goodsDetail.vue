@@ -106,10 +106,11 @@
 			<view class="detail-desc">
 			   <view class="d-header"><text>图文详情</text></view>
 			   <view class="ricetext">
-			     <rich-text :nodes="goods.mobileHtml"></rich-text>
+			     <!-- <rich-text nodes="{{goods}}"></rich-text> -->
+				 <rich-text :nodes="goods"></rich-text>
 			   </view>
 			  </view>
-			<rich-text :nodes="desc"></rich-text>
+			<!-- <rich-text :nodes="desc"></rich-text> -->
 		</view>
 
 		<!-- 底部操作菜单 -->
@@ -193,6 +194,7 @@ import uniPopup from '@/components/uni-popup/uni-popup'
 import uniPopupMessage from '@/components/uni-popup/uni-popup-message'
 import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog'
 let userInfo = uni.getStorageSync('userInfo');
+var that = this;
 export default {
 	components: {
 		share, uniPopup, uniPopupMessage, uniPopupDialog, navBar
@@ -207,7 +209,7 @@ export default {
 			detailData: [],
 			basicMarkingList:[],
 			basicGiftsList:[],
-			goods: [],
+			goods: '',
 			favorite: true,
 			shareList: [
 				{
@@ -237,8 +239,14 @@ export default {
 		}
 		return {
 		  title: this.goodsName,
-		  path: '/pages/goods/agent/agent?id='+this.goodsId
+		  url: '/pages/goods/agent/agent?id='+this.goodsId
 		}
+	},
+	onShow() {
+		// var that = this;
+		// that.setData({
+		// 	html: ''
+		// })
 	},
 	async onLoad(ops) {
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
@@ -248,7 +256,7 @@ export default {
 		});
 		this.goodsId = ops.id;
 		if (this.goodsId) {
-			//this.loadMobileHtml()
+			this.loadMobileHtml()
 			let params = { goodsId: this.goodsId };
 			let data = await Api.apiCall('post', Api.goods.detail, params, false, false);
 			if (data) {
@@ -380,8 +388,6 @@ export default {
 		// let params3 = { };
 		// let couponList1 = await Api.apiCall('get', Api.marking.couponList, params3);
 		// this.couponList = couponList1;
-
-
 	},
 
 	methods: {
@@ -417,11 +423,13 @@ export default {
 		//获取商品的图文详情
 		async loadMobileHtml () {
 			let params = {
-				goodId: this.goodsId
+				goodsId: this.goodsId
 			}
 			let data = await Api.apiCall('post', Api.goods.loadHtml, params,0,0);
+			console.log(data)
 			if (data) {
-				console.log(data)
+				this.goods = data.result.mobileHtml
+				that.setData(this.goods)
 			}
 		},
 		//规格弹窗开关

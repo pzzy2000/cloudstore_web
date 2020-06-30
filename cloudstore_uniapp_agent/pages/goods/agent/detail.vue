@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<nav-bar backState="1000" fontColor="#FFF"></nav-bar>
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
 				<swiper-item class="swiper-item" v-for="(item, index) in goods.goodsDetailPhotos" :key="index">
@@ -157,7 +158,7 @@
 
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="joinAgent">加入代理</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">我的小店</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toAgent">我的小店</button>
 			</view>
 		</view>
 
@@ -167,13 +168,14 @@
 <script>
 	import Api from '@/common/api';
 	import share from '@/components/share';
+	import navBar from '@/components/zhouWei-navBar';
 	import {
 		mapState
 	} from 'vuex';
 	let userInfo = uni.getStorageSync('userInfo');
 	export default {
 		components: {
-			share
+			share, navBar
 		},
 		data() {
 			return {
@@ -257,6 +259,11 @@
 					}
 					// console.log(data)
 				}
+			},
+			toAgent () {
+				uni.switchTab({
+				    url: '/pages/agency/agency'
+				});
 			},
 			//收藏
 			toFavorite(item) {

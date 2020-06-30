@@ -105,7 +105,18 @@
 										},
 										data: params,
 										success: function(res) {
-											console.log(res)
+											if (res) {
+												var userInfo = {
+													name: res.data.result.result.name,
+													url: res.data.result.result.url
+												}
+												uni.setStorageSync('userInfo',userInfo)
+												uni.setStorageSync('token',res.data.result.result.token)
+												uni.switchTab({
+													url: '/pages/index/index'
+												});
+											}
+											//console.log(res)
 										}
 									})
 								}
