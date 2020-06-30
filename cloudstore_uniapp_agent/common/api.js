@@ -58,7 +58,7 @@ export default {
 		activityGoodList: 'activity/app/indexShowActivityGoodList' //活动名称下对应的商品
 	},
 	hot: {
-		hotList: 'activity/app/allActivityGoodList'
+		hotList: 'activity/app/listActivityGoods'
 	},
 	
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {

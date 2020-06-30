@@ -43,7 +43,15 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
+		},{
+			"path": "pages/goods/hotGoodsList/hotGoodsList",
+			"style": {
+				"navigationBarTitleText": "热门活动商品列表",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
 		}
+		
 		// {
 
 		// 	"path": "pages/public/reg",
