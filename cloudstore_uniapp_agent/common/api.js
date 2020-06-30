@@ -17,6 +17,16 @@ export default {
 	/**
 	 * 接口名称
 	 */
+	
+	
+	activity:{
+			searchActivityNavList:'activity/app/showNavlist',
+			searchActivityShowList:'activity/app/indexShowlist',
+			searchIndexActivitygoodsList:'activity/app/indexShowActivityGoodList',
+			},
+	
+	
+	
 	index: {
 		bannerList: '',
 		selectNotRecive: ''
@@ -36,7 +46,8 @@ export default {
 	goods: { //商品接口
 	   list: 'goods/list' ,//获取商品列表
 	   detail: '/goods/getGoodsInfoByGoodsId',
-	   save:'agent/goods/save' //代理商将商品加入代理
+	   save:'agent/goods/save' ,//代理商将商品加入代理
+	   loadHtml:'/goods/app/loadMobileHtml',
 	},
 	category: {
 		list: 'goods/category/list',
@@ -49,6 +60,90 @@ export default {
 	hot: {
 		hotList: 'activity/app/allActivityGoodList'
 	},
+	
+	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
+	 if (load) {
+			uni.showLoading({
+				title: '请稍候',
+				mask: true
+			});
+		}
+	let token = uni.getStorageSync('token') || null;
+	console.log('这是token='+token)
+	if (token == null && (endpoint != this.agent.reg  &&  endpoint != this.agent.userlogin) ) {
+		uni.showToast({
+			title: '请先登录',
+			icon: 'none'
+		});
+		uni.navigateTo({
+			url: `/pages/public/login`
+		})
+	}
+	let formData = {}
+	if (isSwitch) {
+		for (let key in data) {
+			let key_ = key;
+			if (key_ == 'pageNum' || key_ === 'pageSize') {
+				key_ = 'commSearchBean.' + key_;
+			} else if (key_ == 'optType') {
+				key_ = key_;
+			} else {
+				key_ = 'bean.' + key_;
+			}
+			if (data[key] != null) {
+				formData[key_] = data[key];
+			}
+		}
+	} else {
+		formData = data;
+	}
+	uni.request({
+		url: (this.BASEURI + endpoint),
+		data: formData,
+		method: method,
+		header: {
+			'content-type': 'application/x-www-form-urlencoded',
+			auth: token
+		},
+		success:function(res) {
+				let result = res.data.result;
+				if (result.code < 0) {
+					uni.showToast({
+						title: '[' + result.msg+']',
+						icon: 'none'
+					});
+					 let timer = setTimeout(()=>{
+						 clearTimeout(timer);
+						 uni.navigateTo({
+						 	url: `/pages/public/login`
+						 })
+					 }, 2000);
+				} else
+				if (result.code > 0) {
+					uni.showToast({
+						title: '[' + result.msg+']',
+						icon: 'none'
+					});
+				} else {
+					callback(result);
+				}
+			
+		},
+		fail:function(data) {
+			uni.showToast({
+				title: '请求数据失败',
+				icon: 'none'
+			});
+		},
+		complete:function(data) {
+			if (load) {
+				uni.hideLoading();
+			}
+		}
+	});
+		
+	},
+	
 	/**
 	 * 封装请求（async await 封装uni.request） 对应portal 项目
 	 * method	   post/get
@@ -136,7 +231,6 @@ export default {
 					icon: 'none'
 				});
 				 let timer = setTimeout(()=>{
-					 console.log(">>>>>>>>>>>>>>>>  lob")
 					 clearTimeout(timer);
 					 uni.navigateTo({
 					 	url: `/pages/public/login`
