@@ -53,12 +53,12 @@
 					<view class="con-list">
 				<view class="table" v-if="goodsSku[0] != null">
 				 <view class="tr bg-w">
-				 <view class="th">{{goodsSku[0]==null ?   '规格' : goodsSku[0].skuKey }}</view>
+				 <view class="th" v-for="  (item,index) in goodsSku[0].skuKeys " :key='index'>{{item}}</view>
 				 <view class="th">价格</view>
 				 </view>
 				  <block v-for='itm  in  goodsSku' :key='itm.id'>
 					   <view class="tr bg-g">
-					  <view class="td" style="text-align: left;">{{itm.skuValue}}</view>
+					  <view class="td" v-for="  (item,index) in itm.skuValues " :key='index'>{{item}}</view>
 					  <view class="td">¥{{itm.price}}</view>
 					  </view>
 				  </block>
@@ -86,6 +86,9 @@
 				<text class="yticon icon-you"></text>
 			</view>
              -->
+			 <view class="c-row b-b">
+			 	<text class="tit"></text>
+			 </view>
 			<view class="c-row b-b">
 				<text class="tit">产地</text>
 				<view class="con-list">
@@ -384,7 +387,7 @@
 		.c-row {
 			display: flex;
 			align-items: center;
-			padding: 20upx 30upx;
+			padding: 20upx 15upx;
 			position: relative;
 		}
 
@@ -632,20 +635,18 @@
    .tr {
     display: flex;
     width: 100%;
-    justify-content: center;
     height: 40px;
-    align-items: center;
    }
    .td {
     width:100%;
-    justify-content: center;
     text-align: center;
    }
    .bg-w{
     // background-color: #cff8fe;
    }
    .bg-g{
-    background: #E6F3F9;
+    //background: #FFFFFF;
+	//border-bottom: 1px solid darkgray;
    }
    .th {
     width: 100%;
