@@ -46,7 +46,7 @@
 					<text>{{item.name}}</text>
 				</view>
 			</view>
-			<!-- 新品推荐 -->
+			<!-- 热门活动列表 -->
 			<view  v-for='item  in activity.show' :key="item.id">
 				<view   class="f-header m-t" @click="navToCategory(item)">
 					<image src="/static/temp/h1.png"></image>
