@@ -89,16 +89,41 @@
 						data: params,
 						success: function(res) {
 							console.log(res)
-							// if (res) {
-							// 	if (res.)
-							// }
-							// var token = res.data.result.result.token
-							// if (token) {
-							// 	uni.setStorageSync('token',token)
-							// 	uni.switchTab({
-							// 		url: '/pages/index/index',
-							// 	});
-							// }
+							if (res) {
+								if (res.result.code === 0) {
+									var code = uni.getStorageSync('code')
+									let params = {
+										'bean.logintype': 'weixin',
+										'bean.password': code,
+										'bean.access': code
+									}
+									uni.request({
+										url: Api.BASEURI + Api.agent.wxLogin,
+										method: 'post',
+										header: {
+											'content-type': 'application/x-www-form-urlencoded'
+										},
+										data: params,
+										success: function(res) {
+											console.log(res)
+										}
+									})
+								}
+								// var userInfo = {
+								// 	name: res.data.result.result.name,
+								// 	url: res.data.result.result.url
+								// }
+								// uni.setStorageSync('userInfo',userInfo)
+								// uni.setStorageSync('token',res.data.result.result.token)
+								// uni.switchTab({
+								// 	url: '/pages/index/index'
+								// });
+							}else {
+								uni.showToast({
+								    title: '登录失败，请稍后重试',
+								    duration: 2000
+								});
+							}
 						}
 					})
 				}

@@ -48,8 +48,8 @@
 		},
 		data() {
 			return {
-				access: '',
-				password: '',
+				access: 'yuquan',
+				password: '123456',
 				sysInfo: '',
 				logining: false,
 				wxloginCode: '', //获取code
@@ -108,7 +108,7 @@
 						});
 					},
 					success: function(loginRes) {
-						//uni.setStorageSync('code',loginRes.code)
+						uni.setStorageSync('code',loginRes.code)
 						var code = loginRes.code
 						let params = {
 							'bean.logintype': 'weixin',

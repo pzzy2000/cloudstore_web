@@ -38,16 +38,17 @@ export default {
 	   userinfo:"/agent/get",//获取用户信息	
 	   userlogin:"sys/manager/platform/login",
 	   reg:"sys/manager/platform/register/agent",
-	   list: '/agent/goods/list' ,//获取代理商代理的商品信息
 	   wx:'sys/manager/platform/weixin/auth', //获取用户登录微信信息
 	   wxLogin: 'sys/manager/platform/login', //判断微信登录
-       savePhone: 'sys/manager/platform/weixin/login' //微信登录
+       savePhone: 'sys/manager/platform/weixin/login' ,//微信登录
+	   agentList: 'agent/goods/app/list', //获取代理商代理的商品信息
+	   dateList: 'agent/goods/app/dateList' //获取今日上新的商品
 	},
 	goods: { //商品接口
 	   list: 'goods/list' ,//获取商品列表
-	   detail: '/goods/getGoodsInfoByGoodsId',
+	   detail: 'goods/getGoodsInfoByGoodsId',
 	   save:'agent/goods/save' ,//代理商将商品加入代理
-	   loadHtml:'/goods/app/loadMobileHtml',
+	   loadHtml:'goods/app/loadMobileHtml',
 	},
 	category: {
 		list: 'goods/category/list',

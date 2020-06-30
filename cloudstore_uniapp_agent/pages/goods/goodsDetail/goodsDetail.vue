@@ -19,11 +19,11 @@
 				<text class="m-price">¥{{ goods.martPrice }}</text>
 				<text class="coupon-tip">7折</text>
 			</view>
-			<view class="bot-row">
+			<!-- <view class="bot-row">
 				<text>销量: {{ goods.sale }}</text>
 				<text>库存: {{ goods.stock }}</text>
 				<text>浏览量: {{ goods.hit }}</text>
-			</view>
+			</view> -->
 		</view>
 
 		<!--  分享 -->
@@ -128,7 +128,7 @@
 			</view>
 
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="openAgent">加入代理</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent">我的小店</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
 			</view>
 		</view>
@@ -176,14 +176,11 @@
 						</text>
 					</view>open
 				</view> -->
-				<button class="btn" @click="openAgent">加入代理</button>
+				<!-- <button class="btn" @click="openAgent">加入代理</button> -->
 			</view>
 		</view>
 		<!-- 分享 -->
 		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
-		<uni-popup ref="popup" type="dialog">
-		    <uni-popup-dialog type="warn" content="是否加入代理？" :duration="2000" :before-close="true" @close="closeAgentDialog" @confirm="confirmAgentDialog"></uni-popup-dialog>
-		</uni-popup>
 	</view>
 </template>
 
@@ -202,7 +199,7 @@ export default {
 	},
 	data() {
 		return {
-      statusBarHeight: '',
+		    statusBarHeight: '',
 			specClass: 'none',
 			specSelected: [],
 			small: [],
@@ -213,12 +210,12 @@ export default {
 			goods: [],
 			favorite: true,
 			shareList: [
-        {
-          icon: "/static/temp/share_wechat.png",
-          text: "微信好友",
-          type: 1
-        }
-      ],
+				{
+				  icon: "/static/temp/share_wechat.png",
+				  text: "微信好友",
+				  type: 1
+				}
+		    ],
 			desc: ``,
 			skuList: [],
 			consultList: [],
@@ -229,6 +226,7 @@ export default {
 				goods: 0
 			},
 			goodsId:'',
+			goodsName: '',
 			specList: [],
 			specChildList: []
 		};
@@ -238,8 +236,8 @@ export default {
 		if (res.from === 'button') {// 来自页面内分享按钮
 		}
 		return {
-		  title: '商品',
-		  path: '/pages/goods/goodsDetail/goodsDetail?id=1'
+		  title: this.goodsName,
+		  path: '/pages/goods/agent/agent?id='+this.goodsId
 		}
 	},
 	async onLoad(ops) {
@@ -250,10 +248,12 @@ export default {
 		});
 		this.goodsId = ops.id;
 		if (this.goodsId) {
+			//this.loadMobileHtml()
 			let params = { goodsId: this.goodsId };
 			let data = await Api.apiCall('post', Api.goods.detail, params, false, false);
 			if (data) {
 				this.goods = data.result.goodsPicesBean
+				this.goodsName = data.result.goodsPicesBean.goodsName
 				console.log(this.goods)
 				//遍历商品数据展示规格
 				for (let index in data.result.goodsPropertyValue) {
@@ -286,7 +286,6 @@ export default {
 						}
 					}
 				}
-
 			}
 		}
 		// 	if (data.data) {
@@ -415,6 +414,16 @@ export default {
 				console.log(data)
 			}
 		},
+		//获取商品的图文详情
+		async loadMobileHtml () {
+			let params = {
+				goodId: this.goodsId
+			}
+			let data = await Api.apiCall('post', Api.goods.loadHtml, params,0,0);
+			if (data) {
+				console.log(data)
+			}
+		},
 		//规格弹窗开关
 		toggleSpec() {
 			if (this.specClass === 'show') {
@@ -501,13 +510,17 @@ export default {
 		share() {
 			this.$refs.share.toggleMask();
 		},
+		toAgent () { //跳转到我的小店界面
+			uni.switchTab({
+			    url: '/pages/agency/agency'
+			});
+		},
 		//收藏
 		toFavorite(item) {
 			if (userInfo && userInfo.id) {
 				this.favorite = !this.favorite;
 				let params = { objId: item.id, type: 1, name: item.name, meno1: item.pic, meno2: item.price, meno3: item.sale };
 				Api.apiCall('post', Api.goods.favoriteSave, params);
-
 			} else {
 				let url = '/pages/public/login';
 				uni.navigateTo({
