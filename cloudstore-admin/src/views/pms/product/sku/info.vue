@@ -239,7 +239,7 @@
           goodsId: gooodsId
         }).then(response => {
           let tr = response.result.result;
-          let goods = tr.goods;
+          let goods = tr.goodsPicesBean;
 
           if (goods.propertyId == null) {
             this.loading = false;

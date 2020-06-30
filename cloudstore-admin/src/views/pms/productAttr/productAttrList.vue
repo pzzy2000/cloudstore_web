@@ -76,23 +76,14 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog
-      :title="dialogTitle"
-      :visible.sync="dialogVisible"
-      width="30%">
-      <el-table-column label="编号" width="100" align="center">
-        <template slot-scope="scope">{{scope.row.id}}</template>
-      </el-table-column>
-      <el-form ref="productAttrCatForm":model="productAttrAdd" :rules="rules" label-width="120px">
-        <el-form-item label="类型名称" prop="name">
-          <el-input v-model="productAttrAdd.name" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm('productAttrCatForm')">确 定</el-button>
-      </span>
-    </el-dialog>
+    <!--<el-dialog-->
+      <!--:title="dialogTitle"-->
+      <!--:visible.sync="dialogVisible"-->
+      <!--width="30%">-->
+      <!--<el-table-column label="编号" width="100" align="center">-->
+        <!--<template slot-scope="scope">{{scope.row.id}}</template>-->
+      <!--</el-table-column>-->
+    <!--</el-dialog>-->
   </div>
 </template>
 <script>
@@ -113,8 +104,6 @@
         },
         operateType: null,
         multipleSelection: [],
-        dialogVisible: false,
-        dialogTitle:'',
         productAttrAdd:{
           name:'',
           id:null
@@ -125,11 +114,6 @@
             value: "deleteProductAttr"
           }
         ],
-        rules: {
-          name: [
-            { required: true, message: '请输入属性名称', trigger: 'blur' }
-          ]
-        }
       }
     },
     created() {
@@ -146,38 +130,9 @@
       },
       addProductAttr() {
         //this.$router.push({path:'/sys/goods/addProductAttr',query:{goodsPropertyId:this.$route.query.goodsPropertyId,type:this.$route.query.type}});
-        this.dialogVisible = true;
-        this.dialogTitle = "添加属性";
-      },
-      handleConfirm(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if(this.dialogTitle==="添加属性"){
-              createProductAttr({'goodsPropertyId':this.$route.query.goodsPropertyId,'name':this.productAttrAdd.name,'optType':'save','type':this.$route.query.type}).then(response=>{
-                this.$message({
-                  message: '添加成功',
-                  type: 'success',
-                  duration:1000
-                });
-                this.dialogVisible = false;
-                this.getList();
-              });
-            }else{
-              createProductAttr({'id':this.productAttrAdd.id,'name':this.productAttrAdd.name,'optType':'update'}).then(response=>{
-                this.$message({
-                  message: '修改成功',
-                  type: 'success',
-                  duration:1000
-                });
-                this.dialogVisible = false;
-                this.getList();
-              });
-            }
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
+        // this.dialogVisible = true;
+        // this.dialogTitle = "添加属性";
+        this.$router.push({path: '/sys/goods/addspectypes', query: {goodsPropertyId: this.$route.query.goodsPropertyId, type:this.$route.query.type, optTp: 'add', allMsg: this.$route.query.type + 'add'}});
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -215,11 +170,11 @@
         this.getList();
       },
       handleUpdate(index, row) {
-        //this.$router.push({path:'/pms/updateProductAttr',query:{id:row.id}});
-        this.dialogVisible = true;
-        this.dialogTitle = "编辑属性";
-        this.productAttrAdd.name = row.name;
-        this.productAttrAdd.id = row.id;
+        this.$router.push({path:'/sys/goods/addspectypes',query:{id:row.id, name: row.name, type:this.$route.query.type, optTp: "update", allMsg: this.$route.query.type + 'update'}});
+        // this.dialogVisible = true;
+        // this.dialogTitle = "编辑属性";
+        // this.productAttrAdd.name = row.name;
+        // this.productAttrAdd.id = row.id;
       },
       handleDeleteProductAttr(ids) {
         this.$confirm('是否要删除该属性', '提示', {

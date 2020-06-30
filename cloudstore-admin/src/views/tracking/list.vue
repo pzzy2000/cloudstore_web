@@ -6,7 +6,7 @@
         <span>筛选搜索</span>
         <el-button
           style="float: right;margin-bottom: 10px;"
-          @click="handleSearchList()"
+          @click="handleSearchList('listQuery')"
           type="primary"
           size="small">
           查询
@@ -19,11 +19,11 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="物流公司：">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="130px" ref="listQuery">
+          <el-form-item label="物流公司：" prop="name">
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="物流公司名字"></el-input>
           </el-form-item>
-          <el-form-item label="物流编码：">
+          <el-form-item label="物流编码：" prop="code">
             <el-input style="width: 214px" v-model="listQuery.code" placeholder="物流编码"></el-input>
           </el-form-item>
            </el-form>
@@ -83,7 +83,7 @@
 </template>
 <script>
    import { getLogistics,deleteLogis,searchLogis } from '@/api/tracking'
-   import {msg}  from '@/api/iunits'
+   import {msg} from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -94,11 +94,11 @@
     data() {
       return {
         operateType: null,
-        listQuery: Object.assign({}, defaultListQuery),
+        listQuery: Object.assign({name: ''}, defaultListQuery),
         list: null,
         total: null,
         listLoading: true,
-        multipleSelection: [],
+        multipleSelection: []
       }
     },
     created() {
@@ -132,7 +132,7 @@
           this.total = parseInt(response.result.result.total);
         });
       },
-      handleSearchList() {
+      handleSearchList(formName) {
         // this.listQuery.pageNum = 1;
         // this.getList();
         searchLogis(this.listQuery).then(res => {
@@ -182,15 +182,21 @@
         })
       },
       delLogis(row) {
-        deleteLogis({ids: row.id}).then(res => {
-          if (res.result.code == 0) {
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            });
-            this.getList();
-          }
-        })
+        this.$confirm('是否要进行删除操作?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteLogis({ids: row.id}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              });
+              this.getList();
+            }
+          })
+        }).catch(e=>e);
       }
     }
   }
