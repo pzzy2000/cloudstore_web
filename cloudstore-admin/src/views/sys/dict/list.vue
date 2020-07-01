@@ -181,7 +181,7 @@
       },
       tochild(index, row){
         this.listQuery = Object.assign({}, defaultListQuery);
-        this.$router.push({path: '/sys/manager/dict/list', query: {parentId: row.id}});
+        this.$router.push({path: '/sys/manager/dict/list', query: {parentId: row.id, parentId: this.$route.query.parentId}});
       },
       haveChild(row, column){
         let  childs  = row.childs;
@@ -206,6 +206,7 @@
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
+          console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
@@ -228,6 +229,7 @@
               message: '查询成功',
               type: 'success'
             })
+            console.log(res);
             this.list = res.result.result.records;
             this.total = parseInt(res.result.result.total);
           }
@@ -262,8 +264,7 @@
         });
       },
       addDict() {
-        console.log("添加事件");
-        this.$router.push('/sys/manager/dict/add');
+        this.$router.push({path: '/sys/manager/dict/add', query: {opt: "0"}});
       }
     }
   }

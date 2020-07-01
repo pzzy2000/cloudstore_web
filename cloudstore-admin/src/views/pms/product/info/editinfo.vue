@@ -474,14 +474,12 @@
                 goodsPics.push(this.goodsPics[i].uid);
               }
               this.baseinfo.goodsPics = goodsPics;
-
               let goodsDetailPics = [];
               for (let i = 0; i < this.goodsDetailPics.length; i++) {
                 let x = this.goodsDetailPics[i];
                 goodsDetailPics.push(this.goodsDetailPics[i].uid);
               }
               this.baseinfo.goodsDetailPics = goodsDetailPics;
-
               createProduct(this.baseinfo).then(response => {
                 if (!response) return;
                 this.$refs['baseinfo'].resetFields();
@@ -492,6 +490,7 @@
                   type: 'success',
                   duration: 1000
                 });
+                this.$router.push("/sys/goods/list");
                 //this.$router.go(0)
               });
             });

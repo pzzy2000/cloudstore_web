@@ -54,7 +54,6 @@
             重置
           </el-button>
 
-
           <el-button style="float: none;margin-bottom: 10px;" @click="updateProduct" :style="{ display: button.update}"
             size="small">
             更新

@@ -2,16 +2,17 @@
   <div>
     <el-card class="filter-container" shadow="never" style="margin: 20px">
       <el-divider content-position="left"><i class="el-icon-search"></i>添加物流公司</el-divider>
-      <el-form label-width="150px" style="width: 600px" :model="logisticsList" :rules="rules" ref="logisticsList">
+      <el-form label-width="150px" :model="logisticsList" :rules="rules" ref="logisticsList">
         <el-form-item label="物流公司：" prop="name">
-          <el-input-dispatcher placeholder="请输入物流公司" v-model="logisticsList.name"></el-input-dispatcher>
+          <el-input-dispatcher placeholder="请输入物流公司" v-model="logisticsList.name" style="width: 350px"></el-input-dispatcher>
         </el-form-item>
         <el-form-item label="物流公司编码：" prop="code">
-          <el-input-dispatcher placeholder="请输入物流公司编码" v-model="logisticsList.code"></el-input-dispatcher>
+          <el-input-dispatcher placeholder="请输入物流公司编码" v-model="logisticsList.code" style="width: 350px"></el-input-dispatcher>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="addLogis('logisticsList')" v-show="rwDispatcherState === 'write'">提交</el-button>
-          <el-button v-show="rwDispatcherState === 'write'" @click="backLastpage">取消</el-button>
+        <el-form-item style="float: right">
+          <el-button type="primary" @click="addLogis('logisticsList')" v-show="rwDispatcherState === 'write'" size="mini">提交</el-button>
+          <el-button @click="resetForm('logisticsList')" v-show="optType == 'save'" size="mini">重置</el-button>
+          <el-button v-show="rwDispatcherState === 'write'" @click="backLastpage" size="mini">取消</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -70,7 +71,8 @@
               { validator: validateSurnmae, trigger: 'blur' }
             ],
           },
-          logisId: ''
+          logisId: '',
+          optType: ''
         }
       },
       created() {
@@ -78,6 +80,7 @@
           this.logisticsList.name = this.$route.query.name;
           this.logisticsList.code = this.$route.query.code;
         }
+        this.optType = this.$route.query.optType;
       },
       methods: {
         addLogis(formName) {
@@ -119,6 +122,14 @@
         },
         backLastpage() {
           this.$router.push("/sys/tracking/list")
+        },
+        resetForm(formName) {
+          this.$refs[formName].resetFields();
+          this.$message({
+            message: '重置成功',
+            type: 'success',
+            duration: 800
+          });
         }
         // toggleRds() {
         //   if (this.rwDispatcherState === 'write'){

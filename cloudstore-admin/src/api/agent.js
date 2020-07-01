@@ -23,3 +23,11 @@ export function getOneagent(params) {
     data: switchForm(params)
   })
 }
+
+export function saveUpdateLevel(params) {
+  return request({
+    url: '/agent/level/save',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
