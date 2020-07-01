@@ -1,6 +1,6 @@
 {
-	"pages": [
-		{
+	"pages": [{
+
 			"path": "pages/public/login",
 			"style": {
 				"navigationBarTitleText": "",
@@ -12,6 +12,7 @@
 			}
 		},
 		{
+
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "",
@@ -42,23 +43,24 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		},
-		{
-		    "path" : "pages/agency/agentGoodsList/agentGoodsList",
-		    "style" : {
-				"navigationBarTitleText": "代理商品列表",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/public/reg",
+		},{
+			"path": "pages/goods/hotGoodsList/hotGoodsList",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "热门活动商品列表",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
 		},
+		
+		// {
+
+		// 	"path": "pages/public/reg",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"navigationStyle": "custom",
+		// 		"enablePullDownRefresh": false
+		// 	}
+		// },
 		{
 			"path": "pages/user/user",
 			"style": {
@@ -67,22 +69,23 @@
 				"enablePullDownRefresh": false
 			}
 		},
-		{
-			"path": "pages/goods/goodsDetail/goodsDetail",
-			"style": {
-				"navigationBarTitleText": "商品详情",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/goods/hotGoodsList/hotGoodsList",
-			"style": {
-				"navigationBarTitleText": "热门活动商品列表",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-		},
+		
+		// {
+		// 	"path": "pages/goods/goodsDetail/goodsDetail",
+		// 	"style": {
+		// 		"navigationBarTitleText": "商品详情",
+		// 		"navigationStyle": "custom",
+		// 		"enablePullDownRefresh": false
+		// 	}
+		// },
+		// {
+		// 	"path": "pages/goods/hotGoodsList/hotGoodsList",
+		// 	"style": {
+		// 		"navigationBarTitleText": "热门活动商品列表",
+		// 		"navigationStyle": "custom",
+		// 		"enablePullDownRefresh": false
+		// 	}
+		// },
 		{
 			"path": "pages/agency/agency",
 			"style": {
@@ -99,6 +102,7 @@
 				"enablePullDownRefresh": false
 			}
 		}
+		
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -127,7 +131,7 @@
 				"pagePath": "pages/agency/agency",
 				"iconPath": "static/fujin.png",
 				"selectedIconPath": "static/fujin_.png",
-				"text": "我的小店"
+				"text": "我的代理"
 			},
 			{
 				"pagePath": "pages/cart/cart",
