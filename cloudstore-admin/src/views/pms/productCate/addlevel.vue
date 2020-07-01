@@ -4,21 +4,24 @@
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">添加商品分类</span>
     </el-card>
-    <el-form label-width="80px" style="width: 500px;margin-top: 20px" :model="addGoodsort" :refs="addGoodsort" :rules="rules">
-      <el-form-item label="分类名称" prop="name">
-        <el-input v-model="addGoodsort.name" placeholder="分类名称"></el-input>
-      </el-form-item>
-      <el-form-item label="级别" prop="level">
-        <el-input v-model="addGoodsort.level" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="排序" prop="order">
-        <el-input v-model="addGoodsort.order" placeholder="排个序吧"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('addGoodsort')">立即创建</el-button>
-        <el-button @click="resetForm('addGoodsort')">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <el-card class="operate-container" shadow="never" style="margin:20px 20px 0 20px">
+      <el-form label-width="80px" :model="addGoodsort" ref="addGoodsort" :rules="rules">
+        <el-form-item label="分类名称" prop="name">
+          <el-input v-model="addGoodsort.name" placeholder="分类名称" style="width: 350px"></el-input>
+        </el-form-item>
+        <el-form-item label="级别" prop="level">
+          <el-input v-model="addGoodsort.level" disabled style="width: 350px"></el-input>
+        </el-form-item>
+        <el-form-item label="排序" prop="order">
+          <el-input v-model="addGoodsort.order" placeholder="排个序吧" style="width: 350px"></el-input>
+        </el-form-item>
+        <el-form-item style="float: right">
+          <el-button type="primary" @click="submitForm('addGoodsort')" size="small">添加</el-button>
+          <el-button @click="resetForm('addGoodsort')" size="small">重置</el-button>
+          <el-button @click="backLastpage" size="small">返回</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
@@ -71,12 +74,25 @@
         savegoodLevel('/goods/category/save', obj).then(res => {
           console.log(res);
           if(res.result.code == 0) {
+            this.$message({
+              message: '添加成功',
+              type: 'success',
+              duration: 800
+            });
             this.$router.push("/sys/goods/category");
           }
         })
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        this.$message({
+          message: '重置成功',
+          type: 'success',
+          duration:800
+        });
+      },
+      backLastpage() {
+        this.$router.go(-1);
       }
     }
   }
