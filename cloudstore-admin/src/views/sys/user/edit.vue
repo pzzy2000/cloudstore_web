@@ -32,13 +32,19 @@
           </el-form-item>
         </el-form>
       </div>
-      <div>
-        <span></span>
+      <div style="overflow: hidden">
         <el-button
           style="float: right;margin-right: 15px"
           @click="toback()"
           size="small">
           返回
+        </el-button>
+        <el-button
+          style="float: right;margin-right: 15px"
+          @click="resetForm('userinfo')"
+          size="small"
+          v-show="optType == 'add'">
+          重置
         </el-button>
         <el-button
           style="float: right;margin-right: 15px"
@@ -56,7 +62,7 @@
           @click="handleUpdateuser()"
           type="primary"
           size="small">
-          编辑
+          更新
         </el-button>
       </div>
     </el-card>
@@ -95,6 +101,7 @@
         operaType: '',
         rwDispatcherState: 'write',
         visibleUpdate:'',// none 隐藏
+        optType: '',
         userinfo: {
           name: '',
           access: '',
@@ -133,6 +140,7 @@
       // this.rwDispatcherState="read"//write  read
       // this.visibleUpdate="none";
       // this.getList();
+      this.optType = this.$route.query.type;
       this.rwDispatcherState = this.$route.query.rds;
       switch (this.$route.query.type) {
         case 'add': return this.operaType = "添加";
@@ -152,18 +160,26 @@
       toback(){
         this.$router.push('/sys/manager/user/list');
       },
-      loadData() {
-        this.userinfo.name = '12121212';
-      },
+      // loadData() {
+      //   this.userinfo.name = '12121212';
+      // },
       handleSubmituser() {
          console.log('提交事件');
         // submitUser().then(res => {
         //   console.log(res);
         // })
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.$message({
+          message: '重置成功',
+          type: 'success',
+          duration: 800
+        });
+      },
+      handleUpdateuser() {
+        alert("提交了编辑")
       }
-      // handleUpdateuser() {
-      //
-      // }
     }
   }
 </script>

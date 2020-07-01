@@ -30,7 +30,7 @@
         border>
         <el-table-column type="selection" width="60" align="center" fixed></el-table-column>
         <el-table-column label="等级名称"  align="center" fixed>
-          <template slot-scope="scope">{{scope.row.levelName}}</template>
+          <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="等级编码"  align="center">
           <template slot-scope="scope">{{scope.row.levelCode}}</template>
@@ -46,48 +46,23 @@
 
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-              <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑
-              </el-button>
+            <el-button size="mini" @click="readLevel(scope.$index, scope.row)">查看
+            </el-button>
+            <el-button size="mini" @click="handleUpdate(scope.$index, scope.row)">编辑
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize" :page-sizes="[5,10,15]" :current-page.sync="listQuery.pageNum" :total="total">
       </el-pagination>
     </div>
-
-    <el-dialog
-      :title="dialogTitle"
-      :visible.sync="dialogVisible"
-      width="30%">
-      <el-table-column label="编号" width="100" align="center">
-        <template slot-scope="scope">{{scope.row.id}}</template>
-      </el-table-column>
-      <el-form ref="levelForm":model="levelModel" :rules="rules" label-width="120px">
-        <el-form-item label="等级名字" prop="levelName">
-          <el-input v-model="levelModel.levelName" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="等级编码" prop="levelCode">
-          <el-input v-model="levelModel.levelCode" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="上架数量" prop="putNumber">
-          <el-input v-model="levelModel.putNumber" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm('levelForm')">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
-  // import {
-  //   fetchList,saveUpdateLevel
-  // } from '@/api/agent'
+  import {fetchList,saveUpdateLevel} from '@/api/agent'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 5,
@@ -97,26 +72,18 @@
     name: "productList",
     data() {
       return {
-
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,
         listLoading: true,
         dialogTitle: '',
         multipleSelection: [],
-        levelModel: [],
-        dialogVisible: false,
         userTypes: [
           {
             value: 'platform',
             label: '平台管理'
           }
-        ],
-        rules: {
-          levelName: [
-            { required: true, message: '请输入等级名称', trigger: 'blur' }
-          ]
-        }
+        ]
       }
     },
     created() {
@@ -129,7 +96,6 @@
         } else {
           this.listQuery.productCategoryId = null;
         }
-
       }
     },
     filters: {
@@ -145,7 +111,6 @@
       showAccess(row,column){
            return ( row.sysManagerUserBean ==null )?'数据读取错误':row.sysManagerUserBean.name ;
       },
-
       deleteStatus(row, column) {
         let status = row.status;
         switch (status) {
@@ -159,26 +124,24 @@
       },
       getList() {
         this.listLoading = true;
-        // fetchList(this.listQuery).then(response => {
-        //   this.listLoading = false;
-        //   this.list = response.result.result.records;
-        //   this.total = response.result.result.records.total;
-        // });
+        fetchList(this.listQuery).then(response => {
+          console.log(response);
+          this.listLoading = false;
+          this.list = response.result.result.records;
+          this.total = response.result.result.records.total;
+        });
       },
       add() {
-        this.dialogVisible = true;
-        this.dialogTitle = "添加类型";
+        this.$router.push({path: "/sys/agent/addlevel", query: {type: "add"}})
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
         this.getList();
       },
       handleUpdateUserInfo(index, row) {
-
         let pageNum = this.listQuery.pageNum;
         let pageSize = this.listQuery.pageSize;
         let userId = row.id;
-
         this.$router.push({
           path: '/sys/supplier/info',
           query: {
@@ -189,12 +152,13 @@
         });
       },
       handleUpdate(index, row) {
-        this.dialogVisible = true;
-        this.dialogTitle = "编辑类型";
-        this.levelModel.levelName = row.levelName;
-        this.levelModel.levelCode = row.levelCode
-        this.levelModel.putNumber = row.putNumber;
-        this.levelModel.id = row.id;
+        // this.dialogVisible = true;
+        // this.dialogTitle = "编辑类型";
+        // this.levelModel.levelName = row.levelName;
+        // this.levelModel.levelCode = row.levelCode
+        // this.levelModel.putNumber = row.putNumber;
+        // this.levelModel.id = row.id;
+        this.$router.push({path: "/sys/agent/addlevel", query: {type: "update", id: row.id}})
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
@@ -208,7 +172,6 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -224,47 +187,8 @@
           this.updateDeleteStatus(1, ids);
         });
       },
-      handleConfirm(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if(this.dialogTitle==="添加类型"){
-              let data = {
-                'levelName':this.levelModel.levelName,
-                'levelCode':this.levelModel.levelCode,
-                'putNumber':this.levelModel.putNumber,
-                'optType':'save',
-                };
-                saveUpdateLevel(data).then(response=>{
-                this.$message({
-                  message: '添加成功',
-                  type: 'success',
-                  duration:1000
-                });
-                this.dialogVisible = false;
-                this.getList();
-              });
-            }else{
-              let data = {
-                'levelName':this.levelModel.levelName,
-                'levelCode':this.levelModel.levelCode,
-                'putNumber':this.levelModel.putNumber,
-                'optType':'update',
-                };
-              saveUpdateLevel(data).then(response=>{
-                this.$message({
-                  message: '修改成功',
-                  type: 'success',
-                  duration:1000
-                });
-                this.dialogVisible = false;
-                this.getList();
-              });
-            }
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
+      readLevel(index, row) {
+        this.$router.push({path: "/sys/agent/addlevel", query: {type: "read", id: row.id}})
       }
     }
   }

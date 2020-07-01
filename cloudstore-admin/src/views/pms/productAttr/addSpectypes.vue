@@ -12,8 +12,8 @@
           </el-form-item>
         </el-form>
         <div style="float: right">
-          <el-button type="primary" @click="handleConfirm('productAttrCatForm')">确 定</el-button>
-          <el-button @click="backPage">取 消</el-button>
+          <el-button type="primary" @click="handleConfirm('productAttrCatForm')" size="small">确 定</el-button>
+          <el-button @click="backPage" size="small">取 消</el-button>
         </div>
       </div>
     </el-card>

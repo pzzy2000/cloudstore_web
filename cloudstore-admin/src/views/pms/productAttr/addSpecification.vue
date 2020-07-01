@@ -2,16 +2,17 @@
   <div class="app-container">
     <el-card class="filter-container" shadow="never">
       <el-divider content-position="left"><i class="el-icon-search"></i>商品规格参数</el-divider>
-      <el-form ref="productAttrCate":model="productAttrCate" :rules="rules" label-width="120px" style="width: 400px">
+      <el-form ref="productAttrCate":model="productAttrCate" :rules="rules" label-width="120px">
         <el-form-item label="类型名称" prop="propertyName">
-          <el-input v-model="productAttrCate.propertyName" auto-complete="off"></el-input>
+          <el-input v-model="productAttrCate.propertyName" auto-complete="off" style="width: 350px"></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="descs">
-          <el-input v-model="productAttrCate.descs" auto-complete="off"></el-input>
+          <el-input v-model="productAttrCate.descs" auto-complete="off" style="width: 350px"></el-input>
         </el-form-item>
-        <el-form-item>
-            <el-button @click="retLastpage">取 消</el-button>
-            <el-button type="primary" @click="handleConfirm('productAttrCate')">确 定</el-button>
+        <el-form-item style="float: right">
+          <el-button type="primary" @click="handleConfirm('productAttrCate')" size="small">提 交</el-button>
+          <el-button @click="resetForm('productAttrCate')" size="small" v-show="optType == 'add'">重 置</el-button>
+          <el-button @click="retLastpage" size="small">返 回</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -33,18 +34,19 @@
             propertyName: [
               { required: true, message: '请输入类型名称', trigger: 'blur' }
             ]
-          }
+          },
+          optType: ''
         }
       },
       created() {
-        console.log(this.$route.query);
+        this.optType = this.$route.query.isAdd;
         this.productAttrCate.propertyName = this.$route.query.propertyName;
         this.productAttrCate.descs = this.$route.query.descs;
         this.productAttrCate.id = this.$route.query.id;
       },
       methods: {
         retLastpage() {
-          this.$router.push("/sys/goods/property");
+          this.$router.go(-1);
         },
         handleConfirm(formName){
           console.log(this.productAttrCate.id);
@@ -73,6 +75,14 @@
               console.log('error submit!!');
               return false;
             }
+          });
+        },
+        resetForm(formName) {
+          this.$refs[formName].resetFields();
+          this.$message({
+            message: '重置成功',
+            type: 'success',
+            duration: 800
           });
         }
       }

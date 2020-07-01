@@ -163,6 +163,11 @@
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.$message({
+          message: '重置成功',
+          type: 'success',
+          duration: 800
+        });
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
