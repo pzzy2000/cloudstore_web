@@ -5,7 +5,7 @@
         <i class="el-icon-search"></i>
         <span>{{titMsg}}</span>
       </div>
-      <el-form :inline="true" :model="userForm" size="small" label-width="130px" style="margin-top: 20px" ref="userForm">
+      <el-form :inline="true" :model="userForm" size="small" label-width="130px" style="margin-top: 20px" ref="userForm" :rules="rules">
         <el-form-item label="客户名称：" prop="name">
           <el-input-dispatcher style="width: 214px" v-model="userForm.name" placeholder="客户名称"></el-input-dispatcher>
         </el-form-item>
@@ -33,11 +33,25 @@
         }
       },
       data() {
+        function checkPhone(rule,value,callback){
+          if(/^1[34578]\d{9}$/.test(value) == false){
+            callback(new Error("请输入正确的手机号"));
+          }else{
+            callback();
+          }
+        }
         return {
           userForm: {},
           titMsg: '',
           rwDispatcherState: 'write',
-          operaType: ''
+          operaType: '',
+          rules: {
+            name: [{ required: true, message: '请输入客户名称', trigger: 'blur' }],
+            phone: [
+              { required: true, message: '请输入客户电话', trigger: 'blur' },
+              { validator: checkPhone, trigger: 'blur' }
+            ]
+          }
         }
       },
       created() {

@@ -4,7 +4,7 @@
       <div>
         <i class="el-icon-search"></i>
         <span>活动申请</span>
-        <el-form :inline="true" :model="listQuery" ref="activityFrom" size="small" label-width="130px">
+        <el-form :inline="true" :model="listQuery" ref="activityFrom" size="small" label-width="80px" style="margin-top: 20px">
           <el-form-item label="活动：">
             <el-select v-model="listQuery.activityId" remote placeholder="活动" :loading="loading" v-on:change="seclectactivity($event, 1)">
               <el-option v-for="item in activityList" :key="item.id" :label="item.name" :value="item.id">
@@ -83,7 +83,8 @@
         loading: false,
         list: null,
         activity: {},
-        listQuery: Object.assign({}, defaultListQuery)
+        listQuery: Object.assign({}, defaultListQuery),
+        total: 0
       }
     },
     created() {

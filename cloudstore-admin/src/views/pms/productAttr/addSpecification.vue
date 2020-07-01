@@ -10,9 +10,9 @@
           <el-input v-model="productAttrCate.descs" auto-complete="off" style="width: 350px"></el-input>
         </el-form-item>
         <el-form-item style="float: right">
-          <el-button type="primary" @click="handleConfirm('productAttrCate')" size="small">添 加</el-button>
-          <el-button @click="resetForm('productAttrCate')" size="small">重 置</el-button>
-          <el-button @click="retLastpage" size="small">取 消</el-button>
+          <el-button type="primary" @click="handleConfirm('productAttrCate')" size="small">提 交</el-button>
+          <el-button @click="resetForm('productAttrCate')" size="small" v-show="optType == 'add'">重 置</el-button>
+          <el-button @click="retLastpage" size="small">返 回</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -34,11 +34,12 @@
             propertyName: [
               { required: true, message: '请输入类型名称', trigger: 'blur' }
             ]
-          }
+          },
+          optType: ''
         }
       },
       created() {
-        console.log(this.$route.query);
+        this.optType = this.$route.query.isAdd;
         this.productAttrCate.propertyName = this.$route.query.propertyName;
         this.productAttrCate.descs = this.$route.query.descs;
         this.productAttrCate.id = this.$route.query.id;
