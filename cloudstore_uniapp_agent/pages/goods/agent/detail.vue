@@ -9,7 +9,7 @@
 				</swiper-item>
 			</swiper>
 		</view>
-
+ 
 		<view class="introduce-section">
 			<text class="title">{{ goods.goodsName }}</text>
 			<view class="price-box">
@@ -50,36 +50,35 @@
 				<text class="tit">商品规格</text>
 			</view>
 			<view class="c-row b-b">
-				<view class="con-list">
-					<table class='table4_2' v-if="goodsSku[0] != null">
-						<tr>
-							<th>{{goodsSku[0]==null ?   '规格' : goodsSku[0].skuKey }}</th>
-							<th>价格</th>
-						</tr>
-						<tr v-for='itm  in  goodsSku' :key='itm.id'>
-							<td >{{itm.skuValue}}</td>
-							<td>¥{{itm.price}}</td>
-						</tr>
-
-					</table>
+					<view class="con-list">
+				<view class="table" v-if="goodsSku[0] != null">
+				 <view class="tr bg-w">
+				 <view class="th" v-for="  (item,index) in goodsSku[0].skuKeys " :key='index'>{{item}}</view>
+				 <view class="th">价格</view>
+				 </view>
+				  <block v-for='itm  in  goodsSku' :key='itm.id'>
+					   <view class="tr bg-g">
+					  <view class="td" v-for="  (item,index) in itm.skuValues " :key='index'>{{item}}</view>
+					  <view class="td">¥{{itm.price}}</view>
+					  </view>
+				  </block>
 				</view>
+				</view>
+				
 			</view>
 
 
 			<view class="c-row b-b">
 				<text class="tit">商品参数</text>
 			</view>
-			<view class="c-row b-b">
+			<view class="c-row b-b"   v-for='itm  in  goodsPropertyValue' :key='itm.id' v-if="itm.propertyType == 1 ">
+				<text class="tit">{{itm.goodsPropertyParamName}}</text>
 				<view class="con-list">
-					<table class='table4_2' v-if="goodsPropertyValue != null">
-						<tr v-for='itm  in  goodsPropertyValue' :key='itm.id' v-if="itm.propertyType == 1 " >
-							<td >{{itm.goodsPropertyParamName}}</td>
-							<td>¥{{itm.propertyValue}}</td>
-						</tr>
-			
-					</table>
+					<text >¥{{itm.propertyValue}}
+					</text>
 				</view>
 			</view>
+			
 			<!--
 			<view class="c-row b-b">
 				<text class="tit">优惠券</text>
@@ -87,11 +86,13 @@
 				<text class="yticon icon-you"></text>
 			</view>
              -->
+			 <view class="c-row b-b">
+			 	<text class="tit"></text>
+			 </view>
 			<view class="c-row b-b">
 				<text class="tit">产地</text>
 				<view class="con-list">
 					<text v-text="addressBygoods(goods)">
-
 					</text>
 				</view>
 			</view>
@@ -386,7 +387,7 @@
 		.c-row {
 			display: flex;
 			align-items: center;
-			padding: 20upx 30upx;
+			padding: 20upx 15upx;
 			position: relative;
 		}
 
@@ -628,40 +629,32 @@
 		}
 	}
 
+   .table {
+    border: 0px solid darkgray;
+   }
+   .tr {
+    display: flex;
+    width: 100%;
+    height: 40px;
+   }
+   .td {
+    width:100%;
+    text-align: center;
+   }
+   .bg-w{
+    // background-color: #cff8fe;
+   }
+   .bg-g{
+    //background: #FFFFFF;
+	//border-bottom: 1px solid darkgray;
+   }
+   .th {
+    width: 100%;
+    justify-content: center;
+    background: #E6E6FA;
+    color: #000000;
+    display: flex;
+    align-items: center;
+   }
 
-	.table4_2 table {
-		width: 100%;
-		margin: 15px 0;
-		border: 0;
-		
-	}
-
-	
-
-	.table4_2,
-	.table4_2 th,
-	.table4_2 td {
-		font-size: 0.95em;
-		text-align: left;
-		padding: 4px;
-		border-collapse: collapse;
-	}
-
-	.table4_2 th,
-	.table4_2 td {
-		border: 1px solid #cff8fe;
-		border-width: 1px 0 1px 0
-	}
-
-	.table4_2 tr {
-		border: 1px solid #cff8fe;
-	}
-
-	.table4_2 tr:nth-child(odd) {
-		background-color: #e3fbfe;
-	}
-
-	.table4_2 tr:nth-child(even) {
-		background-color: #fdfdfd;
-	}
 </style>

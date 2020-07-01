@@ -46,7 +46,7 @@
 					<text>{{item.name}}</text>
 				</view>
 			</view>
-			<!-- 新品推荐 -->
+			<!-- 热门活动列表 -->
 			<view  v-for='item  in activity.show' :key="item.id">
 				<view   class="f-header m-t" @click="navToCategory(item)">
 					<image src="/static/temp/h1.png"></image>
@@ -118,13 +118,9 @@
 		//加载更多
 		onReachBottom() {
 			this.pageNum = this.pageNum + 1;
-
-			this.getNewProductList();
 		},
 		onPullDownRefresh() {
 			this.pageNum = this.pageNum + 1;
-			this.getNewProductList('refresh');
-
 			this.loadData();
 			setTimeout(function() {
 				uni.stopPullDownRefresh();
@@ -132,11 +128,6 @@
 		},
 		onShareAppMessage() {},
 		onLoad(ops) {
-			// let isWeiXin = this.$common.isWeiXinBrowser();
-			// this.getNewProductList('refresh');
-			// if (ops.invitecode) {
-			// 	this.$db.set('invitecode', ops.invitecode);
-			// }
 			this.loadData();
 		},
 		filters: {
@@ -663,7 +654,7 @@
 			display: flex;
 			align-items: left;
 			justify-content: space-between;
-			padding: 30px 0px 0px 0px;
+			padding: 20px 0px 0px 0px;
 			font-size: 14upx;
 			color: $font-color-light;
 			.price1 {

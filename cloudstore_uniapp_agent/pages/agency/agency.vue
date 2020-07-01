@@ -28,8 +28,8 @@
 			<view class="agency-apply">
 				<text class="agency-apply-title">常用应用</text>
 				<view class="agency-apply-main">
-					<view class="apply-detail" v-for="(item, index) in apply" :key='index'>
-						<image src="../../static/emptyCart.jpg" mode="" class="apply-img"></image>
+					<view class="apply-detail" v-for="(item, index) in apply" :key='index' @click="toAgentList(item)">
+						<image :src="item.imgUrl" mode="" class="apply-img"></image>
 						<text>{{item.name}}</text>
 					</view>
 				</view>
@@ -49,7 +49,6 @@
 									/
 									<text class="pricemart">{{ item.goods.martPrice }}</text>
 								</view>
-								<button class="goodsBtn">去代理</button>
 							</view>
 						</view>
 					</view>
@@ -59,18 +58,19 @@
 			<view class="faddish-main">
 				<view class="faddish-title">今日上新</view>
 				<view class="goods-list">
-					<view v-for="(item, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(item)">
-						<view class="image-wrapper"><image :src="item.pic" mode="aspectFill"></image></view>
+					<view v-for="(item, index) in updateList" :key="index" class="goods-item" @click="navToDetailPage(item)">
+						<view class="image-wrapper">
+							<image :src="item.goodsPicesBean.goodsPhotos[0].url"></image>
+						</view>
 						<view class="goods-detail">
-							<text class="title clamp">{{ item.goods.goodsName }}</text>
-							<text class="title clamp subhead ">{{item.goods.goodsSubtitle}}</text>
+							<text class="title clamp">{{ item.goodsPicesBean.goodsName }}</text>
+							<text class="title clamp subhead ">{{item.goodsPicesBean.goodsSubtitle}}</text>
 							<view class="price-box">
 								<view class="price">
-									<text class="priceSale">{{ item.goods.salePrice }}</text>
+									<text class="priceSale">{{ item.goodsPicesBean.salePrice }}</text>
 									/
-									<text class="pricemart">{{ item.goods.martPrice }}</text>
+									<text class="pricemart">{{ item.goodsPicesBean.martPrice }}</text>
 								</view>
-								<button class="goodsBtn">去代理</button>
 							</view>
 						</view>
 					</view>
@@ -88,14 +88,14 @@
 				user: {
 					name:'',
 					url:'',
-          detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
+					detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
 				},
 				statusBarHeight: '',
 				height: '',
 				headerList: [
 					{
-						name : '今日访客',
-						number: '20'
+						name : '代理商品',
+						number: '20',
 					},
 					{
 						name : '今日订单数',
@@ -112,28 +112,58 @@
 				],
 				apply: [
 					{
-						name: '店铺管理'
+						name: '代理商品',
+						detailListUrl: '../agency/agentGoodsList/agentGoodsList',
+						imgUrl: '/static/temp/c3.png'
 					},
 					{
-						name: '客户管理'
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
 					},
 					{
-						name: '商品管理'
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
 					},
 					{
-						name: '订单收入'
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
 					},
 					{
-						name: '国创云仓'
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
 					},
 					{
-						name: '数据分析'
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
 					},
 					{
-						name: '营销推广'
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
 					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					}
 				],
-				goodsList: []
+				goodsList: [],
+				updateList: []
 			}
 		},
 		onLoad () {
@@ -145,6 +175,7 @@
 			// #ifdef MP-WEIXIN
 				this.getuserInfo();
 			// #endif
+			this.getDateList ()
 		},
 		onShow () {
 			// this.getUserInfo()
@@ -154,15 +185,15 @@
 			// 获取微信用户信息
 			getuserInfo(){
 				let userInfo = uni.getStorageSync('userInfo');
-					if (userInfo) {
-					    if (userInfo.name) {
-						 this.user.name = userInfo.name
-					    }else {
-						   this.user.name = userInfo.nickName
-					    }
-					    if (!userInfo.url) {
-					    	this.user.url = this.user.detailUrl
-					    }
+				if (userInfo) {
+					if (userInfo.name) {
+					 this.user.name = userInfo.name
+					}else {
+					   this.user.name = userInfo.nickName
+					}
+					if (!userInfo.url) {
+						this.user.url = this.user.detailUrl
+					}
 				}
 			},
 			// 获取h5用户信息
@@ -175,16 +206,40 @@
 			},
 			search () {
 			},
-			async loadData(type = 'add', loading) {
+			// async loadData(type = 'add', loading) {
+			// 	let params = {
+			// 		pageNum: '1',
+			// 		pageSize: '10'
+			// 	};
+			// 	let list = await Api.apiCall('post', Api.agent.list, params);
+			// 	if (list) {
+			// 		console.log(list)
+			// 		this.goodsList = list.result.records
+			// 	}
+			// },
+			toAgentList (data) { //去个人的代理商品列表
+				var url = data.detailListUrl
+				console.log(url)
+				uni.navigateTo({
+					url: url,
+				});
+			},
+			async getDateList () {
 				let params = {
-					pageNum: '1',
-					pageSize: '10'
-				};
-				let list = await Api.apiCall('post', Api.agent.list, params);
+					pageNum:1,
+					pageSize: 10
+				}
+				let list = await Api.apiCall('post', Api.agent.dateList, params);
 				if (list) {
 					console.log(list)
-					this.goodsList = list.result.records
+					this.updateList = list.result.records
 				}
+			},
+			navToDetailPage (item) {
+				var id = item.goodsId
+				uni.navigateTo({
+					url: '/pages/goods/goodsDetail/goodsDetail?id='+id,
+				});
 			}
 		}
 	}
@@ -248,14 +303,15 @@
 			display: flex;
 			flex-wrap: wrap;
 			.apply-detail {
-				width: 25%;
-				font-size: $font-lg;
+				width: 20%;
+				font-size: 26rpx;
+				color: #303133;
 				text-align: center;
-				padding: 20upx 0;
+				padding-top: 20upx;
 			}
 			.apply-img{
-				height: 100upx;
-				width: 100upx;
+				height: 88upx;
+				width: 88upx;
 				display: block;
 				margin: 0 auto;
 			}
@@ -289,7 +345,7 @@
 		// }
 	}
 	.image-wrapper {
-		width: 55%;
+		width: 40%;
 		height: 250upx;
 		border-radius: 3px;
 		overflow: hidden;
@@ -302,7 +358,7 @@
 	}
 	.goods-detail {
 		display: inline-block;
-		width: 100%;
+		width: 60%;
 		padding: 10upx;
 		.title {
 			font-size: $font-lg;
