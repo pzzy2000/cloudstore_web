@@ -1,0 +1,4 @@
+ let isWeiXin = this.$common.isWeiXinBrowser()
+            if (isWeiXin) {
+                this.wxAuthorize()
+            }
