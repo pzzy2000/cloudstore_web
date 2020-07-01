@@ -6,7 +6,7 @@
           <!--基本信息--></span>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="baseinfo" ref="baseinfoFrom" size="small" label-width="130px" :rules="rules">
+        <el-form :inline="true" :model="baseinfo" ref="baseinfo" size="small" label-width="130px" :rules="rules">
           <el-divider content-position="left"><i class="el-icon-search"></i>商品基本信息</el-divider>
           <el-form-item label="商品名称：" prop="goodsName">
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
@@ -74,25 +74,23 @@
             </el-select-dispatcher>
           </el-form-item>
           <br />
-
-
           <el-form-item label="地区：" prop="provinceId">
             <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"
-              v-on:change="selectDistrict($event, 1)">
+              @change="selectDistrict($event, 1)">
               <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
           <el-form-item prop="cityId">
             <el-select-dispatcher v-model="baseinfo.cityId" :options="category1" remote placeholder="市" :loading="loading"
-              v-on:change="selectDistrict($event, 2)">
+              @change="selectDistrict($event, 2)">
               <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
           <el-form-item prop="areaId">
             <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"
-              v-on:change="selectDistrict($event, 3)">
+              @change="selectDistrict($event, 3)">
               <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select-dispatcher>
@@ -218,9 +216,9 @@
         goodsDetailPics:[],
         rules: {
           goodsName: [{required: true, message: '请输入商品名称', trigger: 'blur'}],
-          categoryOneId: [{required: true, message: '请输入一级分类', trigger: 'change'}],
-          categoryTwoId: [{required: true, message: '请输入二级分类', trigger: 'change'}],
-          categoryThreeId: [{required: true, message: '请输入三级分类', trigger: 'change'}],
+          categoryOneId: [{required: true, message: '请输入一级分类', trigger: ['blur', 'change']}],
+          categoryTwoId: [{required: true, message: '请输入二级分类', trigger: ['blur', 'change']}],
+          categoryThreeId: [{required: true, message: '请输入三级分类', trigger: ['blur', 'change']}],
           provinceId: [{required: true, message: '请输入省', trigger: 'blur'}],
           cityId: [{required: true, message: '请输入市', trigger: 'blur'}],
           areaId: [{required: true, message: '请输入区/县', trigger: 'blur'}],
@@ -327,13 +325,14 @@
       },
 
       seclectCategory(event, item) {
+        console.log(this.baseinfo);
         switch (item) {
           case 1:
             { //一级分类
               this.category.two = [];
               this.category.three = [];
-              this.baseinfo.categoryTwoId = '';
-              this.baseinfo.categoryThreeId = '';
+              // this.baseinfo.categoryTwoId = '';
+              // this.baseinfo.categoryThreeId = '';
               fetchListWithChildren(event).then(response => {
                 let list = response.result.result;
                 this.category.two = list;
@@ -343,7 +342,7 @@
           case 2:
             {
               this.category.three = [];
-              this.baseinfo.categoryThreeId = '';
+              // this.baseinfo.categoryThreeId = '';
               fetchListWithChildren(event).then(response => {
                 let list = response.result.result;
                 this.category.three = list;
@@ -353,15 +352,14 @@
         }
         this.$forceUpdate();
       },
-
       selectDistrict(type, item) {
         switch (item) {
           case 1:
             { //一级分类
               this.district.city = [];
               this.district.area = [];
-              this.baseinfo.cityId = '';
-              this.baseinfo.areaId = '';
+              // this.baseinfo.cityId = '';
+              // this.baseinfo.areaId = '';
               fetchDistrictList({
                 codeType: 'city',
                 parentId: type
@@ -374,7 +372,7 @@
           case 2:
             {
               this.category.area = [];
-              this.baseinfo.areaId = '';
+              // this.baseinfo.areaId = '';
               fetchDistrictList({
                 codeType: 'district',
                 parentId: type
@@ -463,8 +461,7 @@
       },
 
       addProduct() {
-
-        this.$refs['baseinfoFrom'].validate((valid) => {
+        this.$refs['baseinfo'].validate((valid) => {
           if (valid) {
             this.$confirm('是否提交数据', '提示', {
               confirmButtonText: '确定',
@@ -487,7 +484,7 @@
 
               createProduct(this.baseinfo).then(response => {
                 if (!response) return;
-                this.$refs['baseinfoFrom'].resetFields();
+                this.$refs['baseinfo'].resetFields();
                 this.goodsPics = [];
                 this.goodsDetailPics=[],
                 this.$message({
