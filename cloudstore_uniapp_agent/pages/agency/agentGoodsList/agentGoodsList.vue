@@ -1,6 +1,8 @@
 <template>
 	<view class="content">
-		<nav-bar backState="1000">代理商品列表</nav-bar>
+		<nav-bar backState="1000">
+			<view>代理商品列表</view>
+		</nav-bar>
 		<!-- #ifdef H5 -->
 		<view class="navbar">
 		<!-- #endif -->
@@ -125,9 +127,9 @@
 				}
 			},
 			navToDetailPage(item) {
-				let id = item.goodsId;
+				let id = item.goodsId,agentGoodsId = item.id
 				uni.navigateTo({
-					url: '/pages/goods/goodsDetail/goodsDetail?id='+id+'&type=agent'
+					url: '/pages/goods/goodsDetail/goodsDetail?goodsId='+id+'&type=agent'+'&agentGoodsId='+agentGoodsId
 				});
 			}
 		}
