@@ -11,7 +11,8 @@ export default {
 	client:{
 		login:{
 		 login:"sys/manager/platform/login"	,
-		 reg:"sys/manager/platform/register/client"
+		 reg:"sys/manager/platform/register/client",
+		 logout:"sys/manager/platform/loginout"
 		},
 		info:{
 		searchInfo:"client/app/searchClientInfo" //查询当前登录信息
