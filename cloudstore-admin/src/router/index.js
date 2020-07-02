@@ -222,15 +222,21 @@ export const asyncRouterMap = [
         meta: {title: '代理等级', icon: 'product-list'}
      },{
        path: 'addlevel',
-       name: 'add_level',
+       name: 'agent_addlevel',
        component: () => import('@/views/agent/level/addlevel'),
        meta: {title: '添加代理等级', icon: 'product-list'},
        hidden: true
      },{
         path: 'goods',
         name: 'agent_goods',
-        component: () => import('@/views/supplier/info'),
+        component: () => import('@/views/agent/goods'),
         meta: {title: '代理商品', icon: 'product-list'}
+     },{
+       path: 'addgoods',
+       name: 'add_goods',
+       component: () => import('@/views/agent/addgoods'),
+       meta: {title: '添加代理商品', icon: 'product-list'},
+       hidden: true
      }]
   },
 
@@ -243,7 +249,7 @@ export const asyncRouterMap = [
     children: [
       {
         path: 'user/list',
-        name: 'userlist',
+        name: 'user_list',
         component: () => import('@/views/sys/user/index'),
         meta: {title: '系统用户列表', icon: 'product-list'}
       },
@@ -300,6 +306,13 @@ export const asyncRouterMap = [
           name: 'level',
           component: () => import('@/views/client/level'),
           meta: {title: '客户等级', icon: 'ums-resource'}
+        },
+        {
+          path: 'addlevel',
+          name: 'user_addlevel',
+          component: () => import('@/views/client/addlevel'),
+          meta: {title: '添加等级', icon: 'ums-resource'},
+          hidden: true
         }
       ]
 

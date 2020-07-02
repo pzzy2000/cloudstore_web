@@ -18,16 +18,6 @@
           重置
         </el-button>
       </div>
-      <div style="margin-top: 15px">
-        <el-form :inline="true" :model="levelForm" ref="levelForm" size="small" label-width="130px">
-          <el-form-item label="客户名称：" prop="name">
-            <el-input style="width: 214px" v-model="levelForm.name" placeholder="客户名称"></el-input>
-          </el-form-item>
-          <el-form-item label="客户等级：" prop="level">
-            <el-input style="width: 214px" v-model="levelForm.level" placeholder="客户等级"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
@@ -58,12 +48,8 @@
 </template>
 
 <script>
-  import {getUserlist} from '@/api/client'
-  let defaultList = {
-    pageNum: 1,
-    pageSize: 20
-  };
   export default {
+    name: 'goods',
     data() {
       return {
         levelForm: {},
@@ -83,13 +69,13 @@
         })
       },
       addUser() {
-        this.$router.push({path: '/sys/client/addlevel', query: {operaType: "add", rds: 'write'}})
+        this.$router.push({path: '/sys/agent/addgoods', query: {operaType: "add", rds: 'write'}})
       },
       readUser(row) {
-        this.$router.push({path: '/sys/client/addlevel', query: {operaType: "read", rds: 'read'}})
+        this.$router.push({path: '/sys/agent/addgoods', query: {operaType: "read", rds: 'read'}})
       },
       editUser(row) {
-        this.$router.push({path: '/sys/client/addlevel', query: {operaType: "edit", rds: 'write'}})
+        this.$router.push({path: '/sys/agent/addgoods', query: {operaType: "edit", rds: 'write'}})
       },
       deleteUser() {
         alert("删除事件");
@@ -106,5 +92,6 @@
   }
 </script>
 
-<style>
+<style scoped>
+
 </style>
