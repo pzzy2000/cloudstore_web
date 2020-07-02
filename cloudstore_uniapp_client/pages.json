@@ -1,4 +1,5 @@
 {
+	
 	"pages": [{
 
 			"path": "pages/welcome",
@@ -10,21 +11,21 @@
 					"animationType": "slide-in-bottom"
 				}
 			}
-		},{
+		}, {
 			"path": "pages/client/public/login",
 			"style": { //用户 首页
 				"navigationBarTitleText": "用户登录",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		},{
+		}, {
 			"path": "pages/client/public/reg",
 			"style": { //用户 首页
 				"navigationBarTitleText": "用户注册",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		},
+		}, 
 		{
 			"path": "pages/client/recommend/index",
 			"style": { //用户 首页
@@ -48,14 +49,54 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		},{
+		}, {
 			"path": "pages/client/cart/index",
 			"style": { //用户 首页
 				"navigationBarTitleText": "我的购物车",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
+		},
+
+		{
+			"path": "pages/agent/goods/hotsale/hotsale",
+			"style": { //用户 首页
+				"navigationBarTitleText": "热销商品",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/agent/goods/category/category",
+			"style": { //用户 首页
+				"navigationBarTitleText": "商品分类",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		 { 
+			"path": "pages/agent/home/index",
+			"style": { //用户 首页
+				"navigationBarTitleText": "我的代理",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/agent/money/profit",
+			"style": { //用户 首页
+				"navigationBarTitleText": "我的收益",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/agent/info/index",
+			"style": { //用户 首页
+				"navigationBarTitleText": "代理信息",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
 		}
+
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -69,8 +110,8 @@
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [
-			 // client 
-			{ 
+			// client 
+			{
 				"pagePath": "pages/client/recommend/index",
 				"iconPath": "static/tab-home.png",
 				"selectedIconPath": "static/tab-home-current.png",
@@ -94,32 +135,39 @@
 				"selectedIconPath": "static/tab-home-current.png",
 				"text": "我的"
 			},
-			
+
 			//end
-			
+
 			{
-				"pagePath": "pages/category/category",
+				"pagePath": "pages/agent/goods/hotsale/hotsale",
 				"iconPath": "static/tab-cate.png",
 				"selectedIconPath": "static/tab-cate-current.png",
-				"text": "分类"
+				"text": "热销商品"
+			},
+
+			{
+				"pagePath": "pages/agent/goods/category/category",
+				"iconPath": "static/tab-cate.png",
+				"selectedIconPath": "static/tab-cate-current.png",
+				"text": "商品分类"
 			},
 			{
-				"pagePath": "pages/agency/agency",
+				"pagePath": "pages/agent/home/index",
 				"iconPath": "static/fujin.png",
 				"selectedIconPath": "static/fujin_.png",
 				"text": "我的代理"
 			},
 			{
-				"pagePath": "pages/cart/cart",
+				"pagePath": "pages/agent/money/profit",
 				"iconPath": "static/tab-cart.png",
 				"selectedIconPath": "static/tab-cart-current.png",
-				"text": "购物车"
+				"text": "我的收益"
 			},
 			{
-				"pagePath": "pages/user/user",
+				"pagePath": "pages/agent/info/index",
 				"iconPath": "static/tab-my.png",
 				"selectedIconPath": "static/tab-my-current.png",
-				"text": "我的"
+				"text": "代理信息"
 			}
 		]
 	},

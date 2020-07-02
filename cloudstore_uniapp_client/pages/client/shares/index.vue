@@ -1,7 +1,7 @@
 <template>
 	<view>
 	 <p>这里显示我浏览的分享 和 我 的分享 </p>
-	<tabbar :role="client"></tabbar>
+	<tabbar :role="client" :id='"cfx"'></tabbar>
 	</view>
 </template>
 
