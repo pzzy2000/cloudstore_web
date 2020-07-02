@@ -225,11 +225,14 @@
         data.mobileHtml=good_sku.mobileHtml
 
         updateGoodsAttr(data).then(response => {
-          this.loading = false;
-          msg("更新商品SKU成功");
-          // let list = response.result.result;
-          // this.goodsku.goods = list;
-          // this.getproductAttributeCategory();
+          if(response.rusult.code == 0){
+            this.loading = false;
+            msg("更新商品SKU成功");
+            this.$router.go(-1);
+            // let list = response.result.result;
+            // this.goodsku.goods = list;
+            // this.getproductAttributeCategory();
+          }
         });
       },
 

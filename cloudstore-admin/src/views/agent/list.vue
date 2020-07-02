@@ -190,7 +190,6 @@
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },
-
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {

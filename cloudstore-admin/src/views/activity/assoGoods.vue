@@ -157,7 +157,7 @@
       },
       changeSwitch(idx, row) {
         // console.log(idx)
-        let goods = row.goodsBean;
+        let goods = row.activityBean;
         if (idx == 0) {  //断开
           outAssogoods({
             ids: row.activityGoodsId
@@ -173,7 +173,7 @@
             optType: "save"
           }).then(res => {
             if (res.result.code == 0) {
-              msg('商品:[' + goods.name + ']申请加入出活动成功');
+              msg('商品:[' + goods.name + ']申请加入活动成功');
             }
           })
         }
