@@ -3,8 +3,8 @@ export default {
 	// qq 237524947 wx15d4269d3210863d
 	//BASEURI: 'http://localhost:8083/api/',
 	// BASEURI: 'http://51wangshi.com:8083/api/',
-	BASEURI: 'http://120.24.156.254:18888/platform/',
-	//BASEURI: 'http://192.168.191.1:8088/',
+	//BASEURI: 'http://120.24.156.254:18888/platform/',
+	BASEURI: 'http://192.168.0.27:8088/',
 
 	// ADMINURI: 'http://51wangshi.com:8085/',
 	// ESURI: 'http://192.168.1.169:8081/',
@@ -61,7 +61,10 @@ export default {
 	hot: {
 		hotList: 'activity/app/listActivityGoods'
 	},
-	
+	buy: {
+		createOrder:'order/app/createOrder',
+		prePay: 'order/app/prePay'
+	},
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
 	 if (load) {
 			uni.showLoading({
@@ -70,7 +73,6 @@ export default {
 			});
 		}
 	let token = uni.getStorageSync('token') || null;
-	console.log('这是token='+token)
 	if (token == null && (endpoint != this.agent.reg  &&  endpoint != this.agent.userlogin) ) {
 		uni.showToast({
 			title: '请先登录',

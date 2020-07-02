@@ -69,13 +69,23 @@
 						checked: 'true'
 					}
 				],
-				current: 0
+				current: 0,
+				vxCode: ''
 			}
 		},
 		onLoad(option) {
 			//这里的数据用来做测试
 			// option.goodsId = "7604921082513985536"
 			// option.price = '100'
+			var that = this;
+			uni.login({
+			    provider: 'weixin',
+			    success: function (loginRes) {
+					console.log(loginRes)
+				   that.vxCode = loginRes.code
+			       console.log(that.vxCode);
+			    }
+			});
 			this.price = option.price
 			this.totalPrice = option.price
 			this.getGoodsData(option.goodsId)
@@ -91,7 +101,6 @@
 				let data = await Api.apiCall('post', Api.goods.detail, params, false, false);
 				if (data) {
 					this.goodsDetail = data.result.goodsPicesBean
-					console.log(data)
 				}
 			},
 			radioChange: function(evt) { //选择支付方式
@@ -101,17 +110,19 @@
 						break;
 					}
 				}
-				console.log(this.current)
+			},
+			computNumber (price) {
+				return Number(this.price) * 100
 			},
 			subtractNum() { //商品数量的简单减少
 				if (this.num >1) {
 					this.num = parseInt(this.num) - 1
-					this.totalPrice =  parseInt(this.num) * parseInt(this.price)
+					this.totalPrice =  Number(parseInt(this.num) * this.computNumber(this.price))/100
 				}
 			},
 			addNum() { //商品数量的简单增加
 				this.num = parseInt(this.num) + 1
-				this.totalPrice =  parseInt(this.num) * parseInt(this.price)
+				this.totalPrice =  Number(parseInt(this.num) * this.computNumber(this.price))/100
 			},
 			buy () { //点击支付按钮
 				var that = this;
@@ -120,7 +131,6 @@
 				uni.getProvider({ //获取支付的方式
 				    service: 'payment',
 				    success: function (res) {
-				        console.log(res.provider)
 						that.buyType = res.provider
 						let params = {
 							'bean.activityId': that.buyInfo.activityId,
@@ -141,30 +151,33 @@
 							},
 							data: params,
 							success: res => {
+								var orderId = res.data.result.result.id,vxCode = that.vxCode
 								if (res.data.result.code === 0) {
-									//微信支付
-									uni.requestPayment({
-										provider: 'wxpay',
-										orderInfo: orderInfo, //订单数据
-										timeStamp: '', //时间戳从1970年1月1日至今的秒数，即当前的时间。
-										nonceStr: '', //随机字符串，长度为32个字符以下。
-										package: '', //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=xx。
-										signType: '', //签名算法，暂支持 MD5。
-										paySign: '', //签名，具体签名方案参见 微信小程序支付文档
-										success: function(res) {
-										
+									let params = {
+										'bean.code': vxCode,
+										'bean.orderId': orderId
+									}
+									console.log(params)
+									//预支付
+									uni.request({
+										url: Api.BASEURI + Api.buy.prePay,
+										method: 'post',
+										header: {
+											'content-type': 'application/x-www-form-urlencoded',
+											'auth': uni.getStorageSync('token')
 										},
-										fail: function(err) {
-											console.log('fail:' + JSON.stringify(err));
+										data: params,
+										success: res => {
+											console.log(res)
+										},
+										fail: (e) => {
 											uni.showToast({
-											icon: 'none',
-											title: '支付失败'
-											
+												title: '调用微信预支付失败',
+												icon: 'none'
 											});
 										}
 									});
 								}
-								console.log(res)
 							},
 							fail: (e) => {
 								uni.showToast({
@@ -173,16 +186,33 @@
 								});
 							}
 						});
-						// uni.requestPayment({
-						// 	provider: 'alipay',
-						// 	orderInfo: orderInfo, 
-						// 	success: function(res) {
-						// 		console.log(res)
-						// 	},
-						// })
 				    }
 				});
-				
+			},
+			payMent() {
+				//微信支付
+				uni.requestPayment({
+					provider: 'wxpay',
+					orderInfo: orderInfo, //订单数据
+					timeStamp: '', //时间戳从1970年1月1日至今的秒数，即当前的时间。
+					nonceStr: '', //随机字符串，长度为32个字符以下。
+					package: '', //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=xx。
+					signType: '', //签名算法，暂支持 MD5。
+					paySign: '', //签名，具体签名方案参见 微信小程序支付文档
+					success: function(res) {
+						console.log(res)
+					},
+					fail: function(err) {
+						console.log('fail:' + JSON.stringify(err));
+						uni.showToast({
+							icon: 'none',
+							title: '支付失败'
+						});
+					},
+					complete: function(res) {
+						
+					}
+				});
 			}
 		}
 	}

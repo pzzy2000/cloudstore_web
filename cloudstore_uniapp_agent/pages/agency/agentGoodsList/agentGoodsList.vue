@@ -31,9 +31,9 @@
 					<text class="title clamp subhead ">{{item.goodsPicesBean.goodsSubtitle}}</text>
 					<view class="price-box">
 						<view class="price">
-							<text class="priceSale">{{item.goodsPicesBean.martPrice}}</text>
+							<text class="priceSale">{{item.goodsPicesBean.salePrice}}</text>
 							/
-							<text class="pricemart">{{item.goodsPicesBean.salePrice}}</text>
+							<text class="pricemart">{{item.goodsPicesBean.martPrice}}</text>
 						</view>
 					</view>
 				</view>

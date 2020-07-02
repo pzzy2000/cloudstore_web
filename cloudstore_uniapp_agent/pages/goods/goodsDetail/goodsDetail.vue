@@ -236,7 +236,10 @@ export default {
 		}
 		return {
 		  title: this.goodsName,
-		  url: '/pages/goods/agent/agent?id='+this.goodsId
+		  url: '/pages/goods/agent/agent?id='+this.goodsId,
+		  sccuess: function(res) {
+			this.isLogin()
+		  }
 		}
 	},
 	onShow() {
@@ -249,6 +252,7 @@ export default {
 		});
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
+		console.log(ops)
 		this.getGoodsDetail(this.goodsId)
 	},
 	methods: {
@@ -260,10 +264,13 @@ export default {
 				this.goods = data.result.goodsPicesBean
 				this.goodsName = data.result.goodsPicesBean.goodsName
 				this.skuList = data.result.goodsSku
-				//赋值商品价格，库存和图片
+				//赋值默认商品价格，库存和图片
 				this.sku.price = this.skuList[0].price
 				this.sku.stock = this.skuList[0].stock
-				this.sku.imgUrl = this.skuList[0].photos[0].url
+				if (this.skuList[0].photos[0]) {
+					this.sku.imgUrl = this.skuList[0].photos[0].url
+				}
+				this.goodsSkuId = this.skuList[0].id
 				//遍历商品数据展示规格
 				for (let index in data.result.goodsPropertyValue) {
 					if (data.result.goodsPropertyValue[index].propertyType == 0) {
@@ -402,20 +409,85 @@ export default {
 			    url: '/pages/agency/agency'
 			});
 		},
-		//收藏
-		toFavorite(item) {
-			if (userInfo && userInfo.id) {
-				this.favorite = !this.favorite;
-				let params = { objId: item.id, type: 1, name: item.name, meno1: item.pic, meno2: item.price, meno3: item.sale };
-				Api.apiCall('post', Api.goods.favoriteSave, params);
-			} else {
-				let url = '/pages/public/login';
-				uni.navigateTo({
-					url
-				});
-			}
+		isLogin () { //微信用户点击分享的连接进来后判断是否登录
+			var that = this;
+			uni.showLoading({
+			  	title: '微信登录中',
+			  	mask: true
+			});
+			uni.login({
+			  	provider: 'weixin',
+			  	fail: function() {
+			  		uni.hideLoading();
+			  		uni.showToast({
+			  			title: '微信登录失败',
+			  			icon: 'none'
+			  		});
+			  	},
+			  	success: function(loginRes) {
+			  		uni.setStorageSync('code',loginRes.code)
+			  		var code = loginRes.code
+			  		let params = {
+			  			'bean.logintype': 'weixin',
+			  			'bean.password': code,
+			  			'bean.access': code
+			  		}
+			  		uni.getUserInfo({
+			  			provider: 'weixin',
+			  			success: function(infoRes) {
+			  				if (infoRes) {
+			  					uni.setStorageSync('vxInfo', infoRes.rawData)
+			  				}
+			  			}
+			  		});
+			  		uni.request({
+			  			url: Api.BASEURI + Api.agent.wxLogin,
+			  			method: 'post',
+			  			header: {
+			  				'content-type': 'application/x-www-form-urlencoded'
+			  			},
+			  			data: params,
+			  			fail: function() {
+			  				uni.hideLoading();
+			  				uni.showToast({
+			  					title: '微信登录失败',
+			  					icon: 'none'
+			  				});
+			  			},
+			  			success: function(res) {
+			  				uni.hideLoading();
+			  				if (res.data.result.code === 100006) {
+			  					uni.showToast({
+			  						title: '请微信绑定代理手机号',
+			  						icon: 'none'
+			  					});
+			  					uni.navigateTo({
+			  						url: '/pages/public/getVxPhone?openId=' + res.data.result.msg
+			  					});
+			  				} else if (res.data.result.code === 0) {
+			  					uni.showToast({
+			  						title: '登录成功',
+			  						icon: 'none'
+			  					});
+			  					var userInfo = {
+			  						name: res.data.result.result.name,
+			  						url: res.data.result.result.url
+			  					}
+			  					uni.setStorageSync('userInfo', userInfo)
+			  					uni.setStorageSync('token', res.data.result.result.token)
+			  				} else {
+			  					uni.showToast({
+			  						title: '微信登录失败',
+			  						icon: 'none'
+			  					});
+			  				}
+			  			}
+			  		})
+			  	}
+			})
 		},
-		toBuy(item) {
+		//点击立即购买
+ 		toBuy(item) {
 			var buyInfo = {
 				activityId: '',
 				agentGoodsId: this.agentGoodsId,
@@ -424,6 +496,7 @@ export default {
 				price: this.sku.price,
 			}
 			uni.setStorageSync('buyInfo',buyInfo)
+			console.log(buyInfo)
 			//先判断库存
 			uni.navigateTo({
 				url: '/pages/buy/buy?goodsId='+buyInfo.goodsId+'&price='+buyInfo.price
