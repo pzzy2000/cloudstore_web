@@ -1,6 +1,8 @@
 <template>
 	<view class="content">
-		<nav-bar backState="1000">代理商品列表</nav-bar>
+		<nav-bar backState="1000">
+			<view>代理商品列表</view>
+		</nav-bar>
 		<!-- #ifdef H5 -->
 		<view class="navbar">
 		<!-- #endif -->
@@ -29,9 +31,9 @@
 					<text class="title clamp subhead ">{{item.goodsPicesBean.goodsSubtitle}}</text>
 					<view class="price-box">
 						<view class="price">
-							<text class="priceSale">{{item.goodsPicesBean.martPrice}}</text>
+							<text class="priceSale">{{item.goodsPicesBean.salePrice}}</text>
 							/
-							<text class="pricemart">{{item.goodsPicesBean.salePrice}}</text>
+							<text class="pricemart">{{item.goodsPicesBean.martPrice}}</text>
 						</view>
 					</view>
 				</view>
@@ -125,9 +127,9 @@
 				}
 			},
 			navToDetailPage(item) {
-				let id = item.goodsId;
+				let id = item.goodsId,agentGoodsId = item.id
 				uni.navigateTo({
-					url: '/pages/goods/goodsDetail/goodsDetail?id='+id+'&type=agent'
+					url: '/pages/goods/goodsDetail/goodsDetail?goodsId='+id+'&type=agent'+'&agentGoodsId='+agentGoodsId
 				});
 			}
 		}

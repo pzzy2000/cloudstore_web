@@ -90,7 +90,7 @@
 						success: function(res) {
 							console.log(res)
 							if (res) {
-								if (res.result.code === 0) {
+								if (res.data.result.code === 0) {
 									var code = uni.getStorageSync('code')
 									let params = {
 										'bean.logintype': 'weixin',
@@ -119,6 +119,12 @@
 											//console.log(res)
 										}
 									})
+								}else{
+									uni.showToast({
+									    title: res.data.result.msg,
+									    duration: 2000,
+										icon:'none'
+									});
 								}
 								// var userInfo = {
 								// 	name: res.data.result.result.name,

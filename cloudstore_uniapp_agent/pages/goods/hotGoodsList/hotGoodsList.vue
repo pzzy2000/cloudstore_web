@@ -1,6 +1,9 @@
 <template>
 	<view class="content">
-		<view class="navbar" :style="{ position: headerPosition, top: headerTop }">
+		<!-- #ifdef MP-WEIXIN -->
+		<nav-bar backState="1000">热门商品列表</nav-bar>
+		<!-- #endif -->
+		<view class="navbar">
 			
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			
@@ -26,7 +29,7 @@
 					<view class="price">
 						 <text class="price1">价格:</text>
 						 <text class="priceSale">{{ goods.goodsPicesBean.salePrice }}</text>
-					 /<text class="pricemart">{{ goods.goodsPicesBean.martPrice }}</text>
+					 /<text class="pricemart">{{ goods.goodsPicesBean.martPrice}}</text>
 					</view><!--<button class="goodsBtn">去代理</button> -->
 					
 				</view>
@@ -57,9 +60,11 @@
 
 <script>
 import Api from '@/common/api';
+import navBar from '@/components/zhouWei-navBar';
 //import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 export default {
 	components: {
+		navBar
 	//	uniLoadMore
 	},
 	data() {
@@ -109,34 +114,23 @@ export default {
 		this.loadData();
 	},
 	methods: {
-		
 		async loadCateList(fid, sid) {
-					let params = {
-						pageNum: '1',
-						pageSize: '20',
-						parentId: 0
-					};
-					uni.showLoading({
-						title: '请稍候',
-						mask: true
-					});
-					let list = await Api.apiCall('post', Api.category.list, params);
-					console.log(list)
-					if (list) {
-						this.cateList = list.result.records
-						uni.hideLoading();
-					}
-					// if (list) {
-					// 	let cateList = list.data.filter(item => item.pid == null);
-						
-					// 	cateList.forEach(item => {
-					// 		let tempList = list.filter(val => val.pid == item.id);
-					// 		item.child = tempList;
-					// 	});
-					// 	this.cateList = cateList;
-					// }
-				},
-
+			let params = {
+				pageNum: '1',
+				pageSize: '20',
+				parentId: 0
+			};
+			uni.showLoading({
+				title: '请稍候',
+				mask: true
+			});
+			let list = await Api.apiCall('post', Api.category.list, params);
+			console.log(list)
+			if (list) {
+				this.cateList = list.result.records
+				uni.hideLoading();
+			}
+		},
 		//加载商品 ，带下拉刷新和上滑加载
 		async loadData(type = 'add', loading) {
 			//没有更多直接返回
@@ -236,7 +230,6 @@ export default {
 		},
 		//详情
 		navToDetailPage(item) {
-			//测试数据没有写id，用title代替
 			let activitId = item.activityId;
 			let id = item.goodsId;
 			uni.navigateTo({

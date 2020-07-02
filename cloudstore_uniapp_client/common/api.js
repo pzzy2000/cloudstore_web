@@ -17,6 +17,13 @@ export default {
 		searchInfo:"client/app/searchClientInfo" //查询当前登录信息
 		}
 	},
+	agent:{
+		activity:{
+				searchActivityNavList:'activity/app/showNavlist',
+				searchActivityShowList:'activity/app/indexShowlist',
+				searchIndexActivitygoodsList:'activity/app/indexShowActivityGoodList',
+				},
+	},
 	
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
 		if (load) {

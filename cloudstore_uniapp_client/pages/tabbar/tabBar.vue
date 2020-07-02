@@ -3,9 +3,8 @@
 		<view class="tabBar">
 		        <view v-for="(item,index) in tabbar" :key="item.pagePath" v-if="item.role == role "
 				 class="tabbar_item" :class="{'active':index == current}"
-		         
 				 @click="navTo(item,index)">
-		            <image v-if="current==index" :src="item.selectedIconPath" mode=""></image>
+		            <image v-if="item.id==id" :src="item.selectedIconPath" mode=""></image>
 		            <image v-else :src="item.iconPath" mode=""></image>
 		            <view class="text">{{item.text}}</view>
 		        </view>
@@ -21,7 +20,14 @@
 	export default {
 		name:"tabbar",
 		props: {
-			role: null
+			id:{
+				type: String,
+				default: ''
+			},
+			role:{
+				type: String,
+				default: 'client'
+			}
 		},
 		computed: mapState(["tabBarIndex","tabBar"]),
 				created() {
@@ -42,68 +48,77 @@
 					// client 
 					{
 						"pagePath": "/pages/client/recommend/index",
-						"iconPath": "static/tab-home.png",
-						"selectedIconPath": "static/tab-home-current.png",
+						"iconPath": "/static/tab-home.png",
+						"selectedIconPath": "/static/tab-home-current.png",
 						"role": "client",
+						"id":'ctj',
 						"text": "推荐"
 					},
 					{
 						"pagePath": "/pages/client/shares/index",
-						"iconPath": "static/tab-home.png",
-						"selectedIconPath": "static/tab-home-current.png",
+						"iconPath": "/static/tab-home.png",
+						"selectedIconPath": "/static/tab-home-current.png",
 						"role": "client",
+						"id":'cfx',
 						"text": "分享"
-					},
+					}, 
 					{
 						"pagePath": "/pages/client/cart/index",
-						"iconPath": "static/tab-home.png",
-						"selectedIconPath": "static/tab-home-current.png",
+						"iconPath": "/static/tab-home.png",
+						"selectedIconPath": "/static/tab-home-current.png",
 						"role": "client",
+						"id":'cgwc',
 						"text": "购物车"
 					},
 					{
 						"pagePath": "/pages/client/info/index",
-						"iconPath": "static/tab-home.png",
-						"selectedIconPath": "static/tab-home-current.png",
+						"iconPath": "/static/tab-home.png",
+						"selectedIconPath": "/static/tab-home-current.png",
 						"role": "client",
+						"id":'cwd',
 						"text": "我的"
 					},
 
 					//end
 
 					{
-						"pagePath": "/pages/category/category",
-						"iconPath": "static/tab-cate.png",
-						"selectedIconPath": "static/tab-cate-current.png",
+						"pagePath": "/pages/agent/goods/hotsale/hotsale",
+						"iconPath": "/static/tab-cate.png",
+						"selectedIconPath": "/static/tab-cate-current.png",
+						id:'armsp',
 						"role": "agent",
 						"text": "热门商品"
 					},
 
 					{
-						"pagePath": "/pages/category/category",
-						"iconPath": "static/tab-cate.png",
-						"selectedIconPath": "static/tab-cate-current.png",
+						"pagePath": "/pages/agent/goods/category/category",
+						"iconPath": "/static/tab-cate.png",
+						"selectedIconPath": "/static/tab-cate-current.png",
 						"role": "agent",
+						id:'aspfl',
 						"text": "商品分类"
 					},
 					{
-						"pagePath": "/pages/agency/agency",
-						"iconPath": "static/fujin.png",
-						"selectedIconPath": "static/fujin_.png",
+						"pagePath": "/pages/agent/home/index",
+						"iconPath": "/static/fujin.png",
+						"selectedIconPath": "/static/fujin_.png",
+						"id":"awddl",
 						"role": "agent",
 						"text": "我的代理"
 					},
 					{
-						"pagePath": "/pages/cart/cart",
-						"iconPath": "static/tab-cart.png",
-						"selectedIconPath": "static/tab-cart-current.png",
+						"pagePath": "/pages/agent/money/profit",
+						"iconPath": "/static/tab-cart.png",
+						"selectedIconPath": "/static/tab-cart-current.png",
+						"id":"awdsy",
 						"role": "agent",
-						"text": "代理收益"
+						"text": "我的收益"
 					},
 					{
-						"pagePath": "/pages/user/user",
-						"iconPath": "static/tab-my.png",
-						"selectedIconPath": "static/tab-my-current.png",
+						"pagePath": "/pages/agent/info/index",
+						"iconPath": "/static/tab-my.png",
+						"selectedIconPath": "/static/tab-my-current.png",
+						"id":"adlxx",
 						"role": "agent",
 						"text": "代理信息"
 					}
@@ -154,9 +169,9 @@
  
     .tabBar {
         width: $isWidth;
-        height: 100upx;
+        height:90upx;
         position: fixed;
-        bottom: 10upx;
+        bottom: 1upx;
         left: 0;
         right: 0;
         margin: 0 auto;
