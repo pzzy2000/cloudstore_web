@@ -132,7 +132,7 @@
         });
       },
       add() {
-        this.$router.push({path: "/sys/agent/addlevel", query: {type: "add"}})
+        this.$router.push({path: "/sys/agent/addlevel", query: {type: "add", rds: 'write'}})
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
@@ -158,7 +158,7 @@
         // this.levelModel.levelCode = row.levelCode
         // this.levelModel.putNumber = row.putNumber;
         // this.levelModel.id = row.id;
-        this.$router.push({path: "/sys/agent/addlevel", query: {type: "update", id: row.id}})
+        this.$router.push({path: "/sys/agent/addlevel", query: {type: "update", id: row.id, rds: 'write'}})
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
@@ -175,6 +175,11 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.$message({
+          message: '重置成功',
+          type: 'success',
+          duration: 800
+        });
       },
       handleDelete(index, row) {
         this.$confirm('是否要进行删除操作?', '提示', {
@@ -188,7 +193,7 @@
         });
       },
       readLevel(index, row) {
-        this.$router.push({path: "/sys/agent/addlevel", query: {type: "read", id: row.id}})
+        this.$router.push({path: "/sys/agent/addlevel", query: {type: "read", id: row.id, rds: 'read'}})
       }
     }
   }
