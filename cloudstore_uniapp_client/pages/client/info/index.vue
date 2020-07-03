@@ -67,7 +67,7 @@
 				
 			</view>
 		</view>
-		<tabbar :role="'client'" :id="'cwd'"></tabbar>
+		<!-- <tabbar :role="'client'" :id="'cwd'"></tabbar> -->
 	</view>
 </template>
 <script>
@@ -178,7 +178,9 @@ import { mapState,mapMutations } from 'vuex';
 		},
 		
 		toapplyAgent(){
-			this.$api.msg("申请代理");
+			uni.navigateTo({
+				url: '/pages/agent/home/index',
+			});
 		},
 		
 		async toExit(){

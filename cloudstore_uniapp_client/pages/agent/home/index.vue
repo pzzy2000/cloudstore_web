@@ -10,6 +10,7 @@
 			<input class="" type="text" value="" placeholder="输入关键字搜索" style="font-size: 28upx;background: #F5F5F5;height: 60upx;width: 90%;border-radius: 50upx;text-align: center;" />
 		</view> -->
 		<!-- #endif -->
+		<navBar>我的代理</navBar>
 		<view class="agency-main">
 			<view class="agency-header">
 				<image :src="user.url" mode="" alt='头像' class="info-img"></image>
@@ -82,6 +83,7 @@
 
 <script>
 	import Api from '@/common/api';
+	import navBar from '@/components/zhouWei-navBar';
 	export default {
 		data() {
 			return {

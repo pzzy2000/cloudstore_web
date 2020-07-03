@@ -1,7 +1,7 @@
 <template>
 	<view>
 	<p>用户端首页 ，这里显示最近一次购买的代理店铺的信息 </p>
-	<tabbar :role="client" :id='"ctj"'></tabbar>
+	<!-- <tabbar :role="client" :id='"ctj"'></tabbar> -->
 	</view>
 </template>
 

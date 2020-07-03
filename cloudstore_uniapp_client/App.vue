@@ -15,7 +15,7 @@
 			
 		},
 		onLaunch: function() {
-			uni.hideTabBar({});
+			//uni.hideTabBar({});
 			// let userInfo = uni.getStorageSync('userInfo') || '';
    //          let token = uni.getStorageSync('token') || '';
 			// if(token){
@@ -30,6 +30,7 @@
 			this.sysInfoMethod();
 		},
 		onShow: function() {
+			uni.hideTabBar({});
 			console.log('App Show')
 		},
 		onHide: function() {

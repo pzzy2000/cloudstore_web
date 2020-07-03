@@ -90,7 +90,7 @@
 				let params = { 
 					goodsId: goodsId ,
 				};
-				let data = await Api.apiCall('post', Api.goods.detail, params, false, false);
+				let data = await Api.apiCall('post', Api.agent.goods.detail, params, false, false);
 				if (data) {
 					this.goodsDetail = data.result.goodsPicesBean
 				}
@@ -140,7 +140,7 @@
 					   			'bean.payType': 'weixin'
 					   		}
 					   		uni.request({
-					   			url: Api.BASEURI + Api.buy.createOrder,
+					   			url: Api.BASEURI + Api.agent.buy.createOrder,
 					   			method: 'post',
 					   			header: {
 					   				'content-type': 'application/x-www-form-urlencoded',
@@ -157,7 +157,7 @@
 					   					console.log(params)
 					   					//预支付
 					   					uni.request({
-					   						url: Api.BASEURI + Api.buy.prePay,
+					   						url: Api.BASEURI + Api.agent.buy.prePay,
 					   						method: 'post',
 					   						header: {
 					   							'content-type': 'application/x-www-form-urlencoded',

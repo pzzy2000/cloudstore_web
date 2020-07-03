@@ -1,7 +1,7 @@
 {
 	
-	"pages": [{
-
+	"pages": [
+		{
 			"path": "pages/welcome",
 			"style": {
 				"navigationBarTitleText": "",
@@ -11,16 +11,25 @@
 					"animationType": "slide-in-bottom"
 				}
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/client/public/login",
 			"style": { //用户 首页
 				"navigationBarTitleText": "用户登录",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		}, {
+		},{
+			"path": "pages/client/public/getVxPhone",
+			"style": { //手机授权
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		}, 
+		{
 			"path": "pages/client/public/reg",
-			"style": { //用户 首页
+			"style": { //用户注册
 				"navigationBarTitleText": "用户注册",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -36,7 +45,7 @@
 		},
 		{
 			"path": "pages/client/info/index",
-			"style": { //用户 首页
+			"style": { //我的信息
 				"navigationBarTitleText": "我的信息",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -81,22 +90,63 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/agent/money/profit",
 			"style": { //用户 首页
 				"navigationBarTitleText": "我的收益",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/agent/info/index",
 			"style": { //用户 首页
 				"navigationBarTitleText": "代理信息",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/agent/goods/hotGoodsList/hotGoodsList",
+			"style": { //热门活动商品列表
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/agent/goods/agentGoodsList/agentGoodsList",
+			"style": { //代理商代理商品列表
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/agent/goods/goodsDetail/goodsDetail",
+			"style": { //商品详情
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/agent/goods/agent/detail",
+			"style": { //商品详情
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/agent/buy/buy",
+			"style": { //支付页面
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
 		}
-
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -110,7 +160,7 @@
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [
-			// client 
+			//client
 			{
 				"pagePath": "pages/client/recommend/index",
 				"iconPath": "static/tab-home.png",
@@ -134,41 +184,40 @@
 				"iconPath": "static/tab-home.png",
 				"selectedIconPath": "static/tab-home-current.png",
 				"text": "我的"
-			},
-
+			}
+ 
 			//end
 
-			{
-				"pagePath": "pages/agent/goods/hotsale/hotsale",
-				"iconPath": "static/tab-cate.png",
-				"selectedIconPath": "static/tab-cate-current.png",
-				"text": "热销商品"
-			},
-
-			{
-				"pagePath": "pages/agent/goods/category/category",
-				"iconPath": "static/tab-cate.png",
-				"selectedIconPath": "static/tab-cate-current.png",
-				"text": "商品分类"
-			},
-			{
-				"pagePath": "pages/agent/home/index",
-				"iconPath": "static/fujin.png",
-				"selectedIconPath": "static/fujin_.png",
-				"text": "我的代理"
-			},
-			{
-				"pagePath": "pages/agent/money/profit",
-				"iconPath": "static/tab-cart.png",
-				"selectedIconPath": "static/tab-cart-current.png",
-				"text": "我的收益"
-			},
-			{
-				"pagePath": "pages/agent/info/index",
-				"iconPath": "static/tab-my.png",
-				"selectedIconPath": "static/tab-my-current.png",
-				"text": "代理信息"
-			}
+			// {
+			// 	"pagePath": "pages/agent/goods/hotsale/hotsale",
+			// 	"iconPath": "static/tab-cate.png",
+			// 	"selectedIconPath": "static/tab-cate-current.png",
+			// 	"text": "热销商品"
+			// },
+			// {
+			// 	"pagePath": "pages/agent/goods/category/category",
+			// 	"iconPath": "static/tab-cate.png",
+			// 	"selectedIconPath": "static/tab-cate-current.png",
+			// 	"text": "商品分类"
+			// },
+			// {
+			// 	"pagePath": "pages/agent/home/index",
+			// 	"iconPath": "static/fujin.png",
+			// 	"selectedIconPath": "static/fujin_.png",
+			// 	"text": "我的代理"
+			// }
+			// {
+			// 	"pagePath": "pages/agent/money/profit",
+			// 	"iconPath": "static/tab-cart.png",
+			// 	"selectedIconPath": "static/tab-cart-current.png",
+			// 	"text": "我的收益"
+			// },
+			// {
+			// 	"pagePath": "pages/agent/info/index",
+			// 	"iconPath": "static/tab-my.png",
+			// 	"selectedIconPath": "static/tab-my-current.png",
+			// 	"text": "代理信息"
+			// }
 		]
 	},
 	"condition": {

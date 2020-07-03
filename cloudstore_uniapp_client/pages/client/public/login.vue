@@ -19,8 +19,8 @@
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<!-- #ifdef MP-WEIXIN -->
-			<button open-type="getUserInfo" @getuserinfo='getWxInfo' class="vx-btn" @click="">
-				<image src="../../static/temp/share_wechat.png" mode="" class="wxLogin"></image>
+			<button open-type="getUserInfo" @getuserinfo='getWxInfo' class="vx-btn">
+				<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
 			</button>
 			<!-- #endif -->
 			<view class="forget-section" @click="toForget">忘记密码?</view>
@@ -115,7 +115,7 @@
 							}
 						});
 						uni.request({
-							url: Api.BASEURI + Api.agent.wxLogin,
+							url: Api.BASEURI + Api.agent.user.wxLogin,
 							method: 'post',
 							header: {
 								'content-type': 'application/x-www-form-urlencoded'
@@ -136,7 +136,7 @@
 										icon: 'none'
 									});
 									uni.navigateTo({
-										url: '/pages/public/getVxPhone?openId=' + res.data.result.msg
+										url: '/pages/client/public/getVxPhone?openId=' + res.data.result.msg
 									});
 								} else if (res.data.result.code === 0) {
 									uni.showToast({
@@ -199,7 +199,7 @@
 					// }
 					uni.setStorageSync('userInfo', data.result);
 					uni.setStorageSync('token', data.result.token);
-					uni.switchTab({
+					uni.navigateTo({
 						url: '/pages/client/recommend/index'
 					});
 				}

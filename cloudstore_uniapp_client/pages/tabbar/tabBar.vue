@@ -145,9 +145,16 @@
 				// 						index: index
 				// 					})
 				let _this = this;
+				if(item.role=='client'){
 				uni.switchTab({
 					url: item.pagePath
-				})
+				})	
+				}else{
+					uni.navigateTo({
+						url: item.pagePath
+					});
+				}
+				
 			}
 		}
 	}
