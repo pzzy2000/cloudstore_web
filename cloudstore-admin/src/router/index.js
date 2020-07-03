@@ -43,9 +43,6 @@ export const constantRouterMap = [
 ]
 
 export const asyncRouterMap = [
-
-
-
 	 {
 		    path:'/sys/activity',
 		    component: Layout,
@@ -233,13 +230,12 @@ export const asyncRouterMap = [
         meta: {title: '代理商品', icon: 'product-list'}
      },{
        path: 'addgoods',
-       name: 'add_goods',
+       name: 'add_goodsInfo',
        component: () => import('@/views/agent/addgoods'),
        meta: {title: '添加代理商品', icon: 'product-list'},
        hidden: true
      }]
   },
-
   {
     path:'/sys/manager',
     component: Layout,
@@ -315,9 +311,8 @@ export const asyncRouterMap = [
           hidden: true
         }
       ]
-
-  },{
-
+  },
+  {
       path:'/sys/tracking',
       component: Layout,
       redirect: '/sys/tracking/list',
@@ -338,7 +333,33 @@ export const asyncRouterMap = [
           hidden: true
         }
       ]
-
+  },
+  {
+    path:'/order/manage',
+    component: Layout,
+    redirect: '/order/manage/orderlist',
+    name: 'order',
+    meta: {title: '订单管理', icon: 'product-list'},
+    children: [
+      {
+        path: 'orderlist',
+        name: 'order_list',
+        component: () => import('@/views/order/orderlist/index'),
+        meta: {title: '订单列表', icon: 'product-list'},
+      },
+      {
+        path: 'readorder',
+        name: 'read_order',
+        component: () => import('@/views/order/orderlist/readorder'),
+        meta: {title: '查看订单', icon: 'product-list'},
+      },
+      {
+        path: 'csmlist',
+        name: 'csm_list',
+        component: () => import('@/views/order/consignlist/index'),
+        meta: {title: '发货列表', icon: 'product-list'}
+      }
+    ]
   },
   // {
   //   path: '/pms',
