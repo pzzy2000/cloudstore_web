@@ -15,21 +15,22 @@
 			
 		},
 		onLaunch: function() {
-			uni.hideTabBar({});
-			let userInfo = uni.getStorageSync('userInfo') || '';
-            let token = uni.getStorageSync('token') || '';
-			if(token){
-				//更新登陆状态
-				uni.getStorage({
-					key: 'userInfo',
-					success: (res) => {
-						this.login(res.data);
-					}
-				});
-			}
+			//uni.hideTabBar({});
+			// let userInfo = uni.getStorageSync('userInfo') || '';
+   //          let token = uni.getStorageSync('token') || '';
+			// if(token){
+			// 	//更新登陆状态
+			// 	uni.getStorage({
+			// 		key: 'userInfo',
+			// 		success: (res) => {
+			// 			this.login(res.data);
+			// 		}
+			// 	});
+			// }
 			this.sysInfoMethod();
 		},
 		onShow: function() {
+			uni.hideTabBar({});
 			console.log('App Show')
 		},
 		onHide: function() {

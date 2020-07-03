@@ -1,6 +1,7 @@
 import store from '../store/index';
 export default {
 	BASEURI: 'http://120.24.156.254:18888/platform/',
+	//BASEURI: 'http://192.168.0.27:8088/',
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	source: 1, //1 weixinApplet 2 h5Source 3 pcSource 4 android 5ios
 	es: {
@@ -19,10 +20,40 @@ export default {
 	},
 	agent:{
 		activity:{
-				searchActivityNavList:'activity/app/showNavlist',
-				searchActivityShowList:'activity/app/indexShowlist',
-				searchIndexActivitygoodsList:'activity/app/indexShowActivityGoodList',
-				},
+			searchActivityNavList:'activity/app/showNavlist',
+			searchActivityShowList:'activity/app/indexShowlist',
+			searchIndexActivitygoodsList:'activity/app/indexShowActivityGoodList',
+		},
+		user: {
+			userinfo:"/agent/get",//获取用户信息
+			userlogin:"sys/manager/platform/login",
+			reg:"sys/manager/platform/register/agent",
+			wxLogin: 'sys/manager/platform/login', //判断微信登录
+			savePhone: 'sys/manager/platform/weixin/login' ,//微信第一次利用手机号绑定登录
+			agentList: 'agent/goods/app/list', //获取代理商代理的商品信息
+			dateList: 'agent/goods/app/dateList' //获取今日上新的商品
+		},
+		goods: { //商品接口
+		   list: 'goods/list' ,//获取商品列表
+		   detail: 'goods/getGoodsInfoByGoodsId',
+		   save:'agent/goods/save' ,//代理商将商品加入代理
+		   loadHtml:'goods/app/loadMobileHtml', //获取商品详情的图文详情
+		},
+		category: {
+			list: 'goods/category/list',
+			getchildId: 'goods/category/get'
+		},
+		home: {
+			activity: 'activity/app/ilist', //活动名称列表
+			activityGoodList: 'activity/app/indexShowActivityGoodList' //活动名称下对应的商品
+		},
+		hot: {
+			hotList: 'activity/app/listActivityGoods'
+		},
+		buy: {
+			createOrder:'order/app/createOrder',
+			prePay: 'app/pay/prePay'
+		}
 	},
 	
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
@@ -33,7 +64,6 @@ export default {
 			});
 		}
 		let token = uni.getStorageSync('token') || null;
-		console.log('这是token=' + token)
 		if (token == null && (endpoint != this.client.login.reg && endpoint != this.clent.login.login)) {
 			uni.showToast({
 				title: '请先登录',
@@ -128,7 +158,6 @@ export default {
 		}
 
 		let token = uni.getStorageSync('token') || null;
-		console.log('这是token=' + token)
 		if (token == null && (endpoint != this.client.login.reg && endpoint != this.client.login.login)) {
 			uni.showToast({
 				title: '请先登录',

@@ -9,7 +9,10 @@
 <script>
 	import mallplusCopyright from '@/components/mall-copyright/mallplusCopyright.vue';
 	import Api from '@/common/api';
-	import store from '@/store/index';
+	import {
+		mapMutations,
+		mapState
+	} from 'vuex';
 	export default {
 		components: {
 			mallplusCopyright
@@ -17,13 +20,20 @@
 		onLoad() {
 			this.getAgentInfo();
 		},
+		computed: {
+			...mapState(['hasLogin', 'userInfo'])
+		},
 		methods: {
+			...mapMutations(['login']),
 			async getAgentInfo() {
 				console.log("is wei xin "+this.$config.isWeiXin)
 				this.logining = false;
 				let params = {};
 				let data = await Api.apiCall('post', Api.client.info.searchInfo, params, true, false);
 				if (data) {
+					let loginuser = data.result;
+					uni.setStorageSync('userInfo', loginuser)
+					uni.setStorageSync('token', loginuser.token)
                    uni.switchTab({
                    	url:"/pages/client/recommend/index"
                    })

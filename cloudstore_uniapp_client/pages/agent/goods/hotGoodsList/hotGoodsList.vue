@@ -1,8 +1,12 @@
 <template>
 	<view class="content">
+		<nav-bar backState="1000">热门商品列表</nav-bar>
 		<view class="navbar">
+			
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
+			
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
+
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
 				<text>价格</text>
 				<view class="p-box">
@@ -14,16 +18,16 @@
 		</view>
 		<view class="goods-list">
 			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
-			<view class="image-wrapper"><image :src="goods.goodsPhotos[0].url" mode="aspectFill"></image></view>
+			<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 			<view class="goods-detail">
-				<text class="title clamp">{{ goods.goodsName }}</text>
-				<text class="title clamp subhead ">{{goods.goodsSubtitle}}</text>
-				<text class="title clamp subhead ">供应商:{{goods.supplierBean.name}}/{{goods.supplierShopBean.shopName}}</text>
+				<text class="title clamp">{{ goods.goodsPicesBean.goodsName }}</text>
+				<text class="title clamp subhead ">{{goods.goodsPicesBean.goodsSubtitle}}</text>
+				<text class="title clamp subhead ">供应商:{{goods.goodsPicesBean.supplierBean.name}}/{{goods.goodsPicesBean.supplierShopBean.shopName}}</text>
 				<view class="price-box">
 					<view class="price">
 						 <text class="price1">价格:</text>
-						 <text class="priceSale">{{ goods.salePrice }}</text>
-					 /<text class="pricemart">{{ goods.martPrice }}</text>
+						 <text class="priceSale">{{ goods.goodsPicesBean.salePrice }}</text>
+					 /<text class="pricemart">{{ goods.goodsPicesBean.martPrice}}</text>
 					</view><!--<button class="goodsBtn">去代理</button> -->
 					
 				</view>
@@ -35,19 +39,20 @@
 		<uni-load-more :status="loadingType"></uni-load-more>
 		-->
 		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+45+'px'}]">
-			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
-				<scroll-view scroll-y class="cate-list">
-					<view v-for="item in cateList" :key="item.id">
-						<!-- <view class="cate-item b-b two">{{ item.name }}</view>
-						<view v-for="tItem in item.child" :key="tItem.id" class="cate-item b-b" :class="{ active: tItem.id == cateId }" @click="changeCate(tItem)">
-							{{ tItem.name }}
-						</view> -->
-						<view class="cate-item b-b two" @click="changeCate(item)">{{ item.name }}</view>
+					<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
+						<scroll-view scroll-y class="cate-list">
+							<view v-for="item in cateList" :key="item.id">
+								<!-- <view class="cate-item b-b two">{{ item.name }}</view>
+								<view v-for="tItem in item.child" :key="tItem.id" class="cate-item b-b" :class="{ active: tItem.id == cateId }" @click="changeCate(tItem)">
+									{{ tItem.name }}
+								</view> -->
+								<view class="cate-item b-b two" @click="changeCate(item)">{{ item.name }}</view>
+							</view>
+						</scroll-view>
 					</view>
-				</scroll-view>
-			</view>
-		</view>
-		<tabbar :role="'agent'" :id="'aspfl'"></tabbar>
+				</view>
+
+
 	</view>
 </template>
 
@@ -118,20 +123,11 @@ export default {
 				mask: true
 			});
 			let list = await Api.apiCall('post', Api.agent.category.list, params);
-			//console.log(list)
+			console.log(list)
 			if (list) {
 				this.cateList = list.result.records
 				uni.hideLoading();
 			}
-			// if (list) {
-			// 	let cateList = list.data.filter(item => item.pid == null);
-				
-			// 	cateList.forEach(item => {
-			// 		let tempList = list.filter(val => val.pid == item.id);
-			// 		item.child = tempList;
-			// 	});
-			// 	this.cateList = cateList;
-			// }
 		},
 		//加载商品 ，带下拉刷新和上滑加载
 		async loadData(type = 'add', loading) {
@@ -144,7 +140,7 @@ export default {
 			} else {
 				this.loadingType = 'more';
 			}
-			let params={pageNum: this.pageNum,pageSize:20};
+			let params={pageNum: this.pageNum};
 			if (this.activityId) {
 				params['activityId'] = this.activityId;
 			} 
@@ -156,7 +152,7 @@ export default {
 				//这里要在后台改SQL
 				// params['keyword'] = this.keyword;
 			} 
-			let list = await Api.apiCall('post',  Api.agent.goods.list, params);
+			let list = await Api.apiCall('post', Api.agent.hot.hotList, params);
 			if(list){
 			let goodsList = list.result.records;
 			// let goodsList = await this.$api.json('goodsList');
@@ -232,9 +228,8 @@ export default {
 		},
 		//详情
 		navToDetailPage(item) {
-			//测试数据没有写id，用title代替
-			let activitId = -1;
-			let id = item.id;
+			let activitId = item.activityId;
+			let id = item.goodsId;
 			uni.navigateTo({
 				url: `/pages/agent/goods/agent/detail?id=${id}&activityId=${activitId}`
 			});
@@ -256,7 +251,7 @@ page,
 .navbar {
 	position: fixed;
 	left: 0;
-	top: 0;
+	top: 100upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;
