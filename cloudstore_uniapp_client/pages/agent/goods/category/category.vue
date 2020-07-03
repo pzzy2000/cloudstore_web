@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<nav-bar>商品分类</nav-bar>
 		<view class="navbar">
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
@@ -118,20 +119,10 @@ export default {
 				mask: true
 			});
 			let list = await Api.apiCall('post', Api.agent.category.list, params);
-			//console.log(list)
 			if (list) {
 				this.cateList = list.result.records
 				uni.hideLoading();
 			}
-			// if (list) {
-			// 	let cateList = list.data.filter(item => item.pid == null);
-				
-			// 	cateList.forEach(item => {
-			// 		let tempList = list.filter(val => val.pid == item.id);
-			// 		item.child = tempList;
-			// 	});
-			// 	this.cateList = cateList;
-			// }
 		},
 		//加载商品 ，带下拉刷新和上滑加载
 		async loadData(type = 'add', loading) {
@@ -208,6 +199,10 @@ export default {
 			this.loadData('refresh', 1);
 
 		},
+		//获取分类筛选的数据
+		async getTypeData () {
+			let list = await Api.apiCall('post',  Api.agent.goods.list, params);
+		},
 		//显示分类面板
 		toggleCateMask(type) {
 			let timer = type === 'show' ? 10 : 300;
@@ -228,7 +223,6 @@ export default {
 				scrollTop: 0
 			});
 			this.loadData('refresh', 1);
-
 		},
 		//详情
 		navToDetailPage(item) {
@@ -256,7 +250,12 @@ page,
 .navbar {
 	position: fixed;
 	left: 0;
-	top: 0;
+	/* #ifdef MP-WEIXIN */
+		top: 150upx;
+	/* #endif */
+	/* #ifdef H5 */
+		top: 0upx;
+	/* #endif */
 	display: flex;
 	width: 100%;
 	height: 80upx;
@@ -338,8 +337,8 @@ page,
 	background: rgba(0, 0, 0, 0);
 	z-index: 95;
 	transition: 0.3s;
-
 	.cate-content {
+		padding-top: 40rpx;
 		width: 630upx;
 		height: 100%;
 		background: #fff;

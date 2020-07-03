@@ -53,18 +53,13 @@
 			</view>
 			<!-- 浏览历史 -->
 			<view class="history-section icon">
-				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('../../pagesU/address/address')"></list-cell>
-				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="navTo('../../pagesU/user/profile')"></list-cell>
-				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="navTo('../../pagesU/user/collect')"></list-cell>
-				
-				<list-cell icon="icon-pinglun-copy"  v-if="user.isangent == true" iconColor="#54b4ef" title="我的代理" @eventClick="toAgent"></list-cell>
+				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="toapplyAgent"></list-cell>
+				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="natoapplyAgent"></list-cell>
+				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="toapplyAgent"></list-cell>
+				<list-cell icon="icon-pinglun-copy"  v-if="user.relationId > 0" iconColor="#54b4ef" title="我的代理" @eventClick="toAgent"></list-cell>
 				<list-cell icon="icon-pinglun-copy" v-else iconColor="#54b4ef" title="申请代理" @eventClick="toapplyAgent"></list-cell>
-				
-				
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统设置" border="" @eventClick="navTo('/pages/set/set')"></list-cell>
-				
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统退出" border="" @eventClick="toExit"></list-cell>
-				
+				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统设置" border="" @eventClick="toapplyAgent"></list-cell>
+				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统退出" border="" @eventClick="navTo('/pages/client/public/login','exit')"></list-cell>
 			</view>
 		</view>
 		<!-- <tabbar :role="'client'" :id="'cwd'"></tabbar> -->
@@ -94,7 +89,7 @@ import { mapState,mapMutations } from 'vuex';
 				integration: 0
 			},
 			user:{
-				isangent:false,
+				userType: '',
 				name: null || '获得用户信息错误',
 				url: '',
 				detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
@@ -147,13 +142,12 @@ import { mapState,mapMutations } from 'vuex';
 		},
 		// 获取微信用户信息
 		getuserinfo(){
-			
 			let userInfo = uni.getStorageSync('userInfo');
 			if (userInfo) {
 				console.log(userInfo)
 				this.user.name = userInfo.name 
 				this.user.url = userInfo.url ;
-				this.user.isangent=userInfo.relationId ==null?false:true;
+				this.user.relationId = userInfo.relationId
 				if (!userInfo.url) {
 					this.user.url = this.user.detailUrl
 				}
@@ -170,19 +164,17 @@ import { mapState,mapMutations } from 'vuex';
 				url: '../../pagesU/user/profile'
 			});
 		},
-		
 		toAgent(){
-			uni.switchTab({
+			uni.navigateTo({
 				url:"/pages/agent/home/index"
 			})
 		},
-		
 		toapplyAgent(){
-			uni.navigateTo({
-				url: '/pages/agent/home/index',
+			uni.showToast({
+				title: '敬请期待',
+				icon: 'none'
 			});
 		},
-		
 		async toExit(){
 			let params ={logintype:'client'};
 			let data = await Api.apiCall('post', Api.client.login.logout, params, true, true);
@@ -193,18 +185,21 @@ import { mapState,mapMutations } from 'vuex';
 				})
 			}
 		},
-		
 		/**
 		 * 统一跳转接口,拦截未登录路由
 		 * navigator标签现在默认没有转场动画，所以用view
 		 */
-		navTo(url) {
-			if (!this.hasLogin) {
-				url = '/pages/public/login';
+		navTo(url,type) {
+			if (type === 'exit') {
+				uni.clearStorage();
+				uni.navigateTo({
+					url: url
+				});
+			} else {
+				uni.navigateTo({
+					url: url
+				});
 			}
-			uni.navigateTo({
-				url: url
-			});
 		},
 		/**
 		 *  会员卡下拉和回弹

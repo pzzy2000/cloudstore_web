@@ -69,7 +69,7 @@
 						checked: 'true'
 					}
 				],
-				current: 0,
+				current: 1,
 				vxCode: ''
 			}
 		},

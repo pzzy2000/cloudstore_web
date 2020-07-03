@@ -251,7 +251,7 @@ page,
 .navbar {
 	position: fixed;
 	left: 0;
-	top: 100upx;
+	top: 150upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;
@@ -333,8 +333,8 @@ page,
 	background: rgba(0, 0, 0, 0);
 	z-index: 95;
 	transition: 0.3s;
-
 	.cate-content {
+		padding-top: 40rpx;
 		width: 630upx;
 		height: 100%;
 		background: #fff;

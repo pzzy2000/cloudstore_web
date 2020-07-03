@@ -10,7 +10,7 @@
 			<input class="" type="text" value="" placeholder="输入关键字搜索" style="font-size: 28upx;background: #F5F5F5;height: 60upx;width: 90%;border-radius: 50upx;text-align: center;" />
 		</view> -->
 		<!-- #endif -->
-		<navBar>我的代理</navBar>
+		<nav-bar type='fixed'>我的小店</nav-bar>
 		<view class="agency-main">
 			<view class="agency-header">
 				<image :src="user.url" mode="" alt='头像' class="info-img"></image>
@@ -168,6 +168,9 @@
 				updateList: []
 			}
 		},
+		components:{
+			navBar
+		},
 		onLoad () {
 			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 			this.height = uni.getSystemInfoSync().windowHeight - (this.statusBarHeight+80)
@@ -208,17 +211,6 @@
 			},
 			search () {
 			},
-			// async loadData(type = 'add', loading) {
-			// 	let params = {
-			// 		pageNum: '1',
-			// 		pageSize: '10'
-			// 	};
-			// 	let list = await Api.apiCall('post', Api.agent.list, params);
-			// 	if (list) {
-			// 		console.log(list)
-			// 		this.goodsList = list.result.records
-			// 	}
-			// },
 			toAgentList (data) { //去个人的代理商品列表
 				var url = data.detailListUrl
 				console.log(url)

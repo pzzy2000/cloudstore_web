@@ -125,8 +125,8 @@
 			</view>
 
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent" v-if="userType === 'agent'">我的小店</button>
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toBuy" v-if="userType === 'user'">立即购买</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent" v-if="userType === 'agent'">我的小店</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
 			</view>
 		</view>
@@ -230,16 +230,18 @@ export default {
 		};
 	},
 	onShareAppMessage(res) {
-		console.log(res)
 		if (res.from === 'button') {// 来自页面内分享按钮
+			var shareObj = {
+				title: this.goodsName,
+				params: {
+					goodsId: this.goodsId,
+					agentGoodsId: this.agentGoodsId,
+					userType: 'user'
+				},
+				path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&userType=user'
+			}
 		}
-		return {
-		  title: this.goodsName,
-		  url: '/pages/agent/goods/goodsDetail/goodsDetail?id='+this.goodsId,
-		  sccuess: function(res) {
-			this.isLogin()
-		  }
-		}
+		return shareObj
 	},
 	onShow() {
 	},
@@ -251,7 +253,9 @@ export default {
 		});
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
+		this.userType = ops.userType
 		console.log(ops)
+		console.log(this.userType)
 		this.getGoodsDetail(this.goodsId)
 	},
 	methods: {

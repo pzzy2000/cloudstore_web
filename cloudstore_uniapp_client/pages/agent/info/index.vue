@@ -107,9 +107,9 @@
 				<list-cell icon="icon-share cgtt" iconColor="#0e68d7" v-if="userDetailInfo.storeId" title="商户主页" @eventClick="navTo(`../../pagesC/store/businessDetails?id=${userDetailInfo.storeId}`)"></list-cell>
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai cgtt" iconColor="#0e68d7" v-if="!userDetailInfo.roomNums" title="绑定社区" @eventClick="navTo('../../pagesA/build/bindCommunity')"></list-cell>
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai cgtt" iconColor="#0e68d7" v-if="userDetailInfo.roomNums" title="社区主页" @eventClick="navTo('../../pagesA/build/community')"></list-cell>
-					<list-cell icon="icon-pinglun-copy" iconColor="#0e68d7" title="我的邀请码" :tips="userDetailInfo.id"  @eventClick="navTo('../../pagesU/user/invite')"></list-cell>
-					<list-cell icon="icon-pinglun-copy" iconColor="#0e68d7" v-if="!userDetailInfo.invitecode" title="推荐邀请码" @eventClick="inputShowModal('invitecode')"></list-cell>
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统设置" border="" @eventClick="navTo('/pages/set/set')"></list-cell>
+				<list-cell icon="icon-pinglun-copy" iconColor="#0e68d7" title="我的邀请码" :tips="userDetailInfo.id"  @eventClick="navTo('../../pagesU/user/invite')"></list-cell>
+				<list-cell icon="icon-pinglun-copy" iconColor="#0e68d7" v-if="!userDetailInfo.invitecode" title="推荐邀请码" @eventClick="inputShowModal('invitecode')"></list-cell>
+				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="代理商退出" border="" @eventClick="navTo('/pages/client/info/index','client')"></list-cell>
 				<!-- <list-cell icon="icon-shezhi1" iconColor="#e07472" title="test" border="" @eventClick="navTo('/pages/search/test')"></list-cell> -->
 			</view>
 		</view>
@@ -222,7 +222,6 @@ import { mapState,mapMutations } from 'vuex';
 		getuserinfo(){
 			let userInfo = uni.getStorageSync('userInfo');
 			if (userInfo) {
-				console.log(userInfo)
 				this.user.name = userInfo.name || userInfo.nickName
 				this.user.url = userInfo.url || userInfo.detailUrl
 				if (!userInfo.url) {
@@ -237,21 +236,6 @@ import { mapState,mapMutations } from 'vuex';
 				this.user.name = userInfo.name
 			}
 		},
-		// 	let params = {  };
-		// 	let data1 = await Api.apiCall('get', Api.index.userInfo, params);
-		// 	if(!data1){
-		// 		this.userDetailInfo={};
-		// 	}
-		// 	this.userDetailInfo = data1.member;
-		// 	if(!data1.member){
-		// 		this.logout();
-		// 	}else{
-		// 	uni.setStorageSync('userInfos', data1.member);
-		// 		console.log(this.userDetailInfo)
-		// 		let couponList = data1.histories;
-		// 		this.couponList = couponList;
-		// 	}
-		// },
 		// 获取浏览历史
 		async getHistory(){
 			if(this.hasLogin){
@@ -271,7 +255,7 @@ import { mapState,mapMutations } from 'vuex';
 			});
 		},
 		toWeChatLogin(){
-      uni.clearStorageSync();
+			uni.clearStorageSync();
 			uni.navigateTo({
 				url: '/pages/public/login',
 			});
@@ -288,13 +272,19 @@ import { mapState,mapMutations } from 'vuex';
 		 * 统一跳转接口,拦截未登录路由
 		 * navigator标签现在默认没有转场动画，所以用view
 		 */
-		navTo(url) {
-			if (!this.hasLogin) {
-				url = '/pages/public/login';
+		navTo(url,type) {
+			// if (!this.hasLogin) {
+			// 	url = '/pages/public/login';
+			
+			if (type === 'client') {
+				uni.switchTab({
+					url: url
+				});
+			}else{
+				uni.navigateTo({
+					url: url
+				});
 			}
-			uni.navigateTo({
-				url: url
-			});
 		},
 		/**
 		 *  会员卡下拉和回弹

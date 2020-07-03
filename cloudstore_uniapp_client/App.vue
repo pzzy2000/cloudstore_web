@@ -14,6 +14,16 @@
 			},
 			
 		},
+		onReady() {
+				uni.getSystemInfo({
+					success: function(res) { // res - 各种参数
+						let info = uni.createSelectorQuery().select(".类名");
+						info.boundingClientRect(function(data) { //data - 各种参数
+							console.log(data.width)  // 获取元素宽度
+						}).exec()
+				    }
+				});
+		},
 		onLaunch: function() {
 			//uni.hideTabBar({});
 			// let userInfo = uni.getStorageSync('userInfo') || '';

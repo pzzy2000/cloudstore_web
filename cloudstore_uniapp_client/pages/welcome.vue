@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
-		<p>这里是欢迎页面,当前页面要检查用户是否登录</p>
-	     <mallplusCopyright> 这里 要 CSS 控制到底部 </mallplusCopyright>
+		<p class='welcome'>欢迎光临</p>
+	     <mallplusCopyright></mallplusCopyright>
 	</view>
 	
 </template>
@@ -34,9 +34,9 @@
 					let loginuser = data.result;
 					uni.setStorageSync('userInfo', loginuser)
 					uni.setStorageSync('token', loginuser.token)
-                   uni.switchTab({
-                   	url:"/pages/client/recommend/index"
-                   })
+					uni.switchTab({
+						url:"/pages/client/recommend/index"
+					})
 				}
 			}
 		}
@@ -55,6 +55,9 @@
 		height: 100vh;
 		overflow: hidden;
 		background: #fff;
+		.welcome {
+			text-align: center;
+		}
 	}
-
+	
 </style>

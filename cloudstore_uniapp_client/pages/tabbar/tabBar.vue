@@ -141,14 +141,11 @@
 		methods: {
 			...mapMutations(['changeTabBar']),
 			navTo(item, index) {
-				// this.changeTabBar({
-				// 						index: index
-				// 					})
 				let _this = this;
 				if(item.role=='client'){
-				uni.switchTab({
-					url: item.pagePath
-				})	
+					uni.switchTab({
+						url: item.pagePath
+					})	
 				}else{
 					uni.navigateTo({
 						url: item.pagePath
