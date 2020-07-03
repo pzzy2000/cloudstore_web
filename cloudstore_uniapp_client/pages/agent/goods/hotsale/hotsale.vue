@@ -77,14 +77,16 @@
 				</view>
 			</view>
 			<!-- 新品上市 -->
-            <tabbar :role="'agent'" :id="'armsp'"></tabbar>
+             <!-- 
+			<mallplusCopyright></mallplusCopyright>
+			-->
+			<tabbar :role="'agent'" :id="'armsp'"></tabbar>
 		</view>
-		
 	</view>
 </template>
 
 <script>
-	
+	import mallplusCopyright from '@/components/mall-copyright/mallplusCopyright.vue';
 	import Api from '@/common/api';
 	import coupon from '@/components/coolc-coupon/coolc-coupon';
 
@@ -99,6 +101,7 @@
 	export default {
 		components: {
 			coupon,
+			mallplusCopyright,
 			uniLoadMore,
 			navBar
 		},
@@ -109,7 +112,10 @@
 					nav: {},
 					show: []
 				},
-				
+				titleNViewBackground: '',
+				carouselList: '',
+				swiperCurrent: '',
+				swiperLength: ''
 			};
 		},
 
@@ -277,7 +283,7 @@
 				let id = item.goodsId;
 				let activitId = item.activityId;
 				uni.navigateTo({
-					url: `/pages/goods/agent/detail?id=${id}&activityId=${activitId}`
+					url: `/pages/agent/goods/agent/detail?id=${id}&activityId=${activitId}`
 				});
 			},
 
@@ -296,12 +302,10 @@
 				}
 				uni.hideLoading();
 			},
-			
-			
 			navToCategory(item) {
 				let activitId = item.id;
 				uni.navigateTo({
-						url: '/pages/goods/hotGoodsList/hotGoodsList?id='+activitId
+						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?id='+activitId
 				});
 			},
 			search() {
@@ -381,6 +385,8 @@
 	}
 
 	page {
+		background: $page-color-base;
+		padding-bottom: 160upx;
 		.cate-section {
 			position: relative;
 			z-index: 5;
@@ -407,10 +413,6 @@
 				bottom: 40upx;
 			}
 		}
-	}
-
-	page {
-		background: #f5f5f5;
 	}
 
 	.m-t {
