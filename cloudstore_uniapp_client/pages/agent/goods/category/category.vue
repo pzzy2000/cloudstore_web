@@ -48,7 +48,7 @@
 				</scroll-view>
 			</view>
 		</view>
-		<tabbar :role="'agent'" :id="'aspfl'"></tabbar>
+		<tabbar :role="'agent'" :ids="'aspfl'"></tabbar>
 	</view>
 </template>
 
