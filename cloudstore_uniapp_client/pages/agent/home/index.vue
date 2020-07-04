@@ -77,7 +77,7 @@
 				</view>
 			</view>
 		</view>
-		<tabbar :role="'agent'" :id="'awddl'"></tabbar>	
+		<tabbar :role="'agent'" :ids="'awddl'"></tabbar>	
 	</view>
 </template>
 
