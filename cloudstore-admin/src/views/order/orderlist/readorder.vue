@@ -129,6 +129,11 @@
 </template>
 
 <script>
+  import {getOneorder} from '@/api/order'
+  const defaultList = {
+    pageNum: 1,
+    pageSize: 10
+  };
   export default {
     name: "readorder",
     data() {
@@ -136,7 +141,21 @@
         consigneeMsg: [
           {person: "大梨", phone: '18000000000', postcode: '518000', area: '广东省深圳市南山区科兴科学园'}
         ],
-        baseInfo: []
+        baseInfo: [],
+        parentObj: {}
+      }
+    },
+    created() {
+      this.parentObj = this.$route.params.obj;
+      console.log(this.parentObj);
+      this.getList();
+    },
+    methods: {
+      getList() {
+        defaultList.orderId = this.$route.params.id;
+        getOneorder(defaultList).then(res => {
+          console.log(res);
+        })
       }
     }
   }

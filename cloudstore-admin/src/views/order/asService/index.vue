@@ -1,12 +1,11 @@
 <template>
   <div>
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">全部订单(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="2">待付款(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="3">待发货(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="4">已发货(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="5">已完成(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="6">已关闭(<span>1000</span>)</el-menu-item>
+      <el-menu-item index="1">全部申请(<span>1000</span>)</el-menu-item>
+      <el-menu-item index="2">待处理(<span>1000</span>)</el-menu-item>
+      <el-menu-item index="3">退货中(<span>1000</span>)</el-menu-item>
+      <el-menu-item index="4">已完成(<span>1000</span>)</el-menu-item>
+      <el-menu-item index="5">已拒绝(<span>1000</span>)</el-menu-item>
     </el-menu>
     <el-card class="filter-container" shadow="never" style="margin: 0 20px">
       <div>
@@ -81,8 +80,8 @@
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="readOrder(scope.$index, scope.row)">查看订单</el-button>
-            <el-button type="primary" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>
+            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">查看订单</el-button>
+            <el-button type="danger" size="mini" @click="delLogis(scope.row)">删除订单</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -99,147 +98,106 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog title="物流信息" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
-      <div style="height: 200px;">
-        <el-steps direction="vertical" :active="1">
-          <el-step title="步骤 1">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-          <el-step title="步骤 2">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-          <el-step title="步骤 3">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-        </el-steps>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" size="mini">关闭</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-    import {fetchList} from '@/api/order'
-    import { formatDate } from '@/assets/common/data.js'
-    const defaultList = {
-      pageNum: 1,
-      pageSize: 10,
-      optType:'search'
-    };
-    let that;
-    export default {
-      name: "list",
-      data() {
-        return {
-          activeIndex: '1',
-          searchList: {},
-          orderList: [{
-            code: '1111',
-            goods: '12313',
-            ordertime: '12313',
-            count: '123132',
-            cost: '11123',
-            apply: '321321',
-            ordertype: '45678',
-            status: '32164'
-          }],
-          listLoading: false,
-          pageList: Object.assign({}, defaultList),
-          total: 1,
-          pickerOptions: {
-            disabledDate(time) {
-              return time.getTime() > Date.now();
-            }
-          },
-          options: [
-            {label: "APP订单", value: "1"},
-            {label: "小程序订单", value: "2"},
-            {label: "微信订单", value: "3"}
-          ],
-          dialogVisible: false,
-          btnMsg: '',
-          type: ''
-        }
-      },
-      beforeCreate() {
-        that = this;
-      },
-      created() {
-        this.getList();
-      },
-      filters: {
-        // 时间格式自定义 只需把字符串里面的改成自己所需的格式
-        formatDate(time) {
-          let date = new Date(time);
-          return formatDate(date, 'yyyy-MM-dd');
-        },
-        changeStatus(data) {
-          switch (data) {
-            case 'wait': return "待支付";
-              break;
-            case 'complete': return "待发货";
-              break;
-            case 'close': return "超时关闭";
-              break;
+  import {fetchList} from '@/api/order'
+  import { formatDate } from '@/assets/common/data.js'
+  const defaultList = {
+    pageNum: 1,
+    pageSize: 10,
+    optType:'search'
+  };
+  export default {
+    name: "asService",
+    data() {
+      return {
+        activeIndex: '1',
+        searchList: {},
+        orderList: [{
+          code: '1111',
+          goods: '12313',
+          ordertime: '12313',
+          count: '123132',
+          cost: '11123',
+          apply: '321321',
+          ordertype: '45678',
+          status: '32164'
+        }],
+        listLoading: false,
+        pageList: Object.assign({}, defaultList),
+        total: 1,
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
           }
         },
-        changeMsg(data) {
-          switch (data) {
-            case 'wait':
-              return "关闭订单";
-              break;
-            case 'complete':
-              return "订单发货";
-              break;
-            case 'close':
-              return "删除订单";
-              break;
-          }
-        }
+        options: [
+          {label: "APP订单", value: "1"},
+          {label: "小程序订单", value: "2"},
+          {label: "微信订单", value: "3"}
+        ],
+        dialogVisible: false
+      }
+    },
+    created() {
+      this.getList();
+    },
+    filters: {
+      // 时间格式自定义 只需把字符串里面的改成自己所需的格式
+      formatDate(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd');
       },
-      methods: {
-        getList() {
-          fetchList(this.pageList).then(res => {
-            if (res.result.code == 0) {
-              this.orderList = res.result.result.records;
-              this.total = parseInt(res.result.result.total);
-            }
-          })
-        },
-        showDanger() {
-          this.isshow = false;
-        },
-        handleSelect(key, keyPath) {
-          console.log(key, keyPath);
-        },
-        handleSearchList() {
-          alert("搜索事件！")
-        },
-        handleResetSearch(formName) {
-          this.$refs[formName].resetFields();
-        },
-        handleSizeChange() {
-          this.getList();
-        },
-        handleCurrentChange() {
-          this.getList();
-        },
-        readOrder(index, row){
-          let obj = this.orderList[index];
-          console.log(obj)
-          this.$router.push({name: "read_order", params: {id: row.id, obj: obj}});
-        },
-        handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then(() => {
-              done();
-            })
-            .catch(() => {});
+      changeStatus(data) {
+        switch (data) {
+          case 'wait': return "待支付";
+            break;
+          case 'complete': return "已支付";
+            break;
+          case 'close': return "超时关闭";
+            break;
         }
       }
+    },
+    methods: {
+      getList() {
+        fetchList(this.pageList).then(res => {
+          if (res.result.code == 0) {
+            this.orderList = res.result.result.records;
+            this.total = parseInt(res.result.result.total);
+          }
+        })
+      },
+      handleSelect(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleSearchList() {
+        alert("搜索事件！")
+      },
+      handleResetSearch(formName) {
+        this.$refs[formName].resetFields();
+      },
+      handleSizeChange() {
+        this.getList();
+      },
+      handleCurrentChange() {
+        this.getList();
+      },
+      readOrder(index, row){
+        console.log(index, row);
+        this.$router.push("/order/manage/readorder")
+      },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(() => {
+            done();
+          })
+          .catch(() => {});
+      }
     }
+  }
 </script>
 
 <style scoped>
@@ -274,25 +232,5 @@
   .el-menu-item{
     border-bottom-color: #e4e4e4 !important;
     border: 1px solid #e4e4e4;
-  }
-  .el-step.is-vertical >>> .el-step__icon{
-    width: 12px !important;
-    height: 12px !important;
-  }
-  .el-step.is-vertical >>> .el-step__line{
-    display: none !important;
-  }
-  .el-step.is-vertical >>> .el-step__main{
-    padding: 0;
-  }
-  .el-step.is-vertical >>> .el-step__head.is-finish {
-    color: #c0c4cc !important;
-    border-color: #c0c4cc !important;
-  }
-  .el-step.is-vertical >>> .el-step__title.is-finish {
-    color: #c0c4cc;
-  }
-  .el-step.is-vertical >>> .el-step__description.is-finish {
-    color: #c0c4cc;
   }
 </style>
