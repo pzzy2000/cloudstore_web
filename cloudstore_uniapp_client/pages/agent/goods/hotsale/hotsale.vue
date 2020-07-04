@@ -80,7 +80,7 @@
              <!-- 
 			<mallplusCopyright></mallplusCopyright>
 			-->
-			<tabbar :role="'agent'" :id="'armsp'"></tabbar>
+			<tabbar :role="'agent'" :ids="'armsp'"></tabbar>
 		</view>
 	</view>
 </template>
