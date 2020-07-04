@@ -1,26 +1,22 @@
 <template>
-	<view class="uni-tabbar">
+	
 		<view class="tabBar">
 		        <view v-for="(item,index) in tabbar" :key="item.pagePath" v-if="item.role == role "
-				 class="tabbar_item" :class="{'active':index == current}"
-				 @click="navTo(item,index)">
-		            <image v-if="item.id==id" :src="item.selectedIconPath" mode=""></image>
+				 class="tabbar_item"  @click="navTo(item,index)">
+		            <image v-if="item.id==ids" :src="item.selectedIconPath" mode=""></image>
 		            <image v-else :src="item.iconPath" mode=""></image>
 		            <view class="text">{{item.text}}</view>
 		        </view>
 		</view>
-	</view>
+	
 </template>
 
 <script>
-	import {
-			mapState,
-			mapMutations
-		} from 'vuex';
+	
 	export default {
 		name:"tabbar",
 		props: {
-			id:{
+			ids:{
 				type: String,
 				default: ''
 			},
@@ -29,15 +25,15 @@
 				default: 'client'
 			}
 		},
-		computed: mapState(["tabBarIndex","tabBar"]),
-				created() {
-					this.current = this.tabBarIndex
-				},
-				watch: {
-					tabBarIndex() {
-						this.current = this.tabBarIndex
-					}
-				},
+	
+				// created() {
+				// 	this.current = this.tabBarIndex
+				// },
+				// watch: {
+				// 	tabBarIndex() {
+				// 		this.current = this.tabBarIndex
+				// 	}
+				// },
 		data() {
 			return {
 				current: 0,
@@ -139,20 +135,37 @@
 			// }
 		},
 		methods: {
-			...mapMutations(['changeTabBar']),
-			navTo(item, index) {
-				// this.changeTabBar({
-				// 						index: index
-				// 					})
-				let _this = this;
-				if(item.role=='client'){
-				uni.switchTab({
-					url: item.pagePath
-				})	
-				}else{
-					uni.navigateTo({
+			
+		setshow(show){
+			this.showPage=show;
+		},
+
+        dd(item){
+			console.log(">>>>>>>>>>>>  2tbBar "+item.role+" "+item.pagePath);
+			if(this.showPage==true)return;
+			this.setshow(true);
+			uni.showLoading({
+				title: '请稍候',
+				mask: true
+			});
+			let xx= this.setshow;
+			uni.redirectTo({
+				url: item.pagePath,
+				complete:function(){
+					xx(false);
+					uni.hideLoading();
+				}
+			});
+		},
+
+		 async	navTo(item, index) {
+				console.log(">>>>>>>>>>>>  1tbBar "+item.role);
+				if(item.role ==='client'){
+					uni.switchTab({
 						url: item.pagePath
-					});
+					})	
+				}else{
+					await this.dd(item);
 				}
 				
 			}

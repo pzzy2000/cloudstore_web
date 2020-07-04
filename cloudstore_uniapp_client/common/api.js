@@ -11,11 +11,15 @@ export default {
 	
 	client:{
 		login:{
-		 login:"sys/manager/platform/login"	,
-		 reg:"sys/manager/platform/register/client"
+			login:"sys/manager/platform/login"	,
+			reg:"sys/manager/platform/register/client"
 		},
 		info:{
-		searchInfo:"client/app/searchClientInfo" //查询当前登录信息
+			searchInfo:"client/app/searchClientInfo" //查询当前登录信息
+		},
+		recommend: {
+			newShopinfoByOrder: 'agent/goods/app/newShopinfoByOrder',
+			list: 'agent/goods/app/list'
 		}
 	},
 	agent:{
@@ -31,7 +35,7 @@ export default {
 			wxLogin: 'sys/manager/platform/login', //判断微信登录
 			savePhone: 'sys/manager/platform/weixin/login' ,//微信第一次利用手机号绑定登录
 			agentList: 'agent/goods/app/list', //获取代理商代理的商品信息
-			dateList: 'agent/goods/app/dateList' //获取今日上新的商品
+			dateList: 'agent/goods/app/dateList', //获取今日上新的商品
 		},
 		goods: { //商品接口
 		   list: 'goods/list' ,//获取商品列表

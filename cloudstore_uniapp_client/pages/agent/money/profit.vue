@@ -1,7 +1,7 @@
 <template>
 	<view>
 	<p>我的收益</p>
-	 <tabbar :role="'agent'" :id="'awdsy'"></tabbar>
+	 <tabbar :role="'agent'" :ids="'awdsy'"></tabbar>
 	 </view>
 </template>
 

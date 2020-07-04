@@ -48,8 +48,8 @@
 		},
 		data() {
 			return {
-				access: '',
-				password: '',
+				access: '15573277535',
+				password: '123456',
 				sysInfo: '',
 				logining: false,
 				wxloginCode: '', //获取code
@@ -145,7 +145,8 @@
 									});
 									var userInfo = {
 										name: res.data.result.result.name,
-										url: res.data.result.result.url
+										url: res.data.result.result.url,
+										userType: res.data.result.result.userType
 									}
 									uni.setStorageSync('userInfo', userInfo)
 									uni.setStorageSync('token', res.data.result.result.token)
@@ -199,7 +200,7 @@
 					// }
 					uni.setStorageSync('userInfo', data.result);
 					uni.setStorageSync('token', data.result.token);
-					uni.navigateTo({
+					uni.switchTab({
 						url: '/pages/client/recommend/index'
 					});
 				}

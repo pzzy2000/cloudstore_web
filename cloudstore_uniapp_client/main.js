@@ -27,14 +27,6 @@ const msg = (title, duration=1500, mask=false, icon='none')=>{
 		icon
 	});
 }
-const json = type=>{
-	//模拟异步请求数据
-	return new Promise(resolve=>{
-		setTimeout(()=>{
-			resolve(Json[type]);
-		}, 500)
-	})
-}
 
 const prePage = ()=>{
 	let pages = getCurrentPages();
@@ -58,7 +50,7 @@ Vue.prototype.$config.isWeiXin= isWeiXin;
 Vue.config.productionTip = false
 Vue.prototype.$fire = new Vue();
 Vue.prototype.$store = store;
-Vue.prototype.$api = {msg, json, prePage};
+Vue.prototype.$api = {msg , prePage};
 
 App.mpType = 'app'
 

@@ -5,7 +5,7 @@
 		<view class="navbar">
 		<!-- #endif -->
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="navbar" :style="[{'margin-top': statusBarHeight+45+'px'}]">
+		<view class="navbar">
 		<!-- #endif -->
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量优先</view>
@@ -128,9 +128,9 @@
 				}
 			},
 			navToDetailPage(item) {
-				let id = item.goodsId,agentGoodsId = item.id
+				let id = item.goodsId,agentGoodsId = item.id,userType = 'agent'
 				uni.navigateTo({
-					url: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+id+'&type=agent'+'&agentGoodsId='+agentGoodsId
+					url: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+id+'&userType='+userType+'&agentGoodsId='+agentGoodsId
 				});
 			}
 		}
@@ -149,7 +149,7 @@
 .navbar {
 	position: absolute;
 	left: 0;
-	top: 100upx;
+	top: 130upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;
