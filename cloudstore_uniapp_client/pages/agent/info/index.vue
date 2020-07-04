@@ -117,7 +117,7 @@
 			<input v-model="inputContent" style="margin:20upx" placeholder="请输入..." />
 		</neil-modal>
 		<mallplusCopyright></mallplusCopyright>
-		<tabbar :role="'agent'" :id="'adlxx'"></tabbar>	
+		<tabbar :role="'agent'" :ids="'adlxx'"></tabbar>	
 	</view>
 </template>
 <script>
