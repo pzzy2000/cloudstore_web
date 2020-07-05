@@ -90,7 +90,7 @@ export default {
 		// #endif
 		this.keyword = options.keyword;
 		this.cateId = options.sid;
-		this.loadCateList();
+		this.loadActiviList();
 		this.loadData();
 	},
 	onPageScroll(e) {
@@ -112,21 +112,17 @@ export default {
 		this.loadData();
 	},
 	methods: {
-		async loadCateList(fid, sid) {
+		async loadActiviList() {
 			let params = {
-				pageNum: '1',
-				pageSize: '20',
-				parentId: 0
+				// pageNum: '1',
+				// pageSize: '20',
+				// parentId: 0
 			};
-			uni.showLoading({
-				title: '请稍候',
-				mask: true
-			});
-			let list = await Api.apiCall('post', Api.agent.category.list, params);
-			console.log(list)
+			
+			let list = await Api.apiCall('post', Api.agent.activity.listAll, params);
+			//console.log(list)
 			if (list) {
 				this.cateList = list.result.records
-				uni.hideLoading();
 			}
 		},
 		//加载商品 ，带下拉刷新和上滑加载
@@ -159,21 +155,21 @@ export default {
 			if (type === 'refresh') {
 				this.goodsList = [];
 			}
-			//筛选，测试数据直接前端筛选了
-			if (this.filterIndex === 1) {
-				goodsList.sort((a, b) => b.sales - a.sales);
-			}
-			if (this.filterIndex === 2) {
-				goodsList.sort((a, b) => {
-					if (this.priceOrder == 1) {
-						return a.price - b.price;
-					}
-					return b.price - a.price;
-				});
-			}
+			// //筛选，测试数据直接前端筛选了
+			// if (this.filterIndex === 1) {
+			// 	goodsList.sort((a, b) => b.sales - a.sales);
+			// }
+			// if (this.filterIndex === 2) {
+			// 	goodsList.sort((a, b) => {
+			// 		if (this.priceOrder == 1) {
+			// 			return a.price - b.price;
+			// 		}
+			// 		return b.price - a.price;
+			// 	});
+			// }
 
-			this.goodsList = this.goodsList.concat(goodsList);
-
+			// this.goodsList = this.goodsList.concat(goodsList);
+             this.goodsList = goodsList;
 			//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
 			this.loadingType = this.goodsList.length > list.total ? 'nomore' : 'more';
 			if (type === 'refresh') {
@@ -228,10 +224,12 @@ export default {
 		},
 		//详情
 		navToDetailPage(item) {
+			//测试数据没有写id，用title代替
+			let goodsId = item.goodsId;
 			let activitId = item.activityId;
-			let id = item.goodsId;
+			let agoodsid= item.id;
 			uni.navigateTo({
-				url: `/pages/agent/goods/agent/detail?id=${id}&activityId=${activitId}`
+				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agoodsid=${agoodsid}`
 			});
 		},
 		stopPrevent() {}
