@@ -352,12 +352,19 @@ export const asyncRouterMap = [
         name: 'read_order',
         component: () => import('@/views/order/orderlist/readorder'),
         meta: {title: '查看订单', icon: 'product-list'},
+        hidden: true
       },
       {
         path: 'csmlist',
         name: 'csm_list',
         component: () => import('@/views/order/consignlist/index'),
         meta: {title: '发货列表', icon: 'product-list'}
+      },
+      {
+        path: 'asservice',
+        name: 'as_service',
+        component: () => import('@/views/order/asService/index'),
+        meta: {title: '售后服务', icon: 'product-list'}
       }
     ]
   },

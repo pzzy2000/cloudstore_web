@@ -64,7 +64,15 @@ import {switchForm,saveSupplier} from '@/api/iunits'
 // }
 export function fetchList(params) {
   return request({
-    url: '/order/app/getClientOrder',
+    url: '/order/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function getOneorder(params) {
+  return request({
+    url: '/order/details/list',
     method: 'POST',
     data: switchForm(params)
   })

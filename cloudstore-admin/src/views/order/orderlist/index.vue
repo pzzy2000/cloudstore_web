@@ -81,8 +81,8 @@
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">查看订单</el-button>
-            <el-button type="danger" size="mini" @click="delLogis(scope.row)">删除订单</el-button>
+            <el-button size="mini" @click="readOrder(scope.$index, scope.row)">查看订单</el-button>
+            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -99,6 +99,24 @@
         :total="total">
       </el-pagination>
     </div>
+    <el-dialog title="物流信息" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
+      <div style="height: 200px;">
+        <el-steps direction="vertical" :active="1">
+          <el-step title="步骤 1">
+            <i class="el-icon-circle" slot="icon"></i>
+          </el-step>
+          <el-step title="步骤 2">
+            <i class="el-icon-circle" slot="icon"></i>
+          </el-step>
+          <el-step title="步骤 3">
+            <i class="el-icon-circle" slot="icon"></i>
+          </el-step>
+        </el-steps>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="mini">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -110,6 +128,7 @@
       pageSize: 10,
       optType:'search'
     };
+    let that;
     export default {
       name: "list",
       data() {
@@ -138,8 +157,14 @@
             {label: "APP订单", value: "1"},
             {label: "小程序订单", value: "2"},
             {label: "微信订单", value: "3"}
-          ]
+          ],
+          dialogVisible: false,
+          btnMsg: '',
+          type: ''
         }
+      },
+      beforeCreate() {
+        that = this;
       },
       created() {
         this.getList();
@@ -154,9 +179,22 @@
           switch (data) {
             case 'wait': return "待支付";
               break;
-            case 'complete': return "已支付";
+            case 'complete': return "待发货";
               break;
             case 'close': return "超时关闭";
+              break;
+          }
+        },
+        changeMsg(data) {
+          switch (data) {
+            case 'wait':
+              return "关闭订单";
+              break;
+            case 'complete':
+              return "订单发货";
+              break;
+            case 'close':
+              return "删除订单";
               break;
           }
         }
@@ -169,6 +207,9 @@
               this.total = parseInt(res.result.result.total);
             }
           })
+        },
+        showDanger() {
+          this.isshow = false;
         },
         handleSelect(key, keyPath) {
           console.log(key, keyPath);
@@ -186,8 +227,16 @@
           this.getList();
         },
         readOrder(index, row){
-          console.log(index, row);
-          this.$router.push("/order/manage/readorder")
+          let obj = this.orderList[index];
+          console.log(obj)
+          this.$router.push({name: "read_order", params: {id: row.id, obj: obj}});
+        },
+        handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(() => {
+              done();
+            })
+            .catch(() => {});
         }
       }
     }
@@ -226,7 +275,24 @@
     border-bottom-color: #e4e4e4 !important;
     border: 1px solid #e4e4e4;
   }
-  .red{
-    color: red;
+  .el-step.is-vertical >>> .el-step__icon{
+    width: 12px !important;
+    height: 12px !important;
+  }
+  .el-step.is-vertical >>> .el-step__line{
+    display: none !important;
+  }
+  .el-step.is-vertical >>> .el-step__main{
+    padding: 0;
+  }
+  .el-step.is-vertical >>> .el-step__head.is-finish {
+    color: #c0c4cc !important;
+    border-color: #c0c4cc !important;
+  }
+  .el-step.is-vertical >>> .el-step__title.is-finish {
+    color: #c0c4cc;
+  }
+  .el-step.is-vertical >>> .el-step__description.is-finish {
+    color: #c0c4cc;
   }
 </style>
