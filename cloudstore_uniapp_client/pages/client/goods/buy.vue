@@ -263,85 +263,63 @@
 				this.num = parseInt(this.num) + 1
 				this.totalPrice =  this.num * this.goodsSku.price
 			},
-			buy () { //点击支付按钮
-				var that = this;
-				this.buyInfo = uni.getStorageSync('buyInfo')
-				console.log(this.buyInfo)
-				uni.login({
-				    provider: 'weixin',
-				    success: function (loginRes) {
-					   let  vxCode = loginRes.code
-					   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  "+vxCode);
-					   uni.getProvider({ //获取支付的方式
-					       service: 'payment',
-					       success: function (res) {
-					   		that.buyType = res.provider
-					   		let params = {
-					   			'bean.activityId': that.buyInfo.activityId,
-					   			'bean.agentGoodsId': that.buyInfo.agentGoodsId,
-					   			'bean.goodsId': that.buyInfo.goodsId,
-					   			'bean.goodsSkuId': that.buyInfo.goodsSkuId,
-					   			'bean.number': that.num,
-					   			'bean.payPrice': that.totalPrice,
-					   			'bean.price': that.price,
-					   			'bean.payType': 'weixin'
-					   		}
-					   		uni.request({
-					   			url: Api.BASEURI + Api.agent.buy.createOrder,
-					   			method: 'post',
-					   			header: {
-					   				'content-type': 'application/x-www-form-urlencoded',
-					   				'auth': uni.getStorageSync('token')
-					   			},
-					   			data: params,
-					   			success: res => {
-					   				var orderId = res.data.result.result.id
-					   				if (res.data.result.code === 0) {
-					   					let params = {
-					   						'bean.code': vxCode,
-					   						'bean.orderId': orderId
-					   					}
-					   					console.log(params)
-					   					//预支付
-					   					uni.request({
-					   						url: Api.BASEURI + Api.agent.buy.prePay,
-					   						method: 'post',
-					   						header: {
-					   							'content-type': 'application/x-www-form-urlencoded',
-					   							'auth': uni.getStorageSync('token')
-					   						},
-					   						data: params,
-					   						success: res => {
-					   							console.log(res)
-												if (res) {
-													that.payMent(res)
-												}
-					   						},
-					   						fail: (e) => {
-					   							uni.showToast({
-					   								title: '调用微信预支付失败',
-					   								icon: 'none'
-					   							});
-					   						}
-					   					});
-					   				}
-					   			},
-					   			fail: (e) => {
-					   				uni.showToast({
-					   					title: '创建订单失败',
-					   					icon: 'none'
-					   				});
-					   			}
-					   		});
-					       }
-					   });
-					   
-					   
-				    }
-				});
+			
+			buy(){
+				console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>1");
+				    let that = this;
+				  uni.login({
+				      provider: 'weixin',
+				      success: function (loginRes) {
+						    let  vxCode = loginRes.code;
+							
+							uni.getProvider({ //获取支付的方式
+							    service: 'payment',
+							    success: function (res) {
+									that.buyType = res.provider;
+									let params = {
+										'activityId': that.activity.activityId,
+										'agentGoodsId': that.agentGoodsId,
+										'goodsId': that.goodsId,
+										'goodsSkuId': that.goodsSkuId,
+										'number': that.num,
+										'payPrice': that.totalPrice,
+										'price': that.goodsSku.price,
+										'payType': 'weixin'
+									}
+									
+								Api.apiCallbackCall("POST", Api.client.buy.createOrder, params, true, true, function(data){
+									if (data) {
+										let re =data.result;
+										let params = {
+													'code': vxCode,
+													'orderId': re.id
+													}
+										Api.apiCallbackCall("POST", Api.client.buy.prePay, params, false, true, function(da_ta){
+										if (da_ta) {
+											that.payMent(da_ta)
+											}
+										});
+										
+										that.payMent(data)
+									}
+								}) },
+								fail:function(){
+									this.$api.msg("提交订单失败");
+								}
+							
+							});
+							
+							
+						  },
+					  fail:function() {
+					  	this.$api.msg("提交订单失败");
+					  }
+				
+			})
 			},
+		
 			payMent(res) {
-				let vxBuyInfo = res.data.result.result
+				let vxBuyInfo = res.result;
 				//微信支付
 				uni.requestPayment({
 					provider: 'wxpay',

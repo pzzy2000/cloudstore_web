@@ -33,6 +33,10 @@ export default {
 			list:'app/client/address/searchClientAddress',
 			save:'app/client/address/saveAddress',
 			detail:'app/client/address/searchDetailAddress'
+		},
+		buy: {
+			createOrder:'order/app/createOrder',
+			prePay: 'app/pay/prePay'
 		}
 	},
 	agent:{
@@ -78,11 +82,8 @@ export default {
 			searchClientAddress : 'app/client/address/searchClientAddress',
 			deleteAddress: 'app/client/address/deleteAddress',
 			updateAddressStatus: 'app/client/address/updateAddressStatus'
-		},
-		buy: {
-			createOrder:'order/app/createOrder',
-			prePay: 'app/pay/prePay'
 		}
+		
 	},
 	
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
