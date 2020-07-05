@@ -12,7 +12,7 @@
 		</view>
 		<view class="faddish-main">
 			<view class="faddish-title">今日爆款</view>
-			<view class="goods-list">
+			<view class="goods-list" >
 				<view v-for="(item, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(item)">
 					<view class="image-wrapper"><image :src="item.pic" mode="aspectFill"></image></view>
 					<view class="goods-detail">
@@ -29,7 +29,7 @@
 				</view>
 			</view>
 		</view>
-		<!-- 今日上新 -->
+		
 		<view class="faddish-main">
 			<view class="faddish-title">最新商品</view>
 			<view class="goods-list">
@@ -79,7 +79,6 @@ export default {
 				let parmas = {}
 				let data = await Api.apiCall('post',Api.client.recommend.newShopinfoByOrder,parmas)
 				if (data) {
-					console.log(data)
 					this.shopInfo = data.result
 				}
 			},
@@ -90,14 +89,13 @@ export default {
 				}
 				let list = await Api.apiCall('post', Api.client.recommend.list, params);
 				if (list) {
-					console.log(list)
 					this.updateList = list.result.records
 				}
 			},
 			navToDetailPage (item) {
-				let id = item.goodsId,agentGoodsId = item.id,userType = 'user'
+				let id = item.goodsId,agentGoodsId = item.id
 				uni.navigateTo({
-					url: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+id+'&userType='+userType+'&agentGoodsId='+agentGoodsId
+					url: '/pages/client/goods/detail?goodsId='+id+'&agentGoodsId='+agentGoodsId
 				});
 			}
 		}
