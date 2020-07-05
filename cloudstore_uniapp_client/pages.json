@@ -171,14 +171,6 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		},
-		{
-			"path": "pages/agent/buy/buy",
-			"style": { //支付页面
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
 		}
 	],
 	"globalStyle": {
