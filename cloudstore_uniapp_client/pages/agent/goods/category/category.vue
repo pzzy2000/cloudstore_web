@@ -1,9 +1,12 @@
 <template>
 	<view class="content">
-		<nav-bar>商品分类</nav-bar>
+		<nav-bar backState="1000">商品分类</nav-bar>
 		<view class="navbar">
+			
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
+			
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
+
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
 				<text>价格</text>
 				<view class="p-box">
@@ -24,7 +27,7 @@
 					<view class="price">
 						 <text class="price1">价格:</text>
 						 <text class="priceSale">{{ goods.salePrice }}</text>
-					 /<text class="pricemart">{{ goods.martPrice }}</text>
+					 /<text class="pricemart">{{ goods.martPrice}}</text>
 					</view><!--<button class="goodsBtn">去代理</button> -->
 					
 				</view>
@@ -36,19 +39,20 @@
 		<uni-load-more :status="loadingType"></uni-load-more>
 		-->
 		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+45+'px'}]">
-			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
-				<scroll-view scroll-y class="cate-list">
-					<view v-for="item in cateList" :key="item.id">
-						<!-- <view class="cate-item b-b two">{{ item.name }}</view>
-						<view v-for="tItem in item.child" :key="tItem.id" class="cate-item b-b" :class="{ active: tItem.id == cateId }" @click="changeCate(tItem)">
-							{{ tItem.name }}
-						</view> -->
-						<view class="cate-item b-b two" @click="changeCate(item)">{{ item.name }}</view>
+					<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
+						<scroll-view scroll-y class="cate-list">
+							<view v-for="item in cateList" :key="item.id">
+								<!-- <view class="cate-item b-b two">{{ item.name }}</view>
+								<view v-for="tItem in item.child" :key="tItem.id" class="cate-item b-b" :class="{ active: tItem.id == cateId }" @click="changeCate(tItem)">
+									{{ tItem.name }}
+								</view> -->
+								<view class="cate-item b-b two" @click="changeCate(item)">{{ item.name }}</view>
+							</view>
+						</scroll-view>
 					</view>
-				</scroll-view>
-			</view>
-		</view>
-		<tabbar :role="'agent'" :ids="'aspfl'"></tabbar>
+				</view>
+
+<tabbar :role="'agent'" :ids="'aspfl'"></tabbar>
 	</view>
 </template>
 
@@ -86,7 +90,7 @@ export default {
 		// #endif
 		this.keyword = options.keyword;
 		this.cateId = options.sid;
-		this.loadCateList();
+		this.loadActiviList();
 		this.loadData();
 	},
 	onPageScroll(e) {
@@ -108,20 +112,16 @@ export default {
 		this.loadData();
 	},
 	methods: {
-		async loadCateList(fid, sid) {
+		async loadActiviList() {
 			let params = {
 				pageNum: '1',
-				pageSize: '20',
+				// pageSize: '20',
 				parentId: 0
 			};
-			uni.showLoading({
-				title: '请稍候',
-				mask: true
-			});
 			let list = await Api.apiCall('post', Api.agent.category.list, params);
+			//console.log(list)
 			if (list) {
 				this.cateList = list.result.records
-				uni.hideLoading();
 			}
 		},
 		//加载商品 ，带下拉刷新和上滑加载
@@ -135,40 +135,37 @@ export default {
 			} else {
 				this.loadingType = 'more';
 			}
-			let params={pageNum: this.pageNum,pageSize:20};
-			if (this.activityId) {
-				params['activityId'] = this.activityId;
-			} 
+			let params={pageNum: this.pageNum};
 			if (this.cateId) {
-				//这里要在后台改SQL
-				//params['productCategoryId'] = this.cateId;
-			}
+				params['categoryOneId'] = this.cateId;
+			} 
+			
 			if (this.keyword) {
 				//这里要在后台改SQL
 				// params['keyword'] = this.keyword;
 			} 
-			let list = await Api.apiCall('post',  Api.agent.goods.list, params);
+			let list = await Api.apiCall('post', Api.agent.goods.list, params);
 			if(list){
 			let goodsList = list.result.records;
 			// let goodsList = await this.$api.json('goodsList');
 			if (type === 'refresh') {
 				this.goodsList = [];
 			}
-			//筛选，测试数据直接前端筛选了
-			if (this.filterIndex === 1) {
-				goodsList.sort((a, b) => b.sales - a.sales);
-			}
-			if (this.filterIndex === 2) {
-				goodsList.sort((a, b) => {
-					if (this.priceOrder == 1) {
-						return a.price - b.price;
-					}
-					return b.price - a.price;
-				});
-			}
+			// //筛选，测试数据直接前端筛选了
+			// if (this.filterIndex === 1) {
+			// 	goodsList.sort((a, b) => b.sales - a.sales);
+			// }
+			// if (this.filterIndex === 2) {
+			// 	goodsList.sort((a, b) => {
+			// 		if (this.priceOrder == 1) {
+			// 			return a.price - b.price;
+			// 		}
+			// 		return b.price - a.price;
+			// 	});
+			// }
 
-			this.goodsList = this.goodsList.concat(goodsList);
-
+			// this.goodsList = this.goodsList.concat(goodsList);
+             this.goodsList = goodsList;
 			//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
 			this.loadingType = this.goodsList.length > list.total ? 'nomore' : 'more';
 			if (type === 'refresh') {
@@ -199,10 +196,6 @@ export default {
 			this.loadData('refresh', 1);
 
 		},
-		//获取分类筛选的数据
-		async getTypeData () {
-			let list = await Api.apiCall('post',  Api.agent.goods.list, params);
-		},
 		//显示分类面板
 		toggleCateMask(type) {
 			let timer = type === 'show' ? 10 : 300;
@@ -223,14 +216,16 @@ export default {
 				scrollTop: 0
 			});
 			this.loadData('refresh', 1);
+
 		},
 		//详情
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
+			let goodsId = item.id;
 			let activitId = -1;
-			let id = item.id;
+			let agoodsid= -1;
 			uni.navigateTo({
-				url: `/pages/agent/goods/agent/detail?id=${id}&activityId=${activitId}`
+				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agoodsid=${agoodsid}`
 			});
 		},
 		stopPrevent() {}
@@ -250,12 +245,7 @@ page,
 .navbar {
 	position: fixed;
 	left: 0;
-	/* #ifdef MP-WEIXIN */
-		top: 150upx;
-	/* #endif */
-	/* #ifdef H5 */
-		top: 0upx;
-	/* #endif */
+	top: 150upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;
