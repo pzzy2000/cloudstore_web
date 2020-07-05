@@ -44,20 +44,19 @@
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
+			<!--
 			<view class="c-row b-b">
 				<text class="tit">优惠券</text>
 				<text class="con t-r red">领取优惠券</text>
 				<text class="yticon icon-you"></text>
 			</view>
-
+             -->
 
 			<view class="c-row b-b">
-				<text class="tit">促销活动</text>
+				<text class="tit">活动内容</text>
 				<view class="con-list">
-					<text>新人首单送20元无门槛代金券</text>
-					<text>订单满50减10</text>
-					<text>订单满100减30</text>
-					<text>单笔购买满两件免邮费</text>
+					<text>{{activity.name}}</text>
+					
 				</view>
 			</view>
 			<view class="c-row b-b">
@@ -111,22 +110,21 @@
 
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
+			<navigator url="/pages/agent/goods/hotsale/hotsale"  class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
-			<navigator url="/pages/cart/cart" open-type="switchTab" class="p-b-btn">
+			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-gouwuche"></text>
-				<text>购物车</text>
-			</navigator>
+				<text>期待</text>
+			</view>
 			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-shoucang"></text>
-				<text>收藏</text>
+				<text>期待</text>
 			</view>
 
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toBuy" v-if="userType === 'user'">立即购买</button>
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent" v-if="userType === 'agent'">我的小店</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent">我的小店</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
 			</view>
 		</view>
@@ -209,6 +207,7 @@ export default {
 			},
 			detailData: [],
 			goods: '',
+			activity:{},
 			shareList: [
 				{
 				  icon: "/static/temp/share_wechat.png",
@@ -225,8 +224,7 @@ export default {
 			agentGoodsId: '', //此商品的代理商品Id
 			goodsHtml: '',
 			specList: [],
-			specChildList: [],
-			userType: 'user'
+			specChildList: []
 		};
 	},
 	onShareAppMessage(res) {
@@ -247,24 +245,20 @@ export default {
 	},
 	async onLoad(ops) {
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
-		uni.showLoading({
-			title: '请稍候',
-			mask: true
-		});
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
-		this.userType = ops.userType
 		console.log(ops)
-		console.log(this.userType)
-		this.getGoodsDetail(this.goodsId)
+		
+		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 	},
 	methods: {
-		async getGoodsDetail (goodsId) { //获取商品详情
+		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
 			this.loadMobileHtml()
-			let params = { goodsId:goodsId };
-			let data = await Api.apiCall('post', Api.agent.goods.detail, params, false, false);
+			let params = { goodsId:goodsId ,agentGoodsId:agentGoodsId};
+			let data = await Api.apiCall('post', Api.agent.goods.agentGoodsDetail, params, true, false);
 			if (data) {
-				this.goods = data.result.goodsPicesBean
+				this.goods = data.result.goodsPicesBean;
+				this.activity = data.result.activityBean;
 				this.goodsName = data.result.goodsPicesBean.goodsName
 				this.skuList = data.result.goodsSku
 				//赋值默认商品价格，库存和图片
@@ -315,9 +309,13 @@ export default {
 						}
 					}
 				}
-				uni.hideLoading();
 			}
 		},
+		
+		toFavorite(){
+			this.$api.msg("敬请期待");
+		},
+		
 		openAgent () {
 			this.$refs.popup.open()
 		},
@@ -407,8 +405,8 @@ export default {
 			this.$refs.share.toggleMask();
 		},
 		toAgent () { //跳转到我的小店界面
-			uni.switchTab({
-			    url: '/pages/agency/agency'
+			uni.redirectTo({
+				 url: '/pages/agent/home/index'
 			});
 		},
 		isLogin () { //微信用户点击分享的连接进来后判断是否登录
