@@ -61,12 +61,45 @@
 		}, {
 			"path": "pages/client/cart/index",
 			"style": { //用户 首页
-				"navigationBarTitleText": "我的购物车",
+				"navigationBarTitleText": "我的购物�?",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
 		},
-
+		
+		{
+			"path": "pages/client/goods/detail",
+			"style": { //用户 首页
+				"navigationBarTitleText": "商品详情",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/client/goods/buy",
+			"style": { //用户 首页
+				"navigationBarTitleText": "购买商品",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/client/info/address",
+			"style": { //用户 首页
+				"navigationBarTitleText": "地址列表",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},{
+			"path": "pages/client/info/addressManage",
+			"style": { //用户 首页
+				"navigationBarTitleText": "增加地址",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		
+		
 		{
 			"path": "pages/agent/goods/hotsale/hotsale",
 			"style": { //用户 首页
@@ -117,7 +150,7 @@
 		},
 		{
 			"path": "pages/agent/goods/agentGoodsList/agentGoodsList",
-			"style": { //代理商代理商品列表
+			"style": { //代理商代理商品列�?
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -147,7 +180,25 @@
 				"enablePullDownRefresh": false
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/agent/address/address",
+            "style" : {
+				"style": { //收货地址界面
+					"navigationBarTitleText": "",
+					"navigationStyle": "custom",
+					"enablePullDownRefresh": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/agent/address/addressManage",
+            "style" : { //新增收货地址界面
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -177,7 +228,7 @@
 				"pagePath": "pages/client/cart/index",
 				"iconPath": "static/tab-home.png",
 				"selectedIconPath": "static/tab-home-current.png",
-				"text": "购物车"
+				"text": "购物�?"
 			},
 			{
 				"pagePath": "pages/client/info/index",
@@ -221,11 +272,11 @@
 		]
 	},
 	"condition": {
-		//模式配置，仅开发期间生效
-		"current": 0, //当前激活的模式(list 的索引项)
+		//模式配置，仅�?发期间生�?
+		"current": 0, //当前�?活的模式(list 的索引项)
 		"list": [{
 			"name": "", //模式名称
-			"path": "", //启动页面，必选
+			"path": "", //启动页面，必�?
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
