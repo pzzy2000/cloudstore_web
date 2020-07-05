@@ -252,9 +252,9 @@ export default {
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 	},
 	methods: {
-		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
+		async getGoodsDetail (goodsId,activitygoodsId) { //获取商品详情
 			this.loadMobileHtml()
-			let params = { goodsId:goodsId ,agentGoodsId:agentGoodsId};
+			let params = { goodsId:goodsId ,activitygoodsId:activitygoodsId};
 			let data = await Api.apiCall('post', Api.agent.goods.agentGoodsDetail, params, true, false);
 			if (data) {
 				this.goods = data.result.goodsPicesBean;
