@@ -280,10 +280,11 @@
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
-				let id = item.goodsId;
+				let goodsId = item.goodsId;
 				let activitId = item.activityId;
+				let agoodsid= item.id;
 				uni.navigateTo({
-					url: `/pages/agent/goods/agent/detail?id=${id}&activityId=${activitId}`
+					url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agoodsid=${agoodsid}`
 				});
 			},
 
