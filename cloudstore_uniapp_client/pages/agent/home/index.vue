@@ -65,6 +65,7 @@
 						<view class="goods-detail">
 							<text class="title clamp">{{ item.goodsPicesBean.goodsName }}</text>
 							<text class="title clamp subhead ">{{item.goodsPicesBean.goodsSubtitle}}</text>
+							<text class="title clamp subhead ">活动 : {{item.activeBean.name}}</text>
 							<view class="price-box">
 								<view class="price">
 									<text class="priceSale">{{ item.goodsPicesBean.salePrice }}</text>
@@ -225,14 +226,16 @@
 				}
 				let list = await Api.apiCall('post', Api.agent.user.dateList, params);
 				if (list) {
-					console.log(list)
+					// console.log(list)
 					this.updateList = list.result.records
 				}
 			},
 			navToDetailPage (item) {
-				var goodsId = item.goodsId
+				let  agentGoodsId = item.id;
+				let goodsId =item.goodsId;
 				uni.navigateTo({
-					url: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+goodsId,
+					// goodsId=7604921082513985536&userType=agent&agentGoodsId=7630608619278438400
+					url: '/pages/agent/goods/goodsDetail/goodsDetail?agentGoodsId='+agentGoodsId+'&goodsId='+goodsId,
 				});
 			}
 		}
@@ -361,7 +364,7 @@ page {
 		.title {
 			font-size: $font-lg;
 			color: $font-color-dark;
-			line-height: 80upx;
+			line-height: 40upx;
 		}
 		.subhead {
 			color: #333;
