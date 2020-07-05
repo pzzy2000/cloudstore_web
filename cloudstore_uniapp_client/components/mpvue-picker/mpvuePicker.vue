@@ -254,7 +254,8 @@
                 let pickObj = {
                     index: this.pickerValue,
                     value: this._getPickerLabelAndValue(this.pickerValue, this.mode).value,
-                    label: this._getPickerLabelAndValue(this.pickerValue, this.mode).label
+                    label: this._getPickerLabelAndValue(this.pickerValue, this.mode).label,
+					childs: this._getPickerLabelAndValue(this.pickerValue, this.mode).childs
                 };
                 this.$emit('onChange', pickObj);
             },
@@ -313,7 +314,8 @@
                 let pickObj = {
                     index: this.pickerValue,
                     value: this._getPickerLabelAndValue(this.pickerValue, this.mode).value,
-                    label: this._getPickerLabelAndValue(this.pickerValue, this.mode).label
+                    label: this._getPickerLabelAndValue(this.pickerValue, this.mode).label,
+					childs: this._getPickerLabelAndValue(this.pickerValue, this.mode).childs
                 };
                 this.$emit('onChange', pickObj);
             },
