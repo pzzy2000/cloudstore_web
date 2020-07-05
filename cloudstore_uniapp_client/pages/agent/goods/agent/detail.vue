@@ -102,7 +102,9 @@
 				<text class="tit">活动内容</text>
 				<view class="con-list">
 					<text>
-						这里展示活动内容
+						<text>
+							{{this.activity.name}}
+						</text>
 					</text>
 				</view>
 			</view>
@@ -144,25 +146,34 @@
 
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/agent/goods/hotsale/hotsale" open-type="switchTab" class="p-b-btn">
+			<navigator url="/pages/agent/goods/hotsale/hotsale"  class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
+			<!-- 
 			<navigator url="/pages/cart/cart" open-type="switchTab" class="p-b-btn">
 				<text class="yticon icon-gouwuche"></text>
 				<text>期待</text>
 			</navigator>
-			<view class="p-b-btn" :class="{ active: favorite }" @click="toFavorite(goods)">
+			-->
+			<view class="p-b-btn"  @click="toFavorite(goods)">
+				<text class="yticon icon-shoucang"></text>
+				<text>期待</text>
+			</view>
+			<view class="p-b-btn"  @click="toFavorite(goods)">
 				<text class="yticon icon-shoucang"></text>
 				<text>收藏</text>
 			</view>
 
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="joinAgent">加入代理</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toAgent">我的小店</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toAgent">立即分享</button>
 			</view>
 		</view>
 
+
+    <!-- 分享 -->
+    <share ref="share" :contentHeight="380" :shareList="shareList"></share>
 	</view>
 </template>
 
@@ -170,6 +181,8 @@
 	import Api from '@/common/api';
 	import share from '@/components/share';
 	import navBar from '@/components/zhouWei-navBar';
+	
+
 	import {
 		mapState
 	} from 'vuex';
@@ -186,10 +199,42 @@
 				goodsPropertyValue:[],
 				goodsMobileHtml:'',
 				favorite: true,
+				activity:{},
+				shareList: [
+					{
+					  icon: "/static/temp/share_wechat.png",
+					  text: "微信好友",
+					  type: 1
+					}
+				],
 			};
 		},
 		onShow() {
 			this.loadGoodHtml(this.goodsId);
+		},
+		
+		
+		
+		async onShareAppMessage(res) {
+			if (res.from === 'button') {// 来自页面内分享按钮
+			
+			let data = await  this.joinAgentAction();
+			if(data){
+				var shareObj = {
+						title: this.goodsName,
+						params: {
+							goodsId: this.goodsId,
+							agentGoodsId: this.agentGoodsId,
+							userType: 'user'
+						},
+						path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&userType=user'
+					}
+				return shareObj
+				}else{
+					this.$api.msg("加入代理商品错误");
+				}
+				 
+			}
 		},
 		   
 		// onShareAppMessage(res) {
@@ -202,10 +247,13 @@
 		// 	}
 		// },
 		async onLoad(ops) {
-			this.goodsId = ops.id;
+			this.goodsId = ops.goodsId;
+			this.activityId = ops.activityId;
+			this.agoodsid = ops.agoodsid;
 			if (this.goodsId) {
 				let params = {
-					goodsId: this.goodsId
+					goodsId: this.goodsId,
+					activityId:this.activityId
 				};
 				let data = await Api.apiCall('post', Api.agent.goods.detail, params, false, false);
 				if (data) {
@@ -214,11 +262,26 @@
 					this.goodsPropertyValue =data.result.goodsPropertyValue;
 				}
 			}
+			
+			if(this.activityId){
+				if(this.activityId<=0)return;
+				let params = {
+					activityId:this.activityId
+				};
+				let data = await Api.apiCall('post', Api.agent.activity.searchInfo, params, false, false);
+				if (data) {
+					this.activity = data.result
+				}
+			}
 		},
 		filters: {
 		},
 
 		methods: {
+			
+			share() {
+				this.$refs.share.toggleMask();
+			},
 			
 			setmobileHtml(mobileHtml){
 				this.goodsMobileHtml = mobileHtml;
@@ -240,24 +303,29 @@
 					return "获取产地信息出错";
 				}
 			},
-			async joinAgent() {
+			
+			 joinAgentAction(){
 				let params = {
 					goodsId: this.goodsId,
-					activeId: 1
+					activeId: typeof(this.activityId)=="undefined"?'':this.activityId,
+					salesTypeGoodsId: typeof(this.agoodsid)=="undefined"?'':this.agoodsid
+					
 				}
-				let data = await Api.apiCall('post', Api.agent.goods.save, params);
-				if (data) {
-					if (data.code === 0) {
-						uni.showToast({
-							title: '加入代理成功',
-							icon: 'none'
-						});
-						if (this.specClass == 'show') {
-							this.specClass = 'hide'
-						}
-					}
-					// console.log(data)
+				let data =  Api.apiCall('post', Api.agent.goods.save, params,true);
+				
+				return data;
+				
+			},
+			
+			async joinAgent() {
+				
+				let data = await this.joinAgentAction();
+				if(data){
+					 if(data.code ==0){
+						this.$api.msg("成功加入代理商品"); 
+					 }
 				}
+			
 			},
 			toAgent () {
 				uni.switchTab({
@@ -266,24 +334,7 @@
 			},
 			//收藏
 			toFavorite(item) {
-				if (userInfo && userInfo.id) {
-					this.favorite = !this.favorite;
-					let params = {
-						objId: item.id,
-						type: 1,
-						name: item.name,
-						meno1: item.pic,
-						meno2: item.price,
-						meno3: item.sale
-					};
-					Api.apiCall('post', Api.agent.goods.favoriteSave, params);
-
-				} else {
-					let url = '/pages/public/login';
-					uni.navigateTo({
-						url
-					});
-				}
+				this.$api.msg("敬请期待");
 			},
 
 		}
