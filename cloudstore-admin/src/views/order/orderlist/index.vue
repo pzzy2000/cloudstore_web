@@ -87,7 +87,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="pagination-container">
+    <div class="pagination-container" style="margin-right: 20px">
       <el-pagination
         background
         @size-change="handleSizeChange"

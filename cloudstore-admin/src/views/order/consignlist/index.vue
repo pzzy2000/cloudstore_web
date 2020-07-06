@@ -29,6 +29,10 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin: 20px 20px 0 20px; text-align: center">
+        <el-button type="primary">确定</el-button>
+        <el-button style="margin-left: 50px">取消</el-button>
+      </div>
     </div>
 </template>
 

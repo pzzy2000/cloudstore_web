@@ -27,21 +27,15 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="searchList" size="small" label-width="130px" ref="searchList">
-          <el-form-item label="订单编号：" prop="name">
+          <el-form-item label="服务单号：" prop="name">
             <el-input style="width: 214px" v-model="searchList.code" placeholder="订单编号"></el-input>
-          </el-form-item>
-          <el-form-item label="下单时间：" prop="code">
-            <el-date-picker v-model="searchList.ordertime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
-            </el-date-picker>
           </el-form-item>
           <el-form-item label="用户账号：" prop="count">
             <el-input style="width: 214px" v-model="searchList.count" placeholder="用户账号"></el-input>
           </el-form-item>
-          <el-form-item label="订单类型：" prop="ordertype">
-            <el-select v-model="searchList.ordertype" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
+          <el-form-item label="申请时间：" prop="ordertime">
+            <el-date-picker v-model="searchList.ordertime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
+            </el-date-picker>
           </el-form-item>
         </el-form>
       </div>
@@ -54,39 +48,35 @@
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="订单编号" align="center" fixed>
+        <el-table-column label="服务单号" align="center" fixed>
           <template slot-scope="scope">{{scope.row.number}}</template>
         </el-table-column>
-        <el-table-column label="商品" align="center">
+        <el-table-column label="申请时间" align="center">
           <template slot-scope="scope">{{scope.row.goods}}</template>
         </el-table-column>
-        <el-table-column label="下单时间" align="center">
+        <el-table-column label="用户账号" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
         </el-table-column>
-        <el-table-column label="用户账号" align="center">
+        <el-table-column label="退款金额" align="center">
           <template slot-scope="scope">{{scope.row.count}}</template>
         </el-table-column>
-        <el-table-column label="订单金额" align="center">
+        <el-table-column label="联系人" align="center">
           <template slot-scope="scope">{{scope.row.payPrice}}</template>
         </el-table-column>
-        <el-table-column label="支付方式" align="center">
+        <el-table-column label="申请状态" align="center">
           <template slot-scope="scope">{{scope.row.payType}}</template>
         </el-table-column>
-        <el-table-column label="订单类型" align="center">
+        <el-table-column label="处理时间" align="center">
           <template slot-scope="scope">{{scope.row.ordertype}}</template>
-        </el-table-column>
-        <el-table-column label="订单状态" align="center">
-          <template slot-scope="scope">{{scope.row.orderStatus | changeStatus}}</template>
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">查看订单</el-button>
-            <el-button type="danger" size="mini" @click="delLogis(scope.row)">删除订单</el-button>
+            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <div class="pagination-container">
+    <div class="pagination-container" style="margin-right: 20px">
       <el-pagination
         background
         @size-change="handleSizeChange"

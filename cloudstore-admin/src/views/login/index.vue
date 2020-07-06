@@ -90,7 +90,8 @@
         loginForm: {
           'bean.access': '',
           'bean.password': '',
-          'bean.logintype': 'defaults'
+          'bean.logintype': 'supplier',
+          'bean.action': 'password'
         },
         loginRules: {
           'bean.access': [{required: true, trigger: 'blur', validator: validateUsername}],

@@ -8,10 +8,10 @@ import Layout from '../views/layout/Layout'
 
 export  function back(){
 	 if (window.history.length > 1) {
-         this.$router.back()
-       } else {
-         this.$router.push('/sys/goods/list')
-       }
+       this.$router.back()
+     } else {
+       this.$router.push('/sys/goods/list')
+     }
 }
 
 /**
@@ -197,6 +197,18 @@ export const asyncRouterMap = [
          hidden: true
        }]
   },{
+    path:'/broke/rage',
+    component: Layout,
+    redirect: '/broke/broke/index',
+    name: 'brokerage',
+    meta: {title: '佣金', icon: 'product-list'},
+    children: [{
+      path: 'index',
+      name: 'broke_rage',
+      component: () => import('@/views/brokerage/index'),
+      meta: {title: '佣金管理', icon: 'product-list'}
+    }]
+  },{
     path:'/sys/agent',
     component: Layout,
     redirect: '/sys/agent/list',
@@ -365,6 +377,24 @@ export const asyncRouterMap = [
         name: 'as_service',
         component: () => import('@/views/order/asService/index'),
         meta: {title: '售后服务', icon: 'product-list'}
+      },
+      {
+        path: 'temoffre',
+        name: 'temof_fre',
+        component: () => import('@/views/order/temOffre/index'),
+        meta: {title: '运费模板', icon: 'product-list'}
+      },
+      {
+        path: 'shipaddress',
+        name: 'ship_address',
+        component: () => import('@/views/order/shipAddress/index'),
+        meta: {title: '发货地址', icon: 'product-list'}
+      },
+      {
+        path: 'orderreview',
+        name: 'order_review',
+        component: () => import('@/views/order/orderReview/index'),
+        meta: {title: '订单评论', icon: 'product-list'}
       }
     ]
   },
