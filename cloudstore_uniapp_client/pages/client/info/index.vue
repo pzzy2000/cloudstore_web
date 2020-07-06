@@ -38,7 +38,7 @@
 			<image class="arc" src="/static/arc.png"></image>
 			<!-- 订单 -->
 			<view class="order-section">
-				<view class="order-item" @click="navTo('/pages/order/order?status=0')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo('/pages/client/order/order?status=0')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouye"></text>
 					<text>全部订单</text>
 				</view>
@@ -94,6 +94,7 @@ import { mapState,mapMutations } from 'vuex';
 				integration: 0
 			},
 			user:{
+				relationId: '',
 				userType: '',
 				name: null || '获得用户信息错误',
 				url: '',

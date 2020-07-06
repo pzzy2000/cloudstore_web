@@ -224,7 +224,8 @@ export default {
 			agentGoodsId: '', //此商品的代理商品Id
 			goodsHtml: '',
 			specList: [],
-			specChildList: []
+			specChildList: [],
+			userType: 'user'
 		};
 	},
 	onShareAppMessage(res) {
@@ -234,9 +235,8 @@ export default {
 				params: {
 					goodsId: this.goodsId,
 					agentGoodsId: this.agentGoodsId,
-					userType: 'user'
 				},
-				path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&userType=user'
+				path: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId
 			}
 		}
 		return shareObj
@@ -247,6 +247,7 @@ export default {
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
+		this.userType = ops.userType
 		console.log(ops)
 		
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
@@ -498,7 +499,7 @@ export default {
 			uni.setStorageSync('buyInfo',buyInfo)
 			//先判断库存
 			uni.navigateTo({
-				url: '/pages/agent/buy/buy?goodsId='+buyInfo.goodsId+'&price='+buyInfo.price
+				url: '/pages/agent/goods/buy?goodsId='+buyInfo.goodsId+'&price='+buyInfo.price
 			});
 		},
 		stopPrevent() {}

@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<nav-bar backState="1000">{{title}}</nav-bar>
 		<view class="row b-b">
 			<text class="tit">联系人</text>
 			<input class="input" type="text" v-model="addressData.name" placeholder="收货人姓名" placeholder-class="placeholder" />
@@ -19,9 +20,9 @@
 			<input class="input" type="text" v-model="addressData.area" placeholder="详细地址" placeholder-class="placeholder" />
 		</view>
 		
-		<view class="row default-row">
+		<view class="row default-row" v-if="isDetail">
 			<text class="tit">设为默认</text>
-			<switch :checked="addressData.defaule" color="#fa436a" @change="switchChange" />
+			<switch :checked="addressData.status" color="#fa436a" @change="detailChange" />
 		</view>
 		<button class="add-btn" @click="confirm">提交</button>
 		<ehPicker @conceal="conceal" v-if="popup" @close="close" />
@@ -31,73 +32,62 @@
 <script>
 	import ehPicker from '@/pages/tabbar/erha-picker.vue'; 
 	import Api from '@/common/api';
+	import navBar from '@/components/zhouWei-navBar';
 	export default {
 		components: {
-		 ehPicker
+		 ehPicker, navBar
 		},
 		data() {
 			return {
 				popup:false,
+				title: '',
 				addressData: {
-					name: '',
-					mobile: '',
+					name: '孙雨泉',
+					mobile: '15773281581',
 					addressName: '选择省/市/区县',
 					address: '',
-					areas:{
-						
-					},
-					area: '',
-					default: false
-				}
+					areas:'',
+					area: '天安门',
+					default: false,
+					status: '',
+				},
+				isDetail: false,
+				optType: 'save'
 			}
 		},
 		onLoad(option){
-			let title = '新增收货地址';
 			if(option.type==='edit'){
-				title = '编辑收货地址'
-				
-				this.addressData = JSON.parse(option.data)
+				this.title = '编辑收货地址'
+				this.isDetail = true
+				this.optType = 'update'
+				this.getAddressDetail(option.id)
+				this.addressId = option.id
+				console.log(option)
 			}
-			this.manageType = option.type;
-			uni.setNavigationBarTitle({
-				title
-			})
 		},
 		methods: {
-			
 			close(){
 				  this.popup = false;
 			},
-			// {
-			// 			province,
-			// 			city,
-			// 			area
-			// 		}
 			conceal(param) { 
-			            // 获取到传过来的 省 市 区 县数据
-			            console.log(param);
-			            this.addressData.areas = param;
-						try{
-								 this.addressData.addressName = param.province.name+" / "+param.city.name+" / "+param.area.name
-							}catch(e){
-								this.addressData.addressName ="地址选择错误"
-							}
-			            this.popup = false;
-			
-			        },
-			 
+				// 获取到传过来的 省 市 区 县数据
+				console.log(param);
+				this.addressData.areas = param;
+				try{
+					this.addressData.addressName = param.province.name+" / "+param.city.name+" / "+param.area.name
+				}catch(e){
+					this.addressData.addressName ="地址选择错误"
+				}
+				this.popup = false;
+			},
 			switchChange(e){
 				this.addressData.default = e.detail;
 			},
-			
 			//地图选择地址
 			chooseLocation(){
-				
 				this.popup=true;
 			},
-			
-			//提交
-			confirm(){
+			confirm(){ //提交
 				let data = this.addressData;
 				if(!data.name){
 					this.$api.msg('请填写收货人姓名');
@@ -115,19 +105,54 @@
 					this.$api.msg('请填写门牌号信息');
 					return;
 				}
-				
-				console.log(data);
 				this.saveaddress(data);
 			},
-			
-         async saveaddress(data ){ 
-	 			let params ={name:data.name,
-				phone:data.mobile,
-				provinceId:data.areas.province.id,
-				cityId:data.areas.city.id,
-				areaId:data.areas.area.id,
-				detailAddress:data.area,
-				status:data.default.value == true ? 1:0
+			async getAddressDetail (id) { //获取编辑时的地址详情
+			  let params = {
+			    id: id
+			  }
+			  let addressinfo = await Api.apiCall('post',Api.client.address.getClientAddressById,params) 
+			  if (addressinfo) {
+			    console.log(addressinfo.result)
+			    this.addressData.name = addressinfo.result.name,
+			    this.addressData.phone = addressinfo.result.phone
+			    this.addressData.area = addressinfo.result.detailAddress
+				this.addressData.addressName = addressinfo.result.provinceBean.name +'/'+ addressinfo.result.cityBean.name +'/'+ addressinfo.result.areaBean.name
+			    this.addressData.areas.province.id = addressinfo.result.provinceBean.id
+			    this.addressData.areas.cityBean.id = addressinfo.result.cityBean.id
+			    this.addressData.areas.areaBean.id = addressinfo.result.areaBean.id
+			    this.addressData.status = addressinfo.result.status
+			  }
+			},
+			detailChange (e) { //点击是否默认按钮
+			  if (e.detail.value == true) {
+			    this.addressData.status = 1
+			  }else{
+			    this.addressData.status = 0
+			  }
+			  console.log(this.addressData.status)
+			  this.changeDetail()
+			},
+			async changeDetail (){ //改变地址是否默认
+				let params = {
+					id: this.addressId,
+					status: this.addressData.status
+				}
+				let addressinfo = await Api.apiCall('post',Api.agent.address.updateAddressStatus,params)
+				if (addressinfo) {
+					console.log(addressinfo)
+				}
+			},
+			async saveaddress(data ){ //保存地址
+	 			let params ={
+					name:data.name,
+					phone:data.mobile,
+					provinceId:data.areas.province.id,
+					cityId:data.areas.city.id,
+					areaId:data.areas.area.id,
+					detailAddress:data.area,
+					// status:data.default.value == true ? 1:0,
+					optType: this.optType
 				};
 	 			let resullt = await Api.apiCall('post', Api.client.address.save, params, true);
 				if(resullt){

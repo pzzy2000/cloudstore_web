@@ -26,17 +26,23 @@ export default {
 			list: 'agent/goods/app/list'
 		},
 		goods:{
-		buy:"agent/goods/app/buyGoodsDetail",
-		detail:"agent/goods/app/searchGoodsDetail"
+			buy:"agent/goods/app/buyGoodsDetail",
+			detail:"agent/goods/app/searchGoodsDetail"
 		},
 		address:{
 			list:'app/client/address/searchClientAddress',
 			save:'app/client/address/saveAddress',
-			detail:'app/client/address/searchDetailAddress'
+			detail:'app/client/address/searchDetailAddress',
+			deleteAddress: 'app/client/address/deleteAddress',
+			getClientAddressById: 'app/client/address/getClientAddressById'
 		},
 		buy: {
 			createOrder:'order/app/createOrder',
 			prePay: 'app/pay/prePay'
+		},
+		order: {
+			getClientOrder: 'order/app/getClientOrder',
+			getClientOrderDetail : 'order/app/getClientOrderDetail',
 		}
 	},
 	agent:{
@@ -82,8 +88,10 @@ export default {
 			searchClientAddress : 'app/client/address/searchClientAddress',
 			deleteAddress: 'app/client/address/deleteAddress',
 			updateAddressStatus: 'app/client/address/updateAddressStatus'
+		},
+		order: {
+			getAgentOrder: 'order/app/getAgentOrder'
 		}
-		
 	},
 	
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {

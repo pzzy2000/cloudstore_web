@@ -22,52 +22,6 @@
 			// this.getVxLoginCode()
 		},
 		methods: {
-			// getVxLoginCode () {
-			// 	var that = this;
-			// 	let vxInfo = uni.getStorageSync('wxInfo')
-			// 	console.log(vxInfo)
-			// 	if (vxInfo) {
-			// 		let params = {
-			// 			code: that.vxCode,
-			// 			userInfo: vxInfo.rawData,
-			// 			encryptedData: vxInfo.encryptedData,
-			// 			iv: vxInfo.iv,
-			// 			source: 2,
-			// 			signature: vxInfo.signature
-			// 		}
-			// 		uni.request({
-			// 			url: Api.BASEURI + Api.agent.wx,
-			// 			method: 'post',
-			// 			data: params,
-			// 			success: function(res) {
-			// 				if (res){
-			// 					that.vxOpenid = res.data.result.result.openId
-			// 					if (res.data.result.result.authResult !== 0) {
-			// 						var codeInfo = res.data.result.result
-			// 							let params = {
-			// 								openId: codeInfo.openId,
-			// 								authResult: codeInfo.authResult
-			// 							}
-			// 							uni.request({
-			// 								url: Api.BASEURI + Api.agent.savePhone,
-			// 								method: 'post',
-			// 								data: params,
-			// 								success: function(res) {
-			// 									var token = res.data.result.result.token
-			// 									if (token) {
-			// 										uni.setStorageSync('token',token)
-			// 										uni.switchTab({
-			// 											url: '/pages/index/index',
-			// 										});
-			// 									}
-			// 								}
-			// 							})
-			// 						}
-			// 					}
-			// 			}
-			// 		})
-			// 	}
-			// },
 			getPhoneNumber (res) {
 				console.log(res)
 				var that = this;

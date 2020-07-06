@@ -1,5 +1,6 @@
 <template>
 	<view class="content b-t">
+		<nav-bar backState="1000">选择地址</nav-bar>
 		<view class="list b-b" v-for="(item, index) in addressList" :key="index" @click="checkAddress(item)">
 			<view class="wrapper">
 				<view class="address-box">
@@ -12,7 +13,7 @@
 					<text class="address">{{item|address}}</text>
 				</view>
 			</view>
-			<text class="yticon icon-bianji" @click.stop="addAddress('edit', item)"></text>
+			<text class="yticon icon-bianji" @click.stop="addAddress('edit', item.id)"></text>
 		</view>
 		<text style="display:block;padding: 16upx 30upx 10upx;lihe-height: 1.6;color: #fa436a;font-size: 24upx;">
 			
@@ -24,6 +25,7 @@
 
 <script>
 	import Api from '@/common/api';
+	import navBar from '@/components/zhouWei-navBar';
 	export default {
 		data() {
 			return {
@@ -46,6 +48,9 @@
 					// }
 				]
 			}
+		},
+		components:{
+			navBar
 		},
 		onLoad(option){
 			console.log(option.source);
@@ -77,9 +82,10 @@
 					uni.navigateBack()
 				}
 			},
-			addAddress(type, item){
+			addAddress(type, id){
+				console.log(type,id)
 				uni.navigateTo({
-					url: '/pages/client/info/addressManage'
+					url: '/pages/client/info/addressManage?type='+type+'&id='+id
 				});
 			},
 			// //添加或修改成功之后回调

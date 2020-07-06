@@ -1,52 +1,49 @@
 <template>
 	<view>
-		<nav-bar backState="1000">支付</nav-bar>
+		<nav-bar backState="1000">订单详情</nav-bar>
 		<!-- 地址 -->
-		<navigator url="/pages/client/info/address?source=1" class="address-section">
+		<view class="address-section">
 			<view class="order-content">
 				<text class="yticon icon-shouhuodizhi"></text>
 				<view class="cen">
-					<text class="address">{{addressData|address}}</text>
 					<view class="top">
 						<text class="name">{{addressData.name}}</text>
 						<text class="mobile">{{addressData.phone}}</text>
 					</view>
-					
+					<text class="address">{{addressData.address}} {{addressData.area}}</text>
 				</view>
-				<text class="yticon icon-you"></text>
 			</view>
 		
 			<image class="a-bg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAu4AAAAFCAYAAAAaAWmiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Rjk3RjkzMjM2NzMxMTFFOUI4RkU4OEZGMDcxQzgzOEYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Rjk3RjkzMjQ2NzMxMTFFOUI4RkU4OEZGMDcxQzgzOEYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGOTdGOTMyMTY3MzExMUU5QjhGRTg4RkYwNzFDODM4RiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpGOTdGOTMyMjY3MzExMUU5QjhGRTg4RkYwNzFDODM4RiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PrEOZlQAAAiuSURBVHjazJp7bFvV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"></image>
-		</navigator>
+		</view>
 		
 		<view class="goods-section">
 			<view class="g-header b-b">
-				<text class="name">店铺:</text>
-				<text class="name">{{agentShop.name}}</text>
+				<image class="logo" :src="goodsDetail.goodsPhotos[0].url"></image>
+				<text class="name">{{agentDetail.name}}</text>
 			</view>
 			<!-- 商品列表 -->
 			<view class="g-item">
-				<image :src="this.goodsDetail.goodsPhotos[0].url" v-if="goodsDetail.goodsPhotos"></image>
+				<image :src="goodsDetail.goodsPhotos[0].url"></image>
 				<view class="right">
 					<text class="title clamp">{{goodsDetail.goodsName}}</text>
-					<text class="spec">商品规格: {{goodsSku.skuValue}} </text>
+					<text class="spec">{{goodsDetail.goodsSubtitle}}</text>
 					<view class="price-box">
 						<view class="">
 							<text class="price">￥{{totalPrice}}</text>
 						</view>
 						<view class="">
-							<text class="numberBtn" @click="subtractNum">-</text>
+							<text class="numberBtn">-</text>
 							<text class="number">{{num}}</text>
-							<text class="numberBtn" @click="addNum">+</text>
+							<text class="numberBtn">+</text>
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		
-		<!-- 优惠明细 	-->
+		<!-- 优惠明细 -->
 		<view class="yt-list">
-			<!--
 			<view class="yt-list-cell b-b" @click="toggleMask('show')">
 				<view class="cell-icon">
 					券
@@ -57,16 +54,14 @@
 				</text>
 				<text class="cell-more wanjia wanjia-gengduo-d"></text>
 			</view>
-			-->
 			<view class="yt-list-cell b-b">
 				<view class="cell-icon hb">
-					 
+					减
 				</view>
-				<text class="cell-tit clamp">活动内容</text>
-				<text class="cell-tip disabled">{{activity.name}}</text>
+				<text class="cell-tit clamp">商家促销</text>
+				<text class="cell-tip disabled">暂无可用优惠</text>
 			</view>
 		</view>
-	
 		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">
@@ -87,20 +82,10 @@
 			</view>
 		</view>
 		
-		<!-- 底部 -->
-		<view class="footer">
-			<view class="price-content">
-				<text>实付款</text>
-				<text class="price-tip">￥</text>
-				<text class="price">{{totalPrice}}</text>
-			</view>
-			<text class="submit" @click="buy">提交订单</text>
-		</view>
-		
-		<!-- 优惠券面板 
+		<!-- 优惠券面板 -->
 		<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
 			<view class="mask-content" @click.stop.prevent="stopPrevent">
-				 优惠券页面，仿mt 
+				<!-- 优惠券页面，仿mt -->
 				<view class="coupon-item" v-for="(item,index) in couponList" :key="index">
 					<view class="con">
 						<view class="left">
@@ -119,7 +104,6 @@
 				</view>
 			</view>
 		</view>
-		 -->
 	</view>
 </template>
 <script>
@@ -129,14 +113,12 @@
 		data() {
 			return {
 				goodsId: '',
-				goodsDetail: {},
-				agentShop:{},
-				goodsSku:{},
+				goodsDetail: '',
+				price: '',
 				num: '1',
 				totalPrice: '',
 				buyInfo: '',
 				buyType: '',
-				activity:{},
 				items: [{
 						value: 'USA',
 						name: '支付宝'
@@ -167,22 +149,15 @@
 					}
 				],
 				addressData: {
+					id: '',
 					name: '',
 					mobile: '',
 					addressName: '',
 					address: '',
 					area: '',
 					default: false,
-				}
-			}
-		},
-		filters:{
-			address(data){
-				try{
-					return data.provinceBean.name+" "+data.cityBean.name+" "+data.areaBean.name;
-				}catch(e){
-					return "地址错误"
-				}
+				},
+				agentDetail:''
 			}
 		},
 		onLoad(option) {
@@ -190,59 +165,52 @@
 			// option.goodsId = "7604921082513985536"
 			// option.price = '100'
 			var that = this;
-			this.goodsId = option.goodsId
-			this.agentGoodsId = option.agentGoodsId
-			this.goodsSkuId =option.goodsSkuId;
-			this.getGoodsData(this.goodsId ,this.agentGoodsId ,this.goodsSkuId)
-			this.searchDetailAddress()
+			this.price = option.price
+			this.totalPrice = option.price
+			this.getOrderData(option.orderId)
+			this.searchClientAddress()
+		},
+		onShow () {
+		  const addressData = uni.getStorageSync('addressInfo');
+		  if (addressData) {
+			this.addressData.id = addressData.id
+			this.addressData.name = addressData.name
+			this.addressData.address = addressData.provinceBean.name + addressData.cityBean.name + addressData.areaBean.name
+			this.addressData.phone = addressData.phone
+			this.addressData.area = addressData.detailAddress
+		  }
 		},
 		components: {
 			navBar
 		},
 		methods: {
-			
-			async searchDetailAddress(){
-				let params = {
-				};
-				let data = await Api.apiCall('post', Api.client.address.detail, params, false, false);
-				if (data) {
-					if(data.result!=null)
-					      this.setAddress(data.result)
-				 }
-			},
-			
-			async getGoodsData (goodsId,agentGoodsId,goodsSkuId) { //加载商品数据
+			async getOrderData (id) { //加载商品数据
 				let params = { 
-					goodsId: goodsId ,
-					agentGoodsId:agentGoodsId,
-					goodsSkuId:goodsSkuId
+					orderId: id
 				};
-				let data = await Api.apiCall('post', Api.client.goods.buy, params, true, false);
+				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params);
 				if (data) {
-					this.goodsDetail = data.result.goodsPicesBean
-					//console.log(this.goodsDetail.goodsPhotos[0])
-					this.agentShop = data.result.agentShopBean;
-					this.goodsSku = data.result.goodsOneSku;
-					this.totalPrice =this.goodsSku.price; 
-					this.activity=data.result.activityId;
-					console.log(this.activity)
+					this.goodsDetail = data.result.records[0].goodsPicesBean
+					this.agentDetail = data.result.records[0].agentShopBean
+					this.num = data.result.records[0].quantity
+					console.log(data.result)
 				}
 			},
-			// async searchClientAddress () { //查询收货地址
-			// 	let params = {
-			// 		pageNum: '1',
-			// 		pageSize: '10'
-			// 	} 
-			// 	let data = await Api.apiCall('post', Api.agent.address.searchClientAddress, params)
-			// 	if (data) {
-			// 		let tmpData = data.result.records[0]
-			// 		console.log(tmpData)
-			// 		this.addressData.name = tmpData.name
-			// 		this.addressData.address = tmpData.provinceId + tmpData.cityId + tmpData.areaId
-			// 		this.addressData.phone = tmpData.phone
-			// 		this.addressData.area = tmpData.detailAddress
-			// 	}
-			// },
+			async searchClientAddress () { //查询收货地址
+				let params = {
+					pageNum: '1',
+					pageSize: '10'
+				} 
+				let data = await Api.apiCall('post', Api.agent.address.searchClientAddress, params)
+				if (data) {
+					let tmpData = data.result.records[0]
+					this.addressData.id = tmpData.id
+					this.addressData.name = tmpData.name
+					this.addressData.address = tmpData.provinceBean.name + tmpData.cityBean.name + tmpData.areaBean.name
+					this.addressData.phone = tmpData.phone
+					this.addressData.area = tmpData.detailAddress
+				}
+			},
 			radioChange: function(evt) { //选择支付方式
 				for (let i = 0; i < this.items.length; i++) {
 					if (this.items[i].value === evt.target.value) {
@@ -251,99 +219,18 @@
 					}
 				}
 			},
-			// computNumber (price) {
-			// 	return Number(this.price) * 100
-			// },
+			computNumber (price) {
+				return Number(this.price) * 100
+			},
 			subtractNum() { //商品数量的简单减少
 				if (this.num >1) {
 					this.num = parseInt(this.num) - 1
-					this.totalPrice =  this.num * this.goodsSku.price
+					this.totalPrice =  Number(parseInt(this.num) * this.computNumber(this.price))/100
 				}
 			},
 			addNum() { //商品数量的简单增加
 				this.num = parseInt(this.num) + 1
-				this.totalPrice =  this.num * this.goodsSku.price
-			},
-			
-			buy(){
-				console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>1");
-				    let that = this;
-				  uni.login({
-				      provider: 'weixin',
-				      success: function (loginRes) {
-						    let  vxCode = loginRes.code;
-							
-							uni.getProvider({ //获取支付的方式
-							    service: 'payment',
-							    success: function (res) {
-									that.buyType = res.provider;
-									let params = {
-										'activityId': that.activity,
-										'agentGoodsId': that.agentGoodsId,
-										'goodsId': that.goodsId,
-										'goodsSkuId': that.goodsSkuId,
-										'number': that.num,
-										'payPrice': that.totalPrice,
-										'price': that.goodsSku.price,
-										'payType': 'weixin'
-									}
-									
-								Api.apiCallbackCall("POST", Api.client.buy.createOrder, params, true, true, function(data){
-									if (data) {
-										let re =data.result;
-										let params = {
-													'code': vxCode,
-													'orderId': re.id
-													}
-										Api.apiCallbackCall("POST", Api.client.buy.prePay, params, false, true, function(da_ta){
-										if (da_ta) {
-											that.payMent(da_ta)
-											}
-										});
-										
-										that.payMent(data)
-									}
-								}) },
-								fail:function(){
-									this.$api.msg("提交订单失败");
-								}
-							
-							});
-							
-							
-						  },
-					  fail:function() {
-					  	this.$api.msg("提交订单失败");
-					  }
-				
-			})
-			},
-		
-			payMent(res) {
-				let vxBuyInfo = res.result;
-				//微信支付
-				uni.requestPayment({
-					provider: 'wxpay',
-					//orderInfo: orderInfo, //订单数据
-					timeStamp: vxBuyInfo.timeStamp, //时间戳从1970年1月1日至今的秒数，即当前的时间。
-					nonceStr: vxBuyInfo.nonceStr, //随机字符串，长度为32个字符以下。
-					package: vxBuyInfo.packageValue, //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=xx。
-					signType: vxBuyInfo.signType, //签名算法，暂支持 MD5。
-					paySign: vxBuyInfo.paySign, //签名，具体签名方案参见 微信小程序支付文档
-					success: function(res) {
-						console.log(res)
-					},
-					fail: function(err) {
-						console.log('fail:' + JSON.stringify(err));
-						uni.showToast({
-							icon: 'none',
-							title: '支付失败'
-						});
-					},
-					complete: function(res) {
-						
-					}
-				});
+				this.totalPrice =  Number(parseInt(this.num) * this.computNumber(this.price))/100
 			},
 			//显示优惠券面板
 			toggleMask(type){
@@ -365,13 +252,7 @@
 					url: '/pages/money/pay'
 				})
 			},
-			stopPrevent(){},
-			
-			setAddress(data){
-				this.addressData = data;
-			}
-			
-			
+			stopPrevent(){}
 		}
 	}
 </script>

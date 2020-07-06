@@ -26,8 +26,16 @@
 				</view>
 			</view>
 			<button class="confirm-btn" @click="reguser" :disabled="logining">注册</button>
+			<view class="forget-section">
+				<text @click="getWxCode">微信注册</text>
+			</view>
 			<view class="forget-section">已经有账号?<text @click="toLoginPwd">马上登录</text></view>
 		</view>
+		<uni-popup ref="popup" type="dialog">
+		    <uni-popup-dialog type="input" message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="confirm">
+				
+			</uni-popup-dialog>
+		</uni-popup>
 	</view>
 </template>
 
@@ -37,9 +45,11 @@
 	} from 'vuex';
 	import Api from '@/common/api';
 	import store from '@/store/index';
+	import uniPopup from '@/components/uni-popup/uni-popup'
+	import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog'
 	export default {
 		components: {
-			
+			uniPopup, uniPopupDialog
 		},
 		data() {
 			return {
@@ -146,8 +156,40 @@
 				if (data) {
 					this.codekey = data.key;
 				}
+			},
+			getWxCode () {
+				var that = this;
+				uni.showLoading({
+					title: '微信登录中',
+					mask: true
+				});
+				uni.login({
+					provider: 'weixin',
+					fail: function() {
+						uni.hideLoading();
+						uni.showToast({
+							title: '微信登录失败',
+							icon: 'none'
+						});
+					},
+					success: function(loginRes) {
+						uni.hideLoading();
+						console.log(loginRes)
+						that.wxInfo()
+						that.$refs.popup.open()
+					},
+				})
+			},
+			wxInfo () {
+				uni.getUserInfo({
+					provider: 'weixin',
+					success: function(infoRes) {
+						if (infoRes) {
+							console.log(infoRes)
+						}
+					}
+				});
 			}
-
 		}
 	};
 </script>
@@ -333,5 +375,15 @@
 			color: $font-color-spec;
 			margin-left: 10upx;
 		}
+	}
+	.register-pwd {
+		color: #fff;
+		background-color: #179B16;
+		height: 80rpx;
+		line-height: 80rpx;
+		font-size: 34rpx;
+		font-weight: normal;
+		text-align: center;
+		border-radius: 5px;
 	}
 </style>
