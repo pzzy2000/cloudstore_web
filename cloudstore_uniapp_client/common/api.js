@@ -9,6 +9,10 @@ export default {
 		search: 'esProduct/search', //综合搜索、筛选、排序
 	},
 	
+	areas:{
+		province:'/sys/dict/list',
+	},
+	
 	client:{
 		login:{
 			login:"sys/manager/platform/login"	,
@@ -20,13 +24,31 @@ export default {
 		recommend: {
 			newShopinfoByOrder: 'agent/goods/app/newShopinfoByOrder',
 			list: 'agent/goods/app/list'
+		},
+		goods:{
+		buy:"agent/goods/app/buyGoodsDetail",
+		detail:"agent/goods/app/searchGoodsDetail"
+		},
+		address:{
+			list:'app/client/address/searchClientAddress',
+			save:'app/client/address/saveAddress',
+			detail:'app/client/address/searchDetailAddress'
+		},
+		buy: {
+			createOrder:'order/app/createOrder',
+			prePay: 'app/pay/prePay'
 		}
 	},
 	agent:{
+		dictionaries: {
+			search: 'sys/dict/search' //字典下拉查询
+		},
 		activity:{
 			searchActivityNavList:'activity/app/showNavlist',
 			searchActivityShowList:'activity/app/indexShowlist',
 			searchIndexActivitygoodsList:'activity/app/indexShowActivityGoodList',
+			searchInfo:'activity/app/get',
+			listAll:'activity/app/alllist'
 		},
 		user: {
 			userinfo:"/agent/get",//获取用户信息
@@ -38,13 +60,14 @@ export default {
 			dateList: 'agent/goods/app/dateList', //获取今日上新的商品
 		},
 		goods: { //商品接口
-		   list: 'goods/list' ,//获取商品列表
-		   detail: 'goods/getGoodsInfoByGoodsId',
-		   save:'agent/goods/save' ,//代理商将商品加入代理
+		   list: 'goods/app/list' ,//获取商品列表
+		   detail: 'goods/app/searchGoodsDetail',
+		   agentGoodsDetail:'/agent/goods/app/searchGoodsDetail',//查询代理商品的明细
+		   save:'agent/goods/app/save' ,//代理商将商品加入代理
 		   loadHtml:'goods/app/loadMobileHtml', //获取商品详情的图文详情
 		},
 		category: {
-			list: 'goods/category/list',
+			list: '/app/goods/category/list',
 			getchildId: 'goods/category/get'
 		},
 		home: {
@@ -54,10 +77,13 @@ export default {
 		hot: {
 			hotList: 'activity/app/listActivityGoods'
 		},
-		buy: {
-			createOrder:'order/app/createOrder',
-			prePay: 'app/pay/prePay'
+		address: {
+			saveAddress: 'app/client/address/saveAddress',
+			searchClientAddress : 'app/client/address/searchClientAddress',
+			deleteAddress: 'app/client/address/deleteAddress',
+			updateAddressStatus: 'app/client/address/updateAddressStatus'
 		}
+		
 	},
 	
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {

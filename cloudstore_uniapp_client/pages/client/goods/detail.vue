@@ -50,8 +50,8 @@
 				<text class="con t-r red">领取优惠券</text>
 				<text class="yticon icon-you"></text>
 			</view>
-             -->
-
+          -->
+          
 			<view class="c-row b-b">
 				<text class="tit">活动内容</text>
 				<view class="con-list">
@@ -59,6 +59,7 @@
 					
 				</view>
 			</view>
+			
 			<view class="c-row b-b">
 				<text class="tit">服务</text>
 				<view class="bz-list con">
@@ -102,7 +103,7 @@
 			   <view class="d-header"><text>图文详情</text></view>
 			   <view class="ricetext">
 			     <!-- <rich-text nodes="{{goods}}"></rich-text> -->
-				 <rich-text :nodes="goodsHtml"></rich-text>
+				 <rich-text :nodes="goodsMobileHtml"></rich-text>
 			   </view>
 			  </view>
 			<!-- <rich-text :nodes="desc"></rich-text> -->
@@ -110,21 +111,21 @@
 
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/agent/goods/hotsale/hotsale"  class="p-b-btn">
+			<navigator url="/pages/client/recommend/index" open-type="switchTab" class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
-			<view class="p-b-btn" @click="toFavorite(goods)">
+			<navigator url="/pages/client/cart/index" open-type="switchTab" class="p-b-btn">
 				<text class="yticon icon-gouwuche"></text>
-				<text>期待</text>
-			</view>
+				<text>购物车</text>
+			</navigator>
 			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-shoucang"></text>
-				<text>期待</text>
+				<text>收藏</text>
 			</view>
 
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent">我的小店</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
 			</view>
 		</view>
@@ -172,6 +173,7 @@
 						</text>
 					</view>open
 				</view> -->
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toBuy">确定</button>
 				<!-- <button class="btn" @click="openAgent">加入代理</button> -->
 			</view>
 		</view>
@@ -207,7 +209,6 @@ export default {
 			},
 			detailData: [],
 			goods: '',
-			activity:{},
 			shareList: [
 				{
 				  icon: "/static/temp/share_wechat.png",
@@ -222,9 +223,11 @@ export default {
 			goodsName: '',
 			goodsSkuId: '',  //具体商品的skuId
 			agentGoodsId: '', //此商品的代理商品Id
-			goodsHtml: '',
+			goodsMobileHtml: '',
 			specList: [],
-			specChildList: []
+			specChildList: [],
+			activity:{},
+			userType: 'user'
 		};
 	},
 	onShareAppMessage(res) {
@@ -242,22 +245,23 @@ export default {
 		return shareObj
 	},
 	onShow() {
+		this.loadGoodHtml(this.goodsId);
 	},
 	async onLoad(ops) {
+		console.log(ops);
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
-		console.log(ops)
+		this.userType = ops.userType
 		
-		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
+		this.getGoodsDetail(this.goodsId,this.agentGoodsId)
 	},
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
-			this.loadMobileHtml()
-			let params = { goodsId:goodsId ,agentGoodsId:agentGoodsId};
-			let data = await Api.apiCall('post', Api.agent.goods.agentGoodsDetail, params, true, false);
+			let params = { goodsId:goodsId,agentGoodsId:agentGoodsId };
+			let data = await Api.apiCall('post', Api.client.goods.detail, params, true, false);
 			if (data) {
-				this.goods = data.result.goodsPicesBean;
+				this.goods = data.result.goodsPicesBean
 				this.activity = data.result.activityBean;
 				this.goodsName = data.result.goodsPicesBean.goodsName
 				this.skuList = data.result.goodsSku
@@ -309,13 +313,9 @@ export default {
 						}
 					}
 				}
+				// uni.hideLoading();
 			}
 		},
-		
-		toFavorite(){
-			this.$api.msg("敬请期待");
-		},
-		
 		openAgent () {
 			this.$refs.popup.open()
 		},
@@ -326,33 +326,21 @@ export default {
 			this.joinAgent()
 			this.$refs.popup.close()
 		},
-		async joinAgent () { //将商品加入代理
-			let params = {
-				goodsId: this.goodsId,
-				activeId: 1
-			}
-			let data = await Api.apiCall('post', Api.agent.goods.save, params);
-			if (data) {
-				if (data.code === 0) {
-					uni.showToast({
-						title: '加入代理成功',
-						icon: 'none'
-					});
-					if (this.specClass == 'show') {
-						this.specClass = 'hide'
-					}
-				}
-			}
+		
+		setmobileHtml(mobileHtml){
+			this.goodsMobileHtml = mobileHtml;
 		},
-		async loadMobileHtml () {//获取商品的图文详情
+		
+		loadGoodHtml(goodsId){
 			let params = {
-				goodsId: this.goodsId
-			}
-			let data = await Api.apiCall('post', Api.agent.goods.loadHtml, params,0,0);
-			if (data) {
-				this.goodsHtml = data.result.mobileHtml
-			}
+				goodsId: goodsId
+			};
+			let mobileHtml=this.setmobileHtml;
+			Api.apiCallbackCall('post', Api.agent.goods.loadHtml, params, false,false, function(data){
+				  mobileHtml(data.result.mobileHtml);
+			});
 		},
+		
 		//规格弹窗开关
 		toggleSpec() {
 			if (this.specClass === 'show') {
@@ -404,11 +392,12 @@ export default {
 		share() {
 			this.$refs.share.toggleMask();
 		},
-		toAgent () { //跳转到我的小店界面
-			uni.redirectTo({
-				 url: '/pages/agent/home/index'
-			});
+		
+		
+		toFavorite(goods){
+			this.$api.msg("敬请关注");
 		},
+		
 		isLogin () { //微信用户点击分享的连接进来后判断是否登录
 			var that = this;
 			uni.showLoading({
@@ -488,17 +477,18 @@ export default {
 		},
 		//点击立即购买
  		toBuy(item) {
-			var buyInfo = {
-				activityId: '',
-				agentGoodsId: this.agentGoodsId,
-				goodsId: this.goodsId,
-				goodsSkuId: this.goodsSkuId,
-				price: this.sku.price,
-			}
-			uni.setStorageSync('buyInfo',buyInfo)
+			// var buyInfo = {
+			// 	activityId: '',
+			// 	agentGoodsId: this.agentGoodsId,
+			// 	goodsId: this.goodsId,
+			// 	goodsSkuId: this.goodsSkuId,
+			// 	price: this.sku.price,
+			// }
+			// console.log("buy info : ",buyInfo);
+			// uni.setStorageSync('buyInfo',buyInfo)
 			//先判断库存
 			uni.navigateTo({
-				url: '/pages/agent/buy/buy?goodsId='+buyInfo.goodsId+'&price='+buyInfo.price
+				url: '/pages/client/goods/buy?agentGoodsId='+this.agentGoodsId+'&goodsSkuId='+this.goodsSkuId+"&goodsId="+this.goodsId
 			});
 		},
 		stopPrevent() {}

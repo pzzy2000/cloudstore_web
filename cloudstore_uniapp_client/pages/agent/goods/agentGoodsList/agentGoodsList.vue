@@ -89,7 +89,7 @@
 					console.log(this.goodsList)
 				}
 			},
-			toggleCateMask () {
+			toggleCateMask (type) {
 				let timer = type === 'show' ? 10 : 300;
 				let state = type === 'show' ? 1 : 0;
 				this.cateMaskState = 2;

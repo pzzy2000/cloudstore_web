@@ -12,8 +12,13 @@
 					
 				</view>
 			</view>
-			<view class="vip-card-box" @click="toNav('../../pagesU/user/applyMember')">
+			<view class="vip-card-box">
 				<image class="card-bg" src="/static/vip-card-bg.png" mode=""></image>
+				<view class="b-btn">普通等级</view>
+				<view class="tit">
+					<text class="yticon icon-iLinkapp-">普通会员</text>
+					
+				</view>
 				<text class="e-m"></text>
 				<text class="e-b"></text>
 			</view>

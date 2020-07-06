@@ -98,17 +98,10 @@
 					<image v-for="(item, index) in viewList" :key="index" @click="navToDetailPage(item)" :src="item.pic" mode="aspectFill"></image>
 				</scroll-view>
 				<!--<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="我的钱包" tips="您的会员还有3天过期"></list-cell>-->
-				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('../../pagesU/address/address')"></list-cell>
-				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="navTo('../../pagesU/user/profile')"></list-cell>
+				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="代理资料" @eventClick="navTo('../../pagesU/user/profile')"></list-cell>
 				<!--<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell>
 				<list-cell icon="icon-pinglun-copy" iconColor="#ee883b" title="晒单" tips="晒单抢红包"></list-cell>-->
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="navTo('../../pagesU/user/collect')"></list-cell>
-				<list-cell icon="icon-share cgtt" iconColor="#0e68d7" v-if="!userDetailInfo.storeId" title="商户入驻" @eventClick="navTo('../../pagesC/store/applyBusiness')"></list-cell>
-				<list-cell icon="icon-share cgtt" iconColor="#0e68d7" v-if="userDetailInfo.storeId" title="商户主页" @eventClick="navTo(`../../pagesC/store/businessDetails?id=${userDetailInfo.storeId}`)"></list-cell>
-				<list-cell icon="icon-shoucang_xuanzhongzhuangtai cgtt" iconColor="#0e68d7" v-if="!userDetailInfo.roomNums" title="绑定社区" @eventClick="navTo('../../pagesA/build/bindCommunity')"></list-cell>
-				<list-cell icon="icon-shoucang_xuanzhongzhuangtai cgtt" iconColor="#0e68d7" v-if="userDetailInfo.roomNums" title="社区主页" @eventClick="navTo('../../pagesA/build/community')"></list-cell>
-				<list-cell icon="icon-pinglun-copy" iconColor="#0e68d7" title="我的邀请码" :tips="userDetailInfo.id"  @eventClick="navTo('../../pagesU/user/invite')"></list-cell>
-				<list-cell icon="icon-pinglun-copy" iconColor="#0e68d7" v-if="!userDetailInfo.invitecode" title="推荐邀请码" @eventClick="inputShowModal('invitecode')"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="代理商退出" border="" @eventClick="navTo('/pages/client/info/index','client')"></list-cell>
 				<!-- <list-cell icon="icon-shezhi1" iconColor="#e07472" title="test" border="" @eventClick="navTo('/pages/search/test')"></list-cell> -->
 			</view>
@@ -116,12 +109,11 @@
 		<neil-modal :show="inputShow" @close="cancel" title="编辑" @cancel="cancel" @confirm="confirm">
 			<input v-model="inputContent" style="margin:20upx" placeholder="请输入..." />
 		</neil-modal>
-		<mallplusCopyright></mallplusCopyright>
+		
 		<tabbar :role="'agent'" :ids="'adlxx'"></tabbar>	
 	</view>
 </template>
 <script>
-import mallplusCopyright from '@/components/mall-copyright/mallplusCopyright.vue';
 import Api from '@/common/api';
 import listCell from '@/components/mix-list-cell';
 import neilModal from '@/components/neil-modal.vue';
@@ -129,7 +121,7 @@ import { mapState,mapMutations } from 'vuex';
 	let startY = 0, moveY = 0, pageAtTop = true;
 	export default {
 	components: {
-    	mallplusCopyright, listCell, neilModal
+    listCell, neilModal
 	},
 	data() {
 		return {
