@@ -41,7 +41,7 @@
         <el-table-column prop="address" label="是否关联">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#13ce66"
-              inactive-color="#ff4949" @change="changeSwitch($event, scope.row)">
+              inactive-color="#ff4949" @change="changeSwitch($event, scope.row)" :disabled="disabled">
             </el-switch>
           </template>
         </el-table-column>
@@ -84,7 +84,8 @@
         list: null,
         activity: {},
         listQuery: Object.assign({}, defaultListQuery),
-        total: 0
+        total: 0,
+        disabled: false
       }
     },
     created() {
@@ -145,6 +146,7 @@
       getList(activityId) {
         this.list = [];
         fetchAllgoods(this.listQuery).then(response => {
+          console.log(response);
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
         })
@@ -156,14 +158,16 @@
 
       },
       changeSwitch(idx, row) {
-        // console.log(idx)
+        this.disabled = true;
+        console.log(row);
         let goods = row.activityBean;
         if (idx == 0) {  //断开
           outAssogoods({
             ids: row.activityGoodsId
           }).then(res => {
             if (res.result.code == 0) {
-              msg('商品:[' + goods.name + ']申请退出活动成功');
+              msg('申请退出活动成功');
+              this.disabled = false;
             }
           })
         } else { //关联
@@ -173,7 +177,10 @@
             optType: "save"
           }).then(res => {
             if (res.result.code == 0) {
-              msg('商品:[' + goods.name + ']申请加入活动成功');
+              row.activityGoodsId = res.result.result.id;
+              console.log(res);
+              msg('申请加入活动成功');
+              this.disabled = false;
             }
           })
         }

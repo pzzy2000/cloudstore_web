@@ -59,6 +59,9 @@
             </el-switch>
           </template>
         </el-table-column>
+        <el-table-column label="是否参加佣金" width="400px" align="center" fixed>
+          <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
+        </el-table-column>
         <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
@@ -118,6 +121,15 @@
       // }
     },
     filters: {
+      changeMsg(data) {
+        console.log("++++++++")
+        switch (data) {
+          case 1: return "已参加";
+            break;
+          case 0: return "未参加";
+            break;
+        }
+      }
       // verifyStatusFilter(value) {
       //   if (value === 1) {
       //     return '审核通过';

@@ -303,6 +303,12 @@ export const asyncRouterMap = [
           meta: {title: '客户列表', icon: 'product-list'}
         },
         {
+          path: 'userinfo',
+          name: 'userinfo',
+          component: () => import('@/views/client/userinfo'),
+          meta: {title: '客户详情', icon: 'product-list'}
+        },
+        {
           path: 'add',
           name: 'adduser',
           component: () => import('@/views/client/adduser'),
