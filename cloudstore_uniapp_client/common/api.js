@@ -18,6 +18,11 @@ export default {
 			login:"sys/manager/platform/login"	,
 			reg:"sys/manager/platform/register/client"
 		},
+		reg: {
+			auth: 'sys/manager/platform/weixin/auth',  //传code
+			getPhone: 'sys/manager/platform/weixin/getPhone', // 传手机号加密信息
+			saveClientInfo: 'sys/manager/platform/weixin/saveClientInfo' //再传一系列信息
+		},
 		info:{
 			searchInfo:"client/app/searchClientInfo" //查询当前登录信息
 		},

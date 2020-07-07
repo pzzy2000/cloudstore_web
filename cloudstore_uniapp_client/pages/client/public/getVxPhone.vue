@@ -13,18 +13,17 @@
 			return {
 				vxCode: '',
 				vxOpenid: '',
-				vxPhoneData: ''
+				vxPhoneData: '',
+				loginCode: ''
 			}
 		},
 		onLoad (option) {
-			this.vxCode = option.openId
-			console.log(this.vxCode)
 			// this.getVxLoginCode()
+			this.vxCode = option.openId
 		},
 		methods: {
 			getPhoneNumber (res) {
 				console.log(res)
-				var that = this;
 				if (!res.detail.iv) {
 					console.log('您取消了微信授权')
 				}else {
@@ -34,6 +33,7 @@
 						'bean.iv': res.detail.iv,
 						'bean.userInfo': uni.getStorageSync('vxInfo')
 					}
+					var that = this;
 					uni.request({
 						url: Api.BASEURI + Api.agent.user.savePhone,
 						method: 'post',
@@ -44,35 +44,70 @@
 						success: function(res) {
 							console.log(res)
 							if (res) {
+								uni.showToast({
+								    title: '注册成功',
+								    duration: 2000,
+									icon:'none'
+								});
 								if (res.data.result.code === 0) {
-									var code = uni.getStorageSync('code')
-									let params = {
-										'bean.logintype': 'weixin',
-										'bean.password': code,
-										'bean.access': code
-									}
-									uni.request({
-										url: Api.BASEURI + Api.agent.wxLogin,
-										method: 'post',
-										header: {
-											'content-type': 'application/x-www-form-urlencoded'
+									// var code = uni.getStorageSync('code')
+									uni.login({
+										provider: 'weixin',
+										fail: function() {
+											uni.hideLoading();
+											uni.showToast({
+												title: '微信登录失败',
+												icon: 'none'
+											});
 										},
-										data: params,
-										success: function(res) {
-											if (res) {
-												var userInfo = {
-													name: res.data.result.result.name,
-													url: res.data.result.result.url
-												}
-												uni.setStorageSync('userInfo',userInfo)
-												uni.setStorageSync('token',res.data.result.result.token)
-												uni.switchTab({
-													url: '/pages/index/index'
-												});
-											}
-											//console.log(res)
-										}
+										success: function(loginRes) {
+											//that.loginCode = loginRes.code
+											uni.setStorageSync('loginCode', loginRes.code);
+										},
 									})
+									var code = uni.getStorageSync('loginCode') 
+									console.log(code)
+									if (code) {
+										let params = {
+											'bean.logintype': 'client',
+											'bean.action': 'weixin',
+											'bean.password': code,
+											'bean.access': code
+										}
+										uni.request({
+											url: Api.BASEURI + Api.agent.user.wxLogin,
+											method: 'post',
+											header: {
+												'content-type': 'application/x-www-form-urlencoded'
+											},
+											data: params,
+											success: function(res) {
+												console.log(res)
+												if (res.data.result.code === 0 ) {
+													var userInfo = {
+														name: res.data.result.result.name,
+														url: res.data.result.result.url
+													}
+													uni.setStorageSync('userInfo',userInfo)
+													uni.setStorageSync('token',res.data.result.result.token)
+													uni.showToast({
+													    title: '登录成功',
+													    duration: 2000,
+														icon:'none'
+													});
+													uni.switchTab({
+														url: '/pages/client/recommend/index'
+													});
+												} else {
+													uni.showToast({
+													    title: '登录失败',
+													    duration: 2000,
+														icon:'none'
+													});
+												}
+											}
+										})
+									}
 								}else{
 									uni.showToast({
 									    title: res.data.result.msg,

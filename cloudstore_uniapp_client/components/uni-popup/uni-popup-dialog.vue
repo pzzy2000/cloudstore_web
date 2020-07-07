@@ -5,7 +5,7 @@
 		</view>
 		<view class="uni-dialog-content">
 			<text class="uni-dialog-content-text" v-if="mode === 'base'">{{content}}</text>
-			<input v-else class="uni-dialog-input" v-model="val" type="text" :placeholder="placeholder" :focus="focus" >
+			<input v-else class="uni-dialog-input" v-model="val" :type="inputType" :placeholder="placeholder" :focus="focus" >
 		</view>
 		<view class="uni-dialog-button-group">
 			<view class="uni-dialog-button" @click="close">
@@ -72,6 +72,10 @@
 				type: String,
 				default: '提示'
 			},
+			inputType: {
+				type: String,
+				default: 'input'
+			},
 			/**
 			 * 对话框内容
 			 */
@@ -91,7 +95,7 @@
 			return {
 				dialogType: 'error',
 				focus: false,
-				val: ""
+				val: "",
 			}
 		},
 		inject: ['popup'],
@@ -106,7 +110,7 @@
 			},
 			value(val) {
 				this.val = val
-			}
+			},
 		},
 		created() {
 			// 对话框遮罩不可点击

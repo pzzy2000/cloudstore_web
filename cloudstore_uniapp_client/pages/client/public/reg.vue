@@ -31,11 +31,23 @@
 			</view>
 			<view class="forget-section">已经有账号?<text @click="toLoginPwd">马上登录</text></view>
 		</view>
-		<uni-popup ref="popup" type="dialog">
-		    <uni-popup-dialog type="input" message="成功消息" :duration="2000" :before-close="true" @close="close" @confirm="confirm">
-				
-			</uni-popup-dialog>
+		<uni-popup ref="popup" type="center">
+			<button type="primary" open-type='getPhoneNumber' @getphonenumber="getPhoneNumber">微信授权手机号码</button>
 		</uni-popup>
+		<popup-layer ref="popupRef" :direction="'top'" v-model="boolShow">
+			<view class="regBox" >
+				<input type="text" :value="vxPhone" class="input-height"/>
+				<view class="phone-code">
+					<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input"/>
+					<button type="primary" class="code-btn">发送验证码</button>
+				</view>
+				<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height"/>
+				<view class="regBox-btn">
+					<button type="primary" @tap="registerBtn">注册</button>
+					<button type="primary" @tap="close">关闭</button>
+				</view>
+			</view>
+		</popup-layer>
 	</view>
 </template>
 
@@ -47,9 +59,10 @@
 	import store from '@/store/index';
 	import uniPopup from '@/components/uni-popup/uni-popup'
 	import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog'
+	import popupLayer from '@/components/uni-popup/popup-layer.vue'
 	export default {
 		components: {
-			uniPopup, uniPopupDialog
+			uniPopup, uniPopupDialog, popupLayer
 		},
 		data() {
 			return {
@@ -59,11 +72,20 @@
 				logining: false,
 				coding: false,
 				auth_time: 180,
-				codekey: ''
+				codekey: '',
+				title: '注册',
+				//以下为微信注册
+				vxOpenId: '',
+				vxUserInfo: '',
+				vxPhoneInfo: '',
+				vxPhone: '',
+				vxPhoneKey: '',
+				boolShow: false,
+				phoneCode: '1234',
+				userPwd: '123456'
 			};
 		},
 		onLoad() {
-			
 		},
 		computed: {
 			// ...mapState(['hasLogin', 'userInfo'])
@@ -84,7 +106,6 @@
 					url: '/pages/client/public/login'
 				});
 			},
-
 			async reguser() {
 				var that = this;
 				let phoneReg = /^1[1-9][0-9]\d{8}$/;
@@ -158,37 +179,190 @@
 				}
 			},
 			getWxCode () {
+				this.$refs.popup.open()
 				var that = this;
 				uni.showLoading({
-					title: '微信登录中',
+					title: '微信注册中',
 					mask: true
 				});
+				this.wxInfo()
 				uni.login({
 					provider: 'weixin',
 					fail: function() {
 						uni.hideLoading();
 						uni.showToast({
-							title: '微信登录失败',
+							title: '微信注册失败',
 							icon: 'none'
 						});
 					},
 					success: function(loginRes) {
 						uni.hideLoading();
-						console.log(loginRes)
-						that.wxInfo()
-						that.$refs.popup.open()
+						let params = {
+							'bean.code': loginRes.code
+						}
+						uni.request({
+							url: Api.BASEURI + Api.client.reg.auth,
+							method: 'post',
+							header: {
+								'content-type': 'application/x-www-form-urlencoded'
+							},
+							data: params,
+							success: function(res) {
+								if (res.data.result.code === 0) {
+									that.vxOpenId = res.data.result.result.openid
+								}
+							}
+						})
+						// console.log(loginRes)
+						// that.wxInfo()
+						// that.$refs.popup.open()
 					},
 				})
 			},
 			wxInfo () {
+				var that = this;
 				uni.getUserInfo({
 					provider: 'weixin',
 					success: function(infoRes) {
 						if (infoRes) {
-							console.log(infoRes)
+							that.vxUserInfo =  infoRes
 						}
+					},
+					fail:function(e) {
+						uni.showToast({
+							title: '微信授权用户失败'
+						});
 					}
 				});
+			},
+			getPhoneNumber (res) {
+				console.log(res)
+				if (res.detail.iv === '') {
+					uni.showToast({
+						title: '授权失败'
+					});
+				}else{
+					this.vxPhoneInfo = res.detail
+					this.getPhoneKey()
+				}
+			},
+			getPhoneKey () {
+				var that = this;
+				let params = {
+					'bean.encryptedData': this.vxPhoneInfo.encryptedData,
+					'bean.iv': this.vxPhoneInfo.iv,
+					'bean.openId': this.vxOpenId,
+				}
+				uni.request({
+					url: Api.BASEURI + Api.client.reg.getPhone,
+					method: 'POST',
+					data: params,
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					success: res => {
+						this.$refs.popup.close()
+						if(res.data.result.code === 0) {
+							that.vxPhone = res.data.result.result.phone
+							that.vxPhoneKey =  res.data.result.result.codeKey
+							this.$refs.popupRef.show()
+						}else if(res.data.result.code === 100003) {
+							uni.showModal({
+								title: '提示',
+								content: res.data.result.msg,
+								showCancel: false,
+								cancelText: '取消',
+								confirmText: '确定',
+								success: res => {
+									if (res.confirm) {
+										uni.navigateTo({
+											url: '/pages/client/public/login'
+										});
+									} else if (res.cancel) {
+									}
+								}
+							});
+						}else{
+							uni.showToast({
+								title: res.data.result.msg,
+								icon: 'none'
+							});
+						}
+					},
+					fail: () => {
+						uni.showToast({
+							title: '解密微信手机号码失败'
+						});
+					}
+				});
+			},
+			vxRegister () { //微信注册最后一步
+				var that = this;
+				let params = {
+					'bean.code': this.phoneCode,
+					'bean.codeKey': this.vxPhoneKey,
+					'bean.openId': this.vxOpenId,
+					'bean.password': this.userPwd,
+					'bean.phone': this.vxPhone,
+					'bean.userInfo': this.vxUserInfo.rawData
+				}
+				uni.request({
+					url: Api.BASEURI + Api.client.reg.saveClientInfo,
+					method: 'POST',
+					data: params,
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					success: res => {
+						if(res.data.result.code === 0) {
+							console.log(res)
+							uni.showToast({
+								title: '微信注册成功，正在前往登录界面',
+								icon: 'none'
+							});
+							uni.showModal({
+								title: '提示',
+								content: '微信注册成功，正在前往登录界面',
+								showCancel: false,
+								cancelText: '取消',
+								confirmText: '确定',
+								success: res => {
+									if (res.confirm) {
+										uni.navigateTo({
+											url: '/pages/client/public/login'
+										});
+									} else if (res.cancel) {
+										this.$refs.popupRef.close() // 关闭
+									}
+								}
+							});
+						}else{
+							uni.showToast({
+								title: res.data.result.msg,
+								icon: 'none'
+							});
+						}
+					},
+					fail: () => {
+						uni.showToast({
+							title: '微信手机注册失败'
+						});
+					}
+				});
+			},
+			registerBtn () {
+				if(!this.phoneCode){
+					this.$api.msg('请填写手机验证码');
+					return;
+				}
+				if(!this.userPwd){
+					this.$api.msg('请填写密码');
+					return;
+				}
+				this.vxRegister()
+			},
+			close () {
+				this.$refs.popupRef.close() // 关闭
 			}
 		}
 	};
@@ -385,5 +559,40 @@
 		font-weight: normal;
 		text-align: center;
 		border-radius: 5px;
+	}
+	.regBox {
+		width: 85%;
+		padding: 30upx 0;
+		margin: 0 auto;
+		.input-height {
+			line-height: 80upx;
+			height: 80upx;
+			margin-bottom: 20upx;
+		}
+		.uni-input-wrapper {
+			height: 80rpx;
+			line-height: 80rpx;
+		}
+		.phone-code {
+			display: flex;
+			align-items: center;
+			line-height: 80upx;
+			height: 80upx;
+			margin-bottom: 20upx;
+			.phone-input {
+				width: 65%;
+			}
+			.code-btn {
+				width: 35%;
+				font-size: 25upx;
+			}
+		}
+		.regBox-btn {
+			display: flex;
+			justify-content: space-between;
+			button {
+				width: 50%;
+			}
+		}
 	}
 </style>

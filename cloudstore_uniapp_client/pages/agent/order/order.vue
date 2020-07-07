@@ -239,8 +239,9 @@
 				}, 600)
 			},
 			toBuy (item) {
+				console.log(item)
 				uni.navigateTo({
-					url: '/pages/client/order/orderDetail?orderId='+item.id+'&price='+item.payPrice,
+					url: '/pages/client/order/orderDetail?orderId='+item.orderId+'&price='+item.payPrice,
 				});
 			},
 			//取消订单

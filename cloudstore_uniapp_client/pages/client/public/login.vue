@@ -48,7 +48,7 @@
 		},
 		data() {
 			return {
-				access: '15773281581',
+				access: '15573277535',
 				password: '123456',
 				sysInfo: '',
 				logining: false,
@@ -132,12 +132,25 @@
 							success: function(res) {
 								uni.hideLoading();
 								if (res.data.result.code === 100006) {
-									uni.showToast({
-										title: '请微信绑定代理手机号',
-										icon: 'none'
-									});
-									uni.navigateTo({
-										url: '/pages/client/public/getVxPhone?openId=' + res.data.result.msg
+									var data = res.data.result
+									console.log(data)
+									uni.showModal({
+										title: '提示',
+										content: '您的手机号暂未绑定微信，请前往绑定',
+										showCancel: false,
+										cancelText: '取消',
+										confirmText: '确定',
+										success: res => {
+											if (res.confirm) {
+												uni.navigateTo({
+													url: '/pages/client/public/getVxPhone?openId=' + data.msg
+												});
+											} else if (res.cancel) {
+												uni.navigateTo({
+													url: '/pages/client/public/getVxPhone?openId=' + data.msg
+												});
+											}
+										}
 									});
 								} else if (res.data.result.code === 0) {
 									uni.showToast({
