@@ -53,112 +53,49 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
-        border>
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
-
-        <!-- <el-table-column label="商品图片" width="120" align="center">
-          <template slot-scope="scope"><img style="height: 80px" :src="scope.row.pic"></template>
-        </el-table-column> -->
-        <el-table-column label="商品名称" width="150" align="center" fixed="">
-          <template slot-scope="scope">{{scope.row.goodsName}}</template>
+                border>
+        <el-table-column label="商品名称" align="center" fixed="">
+          <template slot-scope="scope">{{scope.row.goodsBean.goodsName}}</template>
         </el-table-column>
-        <el-table-column label="商品品牌" width="150" align="center">
+        <el-table-column label="商品品牌" align="center">
           <template slot-scope="scope">{{scope.row.goodsBrand}}</template>
         </el-table-column>
-        <el-table-column label="商品货号" width="150" align="center">
+        <el-table-column label="商品货号" align="center">
           <template slot-scope="scope">{{scope.row.goodsNumber}}</template>
         </el-table-column>
         <el-table-column label="商品规格类别" width="150" align="center" :formatter="propertyBean">
         </el-table-column>
         <el-table-column label="产地" width="250" align="center" :formatter="showAddress">
-
         </el-table-column>
         <el-table-column label="商品分类" width="200" align="center" :formatter="goodsCategory">
-
         </el-table-column>
         <el-table-column label="销售价格/市场价" width="150" align="left">
-          <template slot-scope="scope"> ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>
+          <template slot-scope="scope"> ￥{{scope.row.goodsBean.salePrice}} / ￥{{scope.row.goodsBean.martPrice}}</template>
         </el-table-column>
         <el-table-column label="所属店铺" width="150" align="left" :formatter="suppilerShop">
-
         </el-table-column>
         <el-table-column label="所属供应商" width="150" align="left" :formatter="suppiler">
-
         </el-table-column>
-        <el-table-column label="商品图片" width="100" align="center">
+<!--        <el-table-column label="商品图片" width="100" align="center">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-image v-for=" (item,index) in scope.row.goodsBean.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">-->
+<!--              <div slot="placeholder" class="image-slot">-->
+<!--                加载中<span class="dot">...</span>-->
+<!--              </div>-->
+<!--            </el-image>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-image v-for=" (item,index) in scope.row.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">
-              <div slot="placeholder" class="image-slot">
-                加载中<span class="dot">...</span>
-              </div>
-            </el-image>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" width="140" align="center">
-          <template slot-scope="scope">
-            上架：
-            <el-switch @change="handlePublishStatusChange(scope.$index, scope.row)" :active-value="1" :inactive-value="0"
-              v-model="scope.row.shelfStatus">
-            </el-switch>
-
-          </template>
-        </el-table-column>
-        <!-- <el-table-column label="排序" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.sort}}</template>
-        </el-table-column>
-        <el-table-column label="SKU库存" width="100" align="center">
-          <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" @click="handleShowSkuEditDialog(scope.$index, scope.row)" circle></el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="销量" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.sale}}</template>
-        </el-table-column>
-        <el-table-column label="审核状态" width="100" align="center">
-          <template slot-scope="scope">
-            <p>{{scope.row.verifyStatus | verifyStatusFilter}}</p>
-            <p>
-              <el-button
-                type="text"
-                @click="handleShowVerifyDetail(scope.$index, scope.row)">审核详情
-              </el-button>
-            </p>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="操作" width="350" align="center">
-          <template slot-scope="scope">
-
-            <el-button size="mini" @click="handleShowProduct(scope.$index, scope.row)">查看
-            </el-button>
-            <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)">编辑
-            </el-button>
             <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU管理
             </el-button>
-            <!-- <el-button
-                size="mini"
-                @click="handleShowLog(scope.$index, scope.row)">日志
-              </el-button> -->
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
-
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <!--
-    <div class="batch-operate-container">
-      <el-select size="small" v-model="operateType" placeholder="批量操作">
-        <el-option v-for="item in operates" :key="item.value" :label="item.label" :value="item.value">
-        </el-option>
-      </el-select>
-      <el-button style="margin-left: 20px" class="search-button" @click="handleBatchOperate()" type="primary" size="small">
-        确定
-      </el-button>
-    </div>
-    -->
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">
+                     :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">
       </el-pagination>
     </div>
     <el-dialog title="编辑货品信息" :visible.sync="editSkuInfo.dialogVisible" width="40%">
@@ -202,26 +139,12 @@
   </div>
 </template>
 <script>
-  import {
-    fetchList,
-    updateDeleteStatus,
-    updateNewStatus,
-    updateRecommendStatus,
-    updatePublishStatus
-  } from '@/api/product'
-  import {
-    fetchList as fetchSkuStockList,
-    update as updateSkuStockList
-  } from '@/api/skuStock'
-  import {
-    fetchList as fetchProductAttrList
-  } from '@/api/productAttr'
-  import {
-    fetchList as fetchBrandList
-  } from '@/api/brand'
-  import {
-    fetchListWithChildren
-  } from '@/api/productCate'
+  // import {fetchList, updateDeleteStatus, updateNewStatus, updateRecommendStatus, updatePublishStatus} from '@/api/product'
+  import {getGoodslist} from '@/api/brokerage';
+  // import {fetchList as fetchSkuStockList, update as updateSkuStockList} from '@/api/skuStock'
+  // import {fetchList as fetchProductAttrList} from '@/api/productAttr'
+  // import {fetchList as fetchBrandList} from '@/api/brand'
+  // import {fetchListWithChildren} from '@/api/productCate'
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
@@ -246,9 +169,9 @@
           keyword: null
         },
         operates: [{
-            label: "商品上架",
-            value: "publishOn"
-          },
+          label: "商品上架",
+          value: "publishOn"
+        },
           {
             label: "商品下架",
             value: "publishOff"
@@ -305,8 +228,6 @@
     },
     created() {
       this.getList();
-      //this.getBrandList();
-      //this.getProductCateList();
     },
     watch: {
       selectProductCateValue: function(newValue) {
@@ -330,46 +251,41 @@
     methods: {
       suppilerShop(row, column) {
         try {
-          return row.supplierShopBean.shopName;
+          return row.goodsBean.supplierShopBean.shopName;
         } catch (e) {
           return '数据读取错误';
         }
       },
       suppiler(row, column) {
         try {
-          return row.supplierBean.name;
+          return row.goodsBean.supplierBean.name;
         } catch (e) {
           return '数据读取错误';
         }
       },
       goodsCategory(row, column) {
         try {
-          return row.categoryOneBean.name + "/" + row.categoryTwoBean.name + "/" + row.categoryThreeBean.name;
+          return row.goodsBean.categoryOneBean.name + "/" + row.goodsBean.categoryTwoBean.name + "/" + row.goodsBean.categoryThreeBean.name;
         } catch (e) {
           return '数据读取错误';
         }
       },
       propertyBean(row, column) {
         try {
-          return row.propertyBean.propertyName;
+          return row.goodsBean.propertyBean.propertyName;
         } catch (e) {
           return null;
         }
       },
       showAddress(row, column) {
         try {
-          return row.provinceBean.name + " " + row.cityBean.name + " " + row.areaBean.name;
+          return row.goodsBean.provinceBean.name + " " + row.goodsBean.cityBean.name + " " + row.goodsBean.areaBean.name;
         } catch (e) {
           return '数据读取错误';
         }
       },
       addsku(index, row) {
-        this.$router.push({
-          path: "/sys/goods/skuinfo",
-          query: {
-            goodsid: row.id
-          }
-        })
+        this.$router.push({path: "/broke/rage/brageinfo", query: {id: row.id}})
       },
       getProductSkuSp(row, index) {
         let spData = JSON.parse(row.spData);
@@ -381,8 +297,10 @@
       },
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
-          console.log(response);
+        let id = this.$route.query.id;
+        this.listQuery.activityId = id;
+        getGoodslist(this.listQuery).then(response => {
+          console.log(response)
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
@@ -552,44 +470,10 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
       },
-      handleDelete(index, row) {
-        this.$confirm('是否要进行删除操作?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let ids = [];
-          ids.push(row.id);
-          this.updateDeleteStatus(1, ids);
-        });
-      },
-      handleUpdateProduct(index, row) {
-        let productId = row.id;
-        this.$router.push({
-          path: '/sys/goods/info',
-          query: {
-            goodsId: productId,
-            action: 2,
-          }
-        });
-      },
-      handleShowProduct(index, row) {
-        let productId = row.id;
-        this.$router.push({
-          path: '/sys/goods/info',
-          query: {
-            goodsId: productId,
-            action: 0,
-          }
-        });
-      },
-
-
       updateDeleteStatus(deleteStatus, ids) {
         let params = new URLSearchParams();
         params.append('ids', ids);

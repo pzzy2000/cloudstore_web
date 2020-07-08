@@ -196,19 +196,41 @@ export const asyncRouterMap = [
          meta: {title: '添加商品规格类型', icon: 'product-list'},
          hidden: true
        }]
-  },{
+  },
+  {
     path:'/broke/rage',
     component: Layout,
     redirect: '/broke/broke/index',
     name: 'brokerage',
-    meta: {title: '佣金', icon: 'product-list'},
+    meta: {title: '佣金管理', icon: 'product-list'},
     children: [{
-      path: 'index',
-      name: 'broke_rage',
-      component: () => import('@/views/brokerage/index'),
-      meta: {title: '佣金管理', icon: 'product-list'}
-    }]
-  },{
+        path: 'index',
+        name: 'broke_rage',
+        component: () => import('@/views/brokerage/index'),
+        meta: {title: '佣金活动列表', icon: 'product-list'}
+      },
+      {
+        path: 'brokegoods',
+        name: 'broke_goods',
+        component: () => import('@/views/brokerage/brokegoods'),
+        meta: {title: '佣金商品', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'brageinfo',
+        name: 'brage_info',
+        component: () => import('@/views/brokerage/brageInfo'),
+        meta: {title: '佣金sku', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'defbro',
+        name: 'default_broke',
+        component: () => import('@/views/brokerage/defBroke'),
+        meta: {title: '默认佣金', icon: 'product-list'}
+      }]
+  },
+  {
     path:'/sys/agent',
     component: Layout,
     redirect: '/sys/agent/list',
@@ -307,6 +329,19 @@ export const asyncRouterMap = [
           name: 'userinfo',
           component: () => import('@/views/client/userinfo'),
           meta: {title: '客户详情', icon: 'product-list'}
+        },
+        {
+          path: 'userapply',
+          name: 'userapply',
+          component: () => import('@/views/client/userapply'),
+          meta: {title: '客户代理申请', icon: 'product-list'}
+        },
+        {
+          path: 'userApplyinfo',
+          name: 'userApply_info',
+          component: () => import('@/views/client/userApplyinfo'),
+          meta: {title: '代理申请详情', icon: 'product-list'},
+          hidden: true
         },
         {
           path: 'add',

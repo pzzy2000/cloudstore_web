@@ -141,7 +141,7 @@
     },
     filters: {
       verifyStatusFilter(value) {
-        if (value === 1) {
+        if (value == 1) {
           return '审核通过';
         } else {
           return '未审核';
@@ -193,6 +193,7 @@
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
+          console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
