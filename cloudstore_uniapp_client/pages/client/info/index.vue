@@ -62,7 +62,7 @@
 				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="natoapplyAgent"></list-cell>
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="toapplyAgent"></list-cell>
 				<list-cell icon="icon-pinglun-copy"  v-if="user.relationId > 0" iconColor="#54b4ef" title="我的代理" @eventClick="toAgent"></list-cell>
-				<list-cell icon="icon-pinglun-copy" v-else iconColor="#54b4ef" title="申请代理" @eventClick="toapplyAgent"></list-cell>
+				<list-cell icon="icon-pinglun-copy" v-else iconColor="#54b4ef" title="申请代理" @eventClick="toapplyAgent('/pages/client/info/applyAgent')"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统设置" border="" @eventClick="toapplyAgent"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统退出" border="" @eventClick="navTo('/pages/client/public/login','exit')"></list-cell>
 			</view>
@@ -175,11 +175,17 @@ import { mapState,mapMutations } from 'vuex';
 				url:"/pages/agent/home/index"
 			})
 		},
-		toapplyAgent(){
-			uni.showToast({
-				title: '敬请期待',
-				icon: 'none'
-			});
+		toapplyAgent(url){
+			if (url) {
+				uni.navigateTo({
+					url: url,
+				});
+			}else{
+				uni.showToast({
+					title: '敬请期待',
+					icon: 'none'
+				});
+			}
 		},
 		async toExit(){
 			let params ={logintype:'client'};

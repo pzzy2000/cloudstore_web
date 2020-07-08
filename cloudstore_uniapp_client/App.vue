@@ -54,6 +54,7 @@
 </script>
 
 <style lang='scss'>
+	
 	/*
 			全局公共样式和字体图标
 		*/
@@ -380,4 +381,6 @@
 		.placeholder {
 			color: #999999;
 		}
+		@import "common/main.css";
+		@import "common/icon.css";
 </style>

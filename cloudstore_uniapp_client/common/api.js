@@ -48,6 +48,10 @@ export default {
 		order: {
 			getClientOrder: 'order/app/getClientOrder',
 			getClientOrderDetail : 'order/app/getClientOrderDetail',
+		},
+		applyAgent: {
+			getClientAgent: 'agent/apply/app/getClientAgent',
+			save: 'agent/apply/app/save'
 		}
 	},
 	agent:{

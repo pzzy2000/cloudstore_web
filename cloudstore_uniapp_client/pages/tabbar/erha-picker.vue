@@ -1,6 +1,6 @@
 <template>
 	<view class="level-container">
-		<h1 class="title">选择收货地址 <A @click="exit">取消</A> </h1>
+		<!-- <h1 class="title">选择地址 <A @click="exit">取消</A> </h1> -->
 		<ul class="name-list">
 			<li :class="showIndex==0?'select':''" @click="anewSelect(0)">{{province.name}}</li>
 			<li :class="showIndex==1?'select':''" @click="anewSelect(1)" v-if="showIndex>=1">{{city.name}}</li>
@@ -260,7 +260,8 @@
 		background: #fff;
 		position: fixed;
 		bottom: 0;
-
+		padding-top: 20upx;
+		z-index: 999;
 		.select {
 			color: red;
 			position: relative;
