@@ -88,9 +88,9 @@
         <el-table-column label="商品图片" width="100" align="center">
           <template slot-scope="scope">
             <el-image v-for=" (item,index) in scope.row.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">
-              <div slot="placeholder" class="image-slot">
-                加载中<span class="dot">...</span>
-              </div>
+<!--              <div slot="placeholder" class="image-slot">-->
+<!--                加载中<span class="dot">...</span>-->
+<!--              </div>-->
             </el-image>
           </template>
         </el-table-column>
@@ -100,7 +100,6 @@
             <el-switch @change="handlePublishStatusChange(scope.$index, scope.row)" :active-value="1" :inactive-value="0"
               v-model="scope.row.shelfStatus">
             </el-switch>
-
           </template>
         </el-table-column>
         <!-- <el-table-column label="排序" width="100" align="center">

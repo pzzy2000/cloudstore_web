@@ -8,14 +8,35 @@
             <el-input-dispatcher v-model="baseinfoForm.name" />
           </el-form-item>
           <br />
-          <el-form-item label="详细地址：" prop="detailAddress">
+          <el-form-item label="地址：" prop="address">
+            <el-input-dispatcher v-model="baseinfoForm.address" />
+          </el-form-item>
+          <br />
+          <el-form-item label="商铺名称：" prop="shopName">
+            <el-input-dispatcher v-model="baseinfoForm.shopName" />
+          </el-form-item>
+          <br />
+          <el-form-item label="证件类型：" prop="cardType">
+            <el-input-dispatcher v-model="baseinfoForm.cardType" />
+          </el-form-item>
+          <br />
+          <el-form-item label="证件号码：" prop="cardNo">
+            <el-input-dispatcher v-model="baseinfoForm.cardNo" />
+          </el-form-item>
+          <br />
+          <el-form-item label="详细住址：" prop="detailAddress">
             <el-input-dispatcher v-model="baseinfoForm.detailAddress" />
           </el-form-item>
           <br />
-          <el-form-item label="所属账号：" prop="phone">
-            <el-input-dispatcher v-model="baseinfoForm.phone" />
+          <el-form-item label="身份证正反面：">
+            <el-table :data="baseinfoForm.goodsPhotos">
+              <el-table-column width="100" align="center">
+                <template slot-scope="scope">
+                  <el-image :src="scope.row.url"></el-image>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-form-item>
-          <br />
           <div style="overflow: hidden">
             <el-button style="float: right" size="mini" @click="refused" v-show="isshow">拒绝</el-button>
             <el-button type="primary" style="float: right; margin-right: 20px" size="mini" @click="submitApply" v-show="isshow">审核通过</el-button>
@@ -23,7 +44,6 @@
         </el-form>
       </div>
     </el-card>
-
   </div>
 </template>
 
@@ -39,9 +59,7 @@
     data() {
       return {
         baseinfoForm: {
-          name: '',
-          detailAddress: '',
-          phone: ''
+          goodsPhotos: []
         },
         rwDispatcherState: 'read',
         isshow: true
@@ -58,16 +76,32 @@
           if (res.result.result.status !== 0) {
             this.isshow = false;
           }
+          this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
+          console.log(this.baseinfoForm.address)
         })
       },
       refused() {
         verified({status: 2, id: this.$route.query.id}).then(res => {
           console.log(res);
+          if (res.result.code == 0) {
+            this.$message({
+              message: '拒绝成功',
+              type: 'success',
+              duration: 800
+            });
+          }
         })
       },
       submitApply() {
         verified({status: 1, id: this.$route.query.id}).then(res => {
           console.log(res);
+          if (res.result.code == 0) {
+            this.$message({
+              message: '通过成功',
+              type: 'success',
+              duration: 800
+            });
+          }
         })
       },
       resetForm(formName) {
@@ -83,5 +117,10 @@
 </script>
 
 <style scoped>
-
+  .el-table >>> .el-table__header-wrapper{
+    display: none;
+  }
+  .el-table td, .el-table th.is-leaf{
+    border-bottom: none !important;
+  }
 </style>

@@ -46,25 +46,23 @@
 <!--    </el-card>-->
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
-        <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
-        <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="名称" align="center">
+        <el-table-column label="名字" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="地址" align="center" :formatter="showAddress">
         </el-table-column>
-<!--        <el-table-column label="开始时间" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="结束时间" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="状态" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.count}}</template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="关联商品数量" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.payPrice}}</template>-->
-<!--        </el-table-column>-->
+        <el-table-column label="商铺名称" align="center">
+          <template slot-scope="scope">{{scope.row.shopName}}</template>
+        </el-table-column>
+        <el-table-column label="证件类型" align="center">
+          <template slot-scope="scope">{{scope.row.cardType}}</template>
+        </el-table-column>
+        <el-table-column label="证件号码" align="center">
+          <template slot-scope="scope">{{scope.row.cardNo}}</template>
+        </el-table-column>
+        <el-table-column label="详细住址" align="center">
+          <template slot-scope="scope">{{scope.row.detailAddress}}</template>
+        </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="delLogis(scope.row)">查看</el-button>
