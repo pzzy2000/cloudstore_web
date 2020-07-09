@@ -43,6 +43,32 @@ export const constantRouterMap = [
 ]
 
 export const asyncRouterMap = [
+    {
+    		    path:'/sys/power',
+    		    component: Layout,
+    		    redirect: '/sys/power/module/list',
+    		    name: 'power',
+    		    meta: {title: '权限管理', icon: 'product-list'},
+    		     children: [{
+    		       path: 'module/list',
+    		       name: 'module_list',
+    		       component: () => import('@/views/power/module/list'),
+    		       meta: {title: '模块列表', icon: 'product-list'}
+    		     },{
+    		       path: 'role/list',
+    		       name: 'role_list',
+    		       component: () => import('@/views/power/role/list'),
+    		       meta: {title: '角色列表', icon: 'product-list'}
+    		     },{
+    		       path: 'role/module/list',
+    		       name: 'role_module_list',
+    		       component: () => import('@/views/power/role/rolemodule'),
+    		       meta: {title: '角色列表', icon: 'product-list'},
+                hidden: true
+    		     }]
+    		  },
+
+
 	 {
 		    path:'/sys/activity',
 		    component: Layout,
@@ -118,13 +144,13 @@ export const asyncRouterMap = [
          component: () => import('@/views/pms/product/info/editinfo'),
          meta: {title: '添加商品', icon: 'product-add'},
        },
-       // {
-       //   path: 'info',
-       //   name: 'goods_info',
-       //   component: () => import('@/views/pms/product/info/editinfo'),
-       //   meta: {title: '商品详情', icon: 'product-list'},
-       //   hidden: true
-       // },
+       {
+         path: 'info',
+         name: 'goods_info',
+         component: () => import('@/views/pms/product/info/editinfo'),
+         meta: {title: '商品详情', icon: 'product-list'},
+         hidden: true
+       },
         {
          path: 'skuinfo',
          name: 'sku_info',
