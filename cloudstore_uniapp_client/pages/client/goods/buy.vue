@@ -26,7 +26,7 @@
 			</view>
 			<!-- 商品列表 -->
 			<view class="g-item">
-				<image :src="this.goodsDetail.goodsPhotos[0].url" v-if="goodsDetail.goodsPhotos"></image>
+				<image :src="goodsDetail.goodsPhotos[0].url"></image>
 				<view class="right">
 					<text class="title clamp">{{goodsDetail.goodsName}}</text>
 					<text class="spec">商品规格: {{goodsSku.skuValue}} </text>
@@ -94,7 +94,7 @@
 				<text class="price-tip">￥</text>
 				<text class="price">{{totalPrice}}</text>
 			</view>
-			<text class="submit" @click="buy">提交订单</text>
+			<text class="submit" @click="buy">支付</text>
 		</view>
 		
 		<!-- 优惠券面板 
@@ -128,6 +128,7 @@
 	export default {
 		data() {
 			return {
+				orderType: '',
 				goodsId: '',
 				goodsDetail: {},
 				agentShop:{},
@@ -152,6 +153,7 @@
 				maskState: 0, //优惠券面板显示状态
 				desc: '', //备注
 				payType: 1, //1微信 2支付宝
+				orderId: '',
 				couponList: [
 					{
 						title: '新用户专享优惠券',
@@ -181,7 +183,7 @@
 				try{
 					return data.provinceBean.name+" "+data.cityBean.name+" "+data.areaBean.name;
 				}catch(e){
-					return "地址错误"
+					return "暂无地址"
 				}
 			}
 		},
@@ -193,6 +195,9 @@
 			this.goodsId = option.goodsId
 			this.agentGoodsId = option.agentGoodsId
 			this.goodsSkuId =option.goodsSkuId;
+			this.orderType = option.orderType
+			this.orderId = option.orderId
+			console.log(option)
 			this.getGoodsData(this.goodsId ,this.agentGoodsId ,this.goodsSkuId)
 			this.searchDetailAddress()
 		},
@@ -200,7 +205,6 @@
 			navBar
 		},
 		methods: {
-			
 			async searchDetailAddress(){
 				let params = {
 				};
@@ -210,7 +214,6 @@
 					      this.setAddress(data.result)
 				 }
 			},
-			
 			async getGoodsData (goodsId,agentGoodsId,goodsSkuId) { //加载商品数据
 				let params = { 
 					goodsId: goodsId ,
@@ -220,29 +223,12 @@
 				let data = await Api.apiCall('post', Api.client.goods.buy, params, true, false);
 				if (data) {
 					this.goodsDetail = data.result.goodsPicesBean
-					//console.log(this.goodsDetail.goodsPhotos[0])
 					this.agentShop = data.result.agentShopBean;
 					this.goodsSku = data.result.goodsOneSku;
 					this.totalPrice =this.goodsSku.price; 
 					this.activity=data.result.activityId;
-					console.log(this.activity)
 				}
 			},
-			// async searchClientAddress () { //查询收货地址
-			// 	let params = {
-			// 		pageNum: '1',
-			// 		pageSize: '10'
-			// 	} 
-			// 	let data = await Api.apiCall('post', Api.agent.address.searchClientAddress, params)
-			// 	if (data) {
-			// 		let tmpData = data.result.records[0]
-			// 		console.log(tmpData)
-			// 		this.addressData.name = tmpData.name
-			// 		this.addressData.address = tmpData.provinceId + tmpData.cityId + tmpData.areaId
-			// 		this.addressData.phone = tmpData.phone
-			// 		this.addressData.area = tmpData.detailAddress
-			// 	}
-			// },
 			radioChange: function(evt) { //选择支付方式
 				for (let i = 0; i < this.items.length; i++) {
 					if (this.items[i].value === evt.target.value) {
@@ -264,15 +250,16 @@
 				this.num = parseInt(this.num) + 1
 				this.totalPrice =  this.num * this.goodsSku.price
 			},
-			
 			buy(){
-				console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>1");
-				    let that = this;
+				uni.showLoading({
+					title: '正在创建订单',
+					mask: false
+				});
+				let that = this;
 				  uni.login({
 				      provider: 'weixin',
 				      success: function (loginRes) {
 						    let  vxCode = loginRes.code;
-							
 							uni.getProvider({ //获取支付的方式
 							    service: 'payment',
 							    success: function (res) {
@@ -287,39 +274,49 @@
 										'price': that.goodsSku.price,
 										'payType': 'weixin'
 									}
-									
-								Api.apiCallbackCall("POST", Api.client.buy.createOrder, params, true, true, function(data){
-									if (data) {
-										let re =data.result;
+									if (that.orderType === 'buyOrder') {
 										let params = {
-													'code': vxCode,
-													'orderId': re.id
-													}
+											'code': vxCode,
+											'orderId': that.orderId
+										}
 										Api.apiCallbackCall("POST", Api.client.buy.prePay, params, false, true, function(da_ta){
 										if (da_ta) {
 											that.payMent(da_ta)
 											}
 										});
-										
-										that.payMent(data)
+										uni.hideLoading()
+									}else{
+										Api.apiCallbackCall("POST", Api.client.buy.createOrder, params, true, true, function(data){
+											if (data) {
+												let re =data.result;
+												let params = {
+													'code': vxCode,
+													'orderId': re.id
+												}
+												that.orderId = re.id
+												Api.apiCallbackCall("POST", Api.client.buy.prePay, params, false, true, function(da_ta){
+												if (da_ta) {
+													that.payMent(da_ta)
+													}
+												});
+												uni.hideLoading()
+												// that.payMent(data)
+											}
+										}) 
 									}
-								}) },
+								},
 								fail:function(){
 									this.$api.msg("提交订单失败");
 								}
-							
 							});
-							
-							
 						  },
 					  fail:function() {
 					  	this.$api.msg("提交订单失败");
 					  }
-				
-			})
+				})
 			},
-		
 			payMent(res) {
+				var that = this;
 				let vxBuyInfo = res.result;
 				//微信支付
 				uni.requestPayment({
@@ -332,18 +329,34 @@
 					paySign: vxBuyInfo.paySign, //签名，具体签名方案参见 微信小程序支付文档
 					success: function(res) {
 						console.log(res)
+						if (res.errMsg === 'requestPayment:ok') {
+							uni.showModal({
+								title: '提示',
+								content: '支付成功',
+								showCancel: false,
+								cancelText: '取消',
+								confirmText: '确定',
+								success: res => {},
+							});
+							that.paySuccess(that.orderId)
+						}
 					},
 					fail: function(err) {
 						console.log('fail:' + JSON.stringify(err));
-						uni.showToast({
-							icon: 'none',
-							title: '支付失败'
-						});
 					},
 					complete: function(res) {
 						
 					}
 				});
+			},
+			async paySuccess (id) {
+				let parmas = {
+					orderId: id
+				}
+				let data = Api.apiCall('post', Api.client.buy.paySuccess,parmas)
+				if (data) {
+					console.log(data)
+				}
 			},
 			//显示优惠券面板
 			toggleMask(type){

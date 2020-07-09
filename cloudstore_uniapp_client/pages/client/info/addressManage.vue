@@ -7,7 +7,7 @@
 		</view>
 		<view class="row b-b">
 			<text class="tit">手机号</text>
-			<input class="input" type="number" v-model="addressData.mobile" placeholder="收货人手机号码" placeholder-class="placeholder" />
+			<input class="input" type="number" v-model="addressData.phone" placeholder="收货人手机号码" placeholder-class="placeholder" />
 		</view>
 		<view class="row b-b">
 			<text class="tit">地址</text>
@@ -42,12 +42,23 @@
 				popup:false,
 				title: '',
 				addressData: {
-					name: '孙雨泉',
-					mobile: '15773281581',
+					id: '',
+					name: '孙翔宇',
+					phone: '15773281581',
 					addressName: '选择省/市/区县',
 					address: '',
-					areas:'',
-					area: '天安门',
+					areas:{
+						province: {
+							id: ''
+						},
+						city: {
+							id: ''
+						},
+						area: {
+							id: ''
+						}
+					},
+					area: '区区区',
 					default: false,
 					status: '',
 				},
@@ -67,7 +78,7 @@
 		},
 		methods: {
 			close(){
-				  this.popup = false;
+				this.popup = false;
 			},
 			conceal(param) { 
 				// 获取到传过来的 省 市 区 县数据
@@ -93,7 +104,7 @@
 					this.$api.msg('请填写收货人姓名');
 					return;
 				}
-				if(!/(^1[3|4|5|7|8][0-9]{9}$)/.test(data.mobile)){
+				if(!/(^1[3|4|5|7|8][0-9]{9}$)/.test(data.phone)){
 					this.$api.msg('请输入正确的手机号码');
 					return;
 				}
@@ -113,15 +124,16 @@
 			  }
 			  let addressinfo = await Api.apiCall('post',Api.client.address.getClientAddressById,params) 
 			  if (addressinfo) {
-			    console.log(addressinfo.result)
+				this.addressData.id = addressinfo.result.id
 			    this.addressData.name = addressinfo.result.name,
 			    this.addressData.phone = addressinfo.result.phone
 			    this.addressData.area = addressinfo.result.detailAddress
 				this.addressData.addressName = addressinfo.result.provinceBean.name +'/'+ addressinfo.result.cityBean.name +'/'+ addressinfo.result.areaBean.name
 			    this.addressData.areas.province.id = addressinfo.result.provinceBean.id
-			    this.addressData.areas.cityBean.id = addressinfo.result.cityBean.id
-			    this.addressData.areas.areaBean.id = addressinfo.result.areaBean.id
+			    this.addressData.areas.city.id = addressinfo.result.cityBean.id
+			    this.addressData.areas.area.id = addressinfo.result.areaBean.id
 			    this.addressData.status = addressinfo.result.status
+				console.log(this.addressData)
 			  }
 			},
 			detailChange (e) { //点击是否默认按钮
@@ -130,8 +142,8 @@
 			  }else{
 			    this.addressData.status = 0
 			  }
-			  console.log(this.addressData.status)
-			  this.changeDetail()
+			  // console.log(this.addressData.status)
+			  // this.changeDetail()
 			},
 			async changeDetail (){ //改变地址是否默认
 				let params = {
@@ -143,17 +155,21 @@
 					console.log(addressinfo)
 				}
 			},
-			async saveaddress(data ){ //保存地址
-	 			let params ={
+			async saveaddress(data){ //保存地址
+	 			console.log(data)
+				let params ={
 					name:data.name,
-					phone:data.mobile,
+					phone:data.phone,
 					provinceId:data.areas.province.id,
 					cityId:data.areas.city.id,
 					areaId:data.areas.area.id,
 					detailAddress:data.area,
-					// status:data.default.value == true ? 1:0,
 					optType: this.optType
 				};
+				if (this.optType === 'update') {
+					params.id = data.id
+					params.status = data.status
+				}
 	 			let resullt = await Api.apiCall('post', Api.client.address.save, params, true);
 				if(resullt){
 					//this.$api.prePage()获取上一页实例，可直接调用上页所有数据和方法，在App.vue定义
