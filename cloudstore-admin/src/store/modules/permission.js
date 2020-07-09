@@ -2,13 +2,14 @@ import { asyncRouterMap, constantRouterMap } from '@/router/index';
 
 //判断是否有权限访问该菜单
 function hasPermission(menus, routeChild) {
-  if (routeChild.name) {
-    let currMenu = getMenu(routeChild.name, menus);
-    routeChild.hidden = !currMenu;
-     return  currMenu;
-  } else {
-    return false
-  }
+  // if (routeChild.name) {
+  //   let currMenu = getMenu(routeChild.name, menus);
+  //   routeChild.hidden = !currMenu;
+  //    return  currMenu;
+  // } else {
+  //   return false
+  // }
+  return  true;
 }
 
 //根据路由名称获取菜单

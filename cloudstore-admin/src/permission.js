@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
