@@ -2,6 +2,7 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
+    <div style="display: inline-block; float: right; margin-right: 100px">{{userType}}</div>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img class="user-avatar" :src="avatar">
@@ -27,6 +28,11 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
+  data() {
+    return {
+     userType: ''
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger
@@ -36,6 +42,17 @@ export default {
       'sidebar',
       'avatar'
     ])
+  },
+  created() {
+    console.log(localStorage.getItem('userType'))
+    switch (localStorage.getItem('userType')) {
+      case 'supplier': this.userType = "供应商";
+        break;
+      case 'agent': this.userType = "代理商";
+        break;
+      case 'platForm': this.userType = "平台";
+        break;
+    }
   },
   methods: {
     toggleSideBar() {

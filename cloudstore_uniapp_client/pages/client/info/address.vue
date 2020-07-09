@@ -7,10 +7,14 @@
 					<text v-if="item.status ==1 " class="tag">默认</text>
 				</view>
 				<view class="u-box">
-					
-					<text class="name">{{item.name}} {{item.phone}} </text><br/>
-					<text class="name">{{item.detailAddress}} </text><br/>
-					<text class="address">{{item|address}}</text>
+					<view class="">
+						<text class="name">{{item.name}} {{item.phone}} </text><br/>
+						<text class="name">{{item.detailAddress}} </text><br/>
+						<text class="address">{{item|address}}</text>
+					</view>
+					<view class="">
+						<text class="address text-red" v-if='isDelete' @click.stop="deleteAddress(item.id)">删除</text>
+					</view>
 				</view>
 			</view>
 			<text class="yticon icon-bianji" @click.stop="addAddress('edit', item.id)"></text>
@@ -31,22 +35,8 @@
 			return {
 				source: 0,
 				addressList: [
-					// {
-					// 	name: '刘晓晓',
-					// 	mobile: '18666666666',
-					// 	addressName: '贵族皇仕牛排(东城店)',
-					// 	address: '北京市东城区',
-					// 	area: 'B区',
-					// 	default: true
-					// },{
-					// 	name: '刘大大',
-					// 	mobile: '18667766666',
-					// 	addressName: '龙回1区12号楼',
-					// 	address: '山东省济南市历城区',
-					// 	area: '西单元302',
-					// 	default: false,
-					// }
-				]
+				],
+				isDelete: true
 			}
 		},
 		components:{
@@ -72,6 +62,11 @@
 				let list = await Api.apiCall('post', Api.client.address.list, params,true);
 				if (list) {
 					this.addressList = list.result.records
+					if (list.result.total === '1') {
+						this.isDelete = false
+					}else {
+						this.isDelete = true
+					}
 				}
 			},
 			//选择地址
@@ -88,6 +83,21 @@
 					url: '/pages/client/info/addressManage?type='+type+'&id='+id
 				});
 			},
+			async deleteAddress (id) {
+				let params={
+					ids: id
+				};
+				let list = await Api.apiCall('post', Api.client.address.deleteAddress, params);
+				if (list) {
+					console.log(list)
+					if (list.code === 0) {
+						this.$api.msg('删除成功');
+						this.searchAddressList()
+					}else{
+						this.$api.msg(list.msg);
+					}
+				}
+			}
 			// //添加或修改成功之后回调
 			// refreshList(data, type){
 			// 	//添加或修改后事件，这里直接在最前面添加了一条数据，实际应用中直接刷新地址列表即可
@@ -140,6 +150,9 @@
 		font-size: 28upx;
 		color: $font-color-light;
 		margin-top: 16upx;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 		.name{
 			margin-right: 30upx;
 		}

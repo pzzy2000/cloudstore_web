@@ -28,6 +28,7 @@ export  function back(){
  **/
 export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index'), hidden: true},
+  {path: '/sign', component: () => import('@/views/sign/index'), hidden: true},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
   {
     path: '',
@@ -336,8 +337,8 @@ export const asyncRouterMap = [
          hidden: true
       }
     ]
-  },{
-
+  },
+  {
       path:'/sys/client',
       component: Layout,
       redirect: '/sys/client/list',

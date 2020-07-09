@@ -43,11 +43,13 @@ export default {
 		},
 		buy: {
 			createOrder:'order/app/createOrder',
-			prePay: 'app/pay/prePay'
+			prePay: 'app/pay/prePay',
+			paySuccess: 'app/pay/paySuccess'
 		},
 		order: {
 			getClientOrder: 'order/app/getClientOrder',
 			getClientOrderDetail : 'order/app/getClientOrderDetail',
+			refundOrder: 'app/pay/refundOrder'
 		},
 		applyAgent: {
 			getClientAgent: 'agent/apply/app/getClientAgent',

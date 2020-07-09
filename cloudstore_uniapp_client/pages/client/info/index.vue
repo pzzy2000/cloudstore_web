@@ -58,8 +58,8 @@
 			</view>
 			<!-- 浏览历史 -->
 			<view class="history-section icon">
-				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="toapplyAgent"></list-cell>
-				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="natoapplyAgent"></list-cell>
+				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="toapplyAgent('/pages/client/info/address')"></list-cell>
+				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="toapplyAgent"></list-cell>
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="toapplyAgent"></list-cell>
 				<list-cell icon="icon-pinglun-copy"  v-if="user.relationId > 0" iconColor="#54b4ef" title="我的代理" @eventClick="toAgent"></list-cell>
 				<list-cell icon="icon-pinglun-copy" v-else iconColor="#54b4ef" title="申请代理" @eventClick="toapplyAgent('/pages/client/info/applyAgent')"></list-cell>

@@ -6,7 +6,8 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    userType: ''
   },
 
   mutations: {
@@ -21,6 +22,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_userType: (state, res) => {
+      state.userType = res;
     }
   },
 
@@ -30,10 +34,13 @@ const user = {
       userInfo['bean.access'] = userInfo['bean.access'].trim()
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
+          console.log(response);
           const data = response.result.result;
           const tokenStr = data.token
           setToken(tokenStr)
           commit('SET_TOKEN', tokenStr)
+          // commit('SET_userType', data.userType)
+          localStorage.setItem('userType', data.userType);
           resolve()
         }).catch(error => {
           reject(error)

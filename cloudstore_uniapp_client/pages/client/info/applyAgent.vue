@@ -8,15 +8,15 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">店铺姓名：</view>
-				<input placeholder="请输入店铺姓名" name="input" :value="agentfrom.shopName" :disabled='isEdit'></input>
+				<input placeholder="请输入店铺姓名" name="input" :value="agentfrom.shopName" :disabled='isEdit' @input="editInput($event,'shopName')"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">姓名：</view>
-				<input placeholder="请输入姓名" name="input" :value="agentfrom.name" :disabled='isEdit'></input>
+				<input placeholder="请输入姓名" name="input" :value="agentfrom.name" :disabled='isEdit'  @input="editInput($event,'name')"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">电话号码：</view>
-				<input placeholder="请输入电话号码" name="input" :value="agentfrom.phone" :disabled='isEdit'></input>
+				<input placeholder="请输入电话号码" name="input" :value="agentfrom.phone" :disabled='isEdit' @input="editInput($event,'phone')"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">证件类型</view>
@@ -28,7 +28,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">证件ID：</view>
-				<input placeholder="请输入证件ID" name="input" :value="agentfrom.cardId" :disabled='isEdit'></input>
+				<input placeholder="请输入证件ID" name="input" :value="agentfrom.cardId" :disabled='isEdit' @input="editInput($event,'cardId')"></input>
 			</view>
 			<view class="cu-form-group" @tap='this.popup=true;' :disabled='isEdit'>
 				<view class="title">省市区：</view>
@@ -36,7 +36,7 @@
 			</view>
 			<view class="cu-form-group align-start">
 				<view class="title">详细地址</view>
-				<textarea maxlength="-1" :value="agentfrom.address" placeholder="请输入详细地址" :disabled = 'isEdit'></textarea>
+				<textarea :value="agentfrom.address" placeholder="请输入详细地址" :disabled='isEdit' @input="editInput($event,'address')" style="color:#000" ></textarea>
 			</view>
 			<view class="cu-bar bg-white margin-top">
 				<view class="action">
@@ -71,6 +71,7 @@
 			return {
 				popup:false,//控制省市区三级联动
 				agentfrom: {
+					id: '',
 					shopName: '',
 					name: '',
 					phone: '',
@@ -89,7 +90,7 @@
 				imageList: [],
 				upImgUrl: Api.BASEURI +'sys/upload/entity/image/update',
 				category: 'image',
-				imglistId: '',
+				imglistId: [],
 				checkText: '',
 				isCheck: false,
 				isEdit: false
@@ -106,6 +107,7 @@
 				let params = {}
 				let data = await Api.apiCall('post', Api.client.applyAgent.getClientAgent, params)
 					if (data.code === 0 && data.result != null) {
+						this.agentfrom.id = data.result.id,
 						this.agentfrom.shopName = data.result.shopName
 						this.agentfrom.name = data.result.name
 						this.agentfrom.phone = data.result.phone
@@ -118,8 +120,8 @@
 						this.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name
 						for (let tmp in data.result.goodsPhotos) {
 							this.imageList.push(data.result.goodsPhotos[tmp].url)
+							this.imglistId.push(data.result.goodsPhotos[tmp].uid)
 						}
-						console.log(this.imageList)
 						if (data.result.status === 0) {
 							this.checkText = '正在审核'
 							this.isCheck = true
@@ -163,6 +165,26 @@
 			delectIndex (e) {
 				console.log(e)
 			},
+			editInput (e,data) { //修改input里面的值的时候
+				switch(data)
+				{
+					case 'shopName':
+						this.agentfrom.shopName = e.detail.value
+						break;
+					case 'name':
+						this.agentfrom.name = e.detail.value
+						break;
+					case 'phone':
+						this.agentfrom.phone = e.detail.value
+						break;
+					case 'cardId':
+						this.agentfrom.cardId = e.detail.value
+						break;
+					case 'address':
+						this.agentfrom.address = e.detail.value
+						break;
+				}
+			},
 			async applyAgent () {
 				let params = {
 					shopName: this.agentfrom.shopName,
@@ -177,22 +199,24 @@
 					detailAddress: this.agentfrom.address,
 					optType: this.agentfrom.optType
 				}
-				console.log( this.agentfrom)
-				// let data = await Api.apiCall('post', Api.client.applyAgent.save, params);
-				// if (data) {
-				// 	console.log(data)
-				// 	if (data.code === 0) {
-				// 		uni.showToast({
-				// 			title: '申请成功',
-				// 			icon: 'success'
-				// 		});
-				// 	}else {
-				// 		uni.showToast({
-				// 			title: 'data.msg',
-				// 			icon: 'none'
-				// 		});
-				// 	}
-				// }
+				if (this.agentfrom.optType === 'update') {
+					params.id = this.agentfrom.id
+				}
+				let data = await Api.apiCall('post', Api.client.applyAgent.save, params);
+				if (data) {
+					console.log(data)
+					if (data.code === 0) {
+						uni.showToast({
+							title: '申请成功',
+							icon: 'success'
+						});
+					}else {
+						uni.showToast({
+							title: 'data.msg',
+							icon: 'none'
+						});
+					}
+				}
 			},
 		}
 	}

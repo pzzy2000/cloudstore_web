@@ -57,3 +57,23 @@ let formData = new FormData();
       }
       return formData;
 }
+//注册专用
+export function switchSignform(data) {
+  let formData = new FormData();
+  for (let key in data) {
+    let key_=key;
+    if(key_ == 'pageNum' || key_==='pageSize'){
+      key_='commSearchBean.'+key_;
+    }else if(key_ == 'optType'){
+      key_=key_;
+    }else if(key_ == 'code'){
+      key_='code.'+key_;
+    }else{
+      key_='bean.'+key_;
+    }
+    if(data[key]!=null){
+      formData.append(key_, data[key]);
+    }
+  }
+  return formData;
+}

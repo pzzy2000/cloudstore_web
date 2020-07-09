@@ -35,6 +35,7 @@
             <svg-icon icon-class="eye" class="color-main"></svg-icon>
           </span>
           </el-input>
+          <span style="float: right">没有账号？去<a href="void:javascript(0)" class="sign" @click="tosign">注册</a></span>
         </el-form-item>
         <el-form-item style="margin-bottom: 60px;text-align: center">
           <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
@@ -135,7 +136,8 @@
               this.loading = false;
               setCookie("username",this.loginForm.username,15);
               setCookie("password",this.loginForm.password,15);
-              this.$router.push({path: '/'})
+              this.$router.push({path: '/'});
+              // this.$store.dispatch('userType', )
             }).catch(() => {
               this.loading = false
             })
@@ -155,6 +157,9 @@
       dialogCancel(){
         this.dialogVisible = false;
         setSupport(false);
+      },
+      tosign() {
+        this.$router.push("/sign")
       }
     }
   }
@@ -181,5 +186,9 @@
     max-width: 100%;
     max-height: 100%;
     margin-top: 200px;
+  }
+  .sign{
+    font-size: 16px;
+    color: red;
   }
 </style>

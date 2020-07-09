@@ -5,9 +5,9 @@
     <el-card  shadow="never" style="height: 1500px;">
     -->
     <el-divider content-position="left"><i class="el-icon-search"></i>商品SKU信息</el-divider>
-    <el-form :model="goodsku" ref="goodskuform" label-width="150px" size="small">
+    <el-form :model="goodskuform" ref="goodskuform" label-width="150px" size="small">
       <el-form-item label="商品名称：">
-        <el-input-dispatcher v-model="goodsku.goods.goodsName" style="width: 650px;" readonly></el-input-dispatcher>
+        <el-input-dispatcher v-model="goodskuform.financeProfitId" style="width: 650px;" readonly></el-input-dispatcher>
       </el-form-item>
       <!--<el-form-item label="属性类型：">-->
       <!--<el-select v-model="goodsku.propertyId" placeholder="请选择属性类型" @change="handleProductAttrChange">-->
@@ -38,7 +38,7 @@
                 </template>
               </el-table-column>
               <el-table-column label="销售价格" width="80" align="center">
-                <template slot-scope="scope">{{scope.row.price}}
+                <template slot-scope="scope">{{scope.row.agent}}
                   <!--<el-input-dispatcher v-model="scope.row.price"></el-input-dispatcher>-->
                 </template>
               </el-table-column>
@@ -124,12 +124,16 @@
     optType:'search'
   };
   import {getSkulist} from '@/api/brokerage';
+  import SingleUpload from '@/components/Upload/singleUpload';
   export default {
     name: "brageInfo",
     provide() {
       return {
         rwDispatcherProvider: this
       }
+    },
+    components: {
+      SingleUpload
     },
     data() {
       return {
@@ -150,6 +154,7 @@
           addGuige: { // 增加的规格值
           }
         },
+        goodskuform: {},
         productAttributeCategoryOptions: {
 
         },
@@ -207,6 +212,7 @@
         defaultList.id = id;
         getSkulist(defaultList).then(response => {
           console.log(response);
+          this.goodsku.skuStockList = response.result.result.records;
           // let tr = response.result.result;
           // let goods = tr.goodsPicesBean;
           // if (goods.propertyId == null) {

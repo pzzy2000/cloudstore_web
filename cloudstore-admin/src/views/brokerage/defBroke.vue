@@ -6,17 +6,20 @@
       </el-card>
       <div style="margin: 20px 20px 0 20px">
         <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
-          <el-table-column label="客户等级" align="center">
-            <template slot-scope="scope">{{scope.row.name}}</template>
+<!--          <el-table-column label="客户等级" align="center">-->
+<!--            <template slot-scope="scope">{{scope.row.name}}</template>-->
+<!--          </el-table-column>-->
+          <el-table-column label="代理佣金" align="center">
+            <template slot-scope="scope">{{scope.row.agent}}</template>
           </el-table-column>
           <el-table-column label="客户佣金" align="center">
-            <template slot-scope="scope">{{scope.row.startTime}}</template>
+            <template slot-scope="scope">{{scope.row.client}}</template>
           </el-table-column>
           <el-table-column label="可获积分" align="center">
-            <template slot-scope="scope">{{scope.row.endTime}}</template>
+            <template slot-scope="scope">{{scope.row.clientPoints}}</template>
           </el-table-column>
           <el-table-column label="佣金比例" align="center">
-            <template slot-scope="scope">{{scope.row.count}}</template>
+            <template slot-scope="scope">1</template>
           </el-table-column>
           <el-table-column label="操作" width="200px"  align="center">
             <template slot-scope="scope">
@@ -49,6 +52,7 @@
         getdefbroke({id: 1}).then(res => {
           console.log(res);
           this.listLoading = false;
+          this.orderList.push(res.result.result);
         })
       }
     }

@@ -63,7 +63,7 @@
 				//上传的图片地址
 				uploadImages: [],
 				//展示的图片地址
-				uploads: [],
+				// uploads: [],
 				// 超出限制数组
 				exceeded_list: [],
 				//获取删除的图片数组的index
@@ -71,8 +71,19 @@
 				imgUid: []
 			}
 		},
+		computed:{
+		    uploads:{
+				get() {
+					return this.dataList;
+				},
+				set() {
+					this.uploads = this.dataList
+			    }
+			}
+		},
 		mounted(){
-			this.uploads = this.dataList
+			// this.uploads = this.dataList
+			// console.log(this.dataList)
 		},
 		methods:{
 			previewImage (e) {
@@ -198,10 +209,9 @@
 								'user': 'test'
 							},
 							success: (uploadFileRes) => {
-								//console.log(uploadFileRes.data)
+								console.log(this.uploads)
 								var data = JSON.parse(uploadFileRes.data)
-								//console.log(data.result.result.uid)
-								this.imgUid.push(data.result.result.uid)
+								this.imgUid.push(data.result.result.id)
 							}
 						});
 					}
