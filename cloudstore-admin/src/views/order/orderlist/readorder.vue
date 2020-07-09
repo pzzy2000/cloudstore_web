@@ -24,9 +24,9 @@
       <span>基本信息</span>
     </el-card>
     <el-table :data="baseInfo" border style="width: 96%; margin-left: 2%">
-      <el-table-column prop="person" label="订单编号" align="center">
+      <el-table-column prop="orderId" label="订单编号" align="center">
       </el-table-column>
-      <el-table-column prop="phone" label="发货单流水号" align="center">
+      <el-table-column prop="goodsId" label="发货单流水号" align="center">
       </el-table-column>
       <el-table-column prop="postcode" label="用户账号" align="center">
       </el-table-column>
@@ -40,7 +40,7 @@
     <el-table :data="baseInfo" border style="width: 96%; margin-left: 2%">
       <el-table-column prop="person" label="配送方式" align="center">
       </el-table-column>
-      <el-table-column prop="phone" label="物流单号" align="center">
+      <el-table-column prop="supplierId" label="物流单号" align="center">
       </el-table-column>
       <el-table-column prop="postcode" label="自动确认收货时间" align="center">
       </el-table-column>
@@ -70,17 +70,17 @@
       <span>商品信息</span>
     </el-card>
     <el-table :data="baseInfo" border style="width: 96%; margin-left: 2%">
-      <el-table-column prop="person" label="商品图片" align="center">
+      <el-table-column prop="goodsPicesBean.goodsName" label="商品图片" align="center">
       </el-table-column>
-      <el-table-column prop="phone" label="商品名称" align="center">
+      <el-table-column prop="goodsPicesBean.goodsName" label="商品名称" align="center">
       </el-table-column>
-      <el-table-column prop="postcode" label="价格/货号" align="center">
+      <el-table-column prop="goodsPicesBean.salePrice" label="价格/货号" align="center">
       </el-table-column>
-      <el-table-column prop="area" label="属性" align="center">
+      <el-table-column prop="goodsPicesBean.martPrice" label="属性" align="center">
       </el-table-column>
-      <el-table-column prop="area" label="库存" align="center">
+      <el-table-column prop="agentShopId" label="库存" align="center">
       </el-table-column>
-      <el-table-column prop="area" label="小计" align="center">
+      <el-table-column prop="payPrice" label="小计" align="center">
       </el-table-column>
     </el-table>
     <el-card shadow="never" style="margin: 0 20px">
@@ -155,6 +155,7 @@
         defaultList.orderId = this.$route.params.id;
         getOneorder(defaultList).then(res => {
           console.log(res);
+          this.baseInfo = res.result.result.records;
         })
       }
     }
