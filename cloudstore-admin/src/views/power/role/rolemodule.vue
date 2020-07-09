@@ -65,6 +65,10 @@
 <script>
     import {fetchRoleModuleList,roleModueSaveRemove} from '@/api/role'
     import { formatDate } from '@/assets/common/data.js'
+    import {
+      msg
+    } from '@/api/iunits'
+
     const defaultList = {
       pageNum: 1,
       pageSize: 100,
@@ -115,9 +119,9 @@
                 // this.disabled = false;
                 if (res.result.code == 0) {
                   if(idx==0){
-                    Api.msg("关联模块成功");
+                    msg("关联模块成功");
                   }else{
-                    Api.msg("删除模块关联成功");
+                    msg("删除模块关联成功");
                   }
                 }
               })

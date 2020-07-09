@@ -26,7 +26,7 @@ router.beforeEach((to, from, next) => {
           let result = res.result;
           let code = result.code;
           let loginuser = result.result.loginUser;
-          let menuBeans = result.result.menuBeans;
+          let menuBeans = result.result.sysModule;
           store.dispatch('GenerateRoutes', menuBeans).then(() => { // 生成可访问的路由表
             router.addRoutes(store.getters.addRouters); // 动态添加可访问路由表
             next({ ...to,replace: true})
