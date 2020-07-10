@@ -351,44 +351,45 @@ export const asyncRouterMap = [
           meta: {title: '客户列表', icon: 'product-list'}
         },
         {
-          path: 'userinfo',
-          name: 'userinfo',
-          component: () => import('@/views/client/userinfo'),
-          meta: {title: '客户详情', icon: 'product-list'}
+          path: 'info',
+          name: 'client_info',
+          component: () => import('@/views/client/info'),
+          meta: {title: '客户详情', icon: 'product-list'},
+           hidden: true
         },
-        {
-          path: 'userapply',
-          name: 'userapply',
-          component: () => import('@/views/client/userapply'),
-          meta: {title: '客户代理申请', icon: 'product-list'}
-        },
-        {
-          path: 'userApplyinfo',
-          name: 'userApply_info',
-          component: () => import('@/views/client/userApplyinfo'),
-          meta: {title: '代理申请详情', icon: 'product-list'},
-          hidden: true
-        },
-        {
-          path: 'add',
-          name: 'adduser',
-          component: () => import('@/views/client/adduser'),
-          meta: {title: '添加客户', icon: 'product-list'},
-          hidden: true
-        },
-        {
-          path: 'level',
-          name: 'level',
-          component: () => import('@/views/client/level'),
-          meta: {title: '客户等级', icon: 'ums-resource'}
-        },
-        {
-          path: 'addlevel',
-          name: 'user_addlevel',
-          component: () => import('@/views/client/addlevel'),
-          meta: {title: '添加等级', icon: 'ums-resource'},
-          hidden: true
-        }
+        // {
+        //   path: 'agent/apply/list',
+        //   name: 'agent_apply_list',
+        //   component: () => import('@/views/client/agent/apply/list'),
+        //   meta: {title: '代理申请列表', icon: 'product-list'}
+        // },
+        // {
+        //   path: 'agent/apply/info',
+        //   name: 'agent_apply_info',
+        //   component: () => import('@/views/client/agent/apply/info'),
+        //   meta: {title: '代理申请详情', icon: 'product-list'},
+        //   hidden: true
+        // },
+        // {
+        //   path: 'add',
+        //   name: 'adduser',
+        //   component: () => import('@/views/client/adduser'),
+        //   meta: {title: '添加客户', icon: 'product-list'},
+        //   hidden: true
+        // },
+        // {
+        //   path: 'level',
+        //   name: 'level',
+        //   component: () => import('@/views/client/level'),
+        //   meta: {title: '客户等级', icon: 'ums-resource'}
+        // },
+        // {
+        //   path: 'addlevel',
+        //   name: 'user_addlevel',
+        //   component: () => import('@/views/client/addlevel'),
+        //   meta: {title: '添加等级', icon: 'ums-resource'},
+        //   hidden: true
+        // }
       ]
   },
   {
