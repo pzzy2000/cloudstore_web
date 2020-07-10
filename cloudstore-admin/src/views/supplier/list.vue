@@ -27,23 +27,18 @@
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
         border>
         <el-table-column type="selection" width="60" align="center" fixed></el-table-column>
-        <el-table-column label="供应商名称"  align="center" fixed>
+        <el-table-column label="供应商名称"  align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="供应商等级"  align="center">
           <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>
         </el-table-column>
         <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
-
         </el-table-column>
         <el-table-column label="审核状态"  align="center" :formatter="showStatus">
         </el-table-column>
-
-		<el-table-column label="所属账号"  align="center" :formatter="showAccess">
-
-		</el-table-column>
-
-
+        <el-table-column label="所属账号"  align="center" :formatter="showAccess">
+        </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
             <p>
@@ -249,68 +244,12 @@
           this.updateDeleteStatus(1, ids);
         });
       },
-      // handleUpdateProduct(index,row){
-      //   this.$router.push({path:'/pms/updateProduct',query:{id:row.id}});
-      // },
-      // handleShowProduct(index,row){
-      //   console.log("handleShowProduct",row);
-      // },
-      // handleShowVerifyDetail(index,row){
-      //   console.log("handleShowVerifyDetail",row);
-      // },
-      // handleShowLog(index,row){
-      //   console.log("handleShowLog",row);
-      // },
-      // updatePublishStatus(publishStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('publishStatus', publishStatus);
-      //   updatePublishStatus(params).then(response => {
-      //     this.$message({
-      //       message: '修改成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      // },
-      // updateNewStatus(newStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('newStatus', newStatus);
-      //   updateNewStatus(params).then(response => {
-      //     this.$message({
-      //       message: '修改成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      // },
-      // updateRecommendStatus(recommendStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('recommendStatus', recommendStatus);
-      //   updateRecommendStatus(params).then(response => {
-      //     this.$message({
-      //       message: '修改成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      // },
-      // updateDeleteStatus(deleteStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('deleteStatus', deleteStatus);
-      //   updateDeleteStatus(params).then(response => {
-      //     this.$message({
-      //       message: '删除成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      //   this.getList();
-      // }
     }
   }
 </script>
-<style></style>
+
+<style scoped>
+  .el-table >>> td{
+    padding: 0 !important;
+  }
+</style>

@@ -28,7 +28,7 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="code">
-          <el-input name="username" type="text" v-model="signForm.code" autoComplete="off" placeholder="请输入手机号/账号">
+          <el-input name="username" type="text" v-model="signForm.code" autoComplete="off" placeholder="请输入手机验证码">
           <span slot="prefix">
             <svg-icon icon-class="user" class="color-main"></svg-icon>
           </span>

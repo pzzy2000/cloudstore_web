@@ -43,8 +43,8 @@
 				title: '',
 				addressData: {
 					id: '',
-					name: '孙翔宇',
-					phone: '15773281581',
+					name: '',
+					phone: '',
 					addressName: '选择省/市/区县',
 					address: '',
 					areas:{
@@ -58,7 +58,7 @@
 							id: ''
 						}
 					},
-					area: '区区区',
+					area: '',
 					default: false,
 					status: '',
 				},
@@ -96,7 +96,7 @@
 			},
 			//地图选择地址
 			chooseLocation(){
-				this.popup=true;
+				this.popup= !this.popup;
 			},
 			confirm(){ //提交
 				let data = this.addressData;

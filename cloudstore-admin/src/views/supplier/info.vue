@@ -6,21 +6,21 @@
           <!--基本信息--></span>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="baseinfo" ref="baseinfoFrom" size="small" label-width="130px">
+        <el-form :inline="true" :model="blicense" ref="blicense" :rules="rules" size="small" label-width="130px">
           <el-divider content-position="left"><i class="el-icon-search"></i> 供应商信息</el-divider>
-          <el-form-item label="供应商名字：" required>
-            <el-input-dispatcher style="width: 580px" v-model="baseinfo.supplierName" placeholder="供应商名字"></el-input-dispatcher>
+          <el-form-item label="供应商名字：" prop="supplierName">
+            <el-input-dispatcher style="width: 580px" v-model="blicense.supplierName" placeholder="供应商名字"></el-input-dispatcher>
           </el-form-item>
 
-          <el-form-item label="联系电话：" required>
-            <el-input-dispatcher style="width: 214px" v-model="baseinfo.phone" placeholder="供应商名字"></el-input-dispatcher>
+          <el-form-item label="联系电话：" prop="phoneNumber">
+            <el-input-dispatcher style="width: 214px" v-model.number="blicense.phoneNumber" placeholder="联系电话"></el-input-dispatcher>
           </el-form-item>
           <el-divider content-position="left"><i class="el-icon-search"></i> 店铺信息</el-divider>
-          <el-form-item label="店铺名字：" required>
-            <el-input-dispatcher style="width: 580px" v-model="baseinfo.shopName" placeholder="店铺名字"></el-input-dispatcher>
+          <el-form-item label="店铺名字：" prop="shopName">
+            <el-input-dispatcher style="width: 580px" v-model="blicense.shopName" placeholder="店铺名字"></el-input-dispatcher>
           </el-form-item>
-          <el-form-item label="店铺告示：" style="width: 100%;" required>
-            <el-input-dispatcher style="width: 930px" v-model="baseinfo.notice" placeholder="店铺告示"></el-input-dispatcher>
+          <el-form-item label="店铺告示：" style="width: 100%;" prop="notice">
+            <el-input-dispatcher style="width: 930px" v-model="blicense.notice" placeholder="店铺告示"></el-input-dispatcher>
           </el-form-item>
         </el-form>
       </div>
@@ -28,65 +28,55 @@
     <el-card class="filter-container" shadow="never">
       <div style="margin-top: 15px">
         <el-divider content-position="left"><i class="el-icon-search"></i> 营业执照</el-divider>
-        <el-form :inline="true" :model="blicense" size="small" label-width="130px">
-          <el-form-item label="执照名称：" required>
+        <el-form :inline="true" :model="blicense" ref="blicense" :rules="rules" size="small" label-width="130px">
+          <el-form-item label="执照名称：" prop="licenseName">
             <el-input-dispatcher style="width: 214px" v-model="blicense.licenseName" placeholder="执照名称"></el-input-dispatcher>
           </el-form-item>
-          <el-form-item label="信用代码：" required>
+          <el-form-item label="信用代码：" prop="creditCode">
             <el-input-dispatcher style="width: 214px" v-model="blicense.creditCode" placeholder="信用代码"></el-input-dispatcher>
           </el-form-item>
 
-          <el-form-item label="员工人数：">
+          <el-form-item label="员工人数：" prop="workNumber">
             <el-input-dispatcher style="width: 214px" v-model="blicense.workNumber" placeholder="员工人数"></el-input-dispatcher>
           </el-form-item>
 
-          <el-form-item label="简介：" style="width: 100%;" required>
+          <el-form-item label="简介：" style="width: 100%;" prop="introduce">
             <el-input-dispatcher style="width: 930px" v-model="blicense.introduce" placeholder="简介"></el-input-dispatcher>
           </el-form-item>
 
-          <el-form-item label="主营品牌：">
+          <el-form-item label="主营品牌：" prop="brand">
             <el-input-dispatcher style="width: 214px" v-model="blicense.brand" placeholder="主营品牌"></el-input-dispatcher>
           </el-form-item>
 
-         <!-- <el-form-item label="主营产品：">
-            <el-input-dispatcher style="width: 214px" v-model="blicense.mainProduct" placeholder="主营产品"></el-input-dispatcher>
-          </el-form-item> -->
-
-          <el-form-item label="成立时间：" required>
-            <el-date-picker-dispatcher type="date" placeholder="成立时间" v-model="blicense.startTime" style="width: 214px"></el-date-picker-dispatcher>
-          </el-form-item>
-
-          <el-form-item label="电话：">
+          <el-form-item label="电话：" prop="phone">
             <el-input-dispatcher style="width: 214px" v-model="blicense.phone" placeholder="电话"></el-input-dispatcher>
           </el-form-item>
 
-          <el-form-item label="邮箱：">
+          <el-form-item label="邮箱：" prop="email">
             <el-input-dispatcher style="width: 214px" v-model="blicense.email" placeholder="邮箱"></el-input-dispatcher>
           </el-form-item>
-          <el-form-item label="注册资本：">
+          <el-form-item label="注册资本：" prop="registerCapital">
             <el-input-dispatcher style="width: 214px" v-model="blicense.registerCapital" placeholder="注册资本"></el-input-dispatcher>
           </el-form-item>
           <el-divider content-position="left"></el-divider>
-          <el-form-item label="法人：" required>
+          <el-form-item label="法人：" prop="legalPerson">
             <el-input-dispatcher style="width: 214px" v-model="blicense.legalPerson" placeholder="法人"></el-input-dispatcher>
           </el-form-item>
-          <el-form-item label="证件类型：" required>
+          <el-form-item label="证件类型：" prop="cardType">
             <el-input-dispatcher style="width: 214px" v-model="blicense.cardType" placeholder="证件类型"></el-input-dispatcher>
           </el-form-item>
 
-          <el-form-item label="证件号码：" required>
+          <el-form-item label="证件号码：" prop="cardNo">
             <el-input-dispatcher style="width: 214px" v-model="blicense.cardNo" placeholder="证件号码"></el-input-dispatcher>
           </el-form-item>
           <br/>
-          <el-form-item label="证件照片：" required>
+          <el-form-item label="证件照片：" prop="cardPhotos">
             <div v-if="rwDispatcherState =='read'">
-
                 <el-image  v-for=" (item,index) in cardPhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
                      <div slot="placeholder" class="image-slot">
                        加载中<span class="dot">...</span>
                      </div>
                 </el-image>
-
             </div>
             <div v-else>
              <localmulti-upload v-model="cardPhotos"></localmulti-upload>
@@ -95,11 +85,11 @@
           <br />
           <el-form-item label="营业执照照片：" required>
           <div v-if="rwDispatcherState =='read'">
-                    <el-image  v-for=" (item,index) in licensePhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
-                         <div slot="placeholder" class="image-slot">
-                           加载中<span class="dot">...</span>
-                         </div>
-                    </el-image>
+            <el-image  v-for=" (item,index) in licensePhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
+               <div slot="placeholder" class="image-slot">
+                 加载中<span class="dot">...</span>
+               </div>
+            </el-image>
           </div>
 
           <div v-else>
@@ -120,7 +110,7 @@
           </el-button>
 
           <el-button style="float: right;margin-bottom: 10px; margin-right: 20px;" :style="{ display: shownUpdateButton}"
-            @click="savebaseinfo('baseinfoFrom')" type="primary" size="small">
+            @click="savebaseinfo('blicense')" type="primary" size="small">
             提交
           </el-button>
 
@@ -150,36 +140,160 @@
       }
     },
     data() {
-
+      function checkSpecialKey(str) {
+        var specialKey = "[`~!#$^&*()=|{}':;'\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]‘'";
+        for (var i = 0; i < str.length; i++) {
+          if (specialKey.indexOf(str.substr(i, 1)) != -1) {
+            return false;
+          }
+        }
+        return true;
+      };
+      var validateInput = (rule, value, callback) => {
+        if (!checkSpecialKey(value)) {
+          callback(new Error("不能含有特殊字符！！"));
+        } else {
+          callback();
+        }
+      };
+      var validatePhonenum = (rule, value, callback) => {
+        function isMobile (s) {
+          return /^1[0-9]{10}$/.test(s)
+        }
+        if(value == ''){
+          callback(new Error("请输入电话！！"));
+        } else if (!isMobile(value)) {
+          callback(new Error("请输入正确电话格式！！"));
+        }else {
+          callback();
+        }
+      }
+      var validateEmail = (rule, value, callback) => {
+        function isEmail(s) {
+          return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
+        }
+        if(value == ''){
+          callback();
+        } else if (!isEmail(value)){
+          callback(new Error("请输入正确邮箱格式！！"));
+        }else{
+          callback();
+        }
+      }
+      var validateCardnum = (rule, value, callback) => {
+        function isCardID(sId) {
+          if (!/(^\d{15}$)|(^\d{17}(\d|X|x)$)/.test(sId)) {
+            console.log('你输入的身份证长度或格式错误')
+            return false
+          }
+          //身份证城市
+          var aCity = { 11: "北京", 12: "天津", 13: "河北", 14: "山西", 15: "内蒙古", 21: "辽宁", 22: "吉林", 23: "黑龙江", 31: "上海", 32: "江苏", 33: "浙江", 34: "安徽", 35: "福建", 36: "江西", 37: "山东", 41: "河南", 42: "湖北", 43: "湖南", 44: "广东", 45: "广西", 46: "海南", 50: "重庆", 51: "四川", 52: "贵州", 53: "云南", 54: "西藏", 61: "陕西", 62: "甘肃", 63: "青海", 64: "宁夏", 65: "新疆", 71: "台湾", 81: "香港", 82: "澳门", 91: "国外" };
+          if (!aCity[parseInt(sId.substr(0, 2))]) {
+            console.log('你的身份证地区非法')
+            return false
+          }
+          // 出生日期验证
+          var sBirthday = (sId.substr(6, 4) + "-" + Number(sId.substr(10, 2)) + "-" + Number(sId.substr(12, 2))).replace(/-/g, "/"),
+            d = new Date(sBirthday)
+          if (sBirthday != (d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate())) {
+            console.log('身份证上的出生日期非法')
+            return false
+          }
+          // 身份证号码校验
+          var sum = 0,
+            weights = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2],
+            codes = "10X98765432"
+          for (var i = 0; i < sId.length - 1; i++) {
+            sum += sId[i] * weights[i];
+          }
+          var last = codes[sum % 11]; //计算出来的最后一位身份证号码
+          if (sId[sId.length - 1] != last) {
+            console.log('你输入的身份证号非法')
+            return false
+          }
+          return true
+        }
+        if (!isCardID(value)) {
+          callback(new Error("请输入正确证件号码格式！！"))
+        }else{
+          callback();
+        }
+      }
       return {
         // baseInfo: Object.assign({}, defaultBaseInfo),
         updateParams:{
           from:'SysUser'
         },
-        baseinfo:{
-              supplierName: '',
-              phone: '',
-              shopName: '',
-              notice: ''
-        },
         blicense: {
-              licenseName: '',
-              creditCode: '',
-              introduce: '',
-              workNumber: '',
-              brand: '',
-              startTime: '',
-              phone: '',
-              email: '',
-              registerCapital: '',
-              legalPerson: '',
-              cardType: '',
-              cardNo: '',
-              cardPhoto:[],
+          supplierName: '',
+          phoneNumber: '',
+          shopName: '',
+          notice: '',
+          licenseName: '',
+          creditCode: '',
+          introduce: '',
+          workNumber: '',
+          brand: '',
+          startTime: '',
+          phone: '',
+          email: '',
+          registerCapital: '',
+          legalPerson: '',
+          cardType: '',
+          cardNo: '',
+          cardPhoto:[],
+        },
+        rules: {
+          supplierName: [
+            { required: true, message: '供应商名字不能为空', trigger: 'blur' },
+            { validator: validateInput, trigger: 'blur' }
+          ],
+          phoneNumber: [
+            { required: true, message: '联系电话不能为空', trigger: 'blur' },
+            { validator: validatePhonenum, trigger: 'blur' }
+          ],
+          shopName: [
+            { required: true, message: '店铺名字不能为空', trigger: 'blur' },
+            { validator: validateInput, trigger: 'blur' }
+          ],
+          // notice: [
+          //   { validator: validateInput, trigger: 'blur' }
+          // ]
+          licenseName: [
+            { required: true, message: '执照名称不能为空', trigger: 'blur' },
+            { min: 10, max: 100, message: '长度在10到100字', trigger: 'blur' },
+            { validator: validateInput, trigger: 'blur' }
+          ],
+          creditCode: [
+            { required: true, message: '信用代码不能为空', trigger: 'blur' },
+            { validator: validateInput, trigger: 'blur' }
+          ],
+          introduce: [
+            { required: true, message: '简介不能为空', trigger: 'blur' },
+            { min: 10, max: 100, message: '长度在10到100字', trigger: 'blur' }
+          ],
+          email: [
+            { validator: validateEmail, trigger: 'blur' }
+          ],
+          legalPerson: [
+            { required: true, message: '法人不能为空', trigger: 'blur' },
+            { validator: validateInput, trigger: 'blur' }
+          ],
+          cardType: [
+            { required: true, message: '请输入证件类型', trigger: 'blur' }
+          ],
+          cardNo: [
+            { required: true, message: '证件号码不能为空', trigger: 'blur' },
+            { min: 18, max: 18, message: '请输入18位号码', trigger: 'blur' },
+            { validator: validateCardnum, trigger: 'blur' }
+          ],
+          cardPhotos: [
+            { required: true, message: '不能为空', trigger: 'blur' },
+          ]
         },
         cardPhotos:[],
         licensePhotos:[],
-        rwDispatcherState: 'write',
+        rwDispatcherState: 'read',
         shownUpdateButton: "none",
         shownUpdateSubelButton: "",
         supplierId: typeof(this.$route.query.supplierId) == 'undefined' ? null : this.$route.query.supplierId,
@@ -189,18 +303,12 @@
       // mounted在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作
     },
     created() {
-      this.rwDispatcherState = "read" //write  read
+      this.rwDispatcherState = "write" //write  read
       // this.baseinfo.name="www";
       this.blicense.startTime = "2012-02-12"
       this.loadInfo();
     },
-
-    mounted() {
-
-    },
-
     methods: {
-
       shownUpdateSbutton(action) {
         if (action == true) {
           this.shownUpdateButton = ""
@@ -219,10 +327,10 @@
           supplierId: this.supplierId
         }).then(response => {
           if (response.result.result.supplier != null) {
-           this.baseinfo.supplierName = response.result.result.supplier.name;
-           this.baseinfo.phone = response.result.result.supplier.phone;
-           this.baseinfo.shopName = response.result.result.shop.shopName;
-           this.baseinfo.notice = response.result.result.shop.notice;
+           this.blicense.supplierName = response.result.result.supplier.name;
+           this.blicense.phoneNumber = response.result.result.supplier.phone;
+           this.blicense.shopName = response.result.result.shop.shopName;
+           this.blicense.notice = response.result.result.shop.notice;
            this.blicense.licenseName = response.result.result.supplierMainInfo.licenseName;
            this.blicense.creditCode = response.result.result.supplierMainInfo.creditCode;
            this.blicense.workNumber = response.result.result.supplierMainInfo.workNumber;

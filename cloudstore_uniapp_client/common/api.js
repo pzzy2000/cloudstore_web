@@ -83,6 +83,9 @@ export default {
 		   save:'agent/goods/app/save' ,//代理商将商品加入代理
 		   loadHtml:'goods/app/loadMobileHtml', //获取商品详情的图文详情
 		},
+		share: {
+			save: 'share/app/save'
+		},
 		category: {
 			list: '/app/goods/category/list',
 			getchildId: 'goods/category/get'

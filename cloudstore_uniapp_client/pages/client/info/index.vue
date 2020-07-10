@@ -150,7 +150,6 @@ import { mapState,mapMutations } from 'vuex';
 		getuserinfo(){
 			let userInfo = uni.getStorageSync('userInfo');
 			if (userInfo) {
-				console.log(userInfo)
 				this.user.name = userInfo.name 
 				this.user.url = userInfo.url ;
 				this.user.relationId = userInfo.relationId

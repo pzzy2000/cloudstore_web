@@ -186,7 +186,10 @@
 			},
 
 			async searchActivityNavList() {
-				let params = {};
+				let params = {
+					// pageNum: 1,
+					// pageSize: 20
+				};
 				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params);
 				console.log(data)
 				if (data) {
@@ -194,9 +197,11 @@
 				}
 			},
 			async searchActivityShowList() {
-				let params = {};
+				let params = {
+					// pageNum: 1,
+					// pageSize: 20
+				};
 				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params);
-
 				if (data) {
 					// this.activity.show = data.result.records;
 					let showActivity = data.result.records;
@@ -304,6 +309,7 @@
 				uni.hideLoading();
 			},
 			navToCategory(item) {
+				console.log(item)
 				let activitId = item.id;
 				uni.navigateTo({
 						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?id='+activitId

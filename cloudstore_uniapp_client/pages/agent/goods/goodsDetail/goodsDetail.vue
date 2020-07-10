@@ -67,45 +67,13 @@
 				</view>
 			</view>
 		</view>
-
-		<!-- 评价 -->
-		<!-- <view class="eva-section">
-			<view class="e-header">
-				<text class="tit">评价</text>
-				<text>({{ consultCount.all }})</text>
-				<text class="tit">好评</text>
-				<text>({{ consultCount.goods }})</text>
-
-				<text class="tit">一般</text>
-				<text>({{ consultCount.general }})</text>
-
-				<text class="tit">差评</text>
-				<text>({{ consultCount.bad }})</text>
-				<text class="tip" v-if="consultCount.persent != 200">好评率 {{ consultCount.persent }}%</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="eva-box" v-for="(item, index) in consultList" :key="item.id">
-				<image :src="item.pic" class="portrait" mode="aspectFill"></image>
-				<view class="right">
-					<text class="name">{{ item.memberName }}</text>
-					<text class="con">{{ item.consultContent }}</text>
-					<view class="bot">
-						<text class="attr">购买类型：{{ item.attr }}</text>
-						<text class="time">{{ item.consultAddtime }}</text>
-					</view>
-				</view>
-			</view>
-		</view> -->
-
 		<view class="detail-desc">
 			<view class="detail-desc">
 			   <view class="d-header"><text>图文详情</text></view>
 			   <view class="ricetext">
-			     <!-- <rich-text nodes="{{goods}}"></rich-text> -->
 				 <rich-text :nodes="goodsHtml"></rich-text>
 			   </view>
 			  </view>
-			<!-- <rich-text :nodes="desc"></rich-text> -->
 		</view>
 
 		<!-- 底部操作菜单 -->
@@ -122,13 +90,12 @@
 				<text class="yticon icon-shoucang"></text>
 				<text>期待</text>
 			</view>
-
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent">我的小店</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent" v-if="userType === 'agent'">我的小店</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toBuy" v-if="userType === 'client'">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
 			</view>
 		</view>
-
 		<!-- 规格-模态层弹窗 -->
 		<view class="popup spec" :class="specClass" @touchmove.stop.prevent="stopPrevent" @click="toggleSpec">
 			<!-- 遮罩层 -->
@@ -160,19 +127,6 @@
 						</text>
 					</view>
 				</view>
-				<!-- <view v-for="(item, index) in specList" :key="index" class="attr-list">
-					<text>{{item.goodsPropertyParamName}}</text>
-					<view  class="item-list">
-						<text
-							v-for="(childItem, childIndex) in specChildList"
-							:key="childIndex"
-							class="tit"
-						>
-							{{childItem[index]}}
-						</text>
-					</view>open
-				</view> -->
-				<!-- <button class="btn" @click="openAgent">加入代理</button> -->
 			</view>
 		</view>
 		<!-- 分享 -->
@@ -222,21 +176,31 @@ export default {
 			goodsName: '',
 			goodsSkuId: '',  //具体商品的skuId
 			agentGoodsId: '', //此商品的代理商品Id
+			activeId: '', //此商品的活动id
+			shareId: '',
+			shareClientId: '',
 			goodsHtml: '',
 			specList: [],
 			specChildList: [],
-			userType: 'user'
+			userType: 'client'
 		};
 	},
 	onShareAppMessage(res) {
+		this.shareSave()
 		if (res.from === 'button') {// 来自页面内分享按钮
+			uni.showLoading({
+				title: '正在加载',
+				mask: false
+			});
 			var shareObj = {
 				title: this.goodsName,
 				params: {
 					goodsId: this.goodsId,
 					agentGoodsId: this.agentGoodsId,
+					shareClientId: this.shareClientId,
+					userType: 'client'
 				},
-				path: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId
+				path: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType='+this.userType,
 			}
 		}
 		return shareObj
@@ -247,9 +211,10 @@ export default {
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
-		this.userType = ops.userType
+		// this.userType = ops.userType
+		this.activeId = ops.activeId
+		this.shareClientId = ops.shareClientId
 		console.log(ops)
-		
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 	},
 	methods: {
@@ -312,11 +277,9 @@ export default {
 				}
 			}
 		},
-		
 		toFavorite(){
 			this.$api.msg("敬请期待");
 		},
-		
 		openAgent () {
 			this.$refs.popup.open()
 		},
@@ -354,8 +317,7 @@ export default {
 				this.goodsHtml = data.result.mobileHtml
 			}
 		},
-		//规格弹窗开关
-		toggleSpec() {
+		toggleSpec() { //规格弹窗开关
 			if (this.specClass === 'show') {
 				this.specClass = 'hide';
 				setTimeout(() => {
@@ -365,8 +327,7 @@ export default {
 				this.specClass = 'show';
 			}
 		},
-		//选择规格
-		selectSpec(index, pid) {
+		selectSpec(index, pid) { //选择规格
 			let list = this.specChildList;
 			list.forEach(item => {
 				if (item.pid === pid) {
@@ -401,9 +362,26 @@ export default {
 				}
 			}
 		},
-		//分享
-		share() {
+		share() { //分享
 			this.$refs.share.toggleMask();
+		},
+		async shareSave () {
+			let params = {
+				'agentGoodsId': this.agentGoodsId,
+				'shareClientId': this.shareClientId || '-1'
+			} 
+			let data = await Api.apiCall('post', Api.agent.share.save, params);
+			if (data) {
+				uni.hideLoading() 
+				if (data.code === 0) {
+					this.shareClientId = data.result.shareClientId
+					console.log(this.shareClientId)
+				}else{
+					uni.showToast({
+						title: data.msg
+					});
+				}
+			}
 		},
 		toAgent () { //跳转到我的小店界面
 			uni.redirectTo({
@@ -487,19 +465,20 @@ export default {
 			  	}
 			})
 		},
-		//点击立即购买
- 		toBuy(item) {
+ 		toBuy(item) { //点击立即购买
 			var buyInfo = {
-				activityId: '',
+				activityId: this.activeId,
 				agentGoodsId: this.agentGoodsId,
 				goodsId: this.goodsId,
 				goodsSkuId: this.goodsSkuId,
+				shareId: this.shareId,
 				price: this.sku.price,
+				shareClientId: this.shareClientId
 			}
 			uni.setStorageSync('buyInfo',buyInfo)
 			//先判断库存
 			uni.navigateTo({
-				url: '/pages/agent/goods/buy?goodsId='+buyInfo.goodsId+'&price='+buyInfo.price
+				url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId
 			});
 		},
 		stopPrevent() {}

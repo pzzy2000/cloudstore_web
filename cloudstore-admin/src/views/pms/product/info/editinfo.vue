@@ -74,27 +74,27 @@
             </el-select-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="地区：" prop="provinceId">
-            <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"
-              @change="selectDistrict($event, 1)">
-              <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
-          </el-form-item>
-          <el-form-item prop="cityId">
-            <el-select-dispatcher v-model="baseinfo.cityId" :options="category1" remote placeholder="市" :loading="loading"
-              @change="selectDistrict($event, 2)">
-              <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
-          </el-form-item>
-          <el-form-item prop="areaId">
-            <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"
-              @change="selectDistrict($event, 3)">
-              <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
-          </el-form-item>
+<!--          <el-form-item label="地区：" prop="provinceId">-->
+<!--            <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"-->
+<!--              @change="selectDistrict($event, 1)">-->
+<!--              <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id">-->
+<!--              </el-option>-->
+<!--            </el-select-dispatcher>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item prop="cityId">-->
+<!--            <el-select-dispatcher v-model="baseinfo.cityId" :options="category1" remote placeholder="市" :loading="loading"-->
+<!--              @change="selectDistrict($event, 2)">-->
+<!--              <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id">-->
+<!--              </el-option>-->
+<!--            </el-select-dispatcher>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item prop="areaId">-->
+<!--            <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"-->
+<!--              @change="selectDistrict($event, 3)">-->
+<!--              <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">-->
+<!--              </el-option>-->
+<!--            </el-select-dispatcher>-->
+<!--          </el-form-item>-->
           <br />
           <el-form-item label="副标题：" prop="goodsSubtitle">
             <el-input-dispatcher v-model="baseinfo.goodsSubtitle"></el-input-dispatcher>
@@ -219,33 +219,23 @@
           categoryOneId: [{required: true, message: '请输入一级分类', trigger: ['blur', 'change']}],
           categoryTwoId: [{required: true, message: '请输入二级分类', trigger: ['blur', 'change']}],
           categoryThreeId: [{required: true, message: '请输入三级分类', trigger: ['blur', 'change']}],
-          provinceId: [{required: true, message: '请输入省', trigger: 'change'}],
-          cityId: [{required: true, message: '请输入市', trigger: 'change'}],
-          areaId: [{required: true, message: '请输入区/县', trigger: 'change'}],
+          // provinceId: [{required: true, message: '请输入省', trigger: 'change'}],
+          // cityId: [{required: true, message: '请输入市', trigger: 'change'}],
+          // areaId: [{required: true, message: '请输入区/县', trigger: 'change'}],
           goodsSubtitle: [{required: true, message: '请输入副标题', trigger: 'blur'}],
           salePrice: [{required: true, message: '请输入商品售价', trigger: 'blur'}],
           martPrice: [{required: true, message: '请输入市场价', trigger: 'blur'}]
         }
       }
     },
-    mounted() {
-      // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  mounted 2");
-      // mounted在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作
-    },
-
     beforeMount() {},
-
-
     created() {
       this.reload();
 
     },
-
     mounted() {
       this.reload()
     },
-
-
     watch: {
       '$route'(to, from) {
         console.log('to=' + to)
@@ -439,8 +429,6 @@
 
           }
         });
-
-
       },
 
       cancelList() {
@@ -480,6 +468,9 @@
                 goodsDetailPics.push(this.goodsDetailPics[i].uid);
               }
               this.baseinfo.goodsDetailPics = goodsDetailPics;
+              this.baseinfo.provinceId = 1;
+              this.baseinfo.cityId = 1;
+              this.baseinfo.areaId = 1;
               createProduct(this.baseinfo).then(response => {
                 if (!response) return;
                 this.$refs['baseinfo'].resetFields();
