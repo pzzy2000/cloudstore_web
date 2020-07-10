@@ -150,12 +150,6 @@
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
-			<!-- 
-			<navigator url="/pages/cart/cart" open-type="switchTab" class="p-b-btn">
-				<text class="yticon icon-gouwuche"></text>
-				<text>期待</text>
-			</navigator>
-			-->
 			<view class="p-b-btn"  @click="toFavorite(goods)">
 				<text class="yticon icon-shoucang"></text>
 				<text>期待</text>
@@ -193,13 +187,15 @@
 		},
 		data() {
 			return {
-
+				goodsId: '',
 				goods: {},
 				goodsSku: [],
 				goodsPropertyValue:[],
 				goodsMobileHtml:'',
 				favorite: true,
 				activity:{},
+				activityId: '',
+				agoodsid: '',
 				shareList: [
 					{
 					  icon: "/static/temp/share_wechat.png",
@@ -212,9 +208,6 @@
 		onShow() {
 			this.loadGoodHtml(this.goodsId);
 		},
-		
-		
-		
 		async onShareAppMessage(res) {
 			if (res.from === 'button') {// 来自页面内分享按钮
 			
@@ -233,20 +226,10 @@
 				}else{
 					this.$api.msg("加入代理商品错误");
 				}
-				 
 			}
 		},
-		   
-		// onShareAppMessage(res) {
-		// 	console.log(res)
-		// 	if (res.from === 'button') { // 来自页面内分享按钮
-		// 	}
-		// 	return {
-		// 		title: '商品',
-		// 		path: '/pages/goods/goodsDetail/goodsDetail?id=1'
-		// 	}
-		// },
 		async onLoad(ops) {
+			console.log(ops)
 			this.goodsId = ops.goodsId;
 			this.activityId = ops.activityId;
 			this.agoodsid = ops.agoodsid;
@@ -276,17 +259,13 @@
 		},
 		filters: {
 		},
-
 		methods: {
-			
 			share() {
 				this.$refs.share.toggleMask();
 			},
-			
 			setmobileHtml(mobileHtml){
 				this.goodsMobileHtml = mobileHtml;
 			},
-			
 			loadGoodHtml(goodsId){
 				let params = {
 					goodsId: goodsId
@@ -303,29 +282,24 @@
 					return "获取产地信息出错";
 				}
 			},
-			
-			 joinAgentAction(){
+			joinAgentAction(){
 				let params = {
 					goodsId: this.goodsId,
-					activeId: typeof(this.activityId)=="undefined"?'':this.activityId,
-					salesTypeGoodsId: typeof(this.agoodsid)=="undefined"?'':this.agoodsid
-					
+					// activeId: typeof(this.activityId)=="undefined"?'':this.activityId,
+					// salesTypeGoodsId: typeof(this.agoodsid)=="undefined"?'':this.agoodsid
+					activeId: this.activityId || '',
+					salesTypeGoodsId: this.agoodsid || ''
 				}
 				let data =  Api.apiCall('post', Api.agent.goods.save, params,true);
-				
 				return data;
-				
 			},
-			
 			async joinAgent() {
-				
 				let data = await this.joinAgentAction();
 				if(data){
 					 if(data.code ==0){
 						this.$api.msg("成功加入代理商品"); 
 					 }
 				}
-			
 			},
 			toAgent () {
 				uni.switchTab({

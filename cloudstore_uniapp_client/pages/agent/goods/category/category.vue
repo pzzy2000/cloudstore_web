@@ -84,14 +84,14 @@ export default {
 	},
 
 	onLoad(options) {
-		this.activityId = options.id;
+		//this.activityId = options.id;
 		// #ifdef H5
 		//this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight + 'px';
 		// #endif
-		this.keyword = options.keyword;
-		this.cateId = options.sid;
-		this.loadActiviList();
-		this.loadData();
+		// this.keyword = options.keyword;
+		// this.cateId = options.sid;
+		// this.loadActiviList();
+		// this.loadData();
 	},
 	onPageScroll(e) {
 		//兼容iOS端下拉时顶部漂移
@@ -222,11 +222,12 @@ export default {
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
 			let goodsId = item.id;
-			let activitId = -1;
-			let agoodsid= -1;
-			uni.navigateTo({
-				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agoodsid=${agoodsid}`
-			});
+			console.log(item)
+			// let activitId = -1;
+			// let agoodsid= -1;
+			// uni.navigateTo({
+			// 	url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agoodsid=${agoodsid}`
+			// });
 		},
 		stopPrevent() {}
 	}

@@ -22,77 +22,32 @@
 					<!-- 空白页 -->
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
 					
-					<!-- 订单列表 -->
-					<view v-for="(item,index) in orderList" :key="index" class="order-item" @click="toBuy(item)">
+					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
-							<text class="time">{{item.orderId}}</text>
-							<text class="state" :style="{color: item.stateTipColor}">{{item.orderBean.createTime}}</text>
-							<text 
-								v-if="item.state===9" 
-								class="del-btn yticon icon-iconfontshanchu1"
-								@click="deleteOrder(index)"
-							></text>
+							<text class="time">{{item.createTime}}</text>
+							<text class="state" :style="{color: item.stateTipColor}">{{item.orderStatus}}</text>
 						</view>
-						<view class="goods-box-single">
-							<image class="goods-img" :src="item.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
+						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index" @click="toOrder(item)">
+							<image class="goods-img" :src="item1.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
-								<text class="title clamp">{{item.goodsPicesBean.goodsName}}{{item.goodsPicesBean.goodsName}}</text>
-								<text class="attr-box">{{item.price}}  x {{item.quantity}}</text>
-								<text class="price">{{item.payPrice}}</text>
+								<text class="title clamp">{{item1.goodsPicesBean.goodsName}}</text>
+								<text class="attr-box">{{item1.price}}  x {{item1.quantity}}</text>
+								<text class="price">{{item1.payPrice}}</text>
 							</view>
 						</view>
-						<view class="action-box b-t" v-if="item.state != 9">
+						<view class="action-box b-t" v-if="item.orderStatus === 'wait'">
 							<button class="action-btn" @click="cancelOrder(item)">取消订单</button>
-							<button class="action-btn recom">立即支付</button>
+							<button class="action-btn recom" @click="toBuy(item.detailPicBean)">立即支付</button>
+						</view>
+						<view class="" v-if="item.orderStatus === 'complete'">
+							<view class="price-box">
+								实付款
+								<text class="price">{{item.payPrice}}</text>
+								<button class="action-btn recom" @click="refundNotifyOrder(item.detailPicBean)">申请退款</button>
+							</view>
 						</view>
 					</view>
-					<!-- 订单列表 -->
-					<!-- <view v-for="(item,index) in tabItem.orderList" :key="index" class="order-item">
-						<view class="i-top b-b">
-							<text class="time">{{item.time}}</text>
-							<text class="state" :style="{color: item.stateTipColor}">{{item.stateTip}}</text>
-							<text 
-								v-if="item.state===9" 
-								class="del-btn yticon icon-iconfontshanchu1"
-								@click="deleteOrder(index)"
-							></text>
-						</view>
-						
-						<scroll-view v-if="item.goodsList.length > 1" class="goods-box" scroll-x>
-							<view
-								v-for="(goodsItem, goodsIndex) in item.goodsList" :key="goodsIndex"
-								class="goods-item"
-							>
-								<image class="goods-img" :src="goodsItem.image" mode="aspectFill"></image>
-							</view>
-						</scroll-view>
-						<view 
-							v-if="item.goodsList.length === 1" 
-							class="goods-box-single"
-							v-for="(goodsItem, goodsIndex) in item.goodsList" :key="goodsIndex"
-						>
-							<image class="goods-img" :src="goodsItem.image" mode="aspectFill"></image>
-							<view class="right">
-								<text class="title clamp">{{goodsItem.title}}</text>
-								<text class="attr-box">{{goodsItem.attr}}  x {{goodsItem.number}}</text>
-								<text class="price">{{goodsItem.price}}</text>
-							</view>
-						</view>
-						
-						<view class="price-box">
-							共
-							<text class="num">7</text>
-							件商品 实付款
-							<text class="price">143.7</text>
-						</view>
-						<view class="action-box b-t" v-if="item.state != 9">
-							<button class="action-btn" @click="cancelOrder(item)">取消订单</button>
-							<button class="action-btn recom">立即支付</button>
-						</view>
-					</view> -->
-					 
 					<uni-load-more :status="tabItem.loadingType"></uni-load-more>
-					
 				</scroll-view>
 			</swiper-item>
 		</swiper>
