@@ -106,8 +106,8 @@
           return '数据读取错误';
         }
       },
-      delLogis(row) {
-        this.$router.push({path: "/sys/client/userApplyinfo", query: {id: row.id}})
+      delLogis(row) { 
+        this.$router.push({path: "/sys/client/agent/apply/info", query: {id: row.id}})
       }
     }
   }

@@ -357,19 +357,19 @@ export const asyncRouterMap = [
           meta: {title: '客户详情', icon: 'product-list'},
            hidden: true
         },
-        // {
-        //   path: 'agent/apply/list',
-        //   name: 'agent_apply_list',
-        //   component: () => import('@/views/client/agent/apply/list'),
-        //   meta: {title: '代理申请列表', icon: 'product-list'}
-        // },
-        // {
-        //   path: 'agent/apply/info',
-        //   name: 'agent_apply_info',
-        //   component: () => import('@/views/client/agent/apply/info'),
-        //   meta: {title: '代理申请详情', icon: 'product-list'},
-        //   hidden: true
-        // },
+        {
+          path: 'agent/apply/list',
+          name: 'agent_apply_list',
+          component: () => import('@/views/client/agent/applylist'),
+          meta: {title: '代理申请列表', icon: 'product-list'}
+        },
+        {
+          path: 'agent/apply/info',
+          name: 'agent_apply_info',
+          component: () => import('@/views/client/agent/applyinfo'),
+          meta: {title: '代理申请详情', icon: 'product-list'},
+          hidden: true
+        },
         // {
         //   path: 'add',
         //   name: 'adduser',
