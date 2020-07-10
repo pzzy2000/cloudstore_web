@@ -175,7 +175,12 @@
         this.getList();
       },
       handleUpdate(index, row) {
-        this.$router.push({path:'/sys/goods/addspectypes',query:{id:row.id, name: row.name, type:this.$route.query.type, optTp: "update", allMsg: this.$route.query.type + 'update'}});
+        if(this.$route.query.type ==0 ){
+            this.$router.push({path:'/sys/goods/property/specs/update',query:{id:row.id, name: row.name, type:this.$route.query.type, optTp: "update", allMsg: this.$route.query.type + 'update'}});
+          }else{
+              this.$router.push({path:'/sys/goods/property/param/update',query:{id:row.id, name: row.name, type:this.$route.query.type, optTp: "update", allMsg: this.$route.query.type + 'update'}});
+          }
+
         // this.dialogVisible = true;
         // this.dialogTitle = "编辑属性";
         // this.productAttrAdd.name = row.name;
