@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
 	state: {
 		hasLogin: false,
-		userInfo:''
+		userInfo:'',
+		name:'helloVueX'
 	},
 	mutations: {
 		
@@ -26,6 +27,9 @@ const store = new Vuex.Store({
 			uni.removeStorage({
                 key: 'userInfo'
             })
+		},
+		edit(state){
+			state.name = 'jack'
 		}
 	},
 	actions: {

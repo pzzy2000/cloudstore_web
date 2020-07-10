@@ -26,11 +26,6 @@
 						<view class="i-top b-b">
 							<text class="time">{{item.createTime}}</text>
 							<text class="state" :style="{color: item.stateTipColor}">{{item.orderStatus}}</text>
-							<text 
-								v-if="item.state===9" 
-								class="del-btn yticon icon-iconfontshanchu1"
-								@click="deleteOrder(index)"
-							></text>
 						</view>
 						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index" @click="toOrder(item)">
 							<image class="goods-img" :src="item1.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
@@ -126,7 +121,8 @@
 			// #endif
 			this.getOrderData()
 		},
-		 
+		created() {
+		},
 		methods: {
 			async getOrderData () {
 				uni.showLoading({
@@ -174,30 +170,9 @@
 					url: '/pages/client/goods/buy?goodsId='+item[0].goodsId+'&agentGoodsId='+item[0].agentGoodsId+'&goodsSkuId='+item[0].goodsSkuId+'&orderType=buyOrder'+'&orderId='+item[0].orderId
 				});
 			},
-			//取消订单
-			cancelOrder(item){
-				uni.showLoading({
-					title: '请稍后'
-				})
-				setTimeout(()=>{
-					let {stateTip, stateTipColor} = this.orderStateExp(9);
-					item = Object.assign(item, {
-						state: 9,
-						stateTip, 
-						stateTipColor
-					})
-					
-					//取消订单后删除待付款中该项
-					let list = this.navList[1].orderList;
-					let index = list.findIndex(val=>val.id === item.id);
-					index !== -1 && list.splice(index, 1);
-					
-					uni.hideLoading();
-				}, 600)
-			},
 			async refundNotifyOrder (item) {
 				let parmas = {
-					orderId: item[0].orderId
+					id: item[0].orderId
 				}
 				let data = await Api.apiCall('post',Api.client.order.refundOrder,parmas)
 				if (data) {

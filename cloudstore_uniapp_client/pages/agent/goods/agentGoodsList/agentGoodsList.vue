@@ -128,9 +128,10 @@
 				}
 			},
 			navToDetailPage(item) {
-				let id = item.goodsId,agentGoodsId = item.id,userType = 'agent'
+				console.log(item)
+				let id = item.goodsId,agentGoodsId = item.id,userType = 'agent',activeId = item.activeId
 				uni.navigateTo({
-					url: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+id+'&userType='+userType+'&agentGoodsId='+agentGoodsId
+					url: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+id+'&userType='+userType+'&agentGoodsId='+agentGoodsId+'&activeId='+item.activeId
 				});
 			}
 		}

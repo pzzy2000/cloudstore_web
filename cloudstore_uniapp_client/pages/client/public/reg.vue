@@ -81,8 +81,8 @@
 				vxPhone: '',
 				vxPhoneKey: '',
 				boolShow: false,
-				phoneCode: '1234',
-				userPwd: '123456'
+				phoneCode: '',
+				userPwd: ''
 			};
 		},
 		onLoad() {

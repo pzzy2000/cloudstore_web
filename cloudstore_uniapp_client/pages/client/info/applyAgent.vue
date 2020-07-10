@@ -30,7 +30,7 @@
 				<view class="title">证件ID：</view>
 				<input placeholder="请输入证件ID" name="input" :value="agentfrom.cardId" :disabled='isEdit' @input="editInput($event,'cardId')"></input>
 			</view>
-			<view class="cu-form-group" @tap='this.popup=true;' :disabled='isEdit'>
+			<view class="cu-form-group" @tap='seletctAddress' :disabled='isEdit'>
 				<view class="title">省市区：</view>
 				<view class="">{{agentfrom.provinceName}}</view>
 			</view>
@@ -184,6 +184,9 @@
 						this.agentfrom.address = e.detail.value
 						break;
 				}
+			},
+			seletctAddress () {
+				this.popup = !this.popup
 			},
 			async applyAgent () {
 				let params = {

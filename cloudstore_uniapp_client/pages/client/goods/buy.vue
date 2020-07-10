@@ -137,7 +137,7 @@
 				totalPrice: '',
 				buyInfo: '',
 				buyType: '',
-				activity:{},
+				activity:'',
 				items: [{
 						value: 'USA',
 						name: '支付宝'
@@ -191,13 +191,14 @@
 			//这里的数据用来做测试
 			// option.goodsId = "7604921082513985536"
 			// option.price = '100'
+			console.log(option)
 			var that = this;
 			this.goodsId = option.goodsId
 			this.agentGoodsId = option.agentGoodsId
 			this.goodsSkuId =option.goodsSkuId;
+			this.shareClientId = option.shareClientId;
 			this.orderType = option.orderType
 			this.orderId = option.orderId
-			console.log(option)
 			this.getGoodsData(this.goodsId ,this.agentGoodsId ,this.goodsSkuId)
 			this.searchDetailAddress()
 		},
@@ -211,8 +212,8 @@
 				let data = await Api.apiCall('post', Api.client.address.detail, params, false, false);
 				if (data) {
 					if(data.result!=null)
-					      this.setAddress(data.result)
-				 }
+					    this.setAddress(data.result)
+					}
 			},
 			async getGoodsData (goodsId,agentGoodsId,goodsSkuId) { //加载商品数据
 				let params = { 
@@ -272,6 +273,7 @@
 										'number': that.num,
 										'payPrice': that.totalPrice,
 										'price': that.goodsSku.price,
+										'shareId': that.shareClientId,
 										'payType': 'weixin'
 									}
 									if (that.orderType === 'buyOrder') {
