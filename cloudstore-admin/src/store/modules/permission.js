@@ -4,7 +4,7 @@ import { asyncRouterMap, constantRouterMap } from '@/router/index';
 function hasPermission(menus, routeChild) {
   // if (routeChild.name) {
   //   let currMenu = getMenu(routeChild.name, menus);
-  //   routeChild.hidden = !currMenu;
+  //   //routeChild.hidden = !currMenu;
   //    return  currMenu;
   // } else {
   //   return false

@@ -112,17 +112,18 @@ export const asyncRouterMap = [
        meta: {title: '供应商列表', icon: 'product-list'}
      },
      {
-       path: '/supplier/edit',
-       name: 'supplieredit',
+       path: 'edit',
+       name: 'supplier_edit',
        component: () => import('@/views/supplier/info'),
        meta: {title: '编辑供应商', icon: 'product-list'},
-       hidden: true
+       // hidden: true
      },
      {
        path: 'info',
        name: 'supplier_info',
        component: () => import('@/views/supplier/info'),
-       meta: {title: '供应商详情', icon: 'product-list'}
+       meta: {title: '供应商详情', icon: 'product-list'},
+       hidden: true
      }]
   },
   {
