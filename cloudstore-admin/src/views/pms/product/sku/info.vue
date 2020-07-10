@@ -225,7 +225,7 @@
         data.mobileHtml=good_sku.mobileHtml
 
         updateGoodsAttr(data).then(response => {
-          if(response.rusult.code == 0){
+          if(response.result.code == 0){
             this.loading = false;
             msg("更新商品SKU成功");
             this.$router.go(-1);

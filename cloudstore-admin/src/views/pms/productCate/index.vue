@@ -189,16 +189,42 @@
       },
       addlevel() {
         // console.log(this.list);
-        this.$router.push({
-          path: "/sys/goods/addlevel",
-          query: {
-            parentId: this.$route.query.parentId,
-            level: this.list[0].level
-          }
-        });
+        if (this.list.length != 0){
+          this.$router.push({
+            path: "/sys/goods/addlevel",
+            query: {
+              parentId: this.$route.query.parentId,
+              level: this.list[0].level
+            }
+          });
+        }else if(this.$route.query.level == '1'){
+          this.$router.push({
+            path: "/sys/goods/addlevel",
+            query: {
+              parentId: this.$route.query.parentId,
+              level: 2
+            }
+          });
+        }else if(this.$route.query.level == '2'){
+          this.$router.push({
+            path: "/sys/goods/addlevel",
+            query: {
+              parentId: this.$route.query.parentId,
+              level: 3
+            }
+          })
+        }else{
+          this.$router.push({
+            path: "/sys/goods/addlevel",
+            query: {
+              parentId: this.$route.query.parentId,
+              level: 1
+            }
+          });
+        }
       },
       handleShowNextLevel(index, row) {
-        this.$router.push({path: '/sys/goods/category', query: {parentId: row.id}})
+        this.$router.push({path: '/sys/goods/category', query: {parentId: row.id, level: this.list[0].level}})
       },
       handleTransferProduct(index, row) {
         console.log('handleAddProductCate');
