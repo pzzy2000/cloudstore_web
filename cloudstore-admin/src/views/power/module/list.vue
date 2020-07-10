@@ -8,14 +8,19 @@
       <el-table ref="productTable" :data="list" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
+
         <el-table-column label="模块名字" align="center" fixed>
+          <template slot-scope="scope">{{scope.row.module}}</template>
+        </el-table-column>
+
+        <el-table-column label="功能" align="center" fixed>
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="模块KEY" align="center">
           <template slot-scope="scope">{{scope.row.key}}</template>
         </el-table-column>
-        <el-table-column label="desc" align="center">
-          <template slot-scope="scope">{{scope.row.desc}}</template>
+        <el-table-column label="aiaxurl" align="center">
+          <template slot-scope="scope">{{scope.row.ajaxul}}</template>
         </el-table-column>
         <el-table-column label="url" align="url">
           <template slot-scope="scope">{{scope.row.url}}</template>
@@ -32,7 +37,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="pageList.pageSize"
-        :page-sizes="[10]"
+        :page-sizes="[100]"
         :current-page.sync="pageList.pageNum"
         :total="total">
       </el-pagination>
