@@ -35,15 +35,17 @@
             <svg-icon icon-class="eye" class="color-main"></svg-icon>
           </span>
           </el-input>
-          <span style="float: right">没有账号？去<a href="void:javascript(0)" class="sign" @click="tosign">注册</a></span>
         </el-form-item>
-        <el-form-item style="margin-bottom: 60px;text-align: center">
+        <el-form-item style="text-align: center">
           <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
             登录
           </el-button>
          <!-- <el-button style="width: 45%" type="primary" @click.native.prevent="handleTry">
             获取体验账号
           </el-button> -->
+        </el-form-item>
+        <el-form-item style="text-align: center;letter-spacing: 1px">
+          <span style="font-size: 12px; color: #8c939d">没有账号？<a href="void:javascript(0)" class="sign" @click="tosign">去注册</a></span>
         </el-form-item>
       </el-form>
     </el-card>
@@ -188,7 +190,10 @@
     margin-top: 200px;
   }
   .sign{
-    font-size: 16px;
-    color: red;
+    font-size: 13px;
+    color: #007aff;
   }
+  /*.el-form-item:last-child{*/
+  /*  margin-bottom: 0;*/
+  /*}*/
 </style>
