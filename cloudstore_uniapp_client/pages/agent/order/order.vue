@@ -17,29 +17,29 @@
 				<scroll-view 
 					class="list-scroll-content" 
 					scroll-y
-					@scrolltolower="loadData"
 				>
+					<!-- @scrolltolower="loadData" -->
 					<!-- 空白页 -->
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
 					
 					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
-							<text class="time">{{item.createTime}}</text>
-							<text class="state" :style="{color: item.stateTipColor}">{{item.orderStatus}}</text>
+							<text class="time">{{item.orderId}}</text>
+							<text class="state">{{item.orderBean.orderStatus}}</text>
 						</view>
-						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index" @click="toOrder(item)">
-							<image class="goods-img" :src="item1.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
+						<view class="goods-box-single" :key="index" @click="toOrder(item)">
+							<image class="goods-img" :src="item.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
-								<text class="title clamp">{{item1.goodsPicesBean.goodsName}}</text>
-								<text class="attr-box">{{item1.price}}  x {{item1.quantity}}</text>
-								<text class="price">{{item1.payPrice}}</text>
+								<text class="title clamp">{{item.goodsPicesBean.goodsName}}</text>
+								<text class="attr-box">{{item.price}}  x {{item.quantity}}</text>
+								<text class="price">{{item.payPrice}}</text>
 							</view>
 						</view>
-						<view class="action-box b-t" v-if="item.orderStatus === 'wait'">
+						<view class="action-box b-t" v-if="item.orderBean.orderStatus === 'wait'">
 							<button class="action-btn" @click="cancelOrder(item)">取消订单</button>
 							<button class="action-btn recom" @click="toBuy(item.detailPicBean)">立即支付</button>
 						</view>
-						<view class="" v-if="item.orderStatus === 'complete'">
+						<view class="" v-if="item.orderBean.orderStatus === 'complete'">
 							<view class="price-box">
 								实付款
 								<text class="price">{{item.payPrice}}</text>
@@ -110,14 +110,14 @@
 			 * 修复app端点击除全部订单外的按钮进入时不加载数据的问题
 			 * 替换onLoad下代码即可
 			 */
-			this.tabCurrentIndex = +options.state;
+			//this.tabCurrentIndex = +options.state;
 			// #ifndef MP
-			this.loadData()
+			//this.loadData()
 			// #endif
 			// #ifdef MP
-			if(options.state == 0){
-				this.loadData()
-			}
+			// if(options.state == 0){
+			// 	this.loadData()
+			// }
 			// #endif
 			this.getOrderData()
 		},
@@ -133,51 +133,6 @@
 					this.orderList = data.result.records
 					console.log(this.orderList)
 				}
-			},
-			//获取订单列表
-			loadData(source){
-				//这里是将订单挂载到tab列表下
-				let index = this.tabCurrentIndex;
-				let navItem = this.navList[index];
-				let state = navItem.state;
-				
-				if(source === 'tabChange' && navItem.loaded === true){
-					//tab切换只有第一次需要加载数据
-					return;
-				}
-				if(navItem.loadingType === 'loading'){
-					//防止重复加载
-					return;
-				}
-				
-				navItem.loadingType = 'loading';
-				
-				setTimeout(()=>{
-					let orderList = Json.orderList.filter(item=>{
-						//添加不同状态下订单的表现形式
-						item = Object.assign(item, this.orderStateExp(item.state));
-						//演示数据所以自己进行状态筛选
-						if(state === 0){
-							//0为全部订单
-							return item;
-						}
-						return item.state === state
-					});
-					orderList.forEach(item=>{
-						navItem.orderList.push(item);
-					})
-					//loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
-					this.$set(navItem, 'loaded', true);
-					
-					//判断是否还有数据， 有改为 more， 没有改为noMore 
-					navItem.loadingType = 'more';
-				}, 600);	
-			}, 
-
-			//swiper 切换
-			changeTab(e){
-				this.tabCurrentIndex = e.target.current;
-				this.loadData('tabChange');
 			},
 			//顶部tab点击
 			tabClick(index){

@@ -351,25 +351,46 @@ export const asyncRouterMap = [
           meta: {title: '客户列表', icon: 'product-list'}
         },
         {
+<<<<<<< HEAD
           path: 'info',
           name: 'client_info',
           component: () => import('@/views/client/info'),
           meta: {title: '客户详情', icon: 'product-list'},
            hidden: true
+=======
+          path: 'userinfo',
+          name: 'client_info',
+          component: () => import('@/views/client/userinfo'),
+          meta: {title: '客户详情', icon: 'product-list'}
+>>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
         },
         {
+<<<<<<< HEAD
           path: 'agent/apply/list',
           name: 'agent_apply_list',
           component: () => import('@/views/client/agent/applylist'),
           meta: {title: '代理申请列表', icon: 'product-list'}
+=======
+          path: 'userapply',
+          name: 'client_apply',
+          component: () => import('@/views/client/userapply'),
+          meta: {title: '客户代理申请', icon: 'product-list'}
+>>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
         },
         {
+<<<<<<< HEAD
           path: 'agent/apply/info',
           name: 'agent_apply_info',
           component: () => import('@/views/client/agent/applyinfo'),
+=======
+          path: 'userApplyinfo',
+          name: 'client_Applyinfo',
+          component: () => import('@/views/client/userApplyinfo'),
+>>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
           meta: {title: '代理申请详情', icon: 'product-list'},
           hidden: true
         },
+<<<<<<< HEAD
         // {
         //   path: 'add',
         //   name: 'adduser',
@@ -390,6 +411,28 @@ export const asyncRouterMap = [
         //   meta: {title: '添加等级', icon: 'ums-resource'},
         //   hidden: true
         // }
+=======
+        {
+          path: 'add',
+          name: 'adduser',
+          component: () => import('@/views/client/adduser'),
+          meta: {title: '添加客户', icon: 'product-list'},
+          hidden: true
+        },
+        {
+          path: 'level',
+          name: 'level',
+          component: () => import('@/views/client/level'),
+          meta: {title: '客户等级', icon: 'ums-resource'}
+        },
+        {
+          path: 'addlevel',
+          name: 'client_addlevel',
+          component: () => import('@/views/client/addlevel'),
+          meta: {title: '添加等级', icon: 'ums-resource'},
+          hidden: true
+        }
+>>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
       ]
   },
   {
