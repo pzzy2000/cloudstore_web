@@ -364,7 +364,7 @@
       },
       addsku(index, row) {
         this.$router.push({
-          path: "/sys/goods/skuinfo",
+          path: "/sys/goods/sku/edit",
           query: {
             goodsid: row.id
           }
@@ -570,7 +570,7 @@
       handleUpdateProduct(index, row) {
         let productId = row.id;
         this.$router.push({
-          path: '/sys/goods/info',
+          path: '/sys/goods/edit',
           query: {
             goodsId: productId,
             action: 2,

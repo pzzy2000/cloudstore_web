@@ -79,7 +79,7 @@
               type: 'success',
               duration: 800
             });
-            this.$router.push("/sys/goods/category");
+            this.$router.push("/sys/goods/category/list");
           }
         })
       },

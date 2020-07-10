@@ -103,7 +103,7 @@
         });
       },
       addProductAttrCate() {
-        this.$router.push({path: "/sys/goods/addspec", query: {isAdd: 'add'}});
+        this.$router.push({path: "/sys/goods/property/add", query: {isAdd: 'add'}});
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
@@ -136,7 +136,7 @@
         // this.productAttrCate.propertyName = row.propertyName;
         // this.productAttrCate.descs = row.descs;
         // this.productAttrCate.id = row.id;
-        this.$router.push({path: "/sys/goods/addspec", query: {propertyName: row.propertyName, descs: row.descs, id: row.id, isAdd: 'update'}});
+        this.$router.push({path: "/sys/goods/property/update", query: {propertyName: row.propertyName, descs: row.descs, id: row.id, isAdd: 'update'}});
       },
       getAttrList(index, row) {
         this.$router.push({path: '/sys/goods/param',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:0}})

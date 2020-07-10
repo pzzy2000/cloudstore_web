@@ -150,17 +150,29 @@ export const asyncRouterMap = [
          component: () => import('@/views/pms/product/info/editinfo'),
          meta: {title: '商品详情', icon: 'product-list'},
          hidden: true
+       },{
+        path: 'edit',
+         name: 'edit_goods',
+         component: () => import('@/views/pms/product/info/editinfo'),
+         meta: {title: '编辑商品', icon: 'product-add'},
+         hidden: true
        },
         {
-         path: 'skuinfo',
+         path: 'sku/edit',
+         name: 'sku_edit',
+         component: () => import('@/views/pms/product/sku/info'),
+         meta: {title: 'SKU管理', icon: 'product-list'},
+         hidden: true
+       },{
+         path: 'sku/info',
          name: 'sku_info',
          component: () => import('@/views/pms/product/sku/info'),
          meta: {title: 'SKU管理', icon: 'product-list'},
          hidden: true
        },
        {
-           path: 'category',
-           name: 'goods_category',
+           path: 'category/list',
+           name: 'category_list',
            component: () => import('@/views/pms/productCate/index'),
            meta: {title: '商品分类', icon: 'product-list'}
          },
@@ -171,47 +183,26 @@ export const asyncRouterMap = [
          //   meta: {title: '商品分类', icon: 'product-list'}
          // },
          {
-           path: 'addlevel',
-           name: 'add_level',
+           path: 'category/add',
+           name: 'category_add',
            component: () => import('@/views/pms/productCate/addlevel'),
            meta: {title: '添加分类', icon: 'product-list'},
            hidden: true
          },
-       // {
-       //  path: 'addProductAttrParm',
-       //   name: 'addProductAttrParm',
-       //   component: () => import('@/views/pms/product/components/ProductAttrDetail'),
-       //   meta: {title: '添加商品属性参数', icon: 'product-add'},
-       //   hidden: true
-       // },
-       // {
-       //   path: 'add',
-       //   name: 'goodsSave',
-       //   component: () => import('@/views/pms/productCate/add'),
-       //   meta: {title: '添加商品分类'},
-       //   hidden: true
-       // },
-       {
-         path: 'addProductAttr',
-         name: 'addProductAttr',
-         component: () => import('@/views/pms/productAttr/addProductAttr'),
-         meta: {title: '添加属性'},
-         hidden: true
-       },
-       {
-         path: 'param',
-         name: 'goodsParam',
-         component: () => import('@/views/pms/productAttr/productAttrList'),
-         meta: {title: '添加规格'},
-         hidden: true
-       },{
-         path: 'property',
-         name: 'goods_property',
+      {
+         path: 'property/list',
+         name: 'property_list',
          component: () => import('@/views/pms/productAttr/index'),
          meta: {title: '商品规格参数', icon: 'product-list'}
        },{
-         path: 'addspec',
-         name: 'goods_addspec',
+         path: 'property/add',
+         name: 'property_add',
+         component: () => import('@/views/pms/productAttr/addspecification'),
+         meta: {title: '添加商品规格', icon: 'product-list'},
+         hidden: true
+       },{
+         path: 'property/update',
+         name: 'property_update',
          component: () => import('@/views/pms/productAttr/addspecification'),
          meta: {title: '添加商品规格', icon: 'product-list'},
          hidden: true
@@ -220,6 +211,18 @@ export const asyncRouterMap = [
          name: 'goods_addspectypes',
          component: () => import('@/views/pms/productAttr/addspectypes'),
          meta: {title: '添加商品规格类型', icon: 'product-list'},
+         hidden: true
+       }, {
+         path: 'param',
+         name: 'goodsParam',
+         component: () => import('@/views/pms/productAttr/productAttrList'),
+         meta: {title: '添加规格'},
+         hidden: true
+       }, {
+         path: 'addProductAttr',
+         name: 'addProductAttr',
+         component: () => import('@/views/pms/productAttr/addProductAttr'),
+         meta: {title: '添加属性'},
          hidden: true
        }]
   },
@@ -351,46 +354,25 @@ export const asyncRouterMap = [
           meta: {title: '客户列表', icon: 'product-list'}
         },
         {
-<<<<<<< HEAD
           path: 'info',
           name: 'client_info',
           component: () => import('@/views/client/info'),
           meta: {title: '客户详情', icon: 'product-list'},
            hidden: true
-=======
-          path: 'userinfo',
-          name: 'client_info',
-          component: () => import('@/views/client/userinfo'),
-          meta: {title: '客户详情', icon: 'product-list'}
->>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
         },
         {
-<<<<<<< HEAD
           path: 'agent/apply/list',
           name: 'agent_apply_list',
           component: () => import('@/views/client/agent/applylist'),
           meta: {title: '代理申请列表', icon: 'product-list'}
-=======
-          path: 'userapply',
-          name: 'client_apply',
-          component: () => import('@/views/client/userapply'),
-          meta: {title: '客户代理申请', icon: 'product-list'}
->>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
         },
         {
-<<<<<<< HEAD
           path: 'agent/apply/info',
           name: 'agent_apply_info',
           component: () => import('@/views/client/agent/applyinfo'),
-=======
-          path: 'userApplyinfo',
-          name: 'client_Applyinfo',
-          component: () => import('@/views/client/userApplyinfo'),
->>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
           meta: {title: '代理申请详情', icon: 'product-list'},
           hidden: true
         },
-<<<<<<< HEAD
         // {
         //   path: 'add',
         //   name: 'adduser',
@@ -411,28 +393,6 @@ export const asyncRouterMap = [
         //   meta: {title: '添加等级', icon: 'ums-resource'},
         //   hidden: true
         // }
-=======
-        {
-          path: 'add',
-          name: 'adduser',
-          component: () => import('@/views/client/adduser'),
-          meta: {title: '添加客户', icon: 'product-list'},
-          hidden: true
-        },
-        {
-          path: 'level',
-          name: 'level',
-          component: () => import('@/views/client/level'),
-          meta: {title: '客户等级', icon: 'ums-resource'}
-        },
-        {
-          path: 'addlevel',
-          name: 'client_addlevel',
-          component: () => import('@/views/client/addlevel'),
-          meta: {title: '添加等级', icon: 'ums-resource'},
-          hidden: true
-        }
->>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
       ]
   },
   {
