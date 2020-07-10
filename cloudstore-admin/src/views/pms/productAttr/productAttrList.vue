@@ -132,7 +132,12 @@
         //this.$router.push({path:'/sys/goods/addProductAttr',query:{goodsPropertyId:this.$route.query.goodsPropertyId,type:this.$route.query.type}});
         // this.dialogVisible = true;
         // this.dialogTitle = "添加属性";
-        this.$router.push({path: '/sys/goods/addspectypes', query: {goodsPropertyId: this.$route.query.goodsPropertyId, type:this.$route.query.type, optTp: 'add', allMsg: this.$route.query.type + 'add'}});
+		if(this.$route.query.type ==0 ){
+          this.$router.push({path: '/sys/goods/property/specs/add', query: {goodsPropertyId: this.$route.query.goodsPropertyId, type:this.$route.query.type, optTp: 'add', allMsg: this.$route.query.type + 'add'}});
+		}else{
+           this.$router.push({path: '/sys/goods/property/param/add', query: {goodsPropertyId: this.$route.query.goodsPropertyId, type:this.$route.query.type, optTp: 'add', allMsg: this.$route.query.type + 'add'}});
+		}
+
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;

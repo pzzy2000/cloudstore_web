@@ -139,10 +139,10 @@
         this.$router.push({path: "/sys/goods/property/update", query: {propertyName: row.propertyName, descs: row.descs, id: row.id, isAdd: 'update'}});
       },
       getAttrList(index, row) {
-        this.$router.push({path: '/sys/goods/param',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:0}})
+        this.$router.push({path: '/sys/goods/property/specs/list',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:0}})
       },
       getParamList(index, row) {
-        this.$router.push({path: '/sys/goods/param',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:1}})
+        this.$router.push({path: '/sys/goods/property/param/list',query:{goodsPropertyId:row.id,propertyName:row.propertyName,type:1}})
       }
     }
   }

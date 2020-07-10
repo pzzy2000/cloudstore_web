@@ -206,15 +206,40 @@ export const asyncRouterMap = [
          component: () => import('@/views/pms/productAttr/addspecification'),
          meta: {title: '添加商品规格', icon: 'product-list'},
          hidden: true
+       }, {
+         path: 'property/specs/list',
+         name: 'goods_specs_list',
+         component: () => import('@/views/pms/productAttr/productAttrList'),
+         meta: {title: '规格列表'},
+         hidden: true
+       }, {
+         path: 'property/specs/add',
+         name: 'goods_specs_add',
+          component: () => import('@/views/pms/productAttr/addspectypes'),
+         meta: {title: '增加规格'},
+         hidden: true
        },{
+         path: 'property/param/list',
+         name: 'goods_param_list',
+         component: () => import('@/views/pms/productAttr/productAttrList'),
+         meta: {title: '参数列表'},
+         hidden: true
+       }, {
+         path: 'property/param/add',
+         name: 'goods_specs_add',
+          component: () => import('@/views/pms/productAttr/addspectypes'),
+         meta: {title: '增加规格'},
+         hidden: true
+       },
+       {
          path: 'addspectypes',
          name: 'goods_addspectypes',
          component: () => import('@/views/pms/productAttr/addspectypes'),
          meta: {title: '添加商品规格类型', icon: 'product-list'},
          hidden: true
        }, {
-         path: 'param',
-         name: 'goodsParam',
+         path: 'param/list',
+         name: 'goods_param_list',
          component: () => import('@/views/pms/productAttr/productAttrList'),
          meta: {title: '添加规格'},
          hidden: true
