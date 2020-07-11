@@ -3,7 +3,7 @@ import {switchForm,saveSupplier} from '@/api/iunits'
 
 export function getUserlist(params) {
   return request({
-    url: '/client/register',
+    url: '/client/list',
     method: 'POST',
     data: switchForm(params)
   })
@@ -28,6 +28,14 @@ export function getOneapply(params) {
 export function verified(params) {
   return request({
     url: '/agent/apply/checkAgent',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function getoneClient(params) {
+  return request({
+    url: '/client/get',
     method: 'POST',
     data: switchForm(params)
   })

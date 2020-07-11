@@ -8,6 +8,10 @@
             <el-input-dispatcher v-model="baseinfoForm.name" />
           </el-form-item>
           <br />
+          <el-form-item label="审核状态：" prop="status">
+            <el-input-dispatcher v-model="baseinfoForm.msg" />
+          </el-form-item>
+          <br />
           <el-form-item label="地址：" prop="address">
             <el-input-dispatcher v-model="baseinfoForm.address" />
           </el-form-item>
@@ -38,8 +42,9 @@
             </el-table>
           </el-form-item>
           <div style="overflow: hidden">
-            <el-button style="float: right" size="mini" @click="refused" v-show="isshow">拒绝</el-button>
-            <el-button type="primary" style="float: right; margin-right: 20px" size="mini" @click="submitApply" v-show="isshow">审核通过</el-button>
+            <el-button size="small" style="float: right" @click="backpage">返回</el-button>
+            <el-button style="float: right" size="small" @click="refused" v-show="isshow">拒绝</el-button>
+            <el-button type="primary" style="float: right; margin-right: 20px" size="small" @click="submitApply" v-show="isshow">审核通过</el-button>
           </div>
         </el-form>
       </div>
@@ -76,8 +81,20 @@
           if (res.result.result.status !== 0) {
             this.isshow = false;
           }
-          this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
+          if (this.baseinfoForm.provinceBean == null){
+            this.baseinfoForm.address = ''
+          }else{
+            this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
+          }
           console.log(this.baseinfoForm.address)
+          switch (this.baseinfoForm.status) {
+            case 0: this.baseinfoForm.msg = '待审核';
+              break;
+            case 1: this.baseinfoForm.msg = '已通过';
+              break;
+            case 2: this.baseinfoForm.msg = '已拒绝';
+              break;
+          }
         })
       },
       refused() {
@@ -111,6 +128,9 @@
           type: 'success',
           duration: 800
         });
+      },
+      backpage() {
+        this.$router.go(-1);
       }
     }
   }

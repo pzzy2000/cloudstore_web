@@ -123,9 +123,7 @@
 
 <script>
   import localmultiUpload from '@/components/Upload/localmultiUpload';
-  import {
-    searchSupplierDetail,saveSupplierInfo
-  } from '@/api/supplier' ;
+  import { searchSupplierDetail,saveSupplierInfo } from '@/api/supplier' ;
 
   import{photoUrl} from '@/api/iunits';
 
@@ -293,7 +291,7 @@
         },
         cardPhotos:[],
         licensePhotos:[],
-        rwDispatcherState: 'read',
+        rwDispatcherState: 'write',
         shownUpdateButton: "none",
         shownUpdateSubelButton: "",
         supplierId: typeof(this.$route.query.supplierId) == 'undefined' ? null : this.$route.query.supplierId,
@@ -303,7 +301,7 @@
       // mounted在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作
     },
     created() {
-      this.rwDispatcherState = "write" //write  read
+      this.rwDispatcherState = "read" //write  read
       // this.baseinfo.name="www";
       this.blicense.startTime = "2012-02-12"
       this.loadInfo();

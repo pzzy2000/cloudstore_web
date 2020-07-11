@@ -375,7 +375,7 @@ export const asyncRouterMap = [
         {
           path: 'info',
           name: 'client_info',
-          component: () => import('@/views/client/info'),
+          component: () => import('@/views/client/adduser'),
           meta: {title: '客户详情', icon: 'product-list'},
            hidden: true
         },
