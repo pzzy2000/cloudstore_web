@@ -67,7 +67,7 @@ const permission = {
                           }
               })}
 
-               if(v.hidden ==true)return false;
+              if(v.hidden ==true)return false;
               if(v.children.length >0)
               return true;
               else{
