@@ -36,8 +36,7 @@
           order: ''
         },
         rules: {
-          name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-          order: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
+          name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
         }
       }
     },
@@ -54,7 +53,7 @@
       handelSelectlevel() {
         console.log(this.addGoodsort.level)
       },
-      submitForm() {
+      submitForm(formName) {
         let parentId;
         if (this.$route.query.parentId == null){
           parentId = 0;
@@ -71,15 +70,19 @@
           parentId: parentId
         }
         // let _this = this;
-        savegoodLevel('/goods/category/save', obj).then(res => {
-          console.log(res);
-          if(res.result.code == 0) {
-            this.$message({
-              message: '添加成功',
-              type: 'success',
-              duration: 800
-            });
-            this.$router.push("/sys/goods/category/list");
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            savegoodLevel('/goods/category/save', obj).then(res => {
+              console.log(res);
+              if(res.result.code == 0) {
+                this.$message({
+                  message: '添加成功',
+                  type: 'success',
+                  duration: 800
+                });
+                this.$router.go(-1);
+              }
+            })
           }
         })
       },

@@ -48,7 +48,7 @@
 		},
 		data() {
 			return {
-				access: '15573277535',
+				access: '',
 				password: '123456',
 				sysInfo: '',
 				logining: false,
@@ -71,18 +71,6 @@
 					url: '/pages/client/public/reg'
 				});
 			},
-
-			// vxCheckSession () {
-			// 	uni.checkSession({
-			// 		success() {
-			// 			console.log('状态未过期')
-
-			// 		},
-			// 		fail() {
-			// 			this.getWxInfo()
-			// 		}
-			// 	})
-			// },
 			getWxInfo() { //获取code
 				var that = this;
 				uni.showLoading({
@@ -179,17 +167,12 @@
 				});
 
 			},
-
-			async toLogin() {
+			async toLogin() { //账号密码登录
 				var that = this;
-				// let phoneReg = /^1[1-9][0-9]\d{8}$/;
 				try {
 					if (this.access == '') {
 						throw '请填写手机号/登录账户';
 					}
-					// if (!phoneReg.test(this.phone)) {
-					// 	throw '手机号格式有误';
-					// }
 					if (this.password == '') {
 						throw '请填写密码';
 					}
@@ -206,13 +189,7 @@
 				};
 				let data = await Api.apiCall('post', Api.client.login.login, params,true);
 				if (data) {
-					this.access = params.access;
 					this.$api.msg("登录成功");
-					that.login(data);
-					// var userInfo = {
-					// 	nickName: data.result.name,
-					// 	url: data.result.url
-					// }
 					uni.setStorageSync('userInfo', data.result);
 					uni.setStorageSync('token', data.result.token);
 					uni.switchTab({
@@ -220,6 +197,9 @@
 					});
 				}
 			},
+			toForget () { //修改密码
+				
+			}
 		}
 	};
 </script>
@@ -346,7 +326,8 @@
 
 	.vx-btn {
 		background: #fff;
-
+		display: flex;
+		justify-content: space-around;
 		&:after {
 			border-radius: 100px;
 			border: none;

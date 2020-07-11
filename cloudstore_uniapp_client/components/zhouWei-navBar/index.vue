@@ -29,7 +29,7 @@
 				<slot name="transparentFixedLeft">
 					<view class="left_info" v-if="back || $slots.left || home">
 						<view class="back" v-if="back && !firstPage" @click="onBackPage"></view>
-						<text v-if="isTwoBtn"></text>
+						<text v-if="isTwoBtn" class="text"></text>
 						<view class="home" v-if="(firstPage && back) || home" @click="onBackHome"></view>
 					</view>
 				</slot>
@@ -347,7 +347,7 @@ export default {
 			.back {
 				background-image: url('../../static/zhouWei-navBar/icon_back_white.png');
 			}
-			text {
+			.text {
 				background-color: rgba(255, 255, 255, 0.3);
 			}
 			.home {
@@ -386,7 +386,7 @@ export default {
 			width: $height;
 			height: 100%;
 		}
-		text {
+		.text {
 			height: 30upx;
 			width: 2upx;
 			background-color: rgba(255, 255, 255, 0.4);

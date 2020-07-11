@@ -25,6 +25,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button type="primary" size="mini" @click="backPage" style="float: right">返回</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
@@ -180,12 +181,6 @@
         this.listQuery.pageNum = val;
         this.getList();
       },
-
-      handleSizeChange(val) {
-        this.listQuery.pageNum = 1;
-        this.listQuery.pageSize = val;
-        this.getList();
-      },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
       },
@@ -210,7 +205,6 @@
         })
       },
       handeldel(row) {
-
         this.$confirm('是否要进行删除操作?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -224,6 +218,9 @@
           });
         });
 
+      },
+      backPage() {
+        this.$router.go(-1);
       }
     }
   }

@@ -32,10 +32,10 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right; margin: 0 10px">赠送优惠券</el-button>
-      <el-button size="mini" style="float: right">APP推送</el-button>
-      <el-button size="mini" style="float: right">群发站内信</el-button>
-      <el-button size="mini" style="float: right; vertical-align: top">群发短信</el-button>
+<!--      <el-button size="mini" style="float: right; margin: 0 10px">赠送优惠券</el-button>-->
+<!--      <el-button size="mini" style="float: right">APP推送</el-button>-->
+<!--      <el-button size="mini" style="float: right">群发站内信</el-button>-->
+<!--      <el-button size="mini" style="float: right; vertical-align: top">群发短信</el-button>-->
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" v-loading="listLoading" border>
@@ -44,10 +44,10 @@
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="客户账号" align="center">
-          <template slot-scope="scope">{{scope.row.access}}</template>
+          <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
         <el-table-column label="客户昵称" align="center">
-          <template slot-scope="scope">{{scope.row.access}}</template>
+          <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="代理等级" align="center">
           <template slot-scope="scope">{{scope.row.access}}</template>
@@ -63,18 +63,29 @@
         </el-table-column>
         <el-table-column label="账户启用状态" align="center">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.value" active-color="#13ce66" inactive-color="#ff4949" active-value="1" inactive-value="0">
+            <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" active-value="1" inactive-value="0">
             </el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="250">
           <template slot-scope="scope">
             <el-button size="mini" @click="readUser(scope.row)">查看</el-button>
-            <el-button size="mini" @click="editUser(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="deleteUser(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination-container" style="margin-right: 20px">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          layout="total, sizes,prev, pager, next,jumper"
+          :page-size="pageList.pageSize"
+          :page-sizes="[10]"
+          :current-page.sync="pageList.pageNum"
+          :total="total">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -89,33 +100,36 @@
     data() {
       return {
         userForm: {},
+        pageList: Object.assign({}, defaultList),
         listLoading: false,
         list: [
           {name: "123123", access: "123456"}
-        ]
+        ],
+        total: 0
       }
     },
     created() {
-      // this.getList();
+      this.getList();
     },
     methods: {
       getList() {
         getUserlist(defaultList).then(res => {
           console.log(res);
+          this.list = res.result.result.records;
+          this.total = parseInt(res.result.result.total);
         })
       },
       // addUser() {
       //   this.$router.push({path: '/sys/client/add', query: {operaType: "add", rds: 'write'}})
       // },
       readUser(row) {
-        this.$router.push({path: '/sys/client/add', query: {operaType: "read", rds: 'read'}})
-      },
-      editUser(row) {
-        this.$router.push({path: '/sys/client/add', query: {operaType: "edit", rds: 'write'}})
+        this.$router.push({name: 'client_info', params: {operaType: "read", rds: 'read', id: row.id}})
       },
       deleteUser() {
         alert("删除事件");
-      }
+      },
+      handleSizeChange() {},
+      handleCurrentChange() {}
     }
   }
 </script>

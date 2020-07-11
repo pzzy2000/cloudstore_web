@@ -12,9 +12,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-
       </div>
-
       <el-table ref="multipleTable" :data="list" tooltip-effect="dark" style="width: 100%" border>
         <!--@selection-change="handleSelectionChange"-->
         <el-table-column type="selection" width="50">
@@ -46,7 +44,6 @@
           </template>
         </el-table-column>
       </el-table>
-
       <div class="pagination-container">
         <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
           :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">

@@ -63,3 +63,11 @@ export function fetchAllgoods(params) {
 	    data: switchForm(params)
 	  })
 	}
+
+export function changeShowidx(params) {
+  return request({
+    url: '/activity/save',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

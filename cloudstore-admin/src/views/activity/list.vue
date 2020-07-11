@@ -55,7 +55,7 @@
          </el-table-column>
         <el-table-column label="是否显示在首页" align="center">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">
+            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
@@ -88,7 +88,7 @@
   </div>
 </template>
 <script>
-   import { fetchList } from '@/api/tracking'
+   import { fetchList, changeShowidx } from '@/api/activity'
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
@@ -117,12 +117,10 @@
       //   } else {
       //     this.listQuery.productCategoryId = null;
       //   }
-
       // }
     },
     filters: {
       changeMsg(data) {
-        console.log("++++++++")
         switch (data) {
           case 1: return "已参加";
             break;
@@ -130,13 +128,6 @@
             break;
         }
       }
-      // verifyStatusFilter(value) {
-      //   if (value === 1) {
-      //     return '审核通过';
-      //   } else {
-      //     return '未审核';
-      //   }
-      // }
     },
     methods: {
       getList() {
@@ -152,8 +143,37 @@
         this.listQuery.pageNum = 1;
         this.getList();
       },
-      changeSwitch(){
-
+      changeSwitch(row){
+        console.log(row);
+        let obj = {
+          id: row.id,
+          showIndex: row.showIndex,
+          optType: 'update'
+        }
+        changeShowidx(obj).then(res => {
+          console.log(res);
+          if(res.result.code == 0){
+            if(res.result.result.showIndex == 0) {
+              this.$message({
+                type: 'success',
+                message: '首页不显示了！',
+                duration: 800
+              })
+            }else{
+              this.$message({
+                type: 'success',
+                message: '显示在首页了！',
+                duration: 800
+              })
+            }
+          }else{
+            this.$message({
+              type: 'success',
+              message: '操作不成功，请联系管理员！',
+              duration: 800
+            })
+          }
+        })
       },
       handleSelectionChange(val){
         this.multipleSelection = val;
@@ -171,11 +191,6 @@
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
-      },
-      handleSizeChange(val) {
-              this.listQuery.pageNum = 1;
-              this.listQuery.pageSize = val;
-              this.getList();
       },
       addactivity() {
         this.$router.push({

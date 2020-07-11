@@ -14,6 +14,10 @@
           <el-input-dispatcher style="width: 214px" v-model="userForm.phone" placeholder="客户电话"></el-input-dispatcher>
         </el-form-item>
         <br />
+        <el-form-item label="创建时间：" prop="phone">
+          <el-input-dispatcher style="width: 214px" v-model="userForm.createDate" placeholder="客户电话"></el-input-dispatcher>
+        </el-form-item>
+        <br />
         <el-form-item style="display: block; text-align: right">
           <el-button size="mini" type="primary" v-show="rwDispatcherState == 'write'">提交</el-button>
           <el-button size="mini" v-show="operaType == 'add'" @click="resetForm('userForm')">重置</el-button>
@@ -25,6 +29,7 @@
 </template>
 
 <script>
+  import {getoneClient} from '@/api/client'
     export default {
       name: "adduser",
       provide() {
@@ -55,7 +60,7 @@
         }
       },
       created() {
-        switch (this.$route.query.operaType){
+        switch (this.$route.params.operaType){
           case "add": this.titMsg = "添加客户";
             break;
           case "read": this.titMsg = "查看客户";
@@ -63,10 +68,18 @@
           case "edit": this.titMsg = "编辑客户";
             break;
         }
-        this.rwDispatcherState = this.$route.query.rds;
-        this.operaType = this.$route.query.operaType;
+        this.rwDispatcherState = this.$route.params.rds;
+        this.operaType = this.$route.params.operaType;
+        this.getOneclient();
       },
       methods: {
+        getOneclient() {
+          getoneClient({id: this.$route.params.id}).then(res => {
+            console.log(res)
+            this.userForm = res.result.result;
+            console.log(this.userForm)
+          })
+        },
         backLastpage() {
           this.$router.go(-1);
         },

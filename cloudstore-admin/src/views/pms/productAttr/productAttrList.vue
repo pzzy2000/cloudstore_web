@@ -1,13 +1,19 @@
 <template> 
   <div class="app-container">
     <el-card class="operate-container" shadow="never">
-
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
       <el-button
         class="btn-add"
-        @click="addProductAttr()"
+        @click="backPage()"
         size="mini">
+        返回
+      </el-button>
+      <el-button
+        class="btn-add"
+        @click="addProductAttr()"
+        size="mini"
+        style="margin-right: 20px">
         添加
       </el-button>
     </el-card>
@@ -132,12 +138,11 @@
         //this.$router.push({path:'/sys/goods/addProductAttr',query:{goodsPropertyId:this.$route.query.goodsPropertyId,type:this.$route.query.type}});
         // this.dialogVisible = true;
         // this.dialogTitle = "添加属性";
-		if(this.$route.query.type ==0 ){
-          this.$router.push({path: '/sys/goods/property/specs/add', query: {goodsPropertyId: this.$route.query.goodsPropertyId, type:this.$route.query.type, optTp: 'add', allMsg: this.$route.query.type + 'add'}});
-		}else{
-           this.$router.push({path: '/sys/goods/property/param/add', query: {goodsPropertyId: this.$route.query.goodsPropertyId, type:this.$route.query.type, optTp: 'add', allMsg: this.$route.query.type + 'add'}});
-		}
-
+        if(this.$route.query.type ==0 ){
+              this.$router.push({path: '/sys/goods/property/specs/add', query: {goodsPropertyId: this.$route.query.goodsPropertyId, type:this.$route.query.type, optTp: 'add', allMsg: this.$route.query.type + 'add'}});
+        }else{
+               this.$router.push({path: '/sys/goods/property/param/add', query: {goodsPropertyId: this.$route.query.goodsPropertyId, type:this.$route.query.type, optTp: 'add', allMsg: this.$route.query.type + 'add'}});
+        }
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -207,6 +212,9 @@
         ids.push(row.id); */
         this.handleDeleteProductAttr({'ids':row.id});
       },
+      backPage() {
+        this.$router.go(-1);
+      }
     },
     filters: {
       inputTypeFilter(value) {

@@ -53,7 +53,9 @@
         },
         rwDispatcherState: 'write',
         rules: {
-          activityName: [{ required: true, message: '请输入活动名称', trigger: 'blur' }]
+          activityName: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+          startTime: [{ required: true, message: '开始时间必填哦', trigger: 'blur' }],
+          endTime: [{ required: true, message: '结束时间必填哦', trigger: 'blur' }],
         },
         checked: true,
         startDatePicker: this.beginDate(),

@@ -3,7 +3,8 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
-      <el-button type="primary" size="mini" style="float: right;" @click="addlevel">添加</el-button>
+      <el-button size="mini" style="float: right" @click="backPage" v-show="isshow">返回</el-button>
+      <el-button type="primary" size="mini" style="float: right; margin-right: 20px" @click="addlevel">添加</el-button>
     <!--  <el-button
         class="btn-add"
         @click="handleAddProductCate()"
@@ -117,17 +118,29 @@
           pageNum: 1,
           pageSize: 10,
           parentId: 0,
-        }
+        },
+        isshow: true
       }
     },
     created() {
       this.resetParentId();
       this.getList();
+      console.log(this.$route.query.level)
+      if (this.$route.query.level == undefined){
+        this.isshow = false;
+      }else{
+        this.isshow = true;
+      }
     },
     watch: {
       $route(route) {
         this.resetParentId();
         this.getList();
+        if (this.$route.query.level == undefined){
+          this.isshow = false;
+        }else{
+          this.isshow = true;
+        }
       }
     },
     methods: {
@@ -188,7 +201,6 @@
         });
       },
       addlevel() {
-        // console.log(this.list);
         if (this.list.length != 0){
           this.$router.push({
             path: "/sys/goods/category/add",
@@ -238,6 +250,11 @@
           deleteGoodlevel('/goods/category/delete', {'ids': row.id}).then(res => {
             console.log(res);
             if (res.result.code == 0){
+              this.$message({
+                type: 'success',
+                message: '删除成功！',
+                duration: 800
+              })
               this.getList();
             }
           })
@@ -246,6 +263,9 @@
       handleUpdate(index, row) {
         this.$router.push({path:'/pms/updateProductCate',query:{id:row.id}});
       },
+      backPage() {
+        this.$router.go(-1)
+      }
       // handleDelete(index, row) {
       //   this.$confirm('是否要删除该品牌', '提示', {
       //     confirmButtonText: '确定',
