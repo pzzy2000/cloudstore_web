@@ -10,7 +10,7 @@ export default {
 	},
 	
 	areas:{
-		province:'/sys/dict/list',
+		province:'sys/dict/list',
 	},
 	
 	client:{

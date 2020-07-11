@@ -104,8 +104,14 @@
 		},
 		methods: {
 			async getApplyAgentData () {
+				uni.showLoading({
+					title: '正在加载中',
+					mask: false
+				});
 				let params = {}
 				let data = await Api.apiCall('post', Api.client.applyAgent.getClientAgent, params)
+				if(data) {
+					uni.hideLoading()
 					if (data.code === 0 && data.result != null) {
 						this.agentfrom.id = data.result.id,
 						this.agentfrom.shopName = data.result.shopName
@@ -123,7 +129,7 @@
 							this.imglistId.push(data.result.goodsPhotos[tmp].uid)
 						}
 						if (data.result.status === 0) {
-							this.checkText = '正在审核'
+							this.checkText = '正在审核中,资料不能修改'
 							this.isCheck = true
 							this.isEdit = true
 						}else if(data.result.status === 2) {
@@ -133,6 +139,7 @@
 							this.isEdit = false
 						}
 					}
+				}
 			},
 			typeChange (e) {
 				this.index = e.detail.value
@@ -189,6 +196,10 @@
 				this.popup = !this.popup
 			},
 			async applyAgent () {
+				if (this.isEdit === true) {
+					this.$api.msg('资料正在审核，请勿重复提交')
+					return;
+				}
 				let params = {
 					shopName: this.agentfrom.shopName,
 					name: this.agentfrom.name,

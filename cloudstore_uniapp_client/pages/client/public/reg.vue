@@ -38,10 +38,10 @@
 			<view class="regBox" >
 				<input type="text" :value="vxPhone" class="input-height"/>
 				<view class="phone-code">
-					<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input"/>
+					<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input" @input="editInput($event,'code')"/>
 					<button type="primary" class="code-btn">发送验证码</button>
 				</view>
-				<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height"/>
+				<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height" @input="editInput($event,'pwd')"/>
 				<view class="regBox-btn">
 					<button type="primary" @tap="registerBtn">注册</button>
 					<button type="primary" @tap="close">关闭</button>
@@ -88,14 +88,8 @@
 		onLoad() {
 		},
 		computed: {
-			// ...mapState(['hasLogin', 'userInfo'])
 		},
 		methods: {
-			// ...mapMutations(['login']),
-			// inputChange(e) {
-			// 	const key = e.currentTarget.dataset.key;
-			// 	this[key] = e.detail.value;
-			// },
 			toLoginPwd() {
 				uni.navigateTo({
 					url: '/pages/client/public/login'
@@ -142,42 +136,52 @@
 				//this.logining = false;
 				if (data) {
 					console.log(data);
-					this.$api.msg("注册成功");
-					setInterval(() => {
-						this.toLoginPwd();
-					}, 2000);
+					if (data.code === 0) {
+						uni.showModal({
+							title: '提示',
+							content: '注册成功',
+							showCancel: false,
+							cancelText: '取消',
+							confirmText: '确定',
+							success: res => {
+								this.toLoginPwd();
+							},
+						});
+					} else {
+						this.$api.msg(data.msg);
+					}
 				}
 			},
 			// 获取验证码
-			async getCode() {
-				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
-				if (!myreg.test(this.phone)) {
-					uni.showToast({
-						icon: 'none',
-						title: '请输入正确的手机号码'
-					});
-					return false;
-				}
-				//设置倒计时秒
-				this.auth_time = 60;
-				this.coding = true;
-				var auth_timetimer = setInterval(() => {
-					this.auth_time--;
-					if (this.auth_time < 0) {
-						this.coding = false;
-						clearInterval(auth_timetimer);
-					}
-				}, 1000);
-				//获取验证码
-				let params = {
-					phone: this.phone,
-					codeType: 'reg'
-				};
-				let data = await Api.apiCall('post', Api.index.sendCodes, params);
-				if (data) {
-					this.codekey = data.key;
-				}
-			},
+			// async getCode() {
+			// 	var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+			// 	if (!myreg.test(this.phone)) {
+			// 		uni.showToast({
+			// 			icon: 'none',
+			// 			title: '请输入正确的手机号码'
+			// 		});
+			// 		return false;
+			// 	}
+			// 	//设置倒计时秒
+			// 	this.auth_time = 60;
+			// 	this.coding = true;
+			// 	var auth_timetimer = setInterval(() => {
+			// 		this.auth_time--;
+			// 		if (this.auth_time < 0) {
+			// 			this.coding = false;
+			// 			clearInterval(auth_timetimer);
+			// 		}
+			// 	}, 1000);
+			// 	//获取验证码
+			// 	let params = {
+			// 		phone: this.phone,
+			// 		codeType: 'reg'
+			// 	};
+			// 	let data = await Api.apiCall('post', Api.index.sendCodes, params);
+			// 	if (data) {
+			// 		this.codekey = data.key;
+			// 	}
+			// },
 			getWxCode () {
 				this.$refs.popup.open()
 				var that = this;
@@ -295,6 +299,14 @@
 						});
 					}
 				});
+			},
+			editInput (e,type) {
+				if (type === 'code') {
+					this.phoneCode = e.detail.value
+					console.log(this.phoneCode)
+				} else {
+					this.userPwd = e.detail.value
+				}
 			},
 			vxRegister () { //微信注册最后一步
 				var that = this;
