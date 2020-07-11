@@ -134,7 +134,7 @@
             size="small">
             更新
           </el-button>
-          <el-button style="float: none;margin-bottom: 10px;" @click="cancelList" size="small">
+          <el-button style="float: none;margin-bottom: 10px;" @click="cancelList" type="primary">
             返回
           </el-button>
 

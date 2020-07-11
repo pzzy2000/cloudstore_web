@@ -41,10 +41,10 @@
               </el-table-column>
             </el-table>
           </el-form-item>
-          <div style="overflow: hidden">
-            <el-button size="small" style="float: right" @click="backpage">返回</el-button>
-            <el-button style="float: right; margin-right: 20px" size="small" @click="refused" v-show="isshow">拒绝</el-button>
-            <el-button type="primary" style="float: right; margin-right: 20px" size="small" @click="submitApply" v-show="isshow">审核通过</el-button>
+          <div style="text-align: center">
+            <el-button type="primary" style="margin-right: 20px" size="small" @click="submitApply" v-show="isshow">审核通过</el-button>
+            <el-button style="margin-right: 20px" size="small" @click="refused" v-show="isshow">拒绝</el-button>
+            <el-button size="small" @click="backpage" type="primary">返回</el-button>
           </div>
         </el-form>
       </div>
