@@ -293,29 +293,27 @@ export const asyncRouterMap = [
         path: 'info',
         name: 'agent_info',
         component: () => import('@/views/agent/agentInfo'),
-        meta: {title: '代理详情', icon: 'product-list'}
-     },{
-        path: 'level',
-        name: 'agent_level',
-        component: () => import('@/views/agent/level/list'),
-        meta: {title: '代理等级', icon: 'product-list'}
-     },{
-       path: 'addlevel',
-       name: 'agent_addlevel',
-       component: () => import('@/views/agent/level/addlevel'),
-       meta: {title: '添加代理等级', icon: 'product-list'},
-       hidden: true
-     },{
-        path: 'goods',
-        name: 'agent_goods',
+        meta: {title: '代理详情', icon: 'product-list'},
+        hidden: true
+     },
+     // {
+     //    path: 'level/list',
+     //    name: 'agent_level_list',
+     //    component: () => import('@/views/agent/level/list'),
+     //    meta: {title: '代理等级', icon: 'product-list'}
+     // },
+     // {
+     //   path: 'level/add',
+     //   name: 'agent_level_add',
+     //   component: () => import('@/views/agent/level/addlevel'),
+     //   meta: {title: '添加代理等级', icon: 'product-list'},
+     //   hidden: true
+     // },
+     {
+        path: 'goods/list',
+        name: 'agent_goods_list',
         component: () => import('@/views/agent/goods'),
-        meta: {title: '代理商品', icon: 'product-list'}
-     },{
-       path: 'addgoods',
-       name: 'add_goodsInfo',
-       component: () => import('@/views/agent/addgoods'),
-       meta: {title: '添加代理商品', icon: 'product-list'},
-       hidden: true
+        meta: {title: '代理商品列表', icon: 'product-list'}
      }]
   },
   {
