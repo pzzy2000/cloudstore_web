@@ -74,27 +74,27 @@
             </el-select-dispatcher>
           </el-form-item>
           <br />
-<!--          <el-form-item label="地区：" prop="provinceId">-->
-<!--            <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"-->
-<!--              @change="selectDistrict($event, 1)">-->
-<!--              <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id">-->
-<!--              </el-option>-->
-<!--            </el-select-dispatcher>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item prop="cityId">-->
-<!--            <el-select-dispatcher v-model="baseinfo.cityId" :options="category1" remote placeholder="市" :loading="loading"-->
-<!--              @change="selectDistrict($event, 2)">-->
-<!--              <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id">-->
-<!--              </el-option>-->
-<!--            </el-select-dispatcher>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item prop="areaId">-->
-<!--            <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"-->
-<!--              @change="selectDistrict($event, 3)">-->
-<!--              <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">-->
-<!--              </el-option>-->
-<!--            </el-select-dispatcher>-->
-<!--          </el-form-item>-->
+          <el-form-item label="地区：" prop="provinceId">
+            <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"
+              @change="selectDistrict($event, 1)">
+              <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select-dispatcher>
+          </el-form-item>
+          <el-form-item prop="cityId">
+            <el-select-dispatcher v-model="baseinfo.cityId" :options="category1" remote placeholder="市" :loading="loading"
+              @change="selectDistrict($event, 2)">
+              <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select-dispatcher>
+          </el-form-item>
+          <el-form-item prop="areaId">
+            <el-select-dispatcher v-model="baseinfo.areaId" :options="category1" remote placeholder="区/县" :loading="loading"
+              @change="selectDistrict($event, 3)">
+              <el-option v-for="item in district.area" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select-dispatcher>
+          </el-form-item>
           <br />
           <el-form-item label="副标题：" prop="goodsSubtitle">
             <el-input-dispatcher v-model="baseinfo.goodsSubtitle"></el-input-dispatcher>
@@ -123,24 +123,18 @@
 
         </el-form>
         <div style="text-align:center">
-
           <el-button style="float: none;margin-bottom: 10px;" @click="addProduct" :style="{ display: button.add}" size="small">
             增加
           </el-button>
-
           <el-button style="float: none;margin-bottom: 10px;" @click="resetProduct" :style="{ display: button.reset}"
             size="small">
             重置
           </el-button>
-
-
           <el-button style="float: none;margin-bottom: 10px;" @click="updateProduct" :style="{ display: button.update}"
             size="small">
             更新
           </el-button>
-
-          <el-button style="float: none;margin-bottom: 10px;" @click="cancelList" :style="{ display: button.cancel}"
-            size="small">
+          <el-button style="float: none;margin-bottom: 10px;" @click="cancelList" size="small">
             返回
           </el-button>
 
@@ -430,13 +424,8 @@
           }
         });
       },
-
       cancelList() {
-        if (window.history.length > 1) {
-          this.$router.back()
-        } else {
-          this.$router.push('/sys/goods/list')
-        }
+        this.$router.go(-1)
 
       },
 

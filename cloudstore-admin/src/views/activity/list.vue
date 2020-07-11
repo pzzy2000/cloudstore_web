@@ -152,6 +152,27 @@
         }
         changeShowidx(obj).then(res => {
           console.log(res);
+          if(res.result.code == 0){
+            if(res.result.result.showIndex == 0) {
+              this.$message({
+                type: 'success',
+                message: '首页不显示了！',
+                duration: 800
+              })
+            }else{
+              this.$message({
+                type: 'success',
+                message: '显示在首页了！',
+                duration: 800
+              })
+            }
+          }else{
+            this.$message({
+              type: 'success',
+              message: '操作不成功，请联系管理员！',
+              duration: 800
+            })
+          }
         })
       },
       handleSelectionChange(val){

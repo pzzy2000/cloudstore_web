@@ -59,7 +59,7 @@
                     type: 'success',
                     duration:1000
                   });
-                  this.$router.push("/sys/goods/property");
+                  this.$router.go(-1);
                 });
               } else {
                 updateProductAttrCate({'id':this.productAttrCate.id,'propertyName':this.productAttrCate.propertyName,'descs':this.productAttrCate.descs,'optType':'update'}).then(response=>{
@@ -68,7 +68,7 @@
                     type: 'success',
                     duration:1000
                   });
-                  this.$router.push("/sys/goods/property");
+                  this.$router.go(-1);
                 });
               }
             } else {

@@ -58,7 +58,7 @@
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">关联商品</el-button>
-            <el-button size="mini" @click="delLogis(scope.row)">查看</el-button>
+            <el-button size="mini" @click="read(scope.row)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,6 +132,10 @@
       },
       handleCurrentChange() {
         console.log("1");
+      },
+      read(row) {
+        console.log(row)
+        this.$router.push("");
       }
     }
   }

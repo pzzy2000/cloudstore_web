@@ -55,7 +55,7 @@
           <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
         <el-table-column label="证件类型" align="center">
-          <template slot-scope="scope">{{scope.row.cardType}}</template>
+          <template slot-scope="scope">{{scope.row.cardType | changeCt}}</template>
         </el-table-column>
         <el-table-column label="证件号码" align="center">
           <template slot-scope="scope">{{scope.row.cardNo}}</template>
@@ -92,6 +92,14 @@
     created() {
       this.getList();
     },
+    filters: {
+      changeCt(data) {
+        switch (data) {
+          case "IDCard": return "身份证";
+            break;
+        }
+      }
+    },
     methods: {
       getList() {
         fetchList(this.listQuery).then(res => {
@@ -106,7 +114,7 @@
           return '数据读取错误';
         }
       },
-      delLogis(row) { 
+      delLogis(row) {
         this.$router.push({path: "/sys/client/agent/apply/info", query: {id: row.id}})
       }
     }

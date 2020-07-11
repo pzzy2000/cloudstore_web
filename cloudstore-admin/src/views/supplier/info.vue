@@ -70,30 +70,29 @@
             <el-input-dispatcher style="width: 214px" v-model="blicense.cardNo" placeholder="证件号码"></el-input-dispatcher>
           </el-form-item>
           <br/>
-          <el-form-item label="证件照片：" prop="cardPhotos">
+          <el-form-item label="证件照片：" prop="cardPhoto">
             <div v-if="rwDispatcherState =='read'">
-                <el-image  v-for=" (item,index) in cardPhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
-                     <div slot="placeholder" class="image-slot">
-                       加载中<span class="dot">...</span>
-                     </div>
-                </el-image>
+              <el-image v-for=" (item,index) in cardPhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;" v-model="blicense.cardPhoto">
+                 <div slot="placeholder" class="image-slot">
+                   加载中<span class="dot">...</span>
+                 </div>
+              </el-image>
             </div>
             <div v-else>
              <localmulti-upload v-model="cardPhotos"></localmulti-upload>
             </div>
           </el-form-item>
           <br />
-          <el-form-item label="营业执照照片：" required>
+          <el-form-item label="营业执照照片：" prop="licensePhoto">
           <div v-if="rwDispatcherState =='read'">
-            <el-image  v-for=" (item,index) in licensePhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;">
+            <el-image  v-for=" (item,index) in licensePhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;" v-model="blicense.licensePhoto">
                <div slot="placeholder" class="image-slot">
                  加载中<span class="dot">...</span>
                </div>
             </el-image>
           </div>
-
           <div v-else>
-                   <localmulti-upload v-model="licensePhotos"></localmulti-upload>
+            <localmulti-upload v-model="licensePhotos"></localmulti-upload>
           </div>
          </el-form-item>
 
@@ -170,12 +169,14 @@
         function isEmail(s) {
           return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
         }
-        if(value == ''){
+        if(value == null || value == ''){
           callback();
-        } else if (!isEmail(value)){
-          callback(new Error("请输入正确邮箱格式！！"));
-        }else{
-          callback();
+        } else{
+          if (!isEmail(value)){
+            callback(new Error("请输入正确邮箱格式！！"));
+          }else{
+            callback();
+          }
         }
       }
       var validateCardnum = (rule, value, callback) => {
@@ -240,6 +241,7 @@
           cardType: '',
           cardNo: '',
           cardPhoto:[],
+          licensePhoto: []
         },
         rules: {
           supplierName: [
@@ -259,7 +261,6 @@
           // ]
           licenseName: [
             { required: true, message: '执照名称不能为空', trigger: 'blur' },
-            { min: 10, max: 100, message: '长度在10到100字', trigger: 'blur' },
             { validator: validateInput, trigger: 'blur' }
           ],
           creditCode: [
@@ -285,7 +286,10 @@
             { min: 18, max: 18, message: '请输入18位号码', trigger: 'blur' },
             { validator: validateCardnum, trigger: 'blur' }
           ],
-          cardPhotos: [
+          cardPhoto: [
+            { required: true, message: '不能为空', trigger: 'blur' },
+          ],
+          licensePhoto: [
             { required: true, message: '不能为空', trigger: 'blur' },
           ]
         },
@@ -348,6 +352,19 @@
       },
 
       savebaseinfo(formName) {
+        console.log(this.cardPhotos);
+        let  picId=[];
+        for(let  i=0; i<this.cardPhotos.length ; i++){
+          let  x = this.cardPhotos[i];
+          picId.push(this.cardPhotos[i].uid);
+        }
+        this.blicense.cardPhoto = picId;
+        let  licensePhotoId=[];
+        for(let  i=0; i<this.licensePhotos.length ; i++){
+          let  x = this.licensePhotos[i];
+          licensePhotoId.push(this.licensePhotos[i].uid);
+        }
+        this.blicense.licensePhoto = licensePhotoId;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$confirm('是否提交数据', '提示', {
@@ -355,22 +372,6 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-                console.log(this.blicense);
-                let  picId=[];
-                for(let  i=0; i<this.cardPhotos.length ; i++){
-                      let  x = this.cardPhotos[i];
-                      picId.push(this.cardPhotos[i].uid);
-                }
-
-
-                this.blicense.cardPhoto = picId;
-
-                let  licensePhotoId=[];
-                for(let  i=0; i<this.licensePhotos.length ; i++){
-                      let  x = this.licensePhotos[i];
-                      licensePhotoId.push(this.licensePhotos[i].uid);
-                }
-                this.blicense.licensePhoto = licensePhotoId;
                 saveSupplierInfo(this.baseinfo,this.blicense).then(response=>{
                   this.cardPhotos =response.result.result.supplierMainInfo.cardPhotos;
                   this.rwDispatcherState="read";

@@ -50,7 +50,7 @@ export default {
         break;
       case 'agent': this.userType = "代理商";
         break;
-      case 'platForm': this.userType = "平台";
+      case 'platform': this.userType = "平台";
         break;
     }
   },

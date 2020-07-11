@@ -43,7 +43,7 @@
           </el-form-item>
           <div style="overflow: hidden">
             <el-button size="small" style="float: right" @click="backpage">返回</el-button>
-            <el-button style="float: right" size="small" @click="refused" v-show="isshow">拒绝</el-button>
+            <el-button style="float: right; margin-right: 20px" size="small" @click="refused" v-show="isshow">拒绝</el-button>
             <el-button type="primary" style="float: right; margin-right: 20px" size="small" @click="submitApply" v-show="isshow">审核通过</el-button>
           </div>
         </el-form>
