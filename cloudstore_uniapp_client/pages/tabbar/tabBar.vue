@@ -3,8 +3,8 @@
 		<view class="tabBar">
 		        <view v-for="(item,index) in tabbar" :key="item.pagePath" v-if="item.role == role "
 				 class="tabbar_item"  @click="navTo(item,index)">
-		            <image v-if="item.id==ids" :src="item.selectedIconPath" mode=""></image>
-		            <image v-else :src="item.iconPath" mode=""></image>
+		            <image v-if="item.id==ids" :src="item.selectedIconPath" mode="" class="image"></image>
+		            <image v-else :src="item.iconPath" mode="" class="image"></image>
 		            <view class="text">{{item.text}}</view>
 		        </view>
 		</view>
@@ -141,7 +141,6 @@
 		},
 
         dd(item){
-			console.log(">>>>>>>>>>>>  2tbBar "+item.role+" "+item.pagePath);
 			if(this.showPage==true)return;
 			this.setshow(true);
 			uni.showLoading({
@@ -159,7 +158,6 @@
 		},
 
 		 async	navTo(item, index) {
-				console.log(">>>>>>>>>>>>  1tbBar "+item.role);
 				if(item.role ==='client'){
 					uni.switchTab({
 						url: item.pagePath
@@ -224,7 +222,7 @@
             }
         }
  
-        image {
+        .image {
             width: 36upx;
             height: 36upx;
             margin-left: 5upx;

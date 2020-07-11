@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<nav-bar backState="1000">手机号授权</nav-bar>
 		<view class="wrapper">
 			<button class="confirm-btn" open-type="getPhoneNumber" @getphonenumber='getPhoneNumber'>微信授权手机号</button>
 		</view>
@@ -8,6 +9,7 @@
 
 <script>
 	import Api from '@/common/api';
+	import navBar from '@/components/zhouWei-navBar';
 	export default {
 		data() {
 			return {
@@ -16,6 +18,9 @@
 				vxPhoneData: '',
 				loginCode: ''
 			}
+		},
+		components:{
+			navBar
 		},
 		onLoad (option) {
 			// this.getVxLoginCode()
