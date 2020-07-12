@@ -213,9 +213,9 @@
           categoryOneId: [{required: true, message: '请输入一级分类', trigger: ['blur', 'change']}],
           categoryTwoId: [{required: true, message: '请输入二级分类', trigger: ['blur', 'change']}],
           categoryThreeId: [{required: true, message: '请输入三级分类', trigger: ['blur', 'change']}],
-          // provinceId: [{required: true, message: '请输入省', trigger: 'change'}],
-          // cityId: [{required: true, message: '请输入市', trigger: 'change'}],
-          // areaId: [{required: true, message: '请输入区/县', trigger: 'change'}],
+          provinceId: [{required: true, message: '请输入省', trigger: 'change'}],
+          cityId: [{required: true, message: '请输入市', trigger: 'change'}],
+          areaId: [{required: true, message: '请输入区/县', trigger: 'change'}],
           goodsSubtitle: [{required: true, message: '请输入副标题', trigger: 'blur'}],
           salePrice: [{required: true, message: '请输入商品售价', trigger: 'blur'}],
           martPrice: [{required: true, message: '请输入市场价', trigger: 'blur'}]

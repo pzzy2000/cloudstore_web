@@ -14,8 +14,8 @@
             首页
           </el-dropdown-item>
         </router-link>
-        <el-dropdown-item divided>
-          <span @click="logout" style="display:block;">退出</span>
+        <el-dropdown-item divided @click.native="logout">
+          <span style="display:block;">退出</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -59,9 +59,15 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
-      })
+      this.setCookie('loginToken', "", -1);
+      this.setCookie('username', "", -1);
+      this.setCookie('password', "", -1);
+      location.reload() // 为了重新实例化vue-router对象 避免bug
+    },
+    setCookie(c_name,value,expire) {
+      var date=new Date()
+      date.setSeconds(date.getSeconds()+expire)
+      document.cookie=c_name+ "="+escape(value)+"; expires="+date.toGMTString()
     }
   }
 }

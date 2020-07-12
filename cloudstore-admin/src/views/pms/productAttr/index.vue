@@ -3,10 +3,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
-      <el-button
-        class="btn-add"
-        @click="addProductAttrCate()"
-        size="mini">
+      <el-button class="btn-add" @click="addProductAttrCate()" size="mini" v-show="isshow">
         添加
       </el-button>
     </el-card>
@@ -43,7 +40,7 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="操作" width="200" align="center" v-if="isshow">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -87,11 +84,18 @@
           pageSize: 5
         },
         dialogVisible: false,
-        dialogTitle:''
+        dialogTitle:'',
+        isshow: true
       }
     },
     created() {
       this.getList();
+      switch (localStorage.getItem('userType')){
+        case 'platform': this.isshow = false;
+          break;
+        case 'supplier': this.isshow = true;
+          break;
+      }
     },
     methods: {
       getList() {

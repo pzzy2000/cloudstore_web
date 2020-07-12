@@ -3,17 +3,10 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
-      <el-button
-        class="btn-add"
-        @click="backPage()"
-        size="mini">
+      <el-button class="btn-add" @click="backPage()" size="mini">
         返回
       </el-button>
-      <el-button
-        class="btn-add"
-        @click="addProductAttr()"
-        size="mini"
-        style="margin-right: 20px">
+      <el-button class="btn-add" @click="addProductAttr()" size="mini" style="margin-right: 20px" v-show="isshow">
         添加
       </el-button>
     </el-card>
@@ -35,7 +28,7 @@
         <el-table-column label="属性类型"  align="center">
           <template slot-scope="scope">{{scope.row.type | attrType}}</template>
         </el-table-column>
-        <el-table-column label="操作"  align="center">
+        <el-table-column label="操作" align="center" v-if="isshow">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -120,10 +113,17 @@
             value: "deleteProductAttr"
           }
         ],
+        isshow: true
       }
     },
     created() {
       this.getList();
+      switch (localStorage.getItem('userType')){
+        case 'platform': this.isshow = false;
+          break;
+        case 'supplier': this.isshow = true;
+          break;
+      }
     },
     methods: {
       getList() {

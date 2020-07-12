@@ -92,3 +92,11 @@ export function updateProduct(id,data) {
     data:data
   })
 }
+
+export function upOrdown(params) {
+  return request({
+    url: '/goods/shelfStatus',
+    method: 'POST',
+    params: params
+  })
+}

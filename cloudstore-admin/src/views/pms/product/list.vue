@@ -47,7 +47,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button class="btn-add" @click="handleAddProduct()" size="mini">
+      <el-button class="btn-add" @click="handleAddProduct()" size="mini" v-show="isshow">
         添加
       </el-button>
     </el-card>
@@ -129,15 +129,15 @@
 
             <el-button size="mini" @click="handleShowProduct(scope.$index, scope.row)">查看
             </el-button>
-            <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)">编辑
+            <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)" v-show="isshow">编辑
             </el-button>
-            <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU管理
+            <el-button size="mini" @click="addsku(scope.$index, scope.row)" v-show="isshow">SKU管理
             </el-button>
             <!-- <el-button
                 size="mini"
                 @click="handleShowLog(scope.$index, scope.row)">日志
               </el-button> -->
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" v-show="isshow">删除
             </el-button>
 
           </template>
@@ -206,7 +206,8 @@
     updateDeleteStatus,
     updateNewStatus,
     updateRecommendStatus,
-    updatePublishStatus
+    updatePublishStatus,
+    upOrdown
   } from '@/api/product'
   import {
     fetchList as fetchSkuStockList,
@@ -299,11 +300,18 @@
         }, {
           value: 0,
           label: '未审核'
-        }]
+        }],
+        isshow: false
       }
     },
     created() {
       this.getList();
+      switch (localStorage.getItem('userType')){
+        case 'platform': this.isshow = false;
+          break;
+        case 'supplier': this.isshow = true;
+          break;
+      }
       //this.getBrandList();
       //this.getProductCateList();
     },
@@ -588,6 +596,30 @@
         });
       },
 
+      handlePublishStatusChange(index, row) {
+        console.log(row.id, row.shelfStatus);
+        if (row.shelfStatus == 0){//下架
+          upOrdown({goodsId: row.id}).then(res => {
+            if(res.result.code == 0){
+              this.$message({
+                type: 'success',
+                message: '下架成功',
+                duration: 800
+              })
+            }
+          })
+        }else{//上架
+          upOrdown({goodsId: row.id}).then(res => {
+            if(res.result.code == 0){
+              this.$message({
+                type: 'success',
+                message: '上架成功',
+                duration: 800
+              })
+            }
+          })
+        }
+      },
 
       updateDeleteStatus(deleteStatus, ids) {
         let params = new URLSearchParams();

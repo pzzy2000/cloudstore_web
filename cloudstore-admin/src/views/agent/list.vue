@@ -263,6 +263,15 @@
           ids.push(row.id);
           this.updateDeleteStatus(1, ids);
         });
+      },
+      deleteinfo(index, row) {
+        this.$confirm('确定要删除吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          alert("删除事件");
+        }).catch(() => {alert("不删除")})
       }
     }
   }

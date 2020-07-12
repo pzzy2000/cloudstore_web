@@ -23,16 +23,13 @@
           <el-form-item label="活动名称：">
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
           </el-form-item>
-          <el-form-item label="物流编码：">
-            <el-input style="width: 214px" v-model="listQuery.access" placeholder="访问账号"></el-input>
-          </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right" @click="addactivity">添加活动</el-button>
+      <el-button size="mini" style="float: right" @click="addactivity" v-show="isshow">添加活动</el-button>
       <!--
       <el-button
         class="btn-add"
@@ -65,7 +62,7 @@
         <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)">删除</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -104,11 +101,18 @@
         list: null,
         total: null,
         listLoading: true,
-        multipleSelection: []
+        multipleSelection: [],
+        isshow: false
       }
     },
     created() {
       this.getList();
+      switch (localStorage.getItem('userType')){
+        case 'platform': this.isshow = true;
+          break;
+        case 'supplier': this.isshow = false;
+          break;
+      }
     },
     watch: {
       // selectProductCateValue: function (newValue) {
@@ -191,6 +195,7 @@
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.getList();
       },
       addactivity() {
         this.$router.push({

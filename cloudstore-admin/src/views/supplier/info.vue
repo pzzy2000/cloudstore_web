@@ -1,13 +1,11 @@
 <template>
   <div class="app-container">
     <el-card class="filter-container" shadow="never">
-      <div>
-        <span>
-          <!--基本信息--></span>
+      <div style="text-align: right">
+        <el-divider content-position="left"><i class="el-icon-search"></i> 供应商信息</el-divider>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="blicense" ref="blicense" :rules="rules" size="small" label-width="130px">
-          <el-divider content-position="left"><i class="el-icon-search"></i> 供应商信息</el-divider>
           <el-form-item label="供应商名字：" prop="supplierName">
             <el-input-dispatcher style="width: 580px" v-model="blicense.supplierName" placeholder="供应商名字"></el-input-dispatcher>
           </el-form-item>
@@ -95,24 +93,21 @@
             <localmulti-upload v-model="licensePhotos"></localmulti-upload>
           </div>
          </el-form-item>
-
         </el-form>
-        <div>
-          <el-button style="float: right;margin-bottom: 10px;" @click="shownUpdateSbutton(true)" :style="{ display: shownUpdateSubelButton}"
-            size="small">
+        <div style="text-align: center">
+          <el-button style="margin-bottom: 10px;" @click="shownUpdateSbutton(true)" :style="{ display: shownUpdateSubelButton}"
+            size="small" v-if="isshow">
             更新
           </el-button>
-
-          <el-button style="float: right;margin-bottom: 10px;" @click="shownUpdateSbutton(false)" :style="{ display: shownUpdateButton}"
-            size="small">
+          <el-button style="margin-bottom: 10px;" @click="shownUpdateSbutton(false)" :style="{ display: shownUpdateButton}"
+            size="small" v-if="isshow">
             取消
           </el-button>
-
-          <el-button style="float: right;margin-bottom: 10px; margin-right: 20px;" :style="{ display: shownUpdateButton}"
-            @click="savebaseinfo('blicense')" type="primary" size="small">
+          <el-button style="margin-bottom: 10px; margin-right: 20px;" :style="{ display: shownUpdateButton}"
+            @click="savebaseinfo('blicense')" type="primary" size="small" v-if="isshow">
             提交
           </el-button>
-
+          <el-button @click="backPage" size="small">返回</el-button>
         </div>
       </div>
     </el-card>
@@ -299,6 +294,7 @@
         shownUpdateButton: "none",
         shownUpdateSubelButton: "",
         supplierId: typeof(this.$route.query.supplierId) == 'undefined' ? null : this.$route.query.supplierId,
+        isshow: false
       }
     },
     mounted() {
@@ -309,6 +305,12 @@
       // this.baseinfo.name="www";
       this.blicense.startTime = "2012-02-12"
       this.loadInfo();
+      switch (localStorage.getItem('userType')){
+        case 'platform': this.isshow = false;
+          break;
+        case 'supplier': this.isshow = true;
+          break;
+      }
     },
     methods: {
       shownUpdateSbutton(action) {
@@ -380,6 +382,9 @@
                     type: 'success',
                     duration: 1000
                   });
+                  this.shownUpdateButton = "none"
+                  this.shownUpdateSubelButton = ""
+                  this.rwDispatcherState = "read" //write  read
                   // this.$router.go(0)
                   this.$forceUpdate();
                 });
@@ -394,7 +399,9 @@
           }
         });
       },
-
+      backPage() {
+        this.$router.go(-1);
+      },
       handlePictureCardPreview(){
 
       },
