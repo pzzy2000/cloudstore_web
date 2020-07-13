@@ -71,3 +71,11 @@ export function changeShowidx(params) {
     data: switchForm(params)
   })
 }
+
+export function delActivity(params) {
+  return request({
+    url: '/activity/goods/delete',
+    method: 'POST',
+    params: params
+  })
+}

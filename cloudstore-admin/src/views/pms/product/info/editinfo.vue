@@ -23,7 +23,6 @@
             <div v-else>
               <single-upload v-model="goodsPics"></single-upload>
             </div>
-
           </el-form-item>
           <br />
           <el-form-item label="商品详情图片(最多5个)：" prop="goodsName">
@@ -35,10 +34,8 @@
               </el-image>
             </div>
             <div v-else>
-
               <multi-upload v-model="goodsDetailPics"></multi-upload>
             </div>
-
           </el-form-item>
           <br />
           <el-form-item label="退货规则：" prop="returnRuleId">
@@ -160,7 +157,8 @@
 
   import {
     getProduct,
-    createProduct
+    createProduct,
+    updateGood
   } from '@/api/product';
 
   import SingleUpload from '@/components/Upload/singleUpload';
@@ -225,7 +223,6 @@
     beforeMount() {},
     created() {
       this.reload();
-
     },
     mounted() {
       this.reload()
@@ -259,7 +256,6 @@
       },
       reload() {
         let action = this.$route.query.action; //1:增加 2：编辑 0:查看,默认是查看
-
         action = parseInt((typeof(action) == 'undefined') ? "1" : action);
         switch (action) {
           case 0:
@@ -284,7 +280,6 @@
         this.searchRootCategory();
         this.selectRootDistrict();
       },
-
 
       searchRootCategory() {
         this.loading = true;
@@ -420,7 +415,6 @@
                    this.goodsDetailPics = this.baseinfo.goodsDetailPhotos;
                  });
             });
-
           }
         });
       },
@@ -430,9 +424,38 @@
       },
 
       updateProduct() {
-        msg("更新");
+        let udpobj = {};
+        let goodsPics = [];
+        for (let i = 0; i < this.goodsPics.length; i++) {
+          let x = this.goodsPics[i];
+          goodsPics.push(this.goodsPics[i].uid);
+        }
+        udpobj.goodsPics = goodsPics;
+        let goodsDetailPics = [];
+        for (let i = 0; i < this.goodsDetailPics.length; i++) {
+          let x = this.goodsDetailPics[i];
+          goodsDetailPics.push(this.goodsDetailPics[i].uid);
+        }
+        udpobj.goodsDetailPics = goodsDetailPics;
+        udpobj.optType = "update";
+        udpobj.areaId = this.baseinfo.areaId;
+        udpobj.categoryOneId = this.baseinfo.categoryOneId;
+        udpobj.categoryThreeId = this.baseinfo.categoryThreeId;
+        udpobj.categoryTwoId = this.baseinfo.categoryTwoId;
+        udpobj.cityId = this.baseinfo.cityId;
+        udpobj.provinceId = this.baseinfo.provinceId;
+        udpobj.goodsSubtitle = this.baseinfo.goodsSubtitle;
+        udpobj.salePrice = this.baseinfo.salePrice;
+        udpobj.martPrice = this.baseinfo.martPrice;
+        udpobj.unit = this.baseinfo.unit;
+        udpobj.goodsName = this.baseinfo.goodsName;
+        udpobj.supplierId = this.baseinfo.supplierId;
+        console.log(udpobj);
+        console.log(this.baseinfo);
+        updateGood(udpobj).then(res => {
+          console.log(res);
+        })
       },
-
       resetProduct() {
         this.$refs['baseinfo'].resetFields();
       },

@@ -20,9 +20,6 @@
             <span>{{baseinfo.phone}}</span>
           </el-form-item>
           <br />
-
-
-
           <el-form-item label="地区：" prop="provinceId">
             <span v-if="baseinfo.provinceBean !=null " >{{baseinfo.provinceBean.name}}</span>
             <span v-if="baseinfo.cityBean !=null ">{{baseinfo.cityBean.name}}</span>
@@ -30,7 +27,6 @@
             <span v-if="baseinfo.detailAddress !=null " >{{baseinfo.detailAddress}}</span>
           </el-form-item>
           <br />
-
           <el-form-item label="审核状态：" prop="goodsSubtitle">
             <span>{{baseinfo.status}}</span>
           </el-form-item>
@@ -39,9 +35,6 @@
             <span v-if="baseinfo.sysManagerUserBean !=null " >{{baseinfo.sysManagerUserBean.name}}</span>
           </el-form-item>
           <br />
-
-
-
         </el-form>
         <div style="text-align:center">
 
@@ -128,24 +121,12 @@
         rwDispatcherState: 'read',
       }
     },
-    mounted() {
-      // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  mounted 2");
-      // mounted在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作
-    },
-
-    beforeMount() {},
-
-
     created() {
       this.reload();
-
     },
-
     mounted() {
       this.reload()
     },
-
-
     watch: {
       '$route'(to, from) {
         console.log('to=' + to)
@@ -153,14 +134,12 @@
       }
     },
     methods: {
-
       showinfoBut() {
         this.button.add = "none";
         this.button.reset = "none";
         this.button.update = "none";
         this.button.cancel = "";
       },
-
       showAddBut() {
         this.button.add = "";
         this.button.reset = "";
@@ -175,10 +154,7 @@
       },
       reload() {
         let action = this.$route.query.action; //1:增加 2：编辑 0:查看,默认是查看
-
         action = 0;
-
-
         action = parseInt((typeof(action) == 'undefined') ? "2" : action);
         switch (action) {
           case 0:
@@ -203,8 +179,6 @@
         // this.searchRootCategory();
         // this.selectRootDistrict();
       },
-
-
       searchRootCategory() {
         this.loading = true;
         fetchListWithChildren(0).then(response => {

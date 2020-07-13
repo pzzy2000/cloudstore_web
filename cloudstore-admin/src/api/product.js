@@ -11,7 +11,6 @@ export function updateGoodsAttr(params) {
   })
 }
 
-
 export function fetchList(params) {
 
   return request({
@@ -98,5 +97,13 @@ export function upOrdown(params) {
     url: '/goods/shelfStatus',
     method: 'POST',
     params: params
+  })
+}
+
+export function updateGood(params) {
+  return request({
+    url: '/goods/save',
+    method: 'POST',
+    data: switchForm(params)
   })
 }

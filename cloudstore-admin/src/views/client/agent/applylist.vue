@@ -70,6 +70,9 @@
         <el-table-column label="详细住址" align="center">
           <template slot-scope="scope">{{scope.row.detailAddress}}</template>
         </el-table-column>
+        <el-table-column label="审核状态" align="center">
+          <template slot-scope="scope">{{scope.row.status | changeStatus}}</template>
+        </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="delLogis(scope.row)">{{scope.row.status | changeMsg}}</el-button>
@@ -129,6 +132,16 @@
           case 1: return "查看";
             break;
           case 2: return "查看";
+            break;
+        }
+      },
+      changeStatus(data){
+        switch (data) {
+          case 0: return "待审核";
+            break;
+          case 1: return "已通过";
+            break;
+          case 2: return "已拒绝";
             break;
         }
       }

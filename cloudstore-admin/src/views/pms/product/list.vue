@@ -80,7 +80,6 @@
           <template slot-scope="scope"> ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>
         </el-table-column>
         <el-table-column label="所属店铺" width="150" align="left" :formatter="suppilerShop">
-
         </el-table-column>
         <el-table-column label="所属供应商" width="150" align="left" :formatter="suppiler">
 
@@ -131,7 +130,7 @@
             </el-button>
             <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)" v-show="isshow">编辑
             </el-button>
-            <el-button size="mini" @click="addsku(scope.$index, scope.row)" v-show="isshow">SKU管理
+            <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU管理
             </el-button>
             <!-- <el-button
                 size="mini"

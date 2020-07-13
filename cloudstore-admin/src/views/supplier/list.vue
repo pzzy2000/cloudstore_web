@@ -144,19 +144,17 @@
     },
     methods: {
       showAccess(row,column){
-           return ( row.sysManagerUserBean ==null )?'数据读取错误':row.sysManagerUserBean.name ;
+        return ( row.sysManagerUserBean ==null )?'数据读取错误':row.sysManagerUserBean.name ;
       },
       showStatus(row, column) {
         let status = row.status;
         switch (status) {
           case 1:
-            return '申请';
+            return '待审核';
           case 2:
-            return '拒绝';
+            return '已拒绝';
           case 3:
-            return '通过';
-          default:
-            return '正常';
+            return '已通过';
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },
@@ -168,8 +166,6 @@
             return '未删除';
           case 1:
             return '已删除';
-          default:
-            return '正常';
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
         },

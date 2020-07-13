@@ -18,7 +18,7 @@ export function getAgentInfo(params){
 
 export function getOneagent(params) {
   return request({
-    url: '/agent/goods/get',
+    url: '/agent/get',
     method: 'POST',
     data: switchForm(params)
   })
@@ -29,5 +29,13 @@ export function saveUpdateLevel(params) {
     url: '/agent/level/save',
     method: 'POST',
     data: switchForm(params)
+  })
+}
+
+export function delAgent(params) {
+  return request({
+    url: '/agent/delete',
+    method: 'POST',
+    params: params
   })
 }

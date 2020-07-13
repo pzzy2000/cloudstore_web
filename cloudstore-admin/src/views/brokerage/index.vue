@@ -50,7 +50,7 @@
           <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
         </el-table-column>
         <el-table-column label="状态" align="center">
-          <template slot-scope="scope">{{scope.row.count}}</template>
+          <template slot-scope="scope">{{scope.row.showIndex}}</template>
         </el-table-column>
         <el-table-column label="关联商品数量" align="center">
           <template slot-scope="scope">{{scope.row.payPrice}}</template>

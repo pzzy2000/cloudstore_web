@@ -50,10 +50,12 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button class="btn-add" size="mini" @click="backPage" v-show="isshow">返回</el-button>
       <el-button
         class="btn-add"
         @click="addDict"
-        size="mini">
+        size="mini"
+        style="margin-right: 20px">
         添加
       </el-button>
     </el-card>
@@ -147,17 +149,29 @@
         total: null,
         listLoading: true,
         multipleSelection: [],
-        verifyList: {}
+        verifyList: {},
+        isshow: false
       }
     },
     created() {
        this.resetParentId();
        this.getList();
+       console.log(this.$route.query.parentId)
+       if (this.$route.query.parentId !== undefined) {
+         this.isshow = true;
+       }else {
+         this.isshow = false
+       }
     },
-   watch: {
+    watch: {
      $route(route) {
        this.resetParentId();
        this.getList();
+       if (this.$route.query.parentId !== undefined) {
+         this.isshow = true;
+       }else {
+         this.isshow = false
+       }
      }
    },
     filters: {
@@ -180,8 +194,9 @@
         }
       },
       tochild(index, row){
+        console.log(row)
         this.listQuery = Object.assign({}, defaultListQuery);
-        this.$router.push({path: '/sys/manager/dict/list', query: {parentId: row.id, parentId: this.$route.query.parentId}});
+        this.$router.push({path: '/sys/manager/dict/list', query: {parentId: row.id}});
       },
       haveChild(row, column){
         let  childs  = row.childs;
@@ -207,9 +222,11 @@
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           console.log(response);
-          this.listLoading = false;
-          this.list = response.result.result.records;
-          this.total = parseInt(response.result.result.total);
+          if (response.result.code == 0) {
+            this.listLoading = false;
+            this.list = response.result.result.records;
+            this.total = parseInt(response.result.result.total);
+          }
         });
       },
       handleSearchList() {
@@ -264,7 +281,10 @@
         });
       },
       addDict() {
-        this.$router.push({path: '/sys/manager/dict/add', query: {opt: "0"}});
+        this.$router.push({path: '/sys/manager/dict/add', query: {opt: "0", parentId: this.$route.query.parentId}});
+      },
+      backPage() {
+        this.$router.go(-1);
       }
     }
   }

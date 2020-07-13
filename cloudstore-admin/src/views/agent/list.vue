@@ -22,7 +22,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right" @click="addagency">添加</el-button>
+<!--      <el-button size="mini" style="float: right" @click="addagency">添加</el-button>-->
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
@@ -38,30 +38,22 @@
         <el-table-column label="详细地址" align="center" width="300">
           <template slot-scope="scope">{{scope.row.detailAddress}}</template>
         </el-table-column>
-
         <el-table-column label="代理商等级" width="150" align="center">
           <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>
         </el-table-column>
-
         <el-table-column label="审核状态" align="center" :formatter="showStatus">
         </el-table-column>
-
         <el-table-column label="所属账号" align="center" :formatter="showAccess">
-
         </el-table-column>
-
-
-
         <el-table-column label="是否删除" align="center" :formatter="deleteStatus">
-
         </el-table-column>
 
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="showinfo(scope.$index, scope.row)">查看
             </el-button>
-            <el-button size="mini" @click="editinfo(scope.$index, scope.row)">编辑
-            </el-button>
+<!--            <el-button size="mini" @click="editinfo(scope.$index, scope.row)">编辑-->
+<!--            </el-button>-->
             <el-button type="danger" size="mini" @click="deleteinfo(scope.$index, scope.row)">删除
             </el-button>
           </template>
@@ -88,7 +80,7 @@
   </div>
 </template>
 <script>
-  import { fetchList } from '@/api/agent'
+  import { fetchList, delAgent } from '@/api/agent'
   import { msg } from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
@@ -167,17 +159,16 @@
         let status = row.status;
         switch (status) {
           case 1:
-            return '申请';
+            return '待审核';
           case 2:
-            return '拒绝';
+            return '已拒绝';
           case 3:
-            return '通过';
+            return '已通过';
           default:
             return '正常';
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },
-
       deleteStatus(row, column) {
         let status = row.status;
         switch (status) {
@@ -215,7 +206,7 @@
             pageNum: pageNum,
             pageSize: pageSize,
             type: 'read',
-            ids: 'read'
+            rds: 'read'
           }
         });
       },
@@ -252,6 +243,11 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.$message({
+          message: '重置成功',
+          type: 'success',
+          duration: 800
+        })
       },
       handleDelete(index, row) {
         this.$confirm('是否要进行删除操作?', '提示', {
@@ -270,7 +266,9 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          alert("删除事件");
+          delAgent({ids: row.id}).then(res => {
+            console.log(res);
+          })
         }).catch(() => {alert("不删除")})
       }
     }

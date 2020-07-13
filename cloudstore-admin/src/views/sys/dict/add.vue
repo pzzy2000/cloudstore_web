@@ -16,7 +16,7 @@
           </el-form-item>
           <br />
           <el-form-item label="字典类型:" prop="dirctType">
-            <el-select v-model="bean.dirctType.code" placeholder="字典类型">
+            <el-select v-model="bean.dirctType" placeholder="字典类型">
               <el-option
                 v-for="item in dirctTypes"
                 :key="item.value"
@@ -60,17 +60,19 @@
       return {
         // rwDispatcherState: 'write',
         bean: {
-          dirctType: {}
+          dirctType: ''
         },
         parent:{
         name:""
         },
-        dirctTypes:[{
-          label: "服务保证",
-          value: "fubz"
-        },{
+        dirctTypes:[
+          // {
+          // label: "服务保证",
+          // value: "fubz"
+          // },
+          {
           label: "行政划分",
-          value: "area"
+          value: "areas"
         }],
         rules: {
           code: [
@@ -97,7 +99,7 @@
       async loadInfo() {
         if(this.bean.parentId > 0){
            await get({
-             parentId: this.bena.parentId
+             parentId: this.bean.parentId
            }).then(response => {
              this.parent.name="www";
            });
@@ -106,13 +108,18 @@
       saveUpdate(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.bean.dirctType.code == "area"){
-              this.bean.dirctType.name = "行政划分";
-            }else {
-              this.bean.dirctType.name = "服务保证";
-            }
+            // if (this.bean.dirctType.code == "area"){
+            //   this.bean.dirctType.name = "行政划分";
+            // }else {
+            //   this.bean.dirctType.name = "服务保证";
+            // }
             saveUpate(this.bean).then(response => {
-              msg('保存数据成功');
+              this.$message({
+                message: '添加成功',
+                duration: 800,
+                type: 'success'
+              })
+              this.$router.go(-1);
             });
           } else {
             return false;

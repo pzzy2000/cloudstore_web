@@ -44,12 +44,7 @@
       },
       data() {
         return {
-          baseinfoForm: {
-            name: '',
-            address: '',
-            detailAddress: '',
-            phone: ''
-          },
+          baseinfoForm: {},
           rwDispatcherState: 'write',
           titleMsg: '',
           optType: '',
@@ -62,10 +57,8 @@
         }
       },
       created() {
+        this.getAgent();
         this.optType = this.$route.query.type;
-        if (this.$route.query.agentId !== undefined){
-          this.getoneAgent();
-        }
         this.rwDispatcherState = this.$route.query.rds;
         switch (this.$route.query.type) {
           case 'add': this.titleMsg = '添加代理商';
@@ -79,9 +72,14 @@
         }
       },
       methods: {
-        getoneAgent() {
+        getAgent() {
           getOneagent({id: this.$route.query.agentId}).then(res => {
-            console.log(res);
+            this.baseinfoForm = res.result.result;
+            if (this.baseinfoForm.provinceBean == null){
+              this.baseinfoForm.address = ''
+            }else{
+              this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
+            }
           })
         },
         toLastpage() {

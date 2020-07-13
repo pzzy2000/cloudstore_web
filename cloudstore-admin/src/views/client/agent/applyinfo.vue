@@ -106,6 +106,7 @@
               type: 'success',
               duration: 800
             });
+            this.$router.push('/sys/agent/list');
           }
         })
       },
@@ -118,6 +119,7 @@
               type: 'success',
               duration: 800
             });
+            this.$router.push('/sys/agent/list');
           }
         })
       },

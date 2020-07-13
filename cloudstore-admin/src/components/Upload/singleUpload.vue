@@ -45,7 +45,7 @@
         dialogVisible: false,
         dialogImageUrl: null,
         useOss: false,
-        minioUploadUrl: 'http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update'
+        minioUploadUrl: 'http://106.52.184.24:18888/platform/sys/upload/entity/oss/ali/update'
       };
     },
 

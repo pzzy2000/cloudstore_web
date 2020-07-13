@@ -47,7 +47,7 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="活动名称" width="400px" align="center" fixed>
+        <el-table-column label="活动名称" align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
          </el-table-column>
         <el-table-column label="是否显示在首页" align="center">
@@ -56,7 +56,25 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="是否参加佣金" width="400px" align="center" fixed>
+        <el-table-column label="是否启用" align="center">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="活动状态" align="center">
+<!--          <template slot-scope="scope">-->
+<!--            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">-->
+<!--            </el-switch>-->
+<!--          </template>-->
+        </el-table-column>
+        <el-table-column label="活动时间" align="center">
+<!--          <template slot-scope="scope">-->
+<!--            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">-->
+<!--            </el-switch>-->
+<!--          </template>-->
+        </el-table-column>
+        <el-table-column label="是否参加佣金" align="center">
           <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
         </el-table-column>
         <el-table-column label="操作"  align="center">
@@ -85,7 +103,7 @@
   </div>
 </template>
 <script>
-   import { fetchList, changeShowidx } from '@/api/activity'
+   import { fetchList, changeShowidx, delActivity } from '@/api/activity'
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
@@ -209,8 +227,11 @@
           query: {name: row.name, id: row.id}
         })
       },
-      handeldelGoods() {
-
+      handeldelGoods(row) {
+        console.log(row);
+        delActivity({ids: row.id}).then(res => {
+          console.log(res);
+        })
       }
     }
   }

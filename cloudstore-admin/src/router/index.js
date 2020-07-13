@@ -298,7 +298,8 @@ export const asyncRouterMap = [
         path: 'info',
         name: 'agent_info',
         component: () => import('@/views/agent/agentInfo'),
-        meta: {title: '代理详情', icon: 'product-list'}
+        meta: {title: '代理详情', icon: 'product-list'},
+        hidden: true
      },{
         path: 'level',
         name: 'agent_level',
