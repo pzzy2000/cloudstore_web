@@ -154,6 +154,7 @@
 				desc: '', //备注
 				payType: 1, //1微信 2支付宝
 				orderId: '',
+				shareClientId: '-1',
 				couponList: [
 					{
 						title: '新用户专享优惠券',
@@ -189,14 +190,16 @@
 		},
 		onLoad(option) {
 			//这里的数据用来做测试
-			// option.goodsId = "7604921082513985536"
-			// option.price = '100'
 			console.log(option)
 			var that = this;
 			this.goodsId = option.goodsId
 			this.agentGoodsId = option.agentGoodsId
 			this.goodsSkuId =option.goodsSkuId;
-			this.shareClientId = option.shareClientId;
+			this.shareClientId = option.shareClientId
+			if ( option.shareClientId == 'undefined') {
+				this.shareClientId = '-1'
+			}
+			console.log(this.shareClientId)
 			this.orderType = option.orderType
 			this.orderId = option.orderId
 			this.getGoodsData(this.goodsId ,this.agentGoodsId ,this.goodsSkuId)
@@ -268,6 +271,7 @@
 									let params = {
 										'activityId': that.activity,
 										'agentGoodsId': that.agentGoodsId,
+										'clientAddressId': that.addressData.id,
 										'goodsId': that.goodsId,
 										'goodsSkuId': that.goodsSkuId,
 										'number': that.num,
@@ -381,9 +385,9 @@
 				})
 			},
 			stopPrevent(){},
-			
 			setAddress(data){
 				this.addressData = data;
+				console.log(data)
 			}
 			
 			

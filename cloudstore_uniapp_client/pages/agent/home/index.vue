@@ -231,11 +231,11 @@
 				}
 			},
 			navToDetailPage (item) {
-				let  agentGoodsId = item.id;
-				let goodsId =item.goodsId;
+				let  agentGoodsId = item.id,goodsId =item.goodsId
+				
 				uni.navigateTo({
 					// goodsId=7604921082513985536&userType=agent&agentGoodsId=7630608619278438400
-					url: '/pages/agent/goods/goodsDetail/goodsDetail?agentGoodsId='+agentGoodsId+'&goodsId='+goodsId,
+					url: '/pages/agent/goods/goodsDetail/goodsDetail?agentGoodsId='+agentGoodsId+'&goodsId='+goodsId+'&userType=agent',
 				});
 			}
 		}

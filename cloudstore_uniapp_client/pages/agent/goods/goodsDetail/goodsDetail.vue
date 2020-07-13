@@ -93,7 +93,7 @@
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent" v-if="userType === 'agent'">我的小店</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toBuy" v-if="userType === 'client'">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave">立即分享</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -186,35 +186,35 @@ export default {
 		};
 	},
 	onShareAppMessage(res) {
-		this.shareSave()
 		if (res.from === 'button') {// 来自页面内分享按钮
-			uni.showLoading({
-				title: '正在加载',
-				mask: false
-			});
 			var shareObj = {
 				title: this.goodsName,
 				params: {
 					goodsId: this.goodsId,
 					agentGoodsId: this.agentGoodsId,
-					shareClientId: this.shareClientId,
+					shareClientId: this.shareClientId || '-1',
 					userType: 'client'
 				},
-				path: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType='+this.userType,
+				path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType='+this.userType,
 			}
 		}
 		return shareObj
 	},
 	onShow() {
+		
 	},
-	async onLoad(ops) {
+	onLoad(ops) {
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
 		// this.userType = ops.userType
 		this.activeId = ops.activeId
-		this.shareClientId = ops.shareClientId
-		console.log(ops)
+		if ( ops.shareClientId == undefined) {
+			this.shareClientId = '-1'
+		}else{
+			this.shareClientId = ops.shareClientId
+		}
+		console.log(this.shareClientId)
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 	},
 	methods: {
@@ -366,16 +366,22 @@ export default {
 			this.$refs.share.toggleMask();
 		},
 		async shareSave () {
+			uni.showLoading({
+				title: '正在加载',
+				mask: false
+			});
 			let params = {
 				'agentGoodsId': this.agentGoodsId,
-				'shareClientId': this.shareClientId || '-1'
+				'shareId': this.shareClientId || '-1'
 			} 
 			let data = await Api.apiCall('post', Api.agent.share.save, params);
 			if (data) {
 				uni.hideLoading() 
 				if (data.code === 0) {
-					this.shareClientId = data.result.shareClientId
-					console.log(this.shareClientId)
+					this.shareClientId = data.result.id
+					if (this.shareClientId) {
+						this.share()
+					}
 				}else{
 					uni.showToast({
 						title: data.msg

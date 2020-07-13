@@ -191,7 +191,6 @@
 					// pageSize: 20
 				};
 				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params);
-				console.log(data)
 				if (data) {
 					this.activity.nav = data.result; //查询出来的 
 				}
@@ -210,7 +209,7 @@
 						this.searchActivityGoodsShowList(showActivity[i])
 					}
 					this.activity.show = showActivity;
-
+					console.log(this.activity.show)
 				}
 			},
 			async searchActivityGoodsShowList(activity) {

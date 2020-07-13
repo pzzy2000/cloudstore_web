@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<nav-bar backState="1000" fontColor="#FFF"></nav-bar>
+		<nav-bar backState="1000" fontColor="#FFF">商品详情</nav-bar>
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
 				<swiper-item class="swiper-item" v-for="(item, index) in goods.goodsDetailPhotos" :key="index">
@@ -10,7 +10,6 @@
 				</swiper-item>
 			</swiper>
 		</view>
- 
 		<view class="introduce-section">
 			<text class="title">{{ goods.goodsName }}</text>
 			<view class="price-box">
@@ -28,7 +27,6 @@
 			</view>
 			-->
 		</view>
-
 		<!--  分享 -->
 		<!-- <view class="share-section">
 			<view class="share-icon">
@@ -42,10 +40,6 @@
 				<text class="yticon icon-you"></text>
 			</view>
 		</view> -->
-
-
-
-
 		<view class="c-list">
 			<view class="c-row b-b">
 				<text class="tit">商品规格</text>
@@ -65,17 +59,14 @@
 				  </block>
 				</view>
 				</view>
-				
 			</view>
-
-
 			<view class="c-row b-b">
 				<text class="tit">商品参数</text>
 			</view>
 			<view class="c-row b-b"   v-for='itm  in  goodsPropertyValue' :key='itm.id' v-if="itm.propertyType == 1 ">
 				<text class="tit">{{itm.goodsPropertyParamName}}</text>
 				<view class="con-list">
-					<text >¥{{itm.propertyValue}}
+					<text >{{itm.propertyValue}}
 					</text>
 				</view>
 			</view>
@@ -87,9 +78,6 @@
 				<text class="yticon icon-you"></text>
 			</view>
              -->
-			 <view class="c-row b-b">
-			 	<text class="tit"></text>
-			 </view>
 			<view class="c-row b-b">
 				<text class="tit">产地</text>
 				<view class="con-list">
@@ -161,7 +149,7 @@
 
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="joinAgent">加入代理</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toAgent">立即分享</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
 			</view>
 		</view>
 
@@ -196,6 +184,7 @@
 				activity:{},
 				activityId: '',
 				agoodsid: '',
+				shareClientId: '',
 				shareList: [
 					{
 					  icon: "/static/temp/share_wechat.png",
@@ -209,23 +198,19 @@
 			this.loadGoodHtml(this.goodsId);
 		},
 		async onShareAppMessage(res) {
+			this.shareSave()
 			if (res.from === 'button') {// 来自页面内分享按钮
-			
-			let data = await  this.joinAgentAction();
-			if(data){
 				var shareObj = {
-						title: this.goodsName,
-						params: {
-							goodsId: this.goodsId,
-							agentGoodsId: this.agentGoodsId,
-							userType: 'user'
-						},
-						path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&userType=user'
-					}
-				return shareObj
-				}else{
-					this.$api.msg("加入代理商品错误");
+					title: this.goodsName,
+					params: {
+						goodsId: this.goodsId,
+						agentGoodsId: this.agentGoodsId,
+						shareClientId: this.shareClientId,
+						userType: 'user'
+					},
+					path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=user'
 				}
+				return shareObj
 			}
 		},
 		async onLoad(ops) {
@@ -299,6 +284,23 @@
 					 if(data.code ==0){
 						this.$api.msg("成功加入代理商品"); 
 					 }
+				}
+			},
+			async shareSave () {
+				let params = {
+					'agentGoodsId': this.agentGoodsId,
+					'shareId': this.shareClientId || '-1'
+				} 
+				let data = await Api.apiCall('post', Api.agent.share.save, params);
+				if (data) {
+					uni.hideLoading() 
+					if (data.code === 0) {
+						this.shareClientId = data.result.id
+					}else{
+						uni.showToast({
+							title: data.msg
+						});
+					}
 				}
 			},
 			toAgent () {

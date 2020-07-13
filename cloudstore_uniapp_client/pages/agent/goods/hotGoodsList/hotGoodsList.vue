@@ -2,11 +2,8 @@
 	<view class="content">
 		<nav-bar backState="1000">热门商品列表</nav-bar>
 		<view class="navbar">
-			
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
-			
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
-
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
 				<text>价格</text>
 				<view class="p-box">
@@ -35,24 +32,19 @@
 			
 			</view>
 		</view>
-		<!--
-		<uni-load-more :status="loadingType"></uni-load-more>
-		-->
 		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+45+'px'}]">
-					<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
-						<scroll-view scroll-y class="cate-list">
-							<view v-for="item in cateList" :key="item.id">
-								<!-- <view class="cate-item b-b two">{{ item.name }}</view>
-								<view v-for="tItem in item.child" :key="tItem.id" class="cate-item b-b" :class="{ active: tItem.id == cateId }" @click="changeCate(tItem)">
-									{{ tItem.name }}
-								</view> -->
-								<view class="cate-item b-b two" @click="changeCate(item)">{{ item.name }}</view>
-							</view>
-						</scroll-view>
+			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
+				<scroll-view scroll-y class="cate-list">
+					<view v-for="item in cateList" :key="item.id">
+						<!-- <view class="cate-item b-b two">{{ item.name }}</view>
+						<view v-for="tItem in item.child" :key="tItem.id" class="cate-item b-b" :class="{ active: tItem.id == cateId }" @click="changeCate(tItem)">
+							{{ tItem.name }}
+						</view> -->
+						<view class="cate-item b-b two" @click="changeCate(item)">{{ item.name }}</view>
 					</view>
-				</view>
-
-
+				</scroll-view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -114,15 +106,14 @@ export default {
 	methods: {
 		async loadActiviList() {
 			let params = {
-				// pageNum: '1',
-				// pageSize: '20',
-				// parentId: 0
+				pageNum: '1',
+				parentId: 0
 			};
 			
-			let list = await Api.apiCall('post', Api.agent.activity.listAll, params);
-			//console.log(list)
+			let list = await Api.apiCall('post', Api.agent.category.list, params);
 			if (list) {
 				this.cateList = list.result.records
+				console.log(this.cateList)
 			}
 		},
 		//加载商品 ，带下拉刷新和上滑加载
@@ -151,7 +142,6 @@ export default {
 			let list = await Api.apiCall('post', Api.agent.hot.hotList, params);
 			if(list){
 			let goodsList = list.result.records;
-			// let goodsList = await this.$api.json('goodsList');
 			if (type === 'refresh') {
 				this.goodsList = [];
 			}

@@ -100,7 +100,7 @@
 					url: '/pages/client/public/login'
 				});
 			},
-			async reguser() {
+			async reguser() { //用户账号密码注册
 				var that = this;
 				let phoneReg = /^1[1-9][0-9]\d{8}$/;
 				try {
@@ -217,13 +217,10 @@
 								}
 							}
 						})
-						// console.log(loginRes)
-						// that.wxInfo()
-						// that.$refs.popup.open()
-					},
+					}
 				})
 			},
-			wxInfo () {
+			wxInfo () { //获取微信用户信息
 				var that = this;
 				uni.getUserInfo({
 					provider: 'weixin',
@@ -239,7 +236,7 @@
 					}
 				});
 			},
-			getPhoneNumber (res) {
+			getPhoneNumber (res) { //点击按钮获取用户的手机号码
 				console.log(res)
 				if (res.detail.iv === '') {
 					uni.showToast({
@@ -250,7 +247,7 @@
 					this.getPhoneKey()
 				}
 			},
-			getPhoneKey () {
+			getPhoneKey () { //将手机加密数据传给后台，后台返回解密后的电话号码和key
 				var that = this;
 				let params = {
 					'bean.encryptedData': this.vxPhoneInfo.encryptedData,
@@ -300,10 +297,9 @@
 					}
 				});
 			},
-			editInput (e,type) {
+			editInput (e,type) { //编辑验证码和密码框
 				if (type === 'code') {
 					this.phoneCode = e.detail.value
-					console.log(this.phoneCode)
 				} else {
 					this.userPwd = e.detail.value
 				}
@@ -334,7 +330,7 @@
 							});
 							uni.showModal({
 								title: '提示',
-								content: '微信注册成功，正在前往登录界面',
+								content: '微信注册成功，前往登录界面',
 								showCancel: false,
 								cancelText: '取消',
 								confirmText: '确定',
@@ -362,7 +358,7 @@
 					}
 				});
 			},
-			registerBtn () {
+			registerBtn () { //注册按钮绑定的事件
 				if(!this.phoneCode){
 					this.$api.msg('请填写手机验证码');
 					return;
