@@ -24,12 +24,10 @@
 			</button>
 			<!-- #endif -->
 			<view class="forget-section" @click="toForget">忘记密码?</view>
-
 		</view>
 		<view class="register-section">
 			还没有账号?<text @click="toRegist">马上注册</text>
 		</view>
-
 		<mallplusCopyright></mallplusCopyright>
 	</view>
 </template>
@@ -66,12 +64,12 @@
 		},
 		methods: {
 			...mapMutations(['login']),
-			toRegist() {
+			toRegist() { //前去注册界面
 				uni.navigateTo({
 					url: '/pages/client/public/reg'
 				});
 			},
-			getWxInfo() { //获取code
+			getWxInfo() { //获取code登录并且判断是否已经绑定手机号码
 				var that = this;
 				uni.showLoading({
 					title: '微信登录中',
@@ -198,7 +196,6 @@
 				}
 			},
 			toForget () { //修改密码
-				
 			}
 		}
 	};

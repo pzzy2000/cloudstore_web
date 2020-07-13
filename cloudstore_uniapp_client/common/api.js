@@ -1,6 +1,7 @@
 import store from '../store/index';
 export default {
-	BASEURI: 'http://120.24.156.254:18888/platform/',
+	// BASEURI: 'http://120.24.156.254:18888/platform/',
+	BASEURI: 'http://106.52.184.24:18888/platform/',
 	//BASEURI: 'http://192.168.0.27:8088/',
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	source: 1, //1 weixinApplet 2 h5Source 3 pcSource 4 android 5ios
@@ -84,10 +85,10 @@ export default {
 		   loadHtml:'goods/app/loadMobileHtml', //获取商品详情的图文详情
 		},
 		share: {
-			save: 'share/app/save'
+			save: 'share/app/apply'
 		},
 		category: {
-			list: '/app/goods/category/list',
+			list: 'app/goods/category/list',
 			getchildId: 'goods/category/get'
 		},
 		home: {

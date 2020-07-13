@@ -53,17 +53,17 @@
 
 				<view class="order-item" @click="navTo('../../pagesA/after_sale/list')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>退款/售后</text>
+					<text>售后</text>
 				</view>
 			</view>
 			<!-- 浏览历史 -->
 			<view class="history-section icon">
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="toapplyAgent('/pages/client/info/address')"></list-cell>
 				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="toapplyAgent"></list-cell>
-				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="toapplyAgent"></list-cell>
+				<!-- <list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="toapplyAgent"></list-cell> -->
 				<list-cell icon="icon-pinglun-copy"  v-if="user.relationId > 0" iconColor="#54b4ef" title="我的代理" @eventClick="toAgent"></list-cell>
 				<list-cell icon="icon-pinglun-copy" v-else iconColor="#54b4ef" title="申请代理" @eventClick="toapplyAgent('/pages/client/info/applyAgent')"></list-cell>
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统设置" border="" @eventClick="toapplyAgent"></list-cell>
+				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="敬请期待" border="" @eventClick="toapplyAgent"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统退出" border="" @eventClick="navTo('/pages/client/public/login','exit')"></list-cell>
 			</view>
 		</view>
