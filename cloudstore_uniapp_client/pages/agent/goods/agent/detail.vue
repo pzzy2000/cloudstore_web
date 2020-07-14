@@ -198,17 +198,16 @@
 			this.loadGoodHtml(this.goodsId);
 		},
 		async onShareAppMessage(res) {
-			this.shareSave()
 			if (res.from === 'button') {// 来自页面内分享按钮
 				var shareObj = {
 					title: this.goodsName,
 					params: {
 						goodsId: this.goodsId,
 						agentGoodsId: this.agentGoodsId,
-						shareClientId: this.shareClientId,
-						userType: 'user'
+						shareClientId: this.shareClientId || '-1',
+						userType: 'Client'
 					},
-					path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=user'
+					path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
 				}
 				return shareObj
 			}
@@ -243,11 +242,8 @@
 			}
 		},
 		filters: {
-		},
+		}, 
 		methods: {
-			share() {
-				this.$refs.share.toggleMask();
-			},
 			setmobileHtml(mobileHtml){
 				this.goodsMobileHtml = mobileHtml;
 			},
@@ -286,16 +282,23 @@
 					 }
 				}
 			},
+			share () { //分享
+				this.$refs.share.toggleMask();
+			},
 			async shareSave () {
 				let params = {
 					'agentGoodsId': this.agentGoodsId,
-					'shareId': this.shareClientId || '-1'
+					'shareId': this.shareClientId || '-1',
+					'type': this.userType
 				} 
 				let data = await Api.apiCall('post', Api.agent.share.save, params);
 				if (data) {
 					uni.hideLoading() 
 					if (data.code === 0) {
 						this.shareClientId = data.result.id
+						if (this.shareClientId) {
+							this.share()
+						}
 					}else{
 						uni.showToast({
 							title: data.msg

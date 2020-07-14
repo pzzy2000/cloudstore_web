@@ -28,7 +28,21 @@
 		},
 		methods: {
 			getPhoneNumber (res) {
-				console.log(res)
+				var that = this
+				uni.login({
+					provider: 'weixin',
+					fail: function() {
+						uni.hideLoading();
+						uni.showToast({
+							title: '微信登录失败',
+							icon: 'none'
+						});
+					},
+					success: function(loginRes) {
+						// uni.setStorageSync('loginCode', loginRes.code);
+						that.loginCode = loginRes.code
+					},
+				})
 				if (!res.detail.iv) {
 					console.log('您取消了微信授权')
 				}else {
@@ -38,7 +52,6 @@
 						'bean.iv': res.detail.iv,
 						'bean.userInfo': uni.getStorageSync('vxInfo')
 					}
-					var that = this;
 					uni.request({
 						url: Api.BASEURI + Api.agent.user.savePhone,
 						method: 'post',
@@ -49,28 +62,13 @@
 						success: function(res) {
 							console.log(res)
 							if (res) {
-								uni.showToast({
-								    title: '注册成功',
-								    duration: 2000,
-									icon:'none'
-								});
 								if (res.data.result.code === 0) {
-									// var code = uni.getStorageSync('code')
-									uni.login({
-										provider: 'weixin',
-										fail: function() {
-											uni.hideLoading();
-											uni.showToast({
-												title: '微信登录失败',
-												icon: 'none'
-											});
-										},
-										success: function(loginRes) {
-											//that.loginCode = loginRes.code
-											uni.setStorageSync('loginCode', loginRes.code);
-										},
-									})
-									var code = uni.getStorageSync('loginCode') 
+									uni.showToast({
+									    title: '绑定成功',
+									    duration: 2000,
+										icon:'none'
+									});
+									var code = that.loginCode
 									console.log(code)
 									if (code) {
 										let params = {
@@ -113,6 +111,19 @@
 											}
 										})
 									}
+								}else if (res.data.result.code === 100007){
+									uni.showModal({
+										title: '提示',
+										content: '您的微信还未注册，请前往注册',
+										showCancel: false,
+										cancelText: '取消',
+										confirmText: '确定',
+										success: res => {
+											uni.navigateTo({
+												url: '/pages/client/public/reg',
+											});
+										},
+									});
 								}else{
 									uni.showToast({
 									    title: res.data.result.msg,
@@ -120,15 +131,6 @@
 										icon:'none'
 									});
 								}
-								// var userInfo = {
-								// 	name: res.data.result.result.name,
-								// 	url: res.data.result.result.url
-								// }
-								// uni.setStorageSync('userInfo',userInfo)
-								// uni.setStorageSync('token',res.data.result.result.token)
-								// uni.switchTab({
-								// 	url: '/pages/index/index'
-								// });
 							}else {
 								uni.showToast({
 								    title: '登录失败，请稍后重试',

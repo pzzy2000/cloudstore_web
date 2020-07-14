@@ -19,9 +19,11 @@
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<!-- #ifdef MP-WEIXIN -->
-			<button open-type="getUserInfo" @getuserinfo='getWxInfo' class="vx-btn">
-				<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
-			</button>
+			<view class="vx-btn">
+				<button open-type="getUserInfo" @getuserinfo='getWxInfo'>
+					<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
+				</button>
+			</view>
 			<!-- #endif -->
 			<view class="forget-section" @click="toForget">忘记密码?</view>
 		</view>
@@ -122,22 +124,40 @@
 									console.log(data)
 									uni.showModal({
 										title: '提示',
-										content: '您的手机号暂未绑定微信，请前往绑定',
+										content: '您的微信号暂未注册，请前往注册',
 										showCancel: false,
 										cancelText: '取消',
 										confirmText: '确定',
 										success: res => {
 											if (res.confirm) {
 												uni.navigateTo({
-													url: '/pages/client/public/getVxPhone?openId=' + data.msg
+													url: '/pages/client/public/reg'
 												});
 											} else if (res.cancel) {
 												uni.navigateTo({
-													url: '/pages/client/public/getVxPhone?openId=' + data.msg
+													url: '/pages/client/public/reg'
 												});
 											}
 										}
 									});
+									// uni.showModal({
+									// 	title: '提示',
+									// 	content: '您的微信暂未绑定手机号，请前往绑定',
+									// 	showCancel: false,
+									// 	cancelText: '取消',
+									// 	confirmText: '确定',
+									// 	success: res => {
+									// 		if (res.confirm) {
+									// 			uni.navigateTo({
+									// 				url: '/pages/client/public/getVxPhone?openId=' + data.msg
+									// 			});
+									// 		} else if (res.cancel) {
+									// 			uni.navigateTo({
+									// 				url: '/pages/client/public/getVxPhone?openId=' + data.msg
+									// 			});
+									// 		}
+									// 	}
+									// });
 								} else if (res.data.result.code === 0) {
 									uni.showToast({
 										title: '登录成功',
@@ -155,7 +175,7 @@
 									});
 								} else {
 									uni.showToast({
-										title: '微信登录失败',
+										title: res.data.result.msg,
 										icon: 'none'
 									});
 								}
@@ -325,6 +345,12 @@
 		background: #fff;
 		display: flex;
 		justify-content: space-around;
+		button{
+			background: #fff;
+			&:after {
+				border: none;
+			}
+		}
 		&:after {
 			border-radius: 100px;
 			border: none;
