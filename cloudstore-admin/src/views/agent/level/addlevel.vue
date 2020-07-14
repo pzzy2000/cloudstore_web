@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-search"></i>
-      <span>数据列表</span>
+      <span>{{titMsg}}</span>
       <el-form ref="levelForm" :model="levelForm" :rules="rules" label-width="120px" style="margin-top: 20px">
         <el-form-item label="等级名字" prop="levelName">
           <el-input-dispatcher v-model="levelForm.levelName" auto-complete="off" style="width: 350px"></el-input-dispatcher>
@@ -16,7 +16,7 @@
         <el-form-item style="float: right">
           <el-button type="primary" @click="handleConfirm('levelForm')" size="small" v-show="rwDispatcherState == 'write'">提 交</el-button>
           <el-button @click="resetForm('levelForm')" size="small" v-show="optType == 'add'">重 置</el-button>
-          <el-button @click="backLastpage" size="small">取 消</el-button>
+          <el-button @click="backLastpage" size="small">返 回</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import {saveUpdateLevel} from '@/api/agent'
+  import {saveUpdateLevel, getOnelevel} from '@/api/agent'
     export default {
       name: "addlevel",
       provide () {
@@ -47,8 +47,22 @@
       created() {
         this.optType = this.$route.query.type;
         this.rwDispatcherState = this.$route.query.rds;
+        switch (this.$route.query.type) {
+          case "add": this.titMsg = "添加代理等级";
+            break;
+          case "read": this.titMsg = "查看代理等级";
+            break;
+          case "update": this.titMsg = "编辑代理等级";
+            break;
+        }
+        this.getLevel();
       },
       methods: {
+        getLevel() {
+          getOnelevel({id: this.$route.query.id}).then(res => {
+            console.log(res);
+          })
+        },
         handleConfirm(formName){
           this.$refs[formName].validate((valid) => {
             if (valid) {

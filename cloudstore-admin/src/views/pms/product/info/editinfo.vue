@@ -36,6 +36,7 @@
             <div v-else>
               <multi-upload v-model="goodsDetailPics"></multi-upload>
             </div>
+            <span style="color: #ccc">格式要求：每张图片大小不超过1M</span>
           </el-form-item>
           <br />
           <el-form-item label="退货规则：" prop="returnRuleId">
@@ -120,15 +121,13 @@
 
         </el-form>
         <div style="text-align:center">
-          <el-button style="float: none;margin-bottom: 10px;" @click="addProduct" :style="{ display: button.add}" size="small">
+          <el-button style="float: none;margin-bottom: 10px;" @click="addProduct" :style="{ display: button.add}">
             增加
           </el-button>
-          <el-button style="float: none;margin-bottom: 10px;" @click="resetProduct" :style="{ display: button.reset}"
-            size="small">
+          <el-button style="float: none;margin-bottom: 10px;" @click="resetProduct" :style="{ display: button.reset}">
             重置
           </el-button>
-          <el-button style="float: none;margin-bottom: 10px;" @click="updateProduct" :style="{ display: button.update}"
-            size="small">
+          <el-button style="float: none;margin-bottom: 10px;" @click="updateProduct" :style="{ display: button.update}">
             更新
           </el-button>
           <el-button style="float: none;margin-bottom: 10px;" @click="cancelList" type="primary">
@@ -215,8 +214,14 @@
           cityId: [{required: true, message: '请输入市', trigger: 'change'}],
           areaId: [{required: true, message: '请输入区/县', trigger: 'change'}],
           goodsSubtitle: [{required: true, message: '请输入副标题', trigger: 'blur'}],
-          salePrice: [{required: true, message: '请输入商品售价', trigger: 'blur'}],
-          martPrice: [{required: true, message: '请输入市场价', trigger: 'blur'}]
+          salePrice: [
+            {required: true, message: '请输入商品售价', trigger: 'blur'},
+            { pattern: /^[0-9]{0,5}$|^[0-9]{0,5}(\.[0-9]{1,2})?$/, message: '请输入正确格式' }
+          ],
+          martPrice: [
+            {required: true, message: '请输入市场价', trigger: 'blur'},
+            { pattern: /^[0-9]{0,5}$|^[0-9]{0,5}(\.[0-9]{1,2})?$/, message: '请输入正确格式' }
+          ]
         }
       }
     },

@@ -37,22 +37,22 @@
                   {{getProductSkuSp(scope.row,index,item)}}
                 </template>
               </el-table-column>
-              <el-table-column label="销售价格" width="80" align="center">
+              <el-table-column label="销售价格" align="center">
                 <template slot-scope="scope">{{scope.row.agent}}
                   <!--<el-input-dispatcher v-model="scope.row.price"></el-input-dispatcher>-->
                 </template>
               </el-table-column>
-              <el-table-column label="商品库存" width="80" align="center">
+              <el-table-column label="商品库存" align="center">
                 <template slot-scope="scope">{{scope.row.stock}}
                   <!--<el-input-dispatcher v-model="scope.row.stock"></el-input-dispatcher>-->
                 </template>
               </el-table-column>
-              <el-table-column label="库存预警值" width="100" align="center">
+              <el-table-column label="库存预警值" align="center">
                 <template slot-scope="scope">{{scope.row.warnQuantity}}
                   <!--<el-input-dispatcher v-model="scope.row.warnQuantity"></el-input-dispatcher>-->
                 </template>
               </el-table-column>
-              <el-table-column label="SKU编号" width="130" align="center">
+              <el-table-column label="SKU编号" align="center">
                 <template slot-scope="scope">{{scope.row.skuCode}}
                   <!--<el-input-dispatcher v-model="scope.row.skuCode"></el-input-dispatcher>-->
                 </template>
@@ -62,12 +62,12 @@
                   <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
                 </template>
               </el-table-column>
-              <el-table-column label="代理商佣金" width="100" align="center">
+              <el-table-column label="代理商佣金" align="center">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.agentbro"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="佣金" width="100" align="center">
+              <el-table-column label="佣金" align="center">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.bro"></el-input>
                 </template>

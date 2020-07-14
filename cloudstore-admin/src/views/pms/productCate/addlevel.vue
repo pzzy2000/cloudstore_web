@@ -16,7 +16,7 @@
           <el-input v-model="addGoodsort.order" placeholder="排个序吧" style="width: 350px"></el-input>
         </el-form-item>
         <el-form-item style="float: right">
-          <el-button type="primary" @click="submitForm('addGoodsort')" size="small">添加</el-button>
+          <el-button type="primary" @click="submitForm('addGoodsort')" size="small" :loading="loadingbut" :disabled="disabled">{{subbtntext}}</el-button>
           <el-button @click="resetForm('addGoodsort')" size="small">重置</el-button>
           <el-button @click="backLastpage" size="small">返回</el-button>
         </el-form-item>
@@ -37,7 +37,10 @@
         },
         rules: {
           name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
-        }
+        },
+        loadingbut: false,
+        subbtntext: "添加",
+        disabled: false
       }
     },
     created() {
@@ -60,8 +63,6 @@
         }else {
           parentId = this.$route.query.parentId;
         }
-        console.log(parentId);
-        console.log(this.$route.query.level);
         let obj = {
           level: this.$route.query.level,
           name: this.addGoodsort.name,
@@ -69,6 +70,9 @@
           optType: "save",
           parentId: parentId
         }
+        this.loadingbut = true;
+        this.subbtntext = '添加中...';
+        this.disabled = true;
         // let _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -81,6 +85,9 @@
                   duration: 800
                 });
                 this.$router.go(-1);
+                this.loadingbut = false;
+                this.subbtntext = '添加';
+                this.disabled = false;
               }
             })
           }

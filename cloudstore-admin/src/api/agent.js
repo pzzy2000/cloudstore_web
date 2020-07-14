@@ -39,3 +39,11 @@ export function delAgent(params) {
     params: params
   })
 }
+
+export function getOnelevel(params) {
+  return request({
+    url: '/agent/level/get',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

@@ -48,7 +48,6 @@
         minioUploadUrl: 'http://106.52.184.24:18888/platform/sys/upload/entity/oss/ali/update'
       };
     },
-
     computed: {
       fileList() {
         let fileList = [];
@@ -63,9 +62,9 @@
           //   //   url: this.value[i].url+"&auth="+token
           //   // });
           // }
+          console.log(this.value)
           return this.value;
         }
-
       }
     },
     methods: {
@@ -109,7 +108,6 @@
         })
       },
       handleUploadSuccess(res, file) {
-
         let re = res.result;
         if (re.code == 0) {
           this.fileList.push({
@@ -122,6 +120,7 @@
           this.emitInput(this.fileList);
         } else {
           msg("图片上传失败");
+          this.value = [];
         }
 
       },

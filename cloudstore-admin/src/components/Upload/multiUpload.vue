@@ -44,10 +44,18 @@
         dialogVisible: false,
         dialogImageUrl: null,
         useOss: false,
-        minioUploadUrl: 'http://106.52.184.24:18888/platform/sys/upload/entity/oss/ali/update'
+        minioUploadUrl: 'http://106.52.184.24:18888/platform/sys/upload/entity/oss/ali/update',
+        issucced: true
       };
     },
-
+    // watch: {
+    //   issucced(newVal, oldVal) {
+    //     if (!this.issucced){
+    //       this.value.pop();
+    //       console.log(this.value);
+    //     }
+    //   }
+    // },
     computed: {
       fileList() {
         let fileList = [];
@@ -62,9 +70,9 @@
           //   //   url: this.value[i].url+"&auth="+token
           //   // });
           // }
+          console.log(this.value);
           return this.value;
         }
-
       }
     },
     methods: {
@@ -73,10 +81,8 @@
         // for (let i = 0; i < fileList.length; i++) {
         //   value.push(fileList[i]);
         // }
-
         // this.$emit('input', value)
         this.$emit('input', fileList);
-
       },
       handleRemove(file, fileList) {
         // this.$emit (fileList);
@@ -107,8 +113,7 @@
           })
         })
       },
-      handleUploadSuccess(res, file) {
-
+      handleUploadSuccess(res, file, fileList) {
         let re = res.result;
         if (re.code == 0) {
           this.fileList.push({
@@ -131,6 +136,9 @@
           duration: 1000
         });
       },
+      // handleChange(file, fileList) {
+      //   console.log(fileList);
+      // }
     }
   }
 </script>

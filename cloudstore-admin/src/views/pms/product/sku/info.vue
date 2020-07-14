@@ -31,31 +31,39 @@
             </div>
 
             <div>
+              <el-form :rules="rules" :model="goodsku" ref="format">
               <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border>
-                <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center"
-                  width="100">
+                <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center">
                   <template slot-scope="scope">
                     {{getProductSkuSp(scope.row,index,item)}}
                   </template>
                 </el-table-column>
-                <el-table-column label="销售价格" width="80" align="center">
+                <el-table-column label="销售价格" align="center">
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row.price"></el-input>
+                    <el-form-item :prop="'skuStockList.' + scope.$index + '.price'" :rules='rules.price'>
+                      <el-input v-model="scope.row.price"></el-input>
+                    </el-form-item>
                   </template>
                 </el-table-column>
-                <el-table-column label="商品库存" width="80" align="center">
+                <el-table-column label="商品库存" align="center">
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row.stock"></el-input>
+                    <el-form-item :prop="'skuStockList.' + scope.$index + '.stock'" :rules='rules.stock'>
+                      <el-input v-model="scope.row.stock"></el-input>
+                    </el-form-item>
                   </template>
                 </el-table-column>
-                <el-table-column label="库存预警值" width="100" align="center">
+                <el-table-column label="库存预警值" align="center">
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row.warnQuantity"></el-input>
+                    <el-form-item :prop="'skuStockList.' + scope.$index + '.warnQuantity'" :rules='rules.warnQuantity'>
+                      <el-input v-model="scope.row.warnQuantity"></el-input>
+                    </el-form-item>
                   </template>
                 </el-table-column>
-                <el-table-column label="SKU编号" width="100" align="center">
+                <el-table-column label="SKU编号" align="center">
                   <template slot-scope="scope">
-                    <el-input v-model="scope.row.skuCode"></el-input>
+                    <el-form-item :prop="'skuStockList.' + scope.$index + '.skuCode'" :rules='rules.skuCode'>
+                      <el-input v-model="scope.row.skuCode" onkeyup="value=value.replace(/[\u4E00-\u9FA5]/g,'')"></el-input>
+                    </el-form-item>
                   </template>
                 </el-table-column>
                 <el-table-column label="属性图片：" align="left" width="400">
@@ -70,6 +78,7 @@
                   </template>
                 </el-table-column>
               </el-table>
+              </el-form>
               <div>
                 <el-button type="primary" style="margin-top: 20px" @click="handleRefreshProductSkuList">刷新列表
                 </el-button>
@@ -192,8 +201,29 @@
              name: 'goods_info',  // 必填参数 文件的参数名
              size: 128,  // 可选参数   图片大小，单位为Kb, 1M = 1024Kb
              accept: 'multipart/form-data, image/png, image/gif, image/jpeg, image/bmp, image/x-icon,image/jpg'  // 可选 可上传的图片格式
+        },
+        rules: {
+          price: [
+            { required:true, message:"价格必填", trigger:"blur" },
+            // { type:'number', message:"价格必须为数字", trigger:"blur", transform (value) { // 用于解决数字非必填函数。如果没有该函数，该字段会在表单提交时候进行触发（形成必填字段）
+            //     return _.toNumber(value)
+            //   }
+            // },
+            { pattern: /^[0-9]{0,5}$|^[0-9]{0,5}(\.[0-9]{1,2})?$/, message: '请输入正确格式' }
+          ],
+          stock: [
+            { required:true, message:"商品库存必填", trigger:"blur" },
+            { pattern: /^(([^0][0-9]+|0)$)|^(([1-9]+)$)/, message: '请输入正确格式' }
+          ],
+          warnQuantity: [
+            { required:true, message:"商品库存预警必填", trigger:"blur" },
+            { pattern: /^(([^0][0-9]+|0)$)|^(([1-9]+)$)/, message: '请输入正确格式' }
+          ],
+          skuCode: [
+            { required:true, message:"sku编号必填", trigger:"blur" }
+            // { pattern: /[\u4E00-\u9FA5]/g, message: '不能输入中文' }
+          ]
         }
-
       }
     },
     created() {
@@ -434,4 +464,8 @@
 .quill-editor{
          height:600px;
      }
+  .el-table >>> .el-form-item__error{
+    position: static;
+    text-align: left;
+  }
 </style>

@@ -309,7 +309,7 @@ export const asyncRouterMap = [
        path: 'addlevel',
        name: 'agent_addlevel',
        component: () => import('@/views/agent/level/addlevel'),
-       meta: {title: '添加代理等级', icon: 'product-list'},
+       meta: {title: '管理代理等级', icon: 'product-list'},
        hidden: true
      },{
         path: 'goods',
