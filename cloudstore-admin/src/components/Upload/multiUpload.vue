@@ -45,7 +45,8 @@
         dialogImageUrl: null,
         useOss: false,
         minioUploadUrl: 'http://106.52.184.24:18888/platform/sys/upload/entity/oss/ali/update',
-        issucced: true
+        issucced: true,
+        fileList: []
       };
     },
     // watch: {
@@ -56,25 +57,25 @@
     //     }
     //   }
     // },
-    computed: {
-      fileList() {
-        let fileList = [];
-        if (typeof(this.value) == 'undefined') {
-          return fileList;
-        } else {
-          // for (let i = 0; i < this.value.length; i++) {
-          //   let  xx =  this.value[i];
-          //   xx.url =xx.url+"&auth="+token;
-          //   fileList.push(xx);
-          //   // fileList.push({
-          //   //   url: this.value[i].url+"&auth="+token
-          //   // });
-          // }
-          console.log(this.value);
-          return this.value;
-        }
-      }
-    },
+    // computed: {
+    //   fileList() {
+    //     let fileList = [];
+    //     if (typeof(this.value) == 'undefined') {
+    //       return fileList;
+    //     } else {
+    //       // for (let i = 0; i < this.value.length; i++) {
+    //       //   let  xx =  this.value[i];
+    //       //   xx.url =xx.url+"&auth="+token;
+    //       //   fileList.push(xx);
+    //       //   // fileList.push({
+    //       //   //   url: this.value[i].url+"&auth="+token
+    //       //   // });
+    //       // }
+    //       console.log(this.value);
+    //       return this.value;
+    //     }
+    //   }
+    // },
     methods: {
       emitInput(fileList) {
         // let value = [];
@@ -126,8 +127,9 @@
           this.emitInput(this.fileList);
         } else {
           msg("图片上传失败");
+          fileList.pop();
+          this.fileList = fileList;
         }
-
       },
       handleExceed(files, fileList) {
         this.$message({

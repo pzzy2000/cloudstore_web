@@ -5,7 +5,7 @@
     <div style="display: inline-block; float: right; margin-right: 100px">{{userType}}</div>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar">
+<!--        <img class="user-avatar" :src="avatar">-->
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">

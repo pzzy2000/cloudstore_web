@@ -1,14 +1,14 @@
 <template>
   <div>
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">全部订单(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="2">待付款(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="3">待发货(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="4">已发货(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="5">已完成(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="6">已关闭(<span>1000</span>)</el-menu-item>
-    </el-menu>
-    <el-card class="filter-container" shadow="never" style="margin: 0 20px">
+<!--    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">-->
+<!--      <el-menu-item index="1">全部订单(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="2">待付款(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="3">待发货(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="4">已发货(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="5">已完成(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="6">已关闭(<span>1000</span>)</el-menu-item>-->
+<!--    </el-menu>-->
+    <el-card class="filter-container" shadow="never" style="margin: 20px 20px 0 20px">
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
@@ -58,31 +58,37 @@
         <el-table-column label="订单编号" align="center" fixed>
           <template slot-scope="scope">{{scope.row.number}}</template>
         </el-table-column>
-        <el-table-column label="商品" align="center">
-          <template slot-scope="scope">{{scope.row.goods}}</template>
-        </el-table-column>
+<!--        <el-table-column label="商品" align="center">-->
+<!--          <template slot-scope="scope">{{scope.row.goods}}</template>-->
+<!--        </el-table-column>-->
         <el-table-column label="下单时间" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
         </el-table-column>
-        <el-table-column label="用户账号" align="center">
-          <template slot-scope="scope">{{scope.row.count}}</template>
+        <el-table-column label="用户账号/名称" align="center">
+
+          <template slot-scope="scope">
+<!--            {{scope.row.clientBean | showClient}}-->
+            <p>账号：{{scope.row.clientBean.access}}</p>
+            <p>名称：{{scope.row.clientBean.name}}</p>
+          </template>
         </el-table-column>
         <el-table-column label="订单金额" align="center">
-          <template slot-scope="scope">{{scope.row.payPrice}}</template>
+          <template slot-scope="scope">￥{{scope.row.payPrice}}</template>
         </el-table-column>
         <el-table-column label="支付方式" align="center">
-          <template slot-scope="scope">{{scope.row.payType}}</template>
+<!--          <template slot-scope="scope">{{scope.row.payType}}</template>-->
+          <template slot-scope="scope">微信</template>
         </el-table-column>
-        <el-table-column label="订单类型" align="center">
-          <template slot-scope="scope">{{scope.row.ordertype}}</template>
-        </el-table-column>
+<!--        <el-table-column label="订单类型" align="center">-->
+<!--          <template slot-scope="scope">{{scope.row.ordertype}}</template>-->
+<!--        </el-table-column>-->
         <el-table-column label="订单状态" align="center">
           <template slot-scope="scope">{{scope.row.orderStatus | changeStatus}}</template>
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="readOrder(scope.$index, scope.row)">查看订单</el-button>
-            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>
+<!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -135,16 +141,7 @@
         return {
           activeIndex: '1',
           searchList: {},
-          orderList: [{
-            code: '1111',
-            goods: '12313',
-            ordertime: '12313',
-            count: '123132',
-            cost: '11123',
-            apply: '321321',
-            ordertype: '45678',
-            status: '32164'
-          }],
+          orderList: [],
           listLoading: false,
           pageList: Object.assign({}, defaultList),
           total: 1,
@@ -170,6 +167,13 @@
         this.getList();
       },
       filters: {
+        // showClient(row){
+        //        try{
+        //          return   "名字:"+row.name+"  登录账号："+row.access;
+        //        } catch (e) {
+        //          return '数据提取错误'
+        //        }
+        // },
         // 时间格式自定义 只需把字符串里面的改成自己所需的格式
         formatDate(time) {
           let date = new Date(time);
@@ -195,6 +199,8 @@
               break;
             case 'close':
               return "删除订单";
+              break;
+            default: return "关闭订单";
               break;
           }
         }
@@ -227,9 +233,8 @@
           this.getList();
         },
         readOrder(index, row){
-          let obj = this.orderList[index];
-          console.log(obj)
-          this.$router.push({name: "read_order", params: {id: row.id, obj: obj}});
+          console.log(row);
+          this.$router.push({name: "read_order", query: {id: row.id}});
         },
         handleClose(done) {
           this.$confirm('确认关闭？')
@@ -258,6 +263,9 @@
     text-align: center;
   }
   .el-menu .el-menu-item:hover{
+    color: #1abc9c;
+  }
+  .el-menu .el-menu-item:hover span{
     color: #1abc9c;
   }
   .el-menu .el-menu-item span{

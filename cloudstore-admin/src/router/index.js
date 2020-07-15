@@ -420,28 +420,28 @@ export const asyncRouterMap = [
         // }
       ]
   },
-  {
-      path:'/sys/tracking',
-      component: Layout,
-      redirect: '/sys/tracking/list',
-      name: 'tracking',
-      meta: {title: '物流管理', icon: 'product-list'},
-      children: [
-        {
-          path: 'list',
-          name: 'trackinglist',
-          component: () => import('@/views/tracking/list'),
-          meta: {title: '物流公司列表', icon: 'product-list'}
-        },
-        {
-          path: 'addlogistics',
-          name: 'addlogistics',
-          component: () => import('@/views/tracking/addlogistics'),
-          meta: {title: '添加物流公司', icon: 'product-list'},
-          hidden: true
-        }
-      ]
-  },
+  // {
+  //     path:'/sys/tracking',
+  //     component: Layout,
+  //     redirect: '/sys/tracking/list',
+  //     name: 'tracking',
+  //     meta: {title: '物流管理', icon: 'product-list'},
+  //     children: [
+  //       {
+  //         path: 'list',
+  //         name: 'trackinglist',
+  //         component: () => import('@/views/tracking/list'),
+  //         meta: {title: '物流公司列表', icon: 'product-list'}
+  //       },
+  //       {
+  //         path: 'addlogistics',
+  //         name: 'addlogistics',
+  //         component: () => import('@/views/tracking/addlogistics'),
+  //         meta: {title: '添加物流公司', icon: 'product-list'},
+  //         hidden: true
+  //       }
+  //     ]
+  // },
   {
     path:'/order/manage',
     component: Layout,
@@ -466,7 +466,8 @@ export const asyncRouterMap = [
         path: 'csmlist',
         name: 'csm_list',
         component: () => import('@/views/order/consignlist/index'),
-        meta: {title: '发货列表', icon: 'product-list'}
+        meta: {title: '发货列表', icon: 'product-list'},
+        hidden: true
       },
       {
         path: 'asservice',
@@ -478,19 +479,22 @@ export const asyncRouterMap = [
         path: 'temoffre',
         name: 'temof_fre',
         component: () => import('@/views/order/temOffre/index'),
-        meta: {title: '运费模板', icon: 'product-list'}
+        meta: {title: '运费模板', icon: 'product-list'},
+        hidden: true
       },
       {
         path: 'shipaddress',
         name: 'ship_address',
         component: () => import('@/views/order/shipAddress/index'),
-        meta: {title: '发货地址', icon: 'product-list'}
+        meta: {title: '发货地址', icon: 'product-list'},
+        hidden: true
       },
       {
         path: 'orderreview',
         name: 'order_review',
         component: () => import('@/views/order/orderReview/index'),
-        meta: {title: '订单评论', icon: 'product-list'}
+        meta: {title: '订单评论', icon: 'product-list'},
+        hidden: true
       }
     ]
   },

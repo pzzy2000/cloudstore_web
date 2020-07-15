@@ -73,7 +73,6 @@
         // for (let i = 0; i < fileList.length; i++) {
         //   value.push(fileList[i]);
         // }
-
         // this.$emit('input', value)
         this.$emit('input', fileList);
 
@@ -120,7 +119,7 @@
           this.emitInput(this.fileList);
         } else {
           msg("图片上传失败");
-          this.value = [];
+          this.$emit('input', []);
         }
 
       },

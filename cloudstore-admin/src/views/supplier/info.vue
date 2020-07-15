@@ -353,7 +353,7 @@
         });
       },
 
-      savebaseinfo(formName) {
+      async savebaseinfo(formName) {
         console.log(this.cardPhotos);
         let  picId=[];
         for(let  i=0; i<this.cardPhotos.length ; i++){

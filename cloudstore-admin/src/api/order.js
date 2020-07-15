@@ -72,7 +72,7 @@ export function fetchList(params) {
 
 export function getOneorder(params) {
   return request({
-    url: '/order/details/list',
+    url: '/order/get',
     method: 'POST',
     data: switchForm(params)
   })
