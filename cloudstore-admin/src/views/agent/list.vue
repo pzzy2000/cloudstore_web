@@ -27,7 +27,7 @@
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
         border>
-        <el-table-column type="selection" width="150" align="center" fixed></el-table-column>
+        <el-table-column type="selection" width="60" align="center" fixed></el-table-column>
         <el-table-column label="代理商名字" align="center" fixed>
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
@@ -38,9 +38,9 @@
         <el-table-column label="详细地址" align="center" width="300">
           <template slot-scope="scope">{{scope.row.detailAddress}}</template>
         </el-table-column>
-        <el-table-column label="代理商等级" width="150" align="center">
-          <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>
-        </el-table-column>
+<!--        <el-table-column label="代理商等级" width="150" align="center">-->
+<!--          <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>-->
+<!--        </el-table-column>-->
         <el-table-column label="审核状态" align="center" :formatter="showStatus">
         </el-table-column>
         <el-table-column label="所属账号" align="center" :formatter="showAccess">

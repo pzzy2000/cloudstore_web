@@ -64,12 +64,11 @@
         <el-table-column label="下单时间" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
         </el-table-column>
-        <el-table-column label="用户账号/名称" align="center">
-
+        <el-table-column label="用户账号/名称" align="center" width="400">
           <template slot-scope="scope">
 <!--            {{scope.row.clientBean | showClient}}-->
-            <p>账号：{{scope.row.clientBean.access}}</p>
-            <p>名称：{{scope.row.clientBean.name}}</p>
+            账号：{{scope.row.clientBean.access}}&nbsp;&nbsp;&nbsp;&nbsp;
+            名称：{{scope.row.clientBean.name}}
           </template>
         </el-table-column>
         <el-table-column label="订单金额" align="center">
