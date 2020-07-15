@@ -36,7 +36,7 @@
 			</view>
 			<view class="cu-form-group align-start">
 				<view class="title">详细地址</view>
-				<textarea :value="agentfrom.address" placeholder="请输入详细地址" :disabled='isEdit' @input="editInput($event,'address')" style="color:#000" ></textarea>
+				<textarea :value="agentfrom.address" placeholder="请输入详细地址" :disabled='isEdit' @input="editInput($event,'address')" style="color:#000"></textarea>
 			</view>
 			<view class="cu-bar bg-white margin-top">
 				<view class="action">
@@ -46,7 +46,7 @@
 			<view class="cu-form-group">
 				<easy-upload
 				:dataList="imageList" :uploadUrl="upImgUrl" :types="category"
-				deleteUrl='' :uploadCount="6"
+				deleteUrl='' :uploadCount="2"
 				uploadIcon="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1049033917,3033202092&fm=26&gp=0.jpg"
 				@successImage="successImage" 
 				@successVideo="successvideo"
@@ -128,6 +128,7 @@
 							this.imageList.push(data.result.goodsPhotos[tmp].url)
 							this.imglistId.push(data.result.goodsPhotos[tmp].uid)
 						}
+						console.log(this.imglistId)
 						if (data.result.status === 0) {
 							this.checkText = '正在审核中,资料不能修改'
 							this.isCheck = true
@@ -170,7 +171,8 @@
 				console.log(e)
 			},
 			delectIndex (e) {
-				console.log(e)
+				this.imglistId.splice(e,1)
+				this.imageList.splice(e,1)
 			},
 			editInput (e,data) { //修改input里面的值的时候
 				switch(data)
@@ -195,11 +197,42 @@
 			seletctAddress () {
 				this.popup = !this.popup
 			},
+			verify () {
+				if (!this.agentfrom.shopName) {
+					this.$api.msg('请输入店铺名称')
+					return;
+				}
+				if (!this.agentfrom.name) {
+					this.$api.msg('请输入姓名')
+					return;
+				}
+				if (!this.agentfrom.phone) {
+					this.$api.msg('请输入电话')
+					return;
+				}
+				if (!this.agentfrom.cardId) {
+					this.$api.msg('请输入证件号码')
+					return;
+				}
+				if (!this.agentfrom.areaId) {
+					this.$api.msg('请选择省市区')
+					return;
+				}
+				if (!this.agentfrom.address) {
+					this.$api.msg('请输入详细地址')
+					return;
+				}
+				if (this.imglistId.length === 0) {
+					this.$api.msg('请选择图片')
+					return;
+				}
+			},
 			async applyAgent () {
 				if (this.isEdit === true) {
 					this.$api.msg('资料正在审核，请勿重复提交')
 					return;
 				}
+				this.verify()
 				let params = {
 					shopName: this.agentfrom.shopName,
 					name: this.agentfrom.name,
@@ -220,13 +253,25 @@
 				if (data) {
 					console.log(data)
 					if (data.code === 0) {
-						uni.showToast({
-							title: '申请成功',
-							icon: 'success'
+						uni.showModal({
+						    title: '提示',
+						    content: '申请成功',
+							showCancel: false,
+						    success: function (res) {
+						        if (res.confirm) {
+						           uni.switchTab({
+						           	url: '/pages/client/info/index',
+						           });
+						        } else if (res.cancel) {
+						            uni.switchTab({
+						            	url: '/pages/client/info/index',
+						            });
+						        }
+						    }
 						});
 					}else {
 						uni.showToast({
-							title: 'data.msg',
+							title: data.msg,
 							icon: 'none'
 						});
 					}

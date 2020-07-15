@@ -72,7 +72,7 @@ export default {
 		},
 		onLoad() {
 			this.getRecommendData()
-			this.getDateList()
+			//this.getDateList()
 		},
 		methods:{
 			async getRecommendData () {

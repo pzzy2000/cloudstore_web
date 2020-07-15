@@ -25,7 +25,10 @@
 					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
 							<text class="time">{{item.createTime}}</text>
-							<text class="state" :style="{color: item.stateTipColor}">{{item.orderStatus}}</text>
+							<template>
+								<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
+								<text class="state" v-else>已完成</text>
+							</template>
 						</view>
 						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index" @click="toOrder(item)">
 							<image class="goods-img" :src="item1.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>

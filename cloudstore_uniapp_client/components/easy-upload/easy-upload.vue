@@ -117,9 +117,15 @@
 								}
 							},
 							fail: (err) => {
-								uni.showModal({
-									content: JSON.stringify(err)
-								});
+								if (err.errMsg != 'chooseImage:fail cancel') {
+									uni.showModal({
+										title: '提示',
+										content: err.msg,
+										showCancel: false,
+										cancelText: '确定',
+										confirmText: '取消',
+									});
+								}
 							}
 						});
 					break;
@@ -298,9 +304,12 @@
 		margin:10upx;
 		width: 208upx;
 		height: 208upx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 	.uploader-icon .image-cion{
-		width: 100%;
-		height: 100%;
+		width: 50%;
+		height: 50%;
 	}
 </style>

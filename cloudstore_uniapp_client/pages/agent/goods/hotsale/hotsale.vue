@@ -36,14 +36,14 @@
 				<view class="cate-item" v-for="item in activity.nav.one" :key="item.id">
 					<image v-if="item.isadd == 0" src="/static/temp/c1.png" @click="navToCategory(item)"></image>
 					<image v-else src="/static/temp/c5.png"></image>
-					<text>{{item.name}}</text>
+					<text class="clamp">{{item.name}}</text>
 				</view>
 			</view>
 			<view class="cate-section">
 				<view class="cate-item" v-for="item in activity.nav.two" :key="item.id" >
 					<image v-if="item.isadd == 0" src="/static/temp/c1.png"  @click="navToCategory(item)"></image>
 					<image v-else src="/static/temp/c5.png"></image>
-					<text>{{item.name}}</text>
+					<text class="clamp">{{item.name}}</text>
 				</view>
 			</view>
 			<!-- 热门活动列表 -->
@@ -503,13 +503,17 @@
 		flex-wrap: wrap;
 		padding: 30upx 22upx;
 		background: #fff;
-
 		.cate-item {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			width: 20%;
 			font-size: $font-sm + 2upx;
 			color: $font-color-dark;
+			.clamp {
+				width: 100%;
+				text-align: center;
+			}
 		}
 
 		/* 原图标颜色太深,不想改图了,所以加了透明度 */

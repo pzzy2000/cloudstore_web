@@ -92,7 +92,7 @@
 			</view>
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent" v-if="userType === 'agent'">我的小店</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toBuy" v-if="userType === 'client'">立即购买</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toBuy" v-if="userType === 'Client'">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave">立即分享</button>
 			</view>
 		</view>
@@ -182,7 +182,7 @@ export default {
 			goodsHtml: '',
 			specList: [],
 			specChildList: [],
-			userType: 'client'
+			userType: 'Client'
 		};
 	},
 	onShareAppMessage(res) {
@@ -193,9 +193,9 @@ export default {
 					goodsId: this.goodsId,
 					agentGoodsId: this.agentGoodsId,
 					shareClientId: this.shareClientId || '-1',
-					userType: 'client'
+					userType: 'Client'
 				},
-				path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType='+this.userType,
+				path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
 			}
 		}
 		return shareObj
@@ -207,7 +207,7 @@ export default {
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
-		// this.userType = ops.userType
+		this.userType = ops.userType
 		this.activeId = ops.activeId
 		if ( ops.shareClientId == undefined) {
 			this.shareClientId = '-1'
@@ -372,7 +372,8 @@ export default {
 			});
 			let params = {
 				'agentGoodsId': this.agentGoodsId,
-				'shareId': this.shareClientId || '-1'
+				'shareId': this.shareClientId || '-1',
+				'type': this.userType
 			} 
 			let data = await Api.apiCall('post', Api.agent.share.save, params);
 			if (data) {
