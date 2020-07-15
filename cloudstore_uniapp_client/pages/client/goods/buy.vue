@@ -255,6 +255,10 @@
 				this.totalPrice =  this.num * this.goodsSku.price
 			},
 			buy(){
+				if (!this.addressData.id) {
+					this.$api.msg('您还未选择收货地址')
+					return;
+				}
 				uni.showLoading({
 					title: '正在创建订单',
 					mask: false

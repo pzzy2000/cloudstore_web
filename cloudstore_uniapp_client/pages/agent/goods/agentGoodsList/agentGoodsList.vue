@@ -86,7 +86,6 @@
 				let shopListData  = await Api.apiCall('post', Api.agent.user.agentList,parmas,0);
 				if (shopListData) {
 					this.goodsList = shopListData.result.records
-					console.log(this.goodsList)
 				}
 			},
 			toggleCateMask (type) {
@@ -101,7 +100,6 @@
 			changeCate(item) {
 				this.pageNum = 1;
 				this.typeId = item.id;
-				//console.log(item)
 				this.toggleCateMask();
 				this.searchtype()
 				uni.pageScrollTo({
@@ -123,12 +121,10 @@
 				let list = await Api.apiCall('post', Api.agent.goods.list, params);
 				if (list) {				
 					this.goodsList = list.result.records
-					console.log(this.goodsList)
 					uni.hideLoading();
 				}
 			},
 			navToDetailPage(item) {
-				console.log(item)
 				let id = item.goodsId,agentGoodsId = item.id,userType = 'agent',activeId = item.activeId
 				uni.navigateTo({
 					url: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+id+'&userType='+userType+'&agentGoodsId='+agentGoodsId+'&activeId='+item.activeId

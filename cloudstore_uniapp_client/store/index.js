@@ -7,7 +7,8 @@ const store = new Vuex.Store({
 	state: {
 		hasLogin: false,
 		userInfo:'',
-		name:'helloVueX'
+		name:'helloVueX',
+		goodsInfo: ''
 	},
 	mutations: {
 		
@@ -28,8 +29,8 @@ const store = new Vuex.Store({
                 key: 'userInfo'
             })
 		},
-		edit(state){
-			state.name = 'jack'
+		goods(state,provider) {
+			state.goodsInfo = provide
 		}
 	},
 	actions: {

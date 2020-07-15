@@ -27,7 +27,7 @@
 							<text class="time">{{item.createTime}}</text>
 							<template>
 								<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
-								<text class="state" v-else>已完成</text>
+								<text class="state" v-if="item.orderStatus === 'close'">已关闭</text>
 							</template>
 						</view>
 						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index" @click="toOrder(item)">

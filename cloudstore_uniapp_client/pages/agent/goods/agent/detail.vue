@@ -149,7 +149,9 @@
 
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="joinAgent">加入代理</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn">敬请期待</button>
+				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave">立即分享</button> -->
+				<!-- 这里的分享功能目前步骤为 先加入代理，再执行分享功能 -->
 			</view>
 		</view>
 
@@ -183,7 +185,8 @@
 				favorite: true,
 				activity:{},
 				activityId: '',
-				agoodsid: '',
+				agentGoodsId: '',
+				goodsName: '',
 				shareClientId: '',
 				shareList: [
 					{
@@ -192,6 +195,7 @@
 					  type: 1
 					}
 				],
+				userType: 'agent'
 			};
 		},
 		onShow() {
@@ -207,7 +211,7 @@
 						shareClientId: this.shareClientId || '-1',
 						userType: 'Client'
 					},
-					path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
 				}
 				return shareObj
 			}
@@ -216,7 +220,7 @@
 			console.log(ops)
 			this.goodsId = ops.goodsId;
 			this.activityId = ops.activityId;
-			this.agoodsid = ops.agoodsid;
+			this.agentGoodsId = ops.agentGoodsId;
 			if (this.goodsId) {
 				let params = {
 					goodsId: this.goodsId,
@@ -225,6 +229,7 @@
 				let data = await Api.apiCall('post', Api.agent.goods.detail, params, false, false);
 				if (data) {
 					this.goods = data.result.goodsPicesBean;
+					this.goodsName = data.result.goodsPicesBean.goodsName
 					this.goodsSku = data.result.goodsSku;
 					this.goodsPropertyValue =data.result.goodsPropertyValue;
 				}
@@ -269,7 +274,7 @@
 					// activeId: typeof(this.activityId)=="undefined"?'':this.activityId,
 					// salesTypeGoodsId: typeof(this.agoodsid)=="undefined"?'':this.agoodsid
 					activeId: this.activityId || '',
-					salesTypeGoodsId: this.agoodsid || ''
+					salesTypeGoodsId: this.agentGoodsId || ''
 				}
 				let data =  Api.apiCall('post', Api.agent.goods.save, params,true);
 				return data;

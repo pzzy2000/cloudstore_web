@@ -13,7 +13,10 @@ export default {
 	areas:{
 		province:'sys/dict/list',
 	},
-	
+	finance: {
+		get: 'app/finance/get',
+		list: 'app/finance/list'
+	},
 	client:{
 		login:{
 			login:"sys/manager/platform/login"	,

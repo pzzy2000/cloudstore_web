@@ -104,15 +104,15 @@
 			}
 		},
 		//下拉刷新
-		onPullDownRefresh() {
-			this.pageNum = this.pageNum + 1;
-			this.loadData('refresh');
-		},
+		// onPullDownRefresh() {
+		// 	this.pageNum = this.pageNum + 1;
+		// 	this.loadData('refresh');
+		// },
 		//加载更多
-		onReachBottom() {
-			this.pageNum = this.pageNum + 1;
-			this.loadData();
-		},
+		// onReachBottom() {
+		// 	this.pageNum = this.pageNum + 1;
+		// 	this.loadData();
+		// },
 		methods: {
 			async loadActiviList(id) {
 				let params = {

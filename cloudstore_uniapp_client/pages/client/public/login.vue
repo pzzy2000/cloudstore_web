@@ -17,7 +17,7 @@
 					<input type="password" placeholder="请输入密码" v-model="password" @confirm="toLogin" />
 				</view>
 			</view>
-			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
+			<button class="confirm-btn" @click.stop="toLogin" :disabled="logining">登录</button>
 			<!-- #ifdef MP-WEIXIN -->
 			<view class="vx-btn">
 				<button open-type="getUserInfo" @getuserinfo='getWxInfo'>
@@ -35,13 +35,13 @@
 </template>
 
 <script>
-	import {
-		mapMutations,
-		mapState
-	} from 'vuex';
+	// import {
+	// 	mapMutations,
+	// 	mapState
+	// } from 'vuex';
 	import mallplusCopyright from '@/components/mall-copyright/mallplusCopyright.vue';
 	import Api from '@/common/api';
-	import store from '@/store/index';
+	// import store from '@/store/index';
 	export default {
 		components: {
 			mallplusCopyright
@@ -53,26 +53,33 @@
 				sysInfo: '',
 				logining: false,
 				wxloginCode: '', //获取code
-				loginInfo: ''
+				loginInfo: '',
+				goodsInfo: '',
+				goodsId: "",
+				agentGoodsId: "",
+				shareClientId: "",
+				userType: 'Client'
 			};
 		},
 		onLoad() {
-			this.sysInfo = this.$db.get('sysInfo');
-			//this.vxCheckSession() //判断登录是否过期
-			// this.getWxlogin()
+			// this.sysInfo = this.$db.get('sysInfo');
+			this.goodsInfo =  uni.getStorageSync('goodsInfo')
+			this.goodsId = this.goodsInfo.goodsId
+			this.agentGoodsId = this.goodsInfo.agentGoodsId
+			this.shareClientId = this.goodsInfo.shareClientId
 		},
 		computed: {
-			...mapState(['hasLogin', 'userInfo'])
+			// ...mapState(['hasLogin', 'userInfo'])
 		},
 		methods: {
-			...mapMutations(['login']),
+			// ...mapMutations(['login']),
 			toRegist() { //前去注册界面
 				uni.navigateTo({
 					url: '/pages/client/public/reg'
 				});
 			},
 			getWxInfo() { //获取code登录并且判断是否已经绑定手机号码
-				var that = this;
+				var that = this
 				uni.showLoading({
 					title: '微信登录中',
 					mask: true
@@ -87,14 +94,6 @@
 						});
 					},
 					success: function(loginRes) {
-						uni.setStorageSync('code',loginRes.code)
-						var code = loginRes.code
-						let params = {
-							'bean.logintype': 'client',
-							'bean.action': 'weixin',
-							'bean.password': code,
-							'bean.access': code
-						}
 						uni.getUserInfo({
 							provider: 'weixin',
 							success: function(infoRes) {
@@ -103,87 +102,95 @@
 								}
 							}
 						});
-						uni.request({
-							url: Api.BASEURI + Api.agent.user.wxLogin,
-							method: 'post',
-							header: {
-								'content-type': 'application/x-www-form-urlencoded'
-							},
-							data: params,
-							fail: function() {
-								uni.hideLoading();
-								uni.showToast({
-									title: '微信登录失败',
-									icon: 'none'
-								});
-							},
-							success: function(res) {
-								uni.hideLoading();
-								if (res.data.result.code === 100006) {
-									var data = res.data.result
-									console.log(data)
-									uni.showModal({
-										title: '提示',
-										content: '您的微信号暂未注册，请前往注册',
-										showCancel: false,
-										cancelText: '取消',
-										confirmText: '确定',
-										success: res => {
-											if (res.confirm) {
-												uni.navigateTo({
-													url: '/pages/client/public/reg'
-												});
-											} else if (res.cancel) {
-												uni.navigateTo({
-													url: '/pages/client/public/reg'
-												});
-											}
-										}
-									});
-									// uni.showModal({
-									// 	title: '提示',
-									// 	content: '您的微信暂未绑定手机号，请前往绑定',
-									// 	showCancel: false,
-									// 	cancelText: '取消',
-									// 	confirmText: '确定',
-									// 	success: res => {
-									// 		if (res.confirm) {
-									// 			uni.navigateTo({
-									// 				url: '/pages/client/public/getVxPhone?openId=' + data.msg
-									// 			});
-									// 		} else if (res.cancel) {
-									// 			uni.navigateTo({
-									// 				url: '/pages/client/public/getVxPhone?openId=' + data.msg
-									// 			});
-									// 		}
-									// 	}
-									// });
-								} else if (res.data.result.code === 0) {
-									uni.showToast({
-										title: '登录成功',
-										icon: 'none'
-									});
-									var userInfo = {
-										name: res.data.result.result.name,
-										url: res.data.result.result.url,
-										userType: res.data.result.result.userType
-									}
-									uni.setStorageSync('userInfo', userInfo)
-									uni.setStorageSync('token', res.data.result.result.token)
-									uni.switchTab({
-										url: '/pages/client/recommend/index'
-									});
-								} else {
-									uni.showToast({
-										title: res.data.result.msg,
-										icon: 'none'
-									});
-								}
-							}
-						})
+						that.vxLogin(loginRes)
 					}
 				});
-
+			},
+			vxLogin (loginRes) {
+				var that = this
+				uni.setStorageSync('code',loginRes.code)
+				var code = loginRes.code
+				let params = {
+					'bean.logintype': 'client',
+					'bean.action': 'weixin',
+					'bean.password': code,
+					'bean.access': code
+				}
+				uni.request({
+					url: Api.BASEURI + Api.agent.user.wxLogin,
+					method: 'post',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: params,
+					fail: function() {
+						uni.hideLoading();
+						uni.showToast({
+							title: '微信登录失败',
+							icon: 'none'
+						});
+					},
+					success: function(res) {
+						uni.hideLoading();
+						if (res.data.result.code === 100006) {
+							var data = res.data.result
+							uni.showModal({
+								title: '提示',
+								content: '您的微信号暂未注册，请前往注册',
+								showCancel: false,
+								cancelText: '取消',
+								confirmText: '确定',
+								success: res => {
+									if (res.confirm) {
+										uni.navigateTo({
+											url: '/pages/client/public/reg'
+										});
+									} else if (res.cancel) {
+										uni.navigateTo({
+											url: '/pages/client/public/reg'
+										});
+									}
+								}
+							});
+							// uni.showModal({
+							// 	title: '提示',
+							// 	content: '您的微信暂未绑定手机号，请前往绑定',
+							// 	showCancel: false,
+							// 	cancelText: '取消',
+							// 	confirmText: '确定',
+							// 	success: res => {
+							// 		if (res.confirm) {
+							// 			uni.navigateTo({
+							// 				url: '/pages/client/public/getVxPhone?openId=' + data.msg
+							// 			});
+							// 		} else if (res.cancel) {
+							// 			uni.navigateTo({
+							// 				url: '/pages/client/public/getVxPhone?openId=' + data.msg
+							// 			});
+							// 		}
+							// 	}
+							// });
+						} else if (res.data.result.code === 0) {
+							uni.showToast({
+								title: '登录成功',
+								icon: 'none'
+							});
+							var userInfo = {
+								name: res.data.result.result.name,
+								url: res.data.result.result.url,
+								userType: res.data.result.result.userType
+							}
+							uni.setStorageSync('userInfo', userInfo)
+							uni.setStorageSync('token', res.data.result.result.token)
+							that.toPages()
+						} else {
+							uni.showToast({
+								title: res.data.result.msg,
+								icon: 'none'
+							});
+						}
+					}
+				})
 			},
 			async toLogin() { //账号密码登录
 				var that = this;
@@ -207,9 +214,29 @@
 				};
 				let data = await Api.apiCall('post', Api.client.login.login, params,true);
 				if (data) {
-					this.$api.msg("登录成功");
-					uni.setStorageSync('userInfo', data.result);
-					uni.setStorageSync('token', data.result.token);
+					if (data.code === 0) {
+						uni.setStorageSync('userInfo', data.result);
+						uni.setStorageSync('token', data.result.token);
+						if (this.goodsId) {
+							uni.navigateTo({
+								url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+							});
+						} else {
+							uni.switchTab({
+								url: '/pages/client/recommend/index'
+							});
+						}
+					} else {
+						this.$api.msg(data.msg)
+					}
+				}
+			},
+			toPages () {
+				if (this.goodsId) {
+					uni.navigateTo({
+						url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+					});
+				} else {
 					uni.switchTab({
 						url: '/pages/client/recommend/index'
 					});

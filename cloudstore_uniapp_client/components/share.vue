@@ -26,7 +26,7 @@
 						open-type="share"
 					>
 						<image :src="item.icon" mode=""></image>
-						<text>{{item.text}}</text>
+						<text class="text">{{item.text}}</text>
 					</button>
 				</view>
 			</scroll-view>
@@ -205,7 +205,7 @@
 			height: 80upx;
 			margin-bottom: 16upx;
 		}
-		text{
+		.text{
 			font-size: $font-base;
 			color: $font-color-base;
 		}

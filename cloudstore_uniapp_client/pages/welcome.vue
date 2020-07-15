@@ -17,8 +17,20 @@
 		components: {
 			mallplusCopyright
 		},
-		onLoad() {
+		data() {
+			return {
+				goodsId: "",
+				agentGoodsId: "",
+				shareClientId: "",
+				userType: 'Client'
+			}
+		},
+		onLoad(ops) {
 			this.getAgentInfo();
+			this.goodsId = ops.goodsId
+			this.agentGoodsId = ops.agentGoodsId
+			this.shareClientId = ops.shareClientId
+			uni.setStorageSync('goodsInfo', ops)
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
@@ -26,7 +38,6 @@
 		methods: {
 			...mapMutations(['login']),
 			async getAgentInfo() {
-				console.log("is wei xin "+this.$config.isWeiXin)
 				this.logining = false;
 				let params = {};
 				let data = await Api.apiCall('post', Api.client.info.searchInfo, params, true, false);
@@ -34,10 +45,17 @@
 					let loginuser = data.result;
 					uni.setStorageSync('userInfo', loginuser)
 					uni.setStorageSync('token', loginuser.token)
-					uni.switchTab({
-						url:"/pages/client/recommend/index"
-					})
+					if (this.goodsId) {
+						uni.navigateTo({
+							url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+						});
+					} else {
+						uni.switchTab({
+							url:'/pages/client/recommend/index'
+						})
+					}
 				}
+				console.log(data)
 			}
 		}
 	};

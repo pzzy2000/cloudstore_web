@@ -148,7 +148,7 @@
 				mask: true
 			});
 			let xx= this.setshow;
-			uni.redirectTo({
+			uni.reLaunch({
 				url: item.pagePath,
 				complete:function(){
 					xx(false);

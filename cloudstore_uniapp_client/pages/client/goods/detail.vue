@@ -50,8 +50,8 @@
 				<text class="con t-r red">领取优惠券</text>
 				<text class="yticon icon-you"></text>
 			</view>
-          -->
-          
+             -->
+
 			<view class="c-row b-b">
 				<text class="tit">活动内容</text>
 				<view class="con-list">
@@ -59,7 +59,6 @@
 					
 				</view>
 			</view>
-			
 			<view class="c-row b-b">
 				<text class="tit">服务</text>
 				<view class="bz-list con">
@@ -68,68 +67,34 @@
 				</view>
 			</view>
 		</view>
-
-		<!-- 评价 -->
-		<!-- <view class="eva-section">
-			<view class="e-header">
-				<text class="tit">评价</text>
-				<text>({{ consultCount.all }})</text>
-				<text class="tit">好评</text>
-				<text>({{ consultCount.goods }})</text>
-
-				<text class="tit">一般</text>
-				<text>({{ consultCount.general }})</text>
-
-				<text class="tit">差评</text>
-				<text>({{ consultCount.bad }})</text>
-				<text class="tip" v-if="consultCount.persent != 200">好评率 {{ consultCount.persent }}%</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="eva-box" v-for="(item, index) in consultList" :key="item.id">
-				<image :src="item.pic" class="portrait" mode="aspectFill"></image>
-				<view class="right">
-					<text class="name">{{ item.memberName }}</text>
-					<text class="con">{{ item.consultContent }}</text>
-					<view class="bot">
-						<text class="attr">购买类型：{{ item.attr }}</text>
-						<text class="time">{{ item.consultAddtime }}</text>
-					</view>
-				</view>
-			</view>
-		</view> -->
-
 		<view class="detail-desc">
 			<view class="detail-desc">
 			   <view class="d-header"><text>图文详情</text></view>
 			   <view class="ricetext">
-			     <!-- <rich-text nodes="{{goods}}"></rich-text> -->
-				 <rich-text :nodes="goodsMobileHtml"></rich-text>
+				 <rich-text :nodes="goodsHtml"></rich-text>
 			   </view>
 			  </view>
-			<!-- <rich-text :nodes="desc"></rich-text> -->
 		</view>
 
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/client/recommend/index" open-type="switchTab" class="p-b-btn">
+			<navigator url="/pages/client/recommend/index" open-type='switchTab' class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
-			<navigator url="/pages/client/cart/index" open-type="switchTab" class="p-b-btn">
+			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-gouwuche"></text>
-				<text>购物车</text>
-			</navigator>
+				<text>期待</text>
+			</view>
 			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-shoucang"></text>
-				<text>收藏</text>
+				<text>期待</text>
 			</view>
-
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="share">立即分享</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toBuy">立即购买</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave">立即分享</button>
 			</view>
 		</view>
-
 		<!-- 规格-模态层弹窗 -->
 		<view class="popup spec" :class="specClass" @touchmove.stop.prevent="stopPrevent" @click="toggleSpec">
 			<!-- 遮罩层 -->
@@ -161,20 +126,6 @@
 						</text>
 					</view>
 				</view>
-				<!-- <view v-for="(item, index) in specList" :key="index" class="attr-list">
-					<text>{{item.goodsPropertyParamName}}</text>
-					<view  class="item-list">
-						<text
-							v-for="(childItem, childIndex) in specChildList"
-							:key="childIndex"
-							class="tit"
-						>
-							{{childItem[index]}}
-						</text>
-					</view>open
-				</view> -->
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toBuy">确定</button>
-				<!-- <button class="btn" @click="openAgent">加入代理</button> -->
 			</view>
 		</view>
 		<!-- 分享 -->
@@ -198,7 +149,6 @@ export default {
 	},
 	data() {
 		return {
-		    statusBarHeight: '',
 			specClass: 'none',
 			specSelected: [],
 			small: [],
@@ -209,6 +159,7 @@ export default {
 			},
 			detailData: [],
 			goods: '',
+			activity:{},
 			shareList: [
 				{
 				  icon: "/static/temp/share_wechat.png",
@@ -223,11 +174,13 @@ export default {
 			goodsName: '',
 			goodsSkuId: '',  //具体商品的skuId
 			agentGoodsId: '', //此商品的代理商品Id
-			goodsMobileHtml: '',
+			activeId: '', //此商品的活动id
+			shareId: '',
+			shareClientId: '',
+			goodsHtml: '',
 			specList: [],
 			specChildList: [],
-			activity:{},
-			userType: 'user'
+			userType: 'Client'
 		};
 	},
 	onShareAppMessage(res) {
@@ -237,31 +190,49 @@ export default {
 				params: {
 					goodsId: this.goodsId,
 					agentGoodsId: this.agentGoodsId,
-					userType: 'user'
+					shareClientId: this.shareClientId || '-1',
+					userType: 'Client'
 				},
-				path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&userType=user'
+				path: '/pages/welcome/?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
 			}
 		}
 		return shareObj
 	},
 	onShow() {
-		this.loadGoodHtml(this.goodsId);
+		
 	},
-	async onLoad(ops) {
-		console.log(ops);
-		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+	onLoad(ops) {
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
 		this.userType = ops.userType
-		
-		this.getGoodsDetail(this.goodsId,this.agentGoodsId)
+		this.activeId = ops.activeId
+		if ( ops.shareClientId == undefined) {
+			this.shareClientId = '-1'
+		}else{
+			this.shareClientId = ops.shareClientId
+		}
+		console.log(ops)
+		console.log(this.shareClientId)
+		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 	},
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
-			let params = { goodsId:goodsId,agentGoodsId:agentGoodsId };
-			let data = await Api.apiCall('post', Api.client.goods.detail, params, true, false);
+			try{
+				this.loadMobileHtml()
+			}catch(e){
+				this.$api.msg('获取商品图文信息失败')
+			}
+			try{
+				let params = {
+					goodsId: goodsId ,
+					agentGoodsId: agentGoodsId,
+				}
+			}catch(e){
+				console.log(1)
+			}
+			let data = await Api.apiCall('post', Api.agent.goods.agentGoodsDetail, params, true, false);
 			if (data) {
-				this.goods = data.result.goodsPicesBean
+				this.goods = data.result.goodsPicesBean;
 				this.activity = data.result.activityBean;
 				this.goodsName = data.result.goodsPicesBean.goodsName
 				this.skuList = data.result.goodsSku
@@ -313,8 +284,10 @@ export default {
 						}
 					}
 				}
-				// uni.hideLoading();
 			}
+		},
+		toFavorite(){
+			this.$api.msg("敬请期待");
 		},
 		openAgent () {
 			this.$refs.popup.open()
@@ -326,23 +299,34 @@ export default {
 			this.joinAgent()
 			this.$refs.popup.close()
 		},
-		
-		setmobileHtml(mobileHtml){
-			this.goodsMobileHtml = mobileHtml;
-		},
-		
-		loadGoodHtml(goodsId){
+		async joinAgent () { //将商品加入代理
 			let params = {
-				goodsId: goodsId
-			};
-			let mobileHtml=this.setmobileHtml;
-			Api.apiCallbackCall('post', Api.agent.goods.loadHtml, params, false,false, function(data){
-				  mobileHtml(data.result.mobileHtml);
-			});
+				goodsId: this.goodsId,
+				activeId: 1
+			}
+			let data = await Api.apiCall('post', Api.agent.goods.save, params);
+			if (data) {
+				if (data.code === 0) {
+					uni.showToast({
+						title: '加入代理成功',
+						icon: 'none'
+					});
+					if (this.specClass == 'show') {
+						this.specClass = 'hide'
+					}
+				}
+			}
 		},
-		
-		//规格弹窗开关
-		toggleSpec() {
+		async loadMobileHtml () {//获取商品的图文详情
+			let params = {
+				goodsId: this.goodsId
+			}
+			let data = await Api.apiCall('post', Api.agent.goods.loadHtml, params,0,0);
+			if (data) {
+				this.goodsHtml = data.result.mobileHtml
+			}
+		},
+		toggleSpec() { //规格弹窗开关
 			if (this.specClass === 'show') {
 				this.specClass = 'hide';
 				setTimeout(() => {
@@ -352,8 +336,7 @@ export default {
 				this.specClass = 'show';
 			}
 		},
-		//选择规格
-		selectSpec(index, pid) {
+		selectSpec(index, pid) { //选择规格
 			let list = this.specChildList;
 			list.forEach(item => {
 				if (item.pid === pid) {
@@ -388,107 +371,53 @@ export default {
 				}
 			}
 		},
-		//分享
-		share() {
+		share() { //分享显示弹窗
 			this.$refs.share.toggleMask();
 		},
-		
-		
-		toFavorite(goods){
-			this.$api.msg("敬请关注");
-		},
-		
-		isLogin () { //微信用户点击分享的连接进来后判断是否登录
-			var that = this;
+		async shareSave () { //分享调用接口
 			uni.showLoading({
-			  	title: '微信登录中',
-			  	mask: true
+				title: '正在加载',
+				mask: false
 			});
-			uni.login({
-			  	provider: 'weixin',
-			  	fail: function() {
-			  		uni.hideLoading();
-			  		uni.showToast({
-			  			title: '微信登录失败',
-			  			icon: 'none'
-			  		});
-			  	},
-			  	success: function(loginRes) {
-			  		uni.setStorageSync('code',loginRes.code)
-			  		var code = loginRes.code
-			  		let params = {
-			  			'bean.logintype': 'weixin',
-			  			'bean.password': code,
-			  			'bean.access': code
-			  		}
-			  		uni.getUserInfo({
-			  			provider: 'weixin',
-			  			success: function(infoRes) {
-			  				if (infoRes) {
-			  					uni.setStorageSync('vxInfo', infoRes.rawData)
-			  				}
-			  			}
-			  		});
-			  		uni.request({
-			  			url: Api.BASEURI + Api.agent.user.wxLogin,
-			  			method: 'post',
-			  			header: {
-			  				'content-type': 'application/x-www-form-urlencoded'
-			  			},
-			  			data: params,
-			  			fail: function() {
-			  				uni.hideLoading();
-			  				uni.showToast({
-			  					title: '微信登录失败',
-			  					icon: 'none'
-			  				});
-			  			},
-			  			success: function(res) {
-			  				uni.hideLoading();
-			  				if (res.data.result.code === 100006) {
-			  					uni.showToast({
-			  						title: '请微信绑定代理手机号',
-			  						icon: 'none'
-			  					});
-			  					uni.navigateTo({
-			  						url: '/pages/client/public/getVxPhone?openId=' + res.data.result.msg
-			  					});
-			  				} else if (res.data.result.code === 0) {
-			  					uni.showToast({
-			  						title: '登录成功',
-			  						icon: 'none'
-			  					});
-			  					var userInfo = {
-			  						name: res.data.result.result.name,
-			  						url: res.data.result.result.url
-			  					}
-			  					uni.setStorageSync('userInfo', userInfo)
-			  					uni.setStorageSync('token', res.data.result.result.token)
-			  				} else {
-			  					uni.showToast({
-			  						title: '微信登录失败',
-			  						icon: 'none'
-			  					});
-			  				}
-			  			}
-			  		})
-			  	}
-			})
+			let params = {
+				'agentGoodsId': this.agentGoodsId,
+				'shareId': this.shareClientId || '-1',
+				'type': this.userType
+			} 
+			let data = await Api.apiCall('post', Api.agent.share.save, params);
+			if (data) {
+				uni.hideLoading() 
+				if (data.code === 0) {
+					this.shareClientId = data.result.id
+					if (this.shareClientId) {
+						this.share()
+					}
+				}else{
+					uni.showToast({
+						title: data.msg
+					});
+				}
+			}
 		},
-		//点击立即购买
- 		toBuy(item) {
-			// var buyInfo = {
-			// 	activityId: '',
-			// 	agentGoodsId: this.agentGoodsId,
-			// 	goodsId: this.goodsId,
-			// 	goodsSkuId: this.goodsSkuId,
-			// 	price: this.sku.price,
-			// }
-			// console.log("buy info : ",buyInfo);
-			// uni.setStorageSync('buyInfo',buyInfo)
+		toAgent () { //跳转到我的小店界面
+			uni.redirectTo({
+				 url: '/pages/agent/home/index'
+			});
+		},
+ 		toBuy(item) { //点击立即购买
+			var buyInfo = {
+				activityId: this.activeId,
+				agentGoodsId: this.agentGoodsId,
+				goodsId: this.goodsId,
+				goodsSkuId: this.goodsSkuId,
+				shareId: this.shareId,
+				price: this.sku.price,
+				shareClientId: this.shareClientId
+			}
+			uni.setStorageSync('buyInfo',buyInfo)
 			//先判断库存
 			uni.navigateTo({
-				url: '/pages/client/goods/buy?agentGoodsId='+this.agentGoodsId+'&goodsSkuId='+this.goodsSkuId+"&goodsId="+this.goodsId
+				url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId
 			});
 		},
 		stopPrevent() {}

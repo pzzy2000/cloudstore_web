@@ -91,8 +91,7 @@
 				<text>期待</text>
 			</view>
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent" v-if="userType === 'agent'">我的小店</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toBuy" v-if="userType === 'Client'">立即购买</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toAgent">我的小店</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave">立即分享</button>
 			</view>
 		</view>
@@ -195,7 +194,7 @@ export default {
 					shareClientId: this.shareClientId || '-1',
 					userType: 'Client'
 				},
-				path: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
 			}
 		}
 		return shareObj
@@ -207,19 +206,18 @@ export default {
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
-		this.userType = ops.userType
+		// this.userType = ops.userType
 		this.activeId = ops.activeId
 		if ( ops.shareClientId == undefined) {
 			this.shareClientId = '-1'
 		}else{
 			this.shareClientId = ops.shareClientId
 		}
-		console.log(this.shareClientId)
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
+		this.loadMobileHtml()
 	},
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
-			this.loadMobileHtml()
 			let params = { goodsId:goodsId ,agentGoodsId:agentGoodsId};
 			let data = await Api.apiCall('post', Api.agent.goods.agentGoodsDetail, params, true, false);
 			if (data) {
@@ -228,17 +226,21 @@ export default {
 				this.goodsName = data.result.goodsPicesBean.goodsName
 				this.skuList = data.result.goodsSku
 				//赋值默认商品价格，库存和图片
-				this.sku.price = this.skuList[0].price
-				this.sku.stock = this.skuList[0].stock
-				if (this.skuList[0].photos[0]) {
-					this.sku.imgUrl = this.skuList[0].photos[0].url
-				}
-				this.goodsSkuId = this.skuList[0].id
-				//遍历商品数据展示规格
-				for (let index in data.result.goodsPropertyValue) {
-					if (data.result.goodsPropertyValue[index].propertyType == 0) {
-						this.specList.push(data.result.goodsPropertyValue[index])
+				try{
+					this.sku.price = this.skuList[0].price
+					this.sku.stock = this.skuList[0].stock
+					if (this.skuList[0].photos[0]) {
+						this.sku.imgUrl = this.skuList[0].photos[0].url
 					}
+					this.goodsSkuId = this.skuList[0].id
+					//遍历商品数据展示规格
+					for (let index in data.result.goodsPropertyValue) {
+						if (data.result.goodsPropertyValue[index].propertyType == 0) {
+							this.specList.push(data.result.goodsPropertyValue[index])
+						}
+					}
+				}catch(e){
+					this.$api.msg('商品默认规格不存在')
 				}
 				//处理规格选择额数据
 				if (this.specList){
@@ -309,12 +311,17 @@ export default {
 			}
 		},
 		async loadMobileHtml () {//获取商品的图文详情
+			uni.showLoading({
+				title: '正在加载图文详情',
+				mask: false
+			});
 			let params = {
 				goodsId: this.goodsId
 			}
 			let data = await Api.apiCall('post', Api.agent.goods.loadHtml, params,0,0);
 			if (data) {
 				this.goodsHtml = data.result.mobileHtml
+				uni.hideLoading()
 			}
 		},
 		toggleSpec() { //规格弹窗开关
