@@ -106,7 +106,7 @@
         -->
 
         <el-form-item label="商品规格参数介绍：">
-          <quill-editor ref="text" v-model="goodsku.mobileHtml" class="myQuillEditor" />
+          <quill-editor ref="text" v-model="goodsku.mobileHtml" class="myQuillEditor" :options="quillOption" />
           <!--
           <tinymce :width="595" :height="300" v-model="goodsku.mobileHtml"></tinymce>
           -->
@@ -144,10 +144,10 @@
   } from '@/api/productAttr';
 
   import SingleUpload from '@/components/Upload/singleUpload';
-  import MultiUpload from '@/components/Upload/multiUpload';
-  import {
-    getToken
-  } from '@/utils/auth';
+  // import MultiUpload from '@/components/Upload/multiUpload';
+  // import {
+  //   getToken
+  // } from '@/utils/auth';
 
   //import Tinymce from '@/components/Tinymce';
 
@@ -156,13 +156,15 @@
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
 
-  var token = getToken(); // 要保证取到
+  // var token = getToken(); // 要保证取到
+
+  import quillConfig from '@/components/quill-config.js'
 
   export default {
     name: "productsku",
     components: {
       SingleUpload,
-      MultiUpload,
+      // MultiUpload,
       quillEditor
       // Tinymce
     },
@@ -178,6 +180,7 @@
           type: 1
         },
         rwDispatcherState: 'write',
+        quillOption: quillConfig,
         goodsku: {
           goods: {},
           //goodsPics: [],
@@ -193,15 +196,15 @@
         productAttributeCategoryOptions: {
 
         },
-        editorOption: {
-          // editorOption里是放图片上传配置参数用的，例如：
-             action:  'http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update',  // 必填参数 图片上传地址
-             methods: 'post',  // 必填参数 图片上传方式
-             token: token,  // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
-             name: 'goods_info',  // 必填参数 文件的参数名
-             size: 128,  // 可选参数   图片大小，单位为Kb, 1M = 1024Kb
-             accept: 'multipart/form-data, image/png, image/gif, image/jpeg, image/bmp, image/x-icon,image/jpg'  // 可选 可上传的图片格式
-        },
+        // editorOption: {
+        //   // editorOption里是放图片上传配置参数用的，例如：
+        //      action:  'http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update',  // 必填参数 图片上传地址
+        //      methods: 'post',  // 必填参数 图片上传方式
+        //      token: token,  // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
+        //      name: 'goods_info',  // 必填参数 文件的参数名
+        //      size: 128,  // 可选参数   图片大小，单位为Kb, 1M = 1024Kb
+        //      accept: 'multipart/form-data, image/png, image/gif, image/jpeg, image/bmp, image/x-icon,image/jpg'  // 可选 可上传的图片格式
+        // },
         rules: {
           price: [
             { required:true, message:"价格必填", trigger:"blur" },
