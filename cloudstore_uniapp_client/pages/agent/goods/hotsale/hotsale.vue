@@ -2,7 +2,7 @@
 	<view class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
-		<nav-bar>mallcloud商城</nav-bar>
+		<nav-bar>吖咪购</nav-bar>
 		<view class="MP-search" @click="search()" style=""><input class="MP-search-input" type="text" disabled="true"
 			 placeholder="输入关键字搜索" /></view>
 		<!-- #endif -->
@@ -32,45 +32,48 @@
 			</view>
 
 			<!-- 活动 -->
-			<view class="cate-section">
-				<view class="cate-item" v-for="item in activity.nav.one" :key="item.id">
-					<image v-if="item.isadd == 0" src="/static/temp/c1.png" @click="navToCategory(item)"></image>
-					<image v-else src="/static/temp/c5.png"></image>
-					<text class="clamp">{{item.name}}</text>
+			<view class="activity-main">
+				<view class="cate-section">
+					<view class="cate-item" v-for="item in activity.nav.one" :key="item.id">
+						<image v-if="item.isadd == 0" src="/static/temp/c1.png" @click="navToCategory(item)"></image>
+						<image v-else src="/static/temp/c5.png"></image>
+						<text class="clamp">{{item.name}}</text>
+					</view>
 				</view>
-			</view>
-			<view class="cate-section">
-				<view class="cate-item" v-for="item in activity.nav.two" :key="item.id" >
-					<image v-if="item.isadd == 0" src="/static/temp/c1.png"  @click="navToCategory(item)"></image>
-					<image v-else src="/static/temp/c5.png"></image>
-					<text class="clamp">{{item.name}}</text>
+				<view class="cate-section">
+					<view class="cate-item" v-for="item in activity.nav.two" :key="item.id" >
+						<image v-if="item.isadd == 0" src="/static/temp/c1.png"  @click="navToCategory(item)"></image>
+						<image v-else src="/static/temp/c5.png"></image>
+						<text class="clamp">{{item.name}}</text>
+					</view>
 				</view>
 			</view>
 			<!-- 热门活动列表 -->
 			<view  v-for='item  in activity.show' :key="item.id">
 				<view   class="f-header m-t" @click="navToCategory(item)">
-					<image src="/static/temp/h1.png"></image>
-					<view class="tit-box">
-						<text class="tit">{{item.name}}</text>
-						<text class="tit2">{{item.name}}</text>
+					<view class="faddish-title">
+						<view class="title-main">
+							<span class='left-chunk'></span>
+							{{item.name}}
+						</view>
+						<span class='more'>更多></span>
 					</view>
-					<text class="yticon icon-you"></text>
 				</view>
 				
 				<view class="goods-list">
 					<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
 						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 						<view class="goods-detail">
-							<text class="title clamp">{{ goods.goodsPicesBean.goodsName }}</text>
-							<text class="title clamp subhead ">{{goods.goodsPicesBean.goodsSubtitle}}</text>
-							<text class="title clamp subhead ">供应商:{{goods.goodsPicesBean.supplierBean.name}}/{{goods.goodsPicesBean.supplierShopBean.shopName}}</text>
-							<view class="price-box">
-								<view class="price">
-									 <text class="price1">价格:</text>
-									 <text class="priceSale">{{ goods.goodsPicesBean.salePrice }}</text>
-								 /<text class="pricemart">{{ goods.goodsPicesBean.martPrice }}</text>
-								</view><!--<button class="goodsBtn">去代理</button> -->
-								
+							<view class="detail-title">
+								<view class="">{{ goods.goodsPicesBean.goodsName }}</view>
+								<view class="number">{{goods.goodsPicesBean.goodsSubtitle}}</view>
+							</view>
+							<view class="detail-price">
+								<view class="price-main">
+									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
+									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
+								</view>
+								<button type="primary" class="price-btn">立即抢购</button>
 							</view>
 						</view>
 					</view>
@@ -209,7 +212,6 @@
 						this.searchActivityGoodsShowList(showActivity[i])
 					}
 					this.activity.show = showActivity;
-					console.log(this.activity.show)
 				}
 			},
 			async searchActivityGoodsShowList(activity) {
@@ -221,6 +223,7 @@
 				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params);
 				if (data) {
 					activity.goodsList = data.result.records;
+					console.log(activity.goodsList)
 				}
 			},
 			/**
@@ -349,7 +352,11 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	.container {
+		background: #fff;
+		padding-bottom: 30rpx;
+	}
 	.MP-search {
 		background: #ffffff;
 		height: 80upx;
@@ -393,30 +400,37 @@
 	page {
 		background: $page-color-base;
 		padding-bottom: 160upx;
-		.cate-section {
-			position: relative;
-			z-index: 5;
-			border-radius: 16upx 16upx 0 0;
-			margin-top: -20upx;
-		}
-
-		.carousel-section {
-			padding: 0;
-
-			.titleNview-placing {
-				padding-top: 0;
-				height: 0;
+		.activity-main {
+			width: 94%;
+			margin: 0 auto;
+			background: rgb(248,248,248);
+			border: 1upx solid #eee;
+			border-radius: 10upx;
+			padding: 10rpx;
+			.cate-section {
+				position: relative;
+				z-index: 5;
+				border-radius: 16upx 16upx 0 0;
 			}
-
-			.carousel {
-				.carousel-item {
-					padding: 0;
+			
+			.carousel-section {
+				padding: 0;
+			
+				.titleNview-placing {
+					padding-top: 0;
+					height: 0;
 				}
-			}
-
-			.swiper-dots {
-				left: 45upx;
-				bottom: 40upx;
+			
+				.carousel {
+					.carousel-item {
+						padding: 0;
+					}
+				}
+			
+				.swiper-dots {
+					left: 45upx;
+					bottom: 40upx;
+				}
 			}
 		}
 	}
@@ -501,15 +515,13 @@
 		justify-content: space-around;
 		align-items: center;
 		flex-wrap: wrap;
-		padding: 30upx 22upx;
-		background: #fff;
+		padding: 30upx 0;
 		.cate-item {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			width: 20%;
 			font-size: $font-sm + 2upx;
-			color: $font-color-dark;
 			.clamp {
 				width: 100%;
 				text-align: center;
@@ -518,8 +530,8 @@
 
 		/* 原图标颜色太深,不想改图了,所以加了透明度 */
 		image {
-			width: 88upx;
-			height: 88upx;
+			width: 70upx;
+			height: 70upx;
 			margin-bottom: 14upx;
 			border-radius: 50%;
 			opacity: 0.7;
@@ -543,10 +555,34 @@
 	.f-header {
 		display: flex;
 		align-items: center;
-		height: 140upx;
-		padding: 0upx 1upx;
+		justify-content: space-between;
 		background: #fff;
-
+		padding: 0 15upx;
+		.faddish-title {
+			font-size: 30upx;
+			margin-top: 20upx;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background: #fff;
+			width: 100%;
+			height: 60rpx;
+			.title-main {
+				display: flex;
+				align-items: center;
+				.left-chunk {
+					display: inline-block;
+					height: 40upx;
+					width: 10upx;
+					background-color: green;
+					margin-right: 10upx;
+				}
+			}
+			.more {
+				color: #999;
+				font-size: 22upx;
+			}
+		}
 		image {
 			flex-shrink: 0;
 			width: 80upx;
@@ -629,19 +665,21 @@
 .goods-list {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 0 15upx;
+	margin: 40upx 30upx;
 	background: #fff;
+	border-bottom: 1upx solid #eee;
+	padding-bottom: 40upx;
 	.goods-item {
 		display: flex;
 		flex-direction: column;
 		flex-flow: nowrap;
 		width: 100%;
-		height: 100px;
+		height: 200upx;
 	}
 	.image-wrapper {
-		width: 100px;
-		height:100px;
-		border-radius: 3px;
+		width: 200upx;
+		height:200upx;
+		border-radius: 3upx;
 		overflow: hidden;
 		image {
 			opacity: 1;
@@ -649,60 +687,48 @@
 	}
 	.goods-detail {
 		display: inline-block;
-		width: 75%;
-		padding: 1px;
-		.title {
+		margin-left: 20upx;
+		display: flex;
+		justify-content: flex-start;
+		flex-wrap: wrap;
+		width: 65%;
+		.detail-title {
 			font-size: 16px;
-			color: $font-color-dark;
-			//line-height: 80upx;
+			color: #000;
+			.number {
+				color: #999;
+				font-size: 26upx;
+				line-height: 50upx;
+				height: 50upx;
+			}
 		}
-		.subhead {
-			color: #333;
-			font-size: 25upx;
-		}
-		.price-box {
+		.detail-price {
 			display: flex;
-			align-items: left;
 			justify-content: space-between;
-			padding: 20px 0px 0px 0px;
-			font-size: 14upx;
-			color: $font-color-light;
-			.price1 {
-				font-size: 14px;
-				color: $uni-color-primary;
-				line-height: 1;
-				}
-			.price {
-				 bottom: 0px; 
-				.priceSale {
-					font-size: 14px;
-					color: $uni-color-primary;
-					line-height: 1;
-					&:before {
-						content: '￥';
-						font-size: 14px;
-					}	
-				}
-				.pricemart {
-					font-size: 12px;
+			align-items: flex-end;
+			width: 100%;
+			padding-bottom: 20upx;
+			.price-main {
+				color: #999;
+				font-size: 24upx;
+				.surprised {
+					font-size: 30upx;
 					color: #000;
-					text-decoration:line-through;
-					line-height: 1;
-					&:before {
-						content: '￥';
-						font-size: 12px;
-					}	
+					.surprised-price {
+						font-size: 35upx;
+						color: red;
+					}
 				}
 			}
-			.goodsBtn {
-				font-size: 30upx;
-				color: #fff;
-				background: red;
-				height: 70upx;
-				line-height: 70upx;
-				width: 150upx;
+			.price-btn {
 				padding: 0;
 				margin: 0;
+				font-size: 30upx;
+				padding: 0 20upx;
+				height: 60upx;
+				line-height: 60upx;
+				color: #fff;
+				background: #ff4f50;
 			}
 		}
 	}
