@@ -281,6 +281,18 @@ export const asyncRouterMap = [
         name: 'default_broke',
         component: () => import('@/views/brokerage/defBroke'),
         meta: {title: '默认佣金', icon: 'product-list'}
+      },
+      {
+        path: 'withdrawbrage',
+        name: 'withdraw_brage',
+        component: () => import('@/views/brokerage/withdrawBrage'),
+        meta: {title: '客户佣金列表', icon: 'product-list'}
+      },
+      {
+        path: 'withdrawinfo',
+        name: 'withdraw_info',
+        component: () => import('@/views/brokerage/withdrawInfo'),
+        meta: {title: '客户佣金详情', icon: 'product-list'}
       }]
   },
   {

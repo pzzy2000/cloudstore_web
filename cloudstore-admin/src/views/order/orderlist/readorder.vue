@@ -10,8 +10,8 @@
 <!--      </el-steps>-->
 <!--    </el-card>-->
     <div style="background-color: #f3f3f3; height: 70px; line-height: 70px; overflow: hidden">
-      <div style="color: #f06d44; display: inline-block; float: left; text-indent: 20px">
-        当前订单状态:{{this.baseInfo|showOrderStatus}}
+      <div style="display: inline-block; float: left; text-indent: 20px">
+        当前订单状态:<span style="color: #f06d44;">&nbsp;&nbsp;{{baseInfo | showOrderStatus}}</span>
       </div>
       <div style="float: right; margin-right: 20px">
 <!--        <el-button size="mini">修改收货人信息</el-button>-->
@@ -19,6 +19,7 @@
 <!--        <el-button size="mini">发送站内信息</el-button>-->
         <el-button size="mini">关闭订单</el-button>
         <el-button size="mini">备注订单</el-button>
+        <el-button size="mini" @click="backPage">返回</el-button>
       </div>
     </div>
     <el-card shadow="never" style="margin: 0 20px">
@@ -62,13 +63,16 @@
     </el-card>
     <el-table :data="baseInfoList" border style="width: 96%; margin-left: 2%">
       <el-table-column prop="clientAddressBean.name" label="收货人" align="center" >
-
+        <template slot-scope="scope">{{scope.row.clientAddressBean.name}}</template>
       </el-table-column>
       <el-table-column prop="clientAddressBean.phone" label="手机号码" align="center">
+        <template slot-scope="scope">{{scope.row.clientAddressBean.phone}}</template>
       </el-table-column>
-      <el-table-column prop="clientAddressBean.detailAddress" label="地址" align="center" :formatter="showArea">
+      <el-table-column prop="clientAddressBean.phone" label="地点" align="center">
+        <template slot-scope="scope">{{scope.row.clientAddressBean.detailAddress}}</template>
       </el-table-column>
-      <el-table-column prop="clientAddressBean.detailAddress" label="地址" align="center">
+      <el-table-column prop="clientAddressBean.detailAddress" label="详细地址" align="center">
+        <template slot-scope="scope">{{scope.row.clientAddressBean | showArea}}</template>
       </el-table-column>
     </el-table>
     <el-card shadow="never" style="margin: 0 20px">
@@ -93,8 +97,6 @@
       <el-table-column prop="supplierShopBean" label="供应商" align="center" :formatter="showgoods">
       </el-table-column>
     </el-table>
-
-
 <!--    <el-card shadow="never" style="margin: 0 20px">-->
 <!--      <i class="el-icon-tickets"></i>-->
 <!--      <span>费用信息</span>-->
@@ -119,7 +121,6 @@
 <!--      <el-table-column prop="area" label="应付款金额" align="center">-->
 <!--      </el-table-column>-->
 <!--    </el-table>-->
-    <
     <el-card shadow="never" style="margin: 0 20px">
       <i class="el-icon-tickets"></i>
       <span>操作信息</span>
@@ -152,37 +153,42 @@
           {person: "大梨", phone: '18000000000', postcode: '518000', area: '广东省深圳市南山区科兴科学园'}
         ],
         baseInfo:{},
-        baseInfoList:[],
-        parentObj: {}
+        baseInfoList:[]
       }
     },
     filters:{
-
       showOrderStatus:function (data) {
-             switch (data.orderStatus) {
-                case 'payed':{
-                  return "已支付"
-                }
-                default:{
-                  return data.orderStatus;
-                }
-             }
+         switch (data.orderStatus) {
+            case 'payed':{
+              return "已支付"
+            };break;
+           case 'close':{
+             return "超时关闭"
+           };break;
+            default:{
+              return data.orderStatus;
+            };break;
+         }
+      },
+      showArea(data){
+        try{
+          return data.provinceBean.name + "省" + data.cityBean.name + "市" + data.areaBean.name + "区" + data.detailAddress;
+        }catch (e) {
+          return "获取地址出错";
+        }
       }
     },
     created() {
-      this.parentObj = this.$route.params.obj;
-      console.log(this.parentObj);
       this.getList();
     },
     methods: {
       showgoods:function(row,index){
         let property = index.property;
-        console.log(row,index);
-        let  goods =row.goodsBean;
+        let goods =row.goodsBean;
         switch (property) {
-             case 'goodsName' :{
-               return goods.goodsName;
-             }
+          case 'goodsName' :{
+            return goods.goodsName;
+          }
           case 'price' :{
             return row.price;
           }
@@ -198,7 +204,6 @@
             }catch (e) {
               return '获取活动数据错误';
             }
-
           }
           case 'agentShopBean':{
             try{
@@ -220,25 +225,18 @@
         }
 
       },
-      showArea(data){
-        try{
-             let address = data.clientAddressBean;
-             return address.provinceBean.name +"/"+address.cityBean.name+"/"+address.areaBean.name;
-        }catch (e) {
-          return "获取地址出错";
-        }
-
-      },
       getList() {
         let params ={
           id:this.$route.query.id
         }
-
         getOneorder(params).then(res => {
           // console.log(res);
           this.baseInfo = res.result.result;
           this.baseInfoList.push(res.result.result);
         })
+      },
+      backPage() {
+        this.$router.go(-1);
       }
     }
   }

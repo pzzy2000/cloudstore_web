@@ -32,3 +32,27 @@ export function getdefbroke(params) {
     data: switchForm(params)
   })
 }
+
+export function listUserBroke(params) {
+  return request ({
+    url: '/finance/sumlist',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function getUserinfo(params) {
+  return request ({
+    url: '/finance/alllistByUserId',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function getBrokeinfo(params) {
+  return request ({
+    url: '/finance/profit/detail/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

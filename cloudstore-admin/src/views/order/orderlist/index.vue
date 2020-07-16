@@ -176,7 +176,7 @@
         // 时间格式自定义 只需把字符串里面的改成自己所需的格式
         formatDate(time) {
           let date = new Date(time);
-          return formatDate(date, 'yyyy-MM-dd');
+          return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
         },
         changeStatus(data) {
           switch (data) {
