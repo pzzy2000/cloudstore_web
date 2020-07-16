@@ -110,6 +110,22 @@ export default {
     placeholder: '',
     theme: 'snow',  // 主题
     modules: {
+    	clipboard: {
+            // 粘贴版，处理粘贴时候带图片
+            matchers: [[Node.ELEMENT_NODE, function(node, Delta){ 
+            	      let ops = []
+            	      Delta.ops.forEach(op => {
+            	        if (op.insert && typeof op.insert === 'string') {// 如果粘贴了图片，这里会是一个对象，所以可以这样处理
+            	          ops.push({
+            	            insert: op.insert,
+            	          })
+            	        }
+            	      })
+            	      Delta.ops = ops
+            	      return Delta
+            	    
+            }]],
+          },
         toolbar: {
             container: toolOptions,  // 工具栏选项
             handlers: handlers  // 事件重写
