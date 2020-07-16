@@ -292,7 +292,8 @@ export const asyncRouterMap = [
         path: 'withdrawinfo',
         name: 'withdraw_info',
         component: () => import('@/views/brokerage/withdrawInfo'),
-        meta: {title: '客户佣金详情', icon: 'product-list'}
+        meta: {title: '客户佣金详情', icon: 'product-list'},
+        hidden: true
       }]
   },
   {
@@ -316,7 +317,8 @@ export const asyncRouterMap = [
         path: 'level',
         name: 'agent_level',
         component: () => import('@/views/agent/level/list'),
-        meta: {title: '代理等级', icon: 'product-list'}
+        meta: {title: '代理等级', icon: 'product-list'},
+        hidden: true
      },{
        path: 'addlevel',
        name: 'agent_addlevel',
