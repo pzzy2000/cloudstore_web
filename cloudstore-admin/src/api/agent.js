@@ -47,3 +47,11 @@ export function getOnelevel(params) {
     data: switchForm(params)
   })
 }
+
+export function getAgentgoods(params) {
+  return request({
+    url: '/agent/goods/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

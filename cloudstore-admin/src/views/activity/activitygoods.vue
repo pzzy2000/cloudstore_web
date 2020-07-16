@@ -119,7 +119,6 @@
       getList() {
         this.listLoading = true;
         fetchActivityGoodsList(this.listQuery).then(response => {
-
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
@@ -167,8 +166,9 @@
         }
       },
       handleSearchList() {
-        this.listQuery.pageNum = 1;
-        this.getList();
+        // this.listQuery.pageNum = 1;
+        // this.getList();
+        alert("搜索")
       },
       changeSwitch() {
 

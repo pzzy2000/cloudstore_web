@@ -28,11 +28,11 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" v-loading="listLoading" border>
-        <el-table-column type="selection" width="60" align="center" fixed ></el-table-column>
-        <el-table-column label="客户名称"  align="center" fixed>
+        <el-table-column type="selection" width="60px" align="center"></el-table-column>
+        <el-table-column label="客户名称"  align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="客户等级"  align="center" fixed>
+        <el-table-column label="客户等级"  align="center">
           <template slot-scope="scope">{{scope.row.level}}</template>
         </el-table-column>
         <el-table-column label="操作" align="right">
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+  import {getAgentgoods} from '@/api/agent'
   export default {
     name: 'goods',
     data() {
@@ -64,7 +65,7 @@
     },
     methods: {
       getList() {
-        getUserlist(defaultList).then(res => {
+        getAgentgoods(defaultList).then(res => {
           console.log(res);
         })
       },
@@ -93,5 +94,4 @@
 </script>
 
 <style scoped>
-
 </style>
