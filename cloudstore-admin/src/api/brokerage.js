@@ -61,6 +61,6 @@ export function updateBrosku(params) {
   return request({
     url: '/finance/profit/goods/update',
     method: 'POST',
-    params: params
+    data: params
   })
 }
