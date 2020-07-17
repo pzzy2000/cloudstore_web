@@ -239,8 +239,9 @@
     methods: {
 
       updateGoodsProperties() {
+        console.log(this.goodsku.mobileHtml);
+        return;
         let good_sku = this.goodsku;
-
         let data = {};
         data.propertyId = good_sku.propertyId;
         data.skuStockList = good_sku.skuStockList;

@@ -2,7 +2,7 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
-    <div style="display: inline-block; float: right; margin-right: 100px">{{userType}}</div>
+    <div style="display: inline-block; float: right; margin-right: 50px">{{userType}}&nbsp;{{userAccont}}&nbsp;{{userName}}</div>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
 <!--        <img class="user-avatar" :src="avatar">-->
@@ -30,7 +30,9 @@ import Hamburger from '@/components/Hamburger'
 export default {
   data() {
     return {
-     userType: ''
+     userType: '',
+      userAccont: '',
+      userName: ''
     }
   },
   components: {
@@ -44,7 +46,7 @@ export default {
     ])
   },
   created() {
-    console.log(localStorage.getItem('userType'))
+    console.log(localStorage.getItem('userAccont'))
     switch (localStorage.getItem('userType')) {
       case 'supplier': this.userType = "供应商";
         break;
@@ -53,6 +55,8 @@ export default {
       case 'platform': this.userType = "平台";
         break;
     }
+    this.userAccont = localStorage.getItem('userAccont');
+    this.userName = localStorage.getItem('userName');
   },
   methods: {
     toggleSideBar() {

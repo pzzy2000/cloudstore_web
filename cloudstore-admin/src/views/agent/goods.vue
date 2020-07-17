@@ -22,9 +22,9 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button class="btn-add" size="mini" @click="addUser">
-        添加
-      </el-button>
+<!--      <el-button class="btn-add" size="mini" @click="addUser">-->
+<!--        添加-->
+<!--      </el-button>-->
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" v-loading="listLoading" border>
@@ -69,9 +69,9 @@
           console.log(res);
         })
       },
-      addUser() {
-        this.$router.push({path: '/sys/agent/addgoods', query: {operaType: "add", rds: 'write'}})
-      },
+      // addUser() {
+      //   this.$router.push({path: '/sys/agent/addgoods', query: {operaType: "add", rds: 'write'}})
+      // },
       readUser(row) {
         this.$router.push({path: '/sys/agent/addgoods', query: {operaType: "read", rds: 'read'}})
       },
