@@ -7,7 +7,7 @@
                ref="loginForm"
                label-position="left">
         <div style="text-align: center">
-          <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
+
         </div>
         <h2 class="login-title color-main">国创基业</h2>
         <el-form-item prop="username">
@@ -49,7 +49,7 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <img :src="login_center_bg" class="login-center-layout">
+
     <el-dialog
       title="公众号二维码"
       :visible.sync="dialogVisible"
@@ -71,7 +71,7 @@
 <script>
   import {isvalidUsername} from '@/utils/validate';
   import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
-  import login_center_bg from '@/assets/images/login_center_bg.png'
+  //import login_center_bg from '@/assets/images/login_center_bg.png'
   export default {
     name: 'login',
     data() {
@@ -102,20 +102,20 @@
         },
         loading: false,
         pwdType: 'password',
-        login_center_bg,
+        // login_center_bg,
         dialogVisible:false,
         supportDialogVisible:false
       }
     },
     created() {
-      this.loginForm['bean.access'] = getCookie("username");
-      this.loginForm['bean.password'] = getCookie("password");
-      if(this.loginForm['bean.access']  === undefined||this.loginForm['bean.access'] ==null||this.loginForm['bean.access'] ===''){
-        this.loginForm['bean.access']  = 'admin';
-      }
-      if(this.loginForm['bean.password'] === undefined||this.loginForm['bean.password']==null){
-        this.loginForm['bean.password'] = '';
-      }
+      // this.loginForm['bean.access'] = getCookie("username");
+      // this.loginForm['bean.password'] = getCookie("password");
+      // if(this.loginForm['bean.access']  === undefined||this.loginForm['bean.access'] ==null||this.loginForm['bean.access'] ===''){
+      //   this.loginForm['bean.access']  = 'admin';
+      // }
+      // if(this.loginForm['bean.password'] === undefined||this.loginForm['bean.password']==null){
+      //   this.loginForm['bean.password'] = '';
+      // }
     },
     methods: {
       showPwd() {
@@ -136,8 +136,8 @@
             this.loading = true;
             this.$store.dispatch('Login', this.loginForm).then(() => {
               this.loading = false;
-              setCookie("username",this.loginForm.username,15);
-              setCookie("password",this.loginForm.password,15);
+              setCookie("username",'xxooxx',15);
+              setCookie("password",'xx00xx',15);
               this.$router.push({path: '/'});
               // this.$store.dispatch('userType', )
             }).catch(() => {
