@@ -219,13 +219,14 @@
 			complete(e) { //点击了商品分类的上一级分类
 			},
 			selectActivity (item) { //点击活动后加载数据
-				this.activityId = item.id
-				this.categoryOneId = ''
-				this.categoryTwoId = ''
-				this.categoryThreeId = ''
-				this.pageNum = '1'
-				this.loadData()
-				this.toggleCateMask('hide')
+				this.activityId = item.id;
+				this.categoryOneId = '';
+				this.categoryTwoId = '';
+				this.categoryThreeId = '';
+				this.filterIndex = 1;
+				this.pageNum = '1';
+				this.loadData();
+				this.toggleCateMask('hide');
 			},
 			tabClick(index) { //点击tab列表
 				if (index === 0) {
@@ -236,7 +237,6 @@
 				}
 				if (index === 2) {
 					this.filterIndex = 2
-					// this.addressPopup = !this.addressPopup
 					this.$refs.popup.open()
 				}
 				uni.pageScrollTo({

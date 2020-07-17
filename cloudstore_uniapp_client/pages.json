@@ -66,7 +66,6 @@
 				"enablePullDownRefresh": false
 			}
 		},
-		
 		{
 			"path": "pages/client/goods/detail",
 			"style": { //用户 首页
@@ -149,7 +148,7 @@
 			}
 		},
 		{
-			"path": "pages/agent/goods/agentGoodsList/agentGoodsList",
+			"path": "pages/agent/home/agentGoodsList/agentGoodsList",
 			"style": { //代理商代理商品列表
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
@@ -177,7 +176,7 @@
             "style" : { //客户端订单
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
         }
 		,{
@@ -189,15 +188,15 @@
 			}
 		},
 		{
-		    "path" : "pages/agent/order/order",
+		    "path" : "pages/agent/home/order/order",
 		    "style" : { //代理商订单
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		}
         ,{
-            "path" : "pages/agent/order/orderDetail",
+            "path" : "pages/agent/home/order/orderDetail",
             "style" : { //代理商订单详情
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
@@ -291,7 +290,7 @@
 		"list": [{
 			"name": "", //模式名称
 			//"path": "", //启动页面，必选
-			"path": "pages/agent/home/index", //启动页面，必选
+			"path": "", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

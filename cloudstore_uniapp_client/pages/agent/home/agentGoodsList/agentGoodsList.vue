@@ -66,11 +66,16 @@
 				cateList: '',
 				filterIndex: '',
 				cateMaskState: 0, //分类面板展开状态
-				goodsList: ''
+				goodsList: [],
+				pageNum: 1,
 			}
 		},
 		components: {
 			navBar
+		},
+		onReachBottom() { //上拉加载
+		 	this.pageNum = this.pageNum + 1;
+			this.agentShopListData()
 		},
 		onLoad () {
 			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
@@ -80,12 +85,16 @@
 		methods: {
 			async agentShopListData () {
 				let parmas = {
-					pageNum: 1,
+					pageNum: this.pageNum,
 					pageSize: 10
 				}
 				let shopListData  = await Api.apiCall('post', Api.agent.user.agentList,parmas,0);
 				if (shopListData) {
-					this.goodsList = shopListData.result.records
+					if (shopListData.result.records.length === 0) {
+						this.$api.msg('没有更多了')
+					} else {
+						this.goodsList = this.goodsList.concat(shopListData.result.records)
+					}
 				}
 			},
 			toggleCateMask (type) {

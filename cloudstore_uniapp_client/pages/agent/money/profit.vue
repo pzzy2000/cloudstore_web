@@ -2,7 +2,7 @@
 	<view>
 		<nav-bar>我的收益</nav-bar>
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
-			<view class="cu-item" v-for="(item,index) in cuIconList" :key="index" v-if="index<gridCol*2">
+			<view class="cu-item" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
 				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
 					<view class="cu-tag badge" v-if="item.badge!=0">
 						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
@@ -12,7 +12,7 @@
 			</view>
 		</view>
 		<view class="cu-list menu-avatar">
-			<p style='text-align: center;' v-if='financetDataList'>暂无订单数据</p>
+			<p style='text-align: center;' v-if='financetDataList.length === 0'>暂无订单数据</p>
 			<view class="cu-item" v-for='(item, index) in financetDataList' :key='index'>
 				<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
 				<view class="content">
@@ -44,22 +44,26 @@
 						color: 'red',
 						badge: 0,
 						name: '已收益',
-						num: '计算中'
+						num: '计算中',
+						value: 2
 					}, {
 						cuIcon: 'refund',
 						color: 'orange',
 						badge: 0,
 						name: '待收益',
-						num: '计算中'
+						num: '计算中',
+						value: 1
 					}, {
 						cuIcon: 'goods',
 						color: 'yellow',
 						badge: 0,
 						name: '积分',
-						num: '计算中'
+						num: '计算中',
+						value: 3
 					}],
 					gridCol: 3,
 					gridBorder: false,
+					tabEarning: 2,
 					financeData: '',
 					financetDataList: ''
 				}
@@ -88,6 +92,10 @@
 					}
 				},
 				async lisFinancetData () {
+					uni.showLoading({
+						title: '正在加载',
+						mask: false
+					});
 					let parmas = {
 						userType: 'agent',
 						pageNum: '1',
@@ -96,10 +104,23 @@
 					let data = await Api.apiCall('post', Api.finance.list, parmas)
 					if (data) {
 						if (data.code === 0 && data.result != null) {
-							this.financetDataList = data.result.records
+							const tmpData = data.result.records;
+							for (let tmp in tmpData) {
+								if (this.tabEarning === tmpData[tmp].profitStauts) {
+									this.financetDataList.push(tmpData[tmp])
+								}
+							}
 						}else{
 							this.$api.msg(data.msg)
 						}
+						uni.hideLoading()
+					}
+				},
+				earninngType (index) {
+					if (index === 1 || index === 2) {
+						this.financetDataList = []
+						this.tabEarning = index
+						this.lisFinancetData()
 					}
 				}
 			}

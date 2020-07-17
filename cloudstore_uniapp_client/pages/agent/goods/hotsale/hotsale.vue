@@ -2,20 +2,20 @@
 	<view class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
-		<nav-bar>吖咪购</nav-bar>
+		<nav-bar>丫咪购</nav-bar>
 		<view class="MP-search" @click="search()" style=""><input class="MP-search-input" type="text" disabled="true"
 			 placeholder="输入关键字搜索" /></view>
 		<!-- #endif -->
 
 		<!-- 头部轮播 -->
 		<!-- #ifdef MP -->
-		<view class="carousel-section" style="margin-top: 80upx;">
+		<view class="carousel-section" style="margin-top: 80upx;margin-bottom: 20upx;">
 			<!-- #endif -->
 			<!-- #ifndef MP -->
 			<view class="carousel-section">
 				<!-- #endif -->
 				<!-- 标题栏和状态栏占位符 -->
-				<view class="titleNview-placing"></view>
+				<!-- <view class="titleNview-placing"></view> -->
 				<!-- 背景色区域 -->
 				<view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view>
 				<swiper class="carousel" circular @change="swiperChange">
@@ -65,15 +65,15 @@
 						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 						<view class="goods-detail">
 							<view class="detail-title">
-								<view class="">{{ goods.goodsPicesBean.goodsName }}</view>
-								<view class="number">{{goods.goodsPicesBean.goodsSubtitle}}</view>
+								<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
+								<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
 							</view>
 							<view class="detail-price">
 								<view class="price-main">
 									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
 									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 								</view>
-								<button type="primary" class="price-btn">立即抢购</button>
+								<button type="primary" class="price-btn">立即代理</button>
 							</view>
 						</view>
 					</view>
@@ -116,9 +116,19 @@
 					show: []
 				},
 				titleNViewBackground: '',
-				carouselList: '',
+				carouselList: [
+					{
+						pic: '/static/slideshow/nav1.jpg'
+					},
+					{
+						pic: '/static/slideshow/nav2.jpg'
+					},
+					{
+						pic: '/static/slideshow/nav3.jpg'
+					},
+				],
 				swiperCurrent: '',
-				swiperLength: ''
+				swiperLength: '3'
 			};
 		},
 
@@ -401,12 +411,10 @@
 		background: $page-color-base;
 		padding-bottom: 160upx;
 		.activity-main {
-			width: 94%;
+			width: 100%;
 			margin: 0 auto;
 			background: rgb(248,248,248);
 			border: 1upx solid #eee;
-			border-radius: 10upx;
-			padding: 10rpx;
 			.cate-section {
 				position: relative;
 				z-index: 5;
@@ -422,6 +430,7 @@
 				}
 			
 				.carousel {
+					margin-bottom: 20upx;
 					.carousel-item {
 						padding: 0;
 					}
@@ -467,7 +476,6 @@
 		.carousel-item {
 			width: 100%;
 			height: 100%;
-			padding: 0 28upx;
 			overflow: hidden;
 		}
 
@@ -675,6 +683,7 @@
 		flex-flow: nowrap;
 		width: 100%;
 		height: 200upx;
+		margin-bottom: 20upx;
 	}
 	.image-wrapper {
 		width: 200upx;
@@ -695,6 +704,7 @@
 		.detail-title {
 			font-size: 16px;
 			color: #000;
+			width: 100%;
 			.number {
 				color: #999;
 				font-size: 26upx;

@@ -1,12 +1,9 @@
 <template>
 	<view class="content">
-		<nav-bar backState="1000">商品分类</nav-bar>
+		<nav-bar>商品分类</nav-bar>
 		<view class="navbar">
-			
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
-			
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
-
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
 				<text>价格</text>
 				<view class="p-box">
@@ -29,15 +26,10 @@
 						 <text class="priceSale">{{ goods.salePrice }}</text>
 					 /<text class="pricemart">{{ goods.martPrice}}</text>
 					</view><!--<button class="goodsBtn">去代理</button> -->
-					
 				</view>
 			</view>	
-			
 			</view>
 		</view>
-		<!--
-		<uni-load-more :status="loadingType"></uni-load-more>
-		-->
 		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+45+'px'}]">
 					<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
 						<scroll-view scroll-y class="cate-list">

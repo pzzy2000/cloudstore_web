@@ -193,7 +193,7 @@ export default {
 					shareClientId: this.shareClientId || '-1',
 					userType: 'Client'
 				},
-				path: '/pages/welcome/?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
 			}
 		}
 		return shareObj
@@ -222,13 +222,9 @@ export default {
 			}catch(e){
 				this.$api.msg('获取商品图文信息失败')
 			}
-			try{
-				let params = {
-					goodsId: goodsId ,
-					agentGoodsId: agentGoodsId,
-				}
-			}catch(e){
-				console.log(1)
+			let params = {
+				goodsId: goodsId ,
+				agentGoodsId: agentGoodsId,
 			}
 			let data = await Api.apiCall('post', Api.agent.goods.agentGoodsDetail, params, true, false);
 			if (data) {

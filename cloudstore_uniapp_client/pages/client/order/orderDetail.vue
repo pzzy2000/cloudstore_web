@@ -190,10 +190,10 @@
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params);
 				if (data) {
+					console.log(data.result)
 					this.goodsDetail = data.result.records[0].goodsPicesBean
 					this.agentDetail = data.result.records[0].agentShopBean
 					this.num = data.result.records[0].quantity
-					console.log(data.result)
 				}
 			},
 			async searchClientAddress () { //查询收货地址

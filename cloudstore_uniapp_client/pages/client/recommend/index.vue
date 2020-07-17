@@ -9,7 +9,15 @@
 					<text class="header-address">地址：{{shopInfo.detailAddress}}</text>
 				</view>
 			</view>
-			<view class="faddish-main">
+			<view class="agency-apply">
+				<view class="agency-apply-main">
+					<view class="apply-detail" v-for="(item, index) in apply" :key='index'>
+						<image :src="item.imgUrl" mode="" class="apply-img"></image>
+						<text>{{item.name}}</text>
+					</view>
+				</view>
+			</view>
+			<!-- <view class="faddish-main">
 				<view class="faddish-title">
 					<view class="title-main">
 						<span class='left-chunk'></span>
@@ -35,7 +43,7 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 			<view class="faddish-main">
 				<view class="faddish-title">
 					<view class="title-main">
@@ -77,6 +85,58 @@ export default {
 				name:'',
 				url:'',
 				updateList: '',
+				apply: [
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					},
+					{
+						name: '敬请期待',
+						detailListUrl: '',
+						imgUrl: '/static/temp/nav1.png'
+					}
+				],
 				detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
 			}
 		},
@@ -155,6 +215,47 @@ export default {
 			text-align: center;
 			span {
 				color: #303133;
+			}
+		}
+	}
+	.agency-apply {
+		uni-image {
+			height: 80upx;
+			width: 80upx;
+			display: block;
+			margin: 0 auto;
+		}
+		span {
+			display: block;
+		}
+		.agency-apply-title {
+			font-size: 40upx;
+			line-height: 80upx;
+			margin-top: 30upx;
+			display: inline-block;
+		}
+		.agency-apply-main {
+			display: flex;
+			flex-wrap: wrap;
+			border: 1upx solid #eee;
+			border-radius: 10upx;
+			padding: 20upx;
+			.apply-detail {
+				width: 20%;
+				font-size: 26upx;
+				color: #303133;
+				text-align: center;
+				padding-top: 20upx;
+			}
+			.apply-img{
+				height: 60upx;
+				width: 60upx;
+				display: block;
+				margin: 0 auto;
+			}
+			span {
+				display: block;
+				font-size: 20upx;
 			}
 		}
 	}

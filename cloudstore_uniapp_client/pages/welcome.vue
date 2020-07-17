@@ -25,8 +25,11 @@
 				userType: 'Client'
 			}
 		},
-		onLoad(ops) {
+		onShow() {
 			this.getAgentInfo();
+		},
+		onLoad(ops) {
+			// this.getAgentInfo();
 			this.goodsId = ops.goodsId
 			this.agentGoodsId = ops.agentGoodsId
 			this.shareClientId = ops.shareClientId
