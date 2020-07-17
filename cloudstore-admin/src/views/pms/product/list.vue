@@ -90,7 +90,7 @@
         <el-table-column label="状态" width="140" align="center">
           <template slot-scope="scope">
             上架：
-            <el-switch @change="handlePublishStatusChange(scope.$index, scope.row)" :active-value="1" :inactive-value="0"
+            <el-switch @change="handlePublishStatusChange($event, scope.row)" :active-value="1" :inactive-value="0"
               v-model="scope.row.shelfStatus">
             </el-switch>
           </template>
@@ -598,8 +598,8 @@
         });
       },
 
-      handlePublishStatusChange(index, row) {
-        console.log(row.id, row.shelfStatus);
+      handlePublishStatusChange($event, row) {
+        console.log($event);
         if (row.shelfStatus == 0){//下架
           upOrdown({goodsId: row.id}).then(res => {
             if(res.result.code == 0){
@@ -618,6 +618,9 @@
                 message: '上架成功',
                 duration: 800
               })
+            }else{
+              console.log("+++++++++++")
+              row.shelfStatus = 0;
             }
           })
         }
