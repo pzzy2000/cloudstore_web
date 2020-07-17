@@ -93,7 +93,7 @@
       }
     },
     created() {
-      this.listQuery.activityId = this.$route.query.activityid;
+      this.listQuery.activityId = this.$route.query.id;
       this.getList();
     },
     watch: {
