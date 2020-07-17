@@ -123,7 +123,7 @@
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
-        total: null,
+        total: 0,
         listLoading: true,
         multipleSelection: [],
         isshow: false

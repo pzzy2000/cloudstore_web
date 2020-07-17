@@ -6,9 +6,9 @@
       </el-card>
       <div style="margin: 20px 20px 0 20px">
         <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
-<!--          <el-table-column label="客户等级" align="center">-->
-<!--            <template slot-scope="scope">{{scope.row.name}}</template>-->
-<!--          </el-table-column>-->
+          <el-table-column label="团长佣金" align="center">
+            <template slot-scope="scope">{{scope.row.leader}}</template>
+          </el-table-column>
           <el-table-column label="代理佣金" align="center">
             <template slot-scope="scope">{{scope.row.agent}}</template>
           </el-table-column>

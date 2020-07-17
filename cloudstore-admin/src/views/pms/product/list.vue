@@ -618,9 +618,6 @@
                 message: '上架成功',
                 duration: 800
               })
-            }else{
-              console.log("+++++++++++")
-              row.shelfStatus = 0;
             }
           })
         }

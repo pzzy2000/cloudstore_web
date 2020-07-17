@@ -61,7 +61,7 @@
                 </template>
               </el-table-column>
               <el-table-column  align="center" >
-                
+
               </el-table-column>
             </el-table>
           </div>
@@ -148,11 +148,11 @@
         // console.log(str);
         updateBrosku(arr).then(res => {
           if(res){
-               if(res.result.code == 0){
-                 msg('更新SKU佣金成功');
-               }else{
-                  msg('更新SKU佣金失败['+res.result.msg+']');
-               }
+             if(res.result.code == 0){
+               msg('更新SKU佣金成功');
+             }else{
+                msg('更新SKU佣金失败['+res.result.msg+']');
+             }
           }else{
             msg('更新SKU佣金失败');
           }

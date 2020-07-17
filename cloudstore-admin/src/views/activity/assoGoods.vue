@@ -46,10 +46,9 @@
       </el-table>
       <div class="pagination-container">
         <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-          :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">
+          :page-size="listQuery.pageSize" :page-sizes="[10]" :current-page.sync="listQuery.pageNum" :total="total">
         </el-pagination>
       </div>
-
     </el-card>
   </div>
 
@@ -70,7 +69,7 @@
 
   const defaultListQuery = {
     pageNum: 1,
-    pageSize: 20,
+    pageSize: 10,
   };
 
   export default {
@@ -82,7 +81,8 @@
         activity: {},
         listQuery: Object.assign({}, defaultListQuery),
         total: 0,
-        disabled: false
+        disabled: false,
+        activityId: ''
       }
     },
     created() {
@@ -130,7 +130,7 @@
         this.loading = true;
         fetchActivityList({
           pageNum: 1,
-          pageSize: 50
+          pageSize: 10
         }).then(res => {
           this.loading = false;
           this.activityList = res.result.result.records;
@@ -138,6 +138,7 @@
       },
       seclectactivity(event) {
         let activityId = event;
+        this.activityId = activityId;
         this.getList(activityId);
       },
       getList(activityId) {
@@ -148,11 +149,14 @@
           this.total = parseInt(response.result.result.total);
         })
       },
-      handleSizeChange() {
-
+      handleSizeChange(val) {
+        this.listQuery.pageNum = 1;
+        this.listQuery.pageSize = val;
+        this.getList(this.activityId);
       },
-      handleCurrentChange() {
-
+      handleCurrentChange(val) {
+        this.listQuery.pageNum = val;
+        this.getList(this.activityId);
       },
       changeSwitch(idx, row) {
         this.disabled = true;
