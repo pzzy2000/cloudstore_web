@@ -182,6 +182,7 @@
         rwDispatcherState: 'write',
         quillOption: quillConfig,
         goodsku: {
+          mobileHtml:null,
           goods: {},
           //goodsPics: [],
           skuStockList: [], //table 显示的  规格头
@@ -272,6 +273,7 @@
 
       async getgoodsInfo() {
         let gooodsId = this.$route.query.goodsid;
+        let set_mobileHtml = this.setmobileHtml;
         getGoodsInfoByGoodsId({
           goodsId: gooodsId
         }).then(response => {

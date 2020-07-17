@@ -20,13 +20,12 @@
 				</view>
 			</view>
 			<view class="agency-list">
-				<view class="" v-for="(item, index) in headerList" :key='index'>
-					<text>{{item.number}}</text>
+				<view v-for="(item, index) in headerList" :key='index' class="agency-list-main">
 					<p>{{item.name}}</p>
+					<text class="span">{{item.number}}</text>
 				</view>
 			</view>
 			<view class="agency-apply">
-				<text class="agency-apply-title">常用应用</text>
 				<view class="agency-apply-main">
 					<view class="apply-detail" v-for="(item, index) in apply" :key='index' @click="toAgentList(item)">
 						<image :src="item.imgUrl" mode="" class="apply-img"></image>
@@ -36,7 +35,13 @@
 			</view>
 			<!-- 今日爆款 -->
 			<view class="faddish-main">
-				<view class="faddish-title">今日爆款</view>
+				<view class="faddish-title">
+					<view class="title-main">
+						<span class='left-chunk'></span>
+						今日爆款
+					</view>
+					<span class='more'>更多></span>
+				</view>
 				<view class="goods-list">
 					<view v-for="(item, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(item)">
 						<view class="image-wrapper"><image :src="item.pic" mode="aspectFill"></image></view>
@@ -56,22 +61,27 @@
 			</view>
 			<!-- 今日上新 -->
 			<view class="faddish-main">
-				<view class="faddish-title">今日上新</view>
+				<view class="faddish-title">
+					<view class="title-main">
+						<span class='left-chunk'></span>
+						今日上新
+					</view>
+					<span class='more'>更多></span>
+				</view>
 				<view class="goods-list">
-					<view v-for="(item, index) in updateList" :key="index" class="goods-item" @click="navToDetailPage(item)">
-						<view class="image-wrapper">
-							<image :src="item.goodsPicesBean.goodsPhotos[0].url"></image>
-						</view>
+					<view v-for="(goods, index) in updateList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
+						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 						<view class="goods-detail">
-							<text class="title clamp">{{ item.goodsPicesBean.goodsName }}</text>
-							<text class="title clamp subhead ">{{item.goodsPicesBean.goodsSubtitle}}</text>
-							<text class="title clamp subhead ">活动 : {{item.activeBean.name}}</text>
-							<view class="price-box">
-								<view class="price">
-									<text class="priceSale">{{ item.goodsPicesBean.salePrice }}</text>
-									/
-									<text class="pricemart">{{ item.goodsPicesBean.martPrice }}</text>
+							<view class="detail-title">
+								<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
+								<view class="number">{{goods.goodsPicesBean.goodsSubtitle}}</view>
+							</view>
+							<view class="detail-price">
+								<view class="price-main">
+									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
+									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 								</view>
+								<!-- <button type="primary" class="price-btn">立即抢购</button> -->
 							</view>
 						</view>
 					</view>
@@ -105,7 +115,7 @@
 						number: '20'
 					},
 					{
-						name : '今日订单全部',
+						name : '今日订单',
 						number: '20'
 					},
 					{
@@ -243,8 +253,8 @@
 </script>
 
 <style scoped lang="scss">
-page {
-	background: $page-color-base;
+.container {
+	background:#fff;
 	padding-bottom: 160upx;
 }
 .agency-main{ 
@@ -253,18 +263,19 @@ page {
 	.agency-header {
 		display: flex;
 		justify-content: flex-start;
-		padding: 20upx 0;
+		align-items: center;
+		padding-left: 50upx;
+		height: 238upx;
 		uni-image{
-			height: 150upx;
-			width: 150upx;
+			height: 90upx;
+			width: 90upx;
 			background-color: red;
 		}
 		.info-img {
-			width: 150upx;
-			height: 150upx;
+			width: 90upx;
+			height: 90upx;
 		}
 		.header-info {
-			width: 60%;
 			font-size: 20upx;
 			color: #999;
 			padding: 30upx;
@@ -278,10 +289,26 @@ page {
 	.agency-list {
 		display: flex;
 		justify-content: space-between;
-		font-size: 35upx;
+		font-size: 25upx;
 		text-align: center;
-		span {
-			color: #303133;
+		margin-bottom: 20upx;
+		.agency-list-main {
+			padding: 20upx 20upx 0 20upx;
+			width: 25%;
+			&:nth-child(1){
+				border-right: 1upx solid rgba(255,31,31,0.8);
+			}
+			&:nth-child(2){
+				border-right: 1upx solid rgba(255,31,31,0.8);
+			}
+			&:nth-child(3){
+				border-right: 1upx solid rgba(255,31,31,0.8);
+			}
+			.span {
+				display: inline-block;
+				color: #303133;
+				line-height: 60upx;
+			}
 		}
 	}
 	.agency-apply {
@@ -303,110 +330,124 @@ page {
 		.agency-apply-main {
 			display: flex;
 			flex-wrap: wrap;
+			border: 1upx solid #eee;
+			border-radius: 10upx;
+			padding: 20upx;
 			.apply-detail {
 				width: 20%;
-				font-size: 26rpx;
+				font-size: 26upx;
 				color: #303133;
 				text-align: center;
 				padding-top: 20upx;
 			}
 			.apply-img{
-				height: 88upx;
-				width: 88upx;
+				height: 60upx;
+				width: 60upx;
 				display: block;
 				margin: 0 auto;
 			}
 			span {
 				display: block;
+				font-size: 20upx;
 			}
 		}
 	}
 }
 .faddish-main {
 	.faddish-title {
-		font-size: 40upx;
-		line-height: 80upx;
+		font-size: 30upx;
+		line-height: 40upx;
+		height: 40upx;
 		margin-top: 20upx;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.title-main {
+			display: flex;
+			align-items: center;
+			.left-chunk {
+				display: inline-block;
+				height: 40upx;
+				width: 10upx;
+				background-color: green;
+				margin-right: 10upx;
+			}
+		}
+		.more {
+			color: #999;
+			font-size: 22upx;
+		}
 	}
 }
 /* 商品列表 */
 .goods-list {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 0 30upx;
-	background: #fff;
 	.goods-item {
 		display: flex;
 		flex-direction: column;
 		flex-flow: nowrap;
 		width: 100%;
+		// height: 200upx;
 		padding-bottom: 40upx;
-		// &:nth-child(2n + 1) {
-		// 	margin-right: 4%;
-		// }
+		margin: 40upx 0;
+		background: #fff;
+		border-bottom: 1upx solid #eee;
 	}
 	.image-wrapper {
-		width: 40%;
-		height: 250upx;
-		border-radius: 3px;
+		width: 200upx;
+		height:200upx;
+		border-radius: 3upx;
 		overflow: hidden;
-		padding: 10upx;
 		image {
-			width: 100%;
-			height: 100%;
 			opacity: 1;
 		}
 	}
 	.goods-detail {
 		display: inline-block;
-		width: 60%;
-		padding: 10upx;
-		.title {
-			font-size: $font-lg;
-			color: $font-color-dark;
-			line-height: 40upx;
+		margin-left: 20upx;
+		display: flex;
+		justify-content: flex-start;
+		flex-wrap: wrap;
+		width: 65%;
+		.detail-title {
+			font-size: 16px;
+			color: #000;
+			width: 100%;
+			.number {
+				color: #999;
+				font-size: 26upx;
+				line-height: 50upx;
+				height: 50upx;
+			}
 		}
-		.subhead {
-			color: #333;
-			font-size: 18upx;
-		}
-		.price-box {
+		.detail-price {
 			display: flex;
-			align-items: center;
 			justify-content: space-between;
-			padding-right: 10upx;
-			font-size: 24upx;
-			color: $font-color-light;
-			.price {
-				.priceSale {
-					font-size: 40upx;
-					color: $uni-color-primary;
-					line-height: 1;
-					&:before {
-						content: '￥';
-						font-size: 26upx;
-					}	
-				}
-				.pricemart {
-					font-size: 16upx;
+			align-items: flex-end;
+			width: 100%;
+			padding-bottom: 20upx;
+			.price-main {
+				color: #999;
+				font-size: 24upx;
+				.surprised {
+					font-size: 30upx;
 					color: #000;
-					text-decoration:line-through;
-					line-height: 1;
-					&:before {
-						content: '￥';
-						font-size: 26upx;
-					}	
+					.surprised-price {
+						font-size: 35upx;
+						color: red;
+					}
 				}
 			}
-			.goodsBtn {
-				font-size: 30upx;
-				color: #fff;
-				background: red;
-				height: 70upx;
-				line-height: 70upx;
-				width: 150upx;
+			.price-btn {
 				padding: 0;
 				margin: 0;
+				font-size: 30upx;
+				padding: 0 20upx;
+				height: 60upx;
+				line-height: 60upx;
+				color: #fff;
+				background: #ff4f50;
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="container">
 		<nav-bar>推荐</nav-bar>
 		<view class="agency-main">
 			<view class="agency-header">
@@ -9,42 +9,55 @@
 					<text class="header-address">地址：{{shopInfo.detailAddress}}</text>
 				</view>
 			</view>
-		</view>
-		<view class="faddish-main">
-			<view class="faddish-title">今日爆款</view>
-			<view class="goods-list" >
-				<view v-for="(item, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(item)">
-					<view class="image-wrapper"><image :src="item.pic" mode="aspectFill"></image></view>
-					<view class="goods-detail">
-						<text class="title clamp">{{ item.goods.goodsName }}</text>
-						<text class="title clamp subhead ">{{item.goods.goodsSubtitle}}</text>
-						<view class="price-box">
-							<view class="price">
-								<text class="priceSale">{{ item.goods.salePrice }}</text>
-								/
-								<text class="pricemart">{{ item.goods.martPrice }}</text>
+			<view class="faddish-main">
+				<view class="faddish-title">
+					<view class="title-main">
+						<span class='left-chunk'></span>
+						今日爆款
+					</view>
+					<span class='more'>更多></span>
+				</view>
+				<view class="goods-list">
+					<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
+						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
+						<view class="goods-detail">
+							<view class="detail-title">
+								<view class="">{{ goods.goodsPicesBean.goodsName }}</view>
+								<view class="number">{{goods.goodsPicesBean.goodsSubtitle}}</view>
+							</view>
+							<view class="detail-price">
+								<view class="price-main">
+									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
+									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
+								</view>
+								<button type="primary" class="price-btn">立即抢购</button>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		
-		<view class="faddish-main">
-			<view class="faddish-title">最新商品</view>
-			<view class="goods-list">
-				<view v-for="(item, index) in updateList" :key="index" class="goods-item" @click="navToDetailPage(item)">
-					<view class="image-wrapper">
-						<image :src="item.goodsPicesBean.goodsPhotos[0].url"></image>
+			<view class="faddish-main">
+				<view class="faddish-title">
+					<view class="title-main">
+						<span class='left-chunk'></span>
+						最新商品
 					</view>
-					<view class="goods-detail">
-						<text class="title clamp">{{ item.goodsPicesBean.goodsName }}</text>
-						<text class="title clamp subhead ">{{item.goodsPicesBean.goodsSubtitle}}</text>
-						<view class="price-box">
-							<view class="price">
-								<text class="priceSale">{{ item.goodsPicesBean.salePrice }}</text>
-								/
-								<text class="pricemart">{{ item.goodsPicesBean.martPrice }}</text>
+					<span class='more'>更多></span>
+				</view>
+				<view class="goods-list">
+					<view v-for="(goods, index) in item.updateList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
+						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
+						<view class="goods-detail">
+							<view class="detail-title">
+								<view class="">{{ goods.goodsPicesBean.goodsName }}</view>
+								<view class="number">{{goods.goodsPicesBean.goodsSubtitle}}</view>
+							</view>
+							<view class="detail-price">
+								<view class="price-main">
+									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
+									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
+								</view>
+								<button type="primary" class="price-btn">立即抢购</button>
 							</view>
 						</view>
 					</view>
@@ -102,25 +115,29 @@ export default {
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	.container {
+		background: #fff;
+	}
 	.agency-main{
 		width: 94%;
 		margin: 0 auto;
 		.agency-header {
 			display: flex;
 			justify-content: flex-start;
-			padding: 20upx 0;
+			align-items: center;
+			padding-left: 50upx;
+			height: 238upx;
 			uni-image{
-				height: 150upx;
-				width: 150upx;
+				height: 90upx;
+				width: 90upx;
 				background-color: red;
 			}
 			.info-img {
-				width: 140upx;
-				height: 140upx;
+				width: 90upx;
+				height: 90upx;
 			}
 			.header-info {
-				width: 60%;
 				font-size: 20upx;
 				color: #999;
 				padding: 30upx;
@@ -128,9 +145,6 @@ export default {
 					color: #000000;
 					font-size: 50upx;
 					display: block;
-				}
-				.header-address {
-					font-size: 30upx;
 				}
 			}
 		}
@@ -146,89 +160,96 @@ export default {
 	}
 	.faddish-main {
 		.faddish-title {
-			font-size: 40upx;
-			line-height: 80upx;
+			font-size: 30upx;
+			line-height: 40upx;
+			height: 40upx;
 			margin-top: 20upx;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			.title-main {
+				display: flex;
+				align-items: center;
+				.left-chunk {
+					display: inline-block;
+					height: 40upx;
+					width: 10upx;
+					background-color: green;
+					margin-right: 10upx;
+				}
+			}
+			.more {
+				color: #999;
+				font-size: 20upx;
+			}
 		}
 	}
 	/* 商品列表 */
 	.goods-list {
 		display: flex;
 		flex-wrap: wrap;
-		padding: 0 30upx;
+		padding: 40rpx 0 40rpx 40rpx;
 		background: #fff;
 		.goods-item {
 			display: flex;
 			flex-direction: column;
 			flex-flow: nowrap;
 			width: 100%;
-			padding-bottom: 40upx;
-			// &:nth-child(2n + 1) {
-			// 	margin-right: 4%;
-			// }
+			height: 200upx;
 		}
 		.image-wrapper {
-			width: 40%;
-			height: 250upx;
-			border-radius: 3px;
+			width: 200upx;
+			height:200upx;
+			border-radius: 3upx;
 			overflow: hidden;
-			padding: 10upx;
 			image {
-				width: 100%;
-				height: 100%;
 				opacity: 1;
 			}
 		}
 		.goods-detail {
 			display: inline-block;
-			width: 60%;
-			padding: 10upx;
-			.title {
-				font-size: $font-lg;
-				color: $font-color-dark;
-				line-height: 80upx;
+			margin-left: 20upx;
+			display: flex;
+			justify-content: flex-start;
+			flex-wrap: wrap;
+			width: 65%;
+			.detail-title {
+				font-size: 16px;
+				color: #000;
+				.number {
+					color: #999;
+					font-size: 26upx;
+					line-height: 50upx;
+					height: 50upx;
+				}
 			}
-			.subhead {
-				color: #333;
-				font-size: 18upx;
-			}
-			.price-box {
+			.detail-price {
 				display: flex;
-				align-items: center;
 				justify-content: space-between;
-				padding-right: 10upx;
-				font-size: 24upx;
-				color: $font-color-light;
-				.price {
-					.priceSale {
-						font-size: 40upx;
-						color: $uni-color-primary;
-						line-height: 1;
-						&:before {
-							content: '￥';
-							font-size: 26upx;
-						}	
-					}
-					.pricemart {
-						font-size: 16upx;
+				align-items: flex-end;
+				width: 100%;
+				padding-bottom: 20upx;
+				.price-main {
+					color: #999;
+					font-size: 24upx;
+					.surprised {
+						font-size: 30upx;
 						color: #000;
-						text-decoration:line-through;
-						line-height: 1;
-						&:before {
-							content: '￥';
-							font-size: 26upx;
-						}	
+						.surprised-price {
+							font-size: 35upx;
+							color: red;
+						}
 					}
 				}
-				.goodsBtn {
-					font-size: 30upx;
-					color: #fff;
-					background: red;
-					height: 70upx;
-					line-height: 70upx;
-					width: 150upx;
+				.price-btn {
 					padding: 0;
 					margin: 0;
+					font-size: 30upx;
+					padding: 0 20upx;
+					height: 60upx;
+					line-height: 60upx;
+					color: #fff;
+					background: #ff4f50;
 				}
 			}
 		}

@@ -99,7 +99,8 @@ export default {
 			activityGoodList: 'activity/app/indexShowActivityGoodList' //活动名称下对应的商品
 		},
 		hot: {
-			hotList: 'activity/app/listActivityGoods'
+			hotList: 'activity/app/listActivityGoods',
+			alllist: '/activity/app/alllist'
 		},
 		address: {
 			saveAddress: 'app/client/address/saveAddress',
