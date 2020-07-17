@@ -603,6 +603,7 @@
         if (row.shelfStatus == 0){//下架
           upOrdown({goodsId: row.id}).then(res => {
             if(res.result.code == 0){
+              row.shelfStatus =0;
               this.$message({
                 type: 'success',
                 message: '下架成功',
@@ -618,6 +619,11 @@
                 message: '上架成功',
                 duration: 800
               })
+            }else{
+              setTimeout(function(){
+                row.shelfStatus =0;
+              },1000);
+
             }
           })
         }

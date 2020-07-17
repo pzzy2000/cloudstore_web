@@ -56,7 +56,8 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject('error')
+      // return Promise.reject('error')
+       return response.data;
     } else {
       // Message({
       //   message: "www",
