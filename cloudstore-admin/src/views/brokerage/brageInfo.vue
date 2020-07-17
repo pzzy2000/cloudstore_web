@@ -4,7 +4,7 @@
     <!--
     <el-card  shadow="never" style="height: 1500px;">
     -->
-    <el-divider content-position="left"><i class="el-icon-search"></i>商品SKU信息</el-divider>
+    <el-divider content-position="left"><i class="el-icon-search"></i>商品SKU佣金设置</el-divider>
     <el-form :model="goodskuform" ref="goodskuform" label-width="150px" size="small">
 <!--      <el-form-item label="商品名称：">-->
 <!--        <el-input-dispatcher v-model="goodskuform.financeProfitId" style="width: 650px;" readonly></el-input-dispatcher>-->
@@ -15,8 +15,8 @@
       <!--</el-option>-->
       <!--</el-select>-->
       <!--</el-form-item>-->
-      <el-form-item label="商品规格：">
-        <el-card shadow="never" class="cardBg">
+
+
           <!--<div v-for="(productAttr,idx) in goodsku.guige">-->
           <!--<div>-->
           <!--<p> {{productAttr.name}} ：-->
@@ -37,38 +37,35 @@
 <!--                  {{getProductSkuSp(scope.row,index,item)}}-->
 <!--                </template>-->
 <!--              </el-table-column>-->
-              <el-table-column label="销售价格" align="center" prop="goodsSkuBean.price">
+              <el-table-column label="SKU编号" align="center" prop="goodsSkuBean.skuCode" width="250">
               </el-table-column>
-              <el-table-column label="商品库存" align="center" prop="goodsSkuBean.stock">
-              </el-table-column>
-              <el-table-column label="库存预警值" align="center" prop="goodsSkuBean.warnQuantity">
-              </el-table-column>
-              <el-table-column label="SKU编号" align="center" prop="goodsSkuBean.skuCode">
-              </el-table-column>
-              <el-table-column label="团长佣金" align="center">
+
+              <el-table-column label="团长佣金" align="center" width="250">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.colonelbro"></el-input>
+                  <el-input v-model="scope.row.leader"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="代理佣金" align="center">
+              <el-table-column label="代理佣金" align="center" width="250">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.agentbro"></el-input>
+                  <el-input v-model="scope.row.agent"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="客户佣金" align="center">
+              <el-table-column label="客户佣金" align="center" width="250">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.userbro"></el-input>
+                  <el-input v-model="scope.row.client"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="积分" align="center">
+              <el-table-column label="积分" align="center" width="250">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.integral"></el-input>
+                  <el-input v-model="scope.row.clientPoints"></el-input>
                 </template>
+              </el-table-column>
+              <el-table-column  align="center" >
+                
               </el-table-column>
             </el-table>
           </div>
-        </el-card>
-      </el-form-item>
+
     </el-form>
     <br/>
     <div style="width: 100%;text-align:center">
@@ -89,6 +86,7 @@
   };
   import {getSkulist, updateBrosku} from '@/api/brokerage';
   import SingleUpload from '@/components/Upload/singleUpload';
+   import {msg}  from '@/api/iunits';
   export default {
     name: "brageInfo",
     provide() {
@@ -122,15 +120,7 @@
         productAttributeCategoryOptions: {
 
         },
-        editorOption: {
-          // editorOption里是放图片上传配置参数用的，例如：
-          action:  'http://120.24.156.254:18888/platform/sys/upload/entity/oss/ali/update',  // 必填参数 图片上传地址
-          methods: 'post',  // 必填参数 图片上传方式
-          // token: token,  // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
-          name: 'goods_info',  // 必填参数 文件的参数名
-          size: 128,  // 可选参数   图片大小，单位为Kb, 1M = 1024Kb
-          accept: 'multipart/form-data, image/png, image/gif, image/jpeg, image/bmp, image/x-icon,image/jpg'  // 可选 可上传的图片格式
-        }
+
 
       }
     },
@@ -148,16 +138,24 @@
         for (let i=0; i<this.goodsku.skuStockList.length; i++) {
           let obj = {};
           obj.id = this.goodsku.skuStockList[i].id;
-          obj.leader = this.goodsku.skuStockList[i].colonelbro;
-          obj.agent = this.goodsku.skuStockList[i].agentbro;
-          obj.client = this.goodsku.skuStockList[i].userbro;
-          obj.clientPoints = this.goodsku.skuStockList[i].integral;
+          obj.leader = this.goodsku.skuStockList[i].leader;
+          obj.agent = this.goodsku.skuStockList[i].agent;
+          obj.client = this.goodsku.skuStockList[i].client;
+          obj.clientPoints = this.goodsku.skuStockList[i].clientPoints;
           arr.push(obj);
         }
-        let str = JSON.stringify(arr);
-        console.log(str);
-        updateBrosku(str).then(res => {
-          console.log(res);
+        // let str = JSON.stringify(arr);
+        // console.log(str);
+        updateBrosku(arr).then(res => {
+          if(res){
+               if(res.result.code == 0){
+                 msg('更新SKU佣金成功');
+               }else{
+                  msg('更新SKU佣金失败['+res.result.msg+']');
+               }
+          }else{
+            msg('更新SKU佣金失败');
+          }
         })
       },
       async getgoodsInfo() {
