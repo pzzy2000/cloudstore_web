@@ -58,21 +58,26 @@
         </el-table-column>
         <el-table-column label="是否启用" align="center">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">
+            <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="onoffAct(scope.row)">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="是否显示在导航栏" align="center">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.navigateIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="showInnavigate(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
         <el-table-column label="活动状态" align="center">
-<!--          <template slot-scope="scope">-->
-<!--            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">-->
-<!--            </el-switch>-->
-<!--          </template>-->
         </el-table-column>
-        <el-table-column label="活动时间" align="center">
-<!--          <template slot-scope="scope">-->
-<!--            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">-->
-<!--            </el-switch>-->
-<!--          </template>-->
+        <el-table-column label="开始时间" align="center">
+          <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="结束时间" align="center">
+          <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center">
+          <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
         </el-table-column>
         <el-table-column label="是否参加佣金" align="center">
           <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
@@ -103,8 +108,9 @@
   </div>
 </template>
 <script>
-   import { fetchList, changeShowidx, delActivity } from '@/api/activity'
+   import { fetchList, changeShowidx, delActivity, showInnavigate, onoffAct } from '@/api/activity'
    import {msg}  from '@/api/iunits'
+   import { formatDate } from '@/assets/common/data.js'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -149,6 +155,10 @@
           case 0: return "未参加";
             break;
         }
+      },
+      formatDate(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
       }
     },
     methods: {
@@ -190,7 +200,7 @@
             }
           }else{
             this.$message({
-              type: 'success',
+              type: 'warning',
               message: '操作不成功，请联系管理员！',
               duration: 800
             })
@@ -244,6 +254,63 @@
               this.getList();
             }
           })
+        })
+      },
+      onoffAct(row) {
+        let obj = {id: row.id};
+        onoffAct(obj).then(res => {
+          if(res.result.code == 0){
+            if(res.result.result.status == 0) {
+              this.$message({
+                type: 'success',
+                message: '活动没启用！',
+                duration: 800
+              })
+            }else{
+              this.$message({
+                type: 'success',
+                message: '活动启用了！',
+                duration: 800
+              })
+            }
+          }else{
+            this.$message({
+              type: 'warning',
+              message: '操作不成功，请联系管理员！',
+              duration: 800
+            })
+          }
+        })
+      },
+      showInnavigate(row) {
+        // console.log(row)
+        let obj = {
+          id: row.id,
+          // navigateIndex: row.navigateIndex,
+          // optType: 'update'
+        }
+        showInnavigate(obj).then(res => {
+          if(res.result.code == 0){
+            if(res.result.result.navigateIndex == 0) {
+              this.$message({
+                type: 'success',
+                message: '导航栏不显示了！',
+                duration: 800
+              })
+            }else{
+              this.$message({
+                type: 'success',
+                message: '显示在导航栏了！',
+                duration: 800
+              })
+            }
+          }else{
+            this.$message({
+              type: 'warning',
+              message: '操作不成功，请联系管理员！',
+              duration: 800
+            })
+          }
         })
       }
     }

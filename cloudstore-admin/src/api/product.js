@@ -30,9 +30,9 @@ export function fetchSimpleList(params) {
 
 export function updateDeleteStatus(params) {
   return request({
-    url:'/product/update/deleteStatus',
+    url:'/goods/delete',
     method:'post',
-    params:params
+    data:switchForm(params)
   })
 }
 

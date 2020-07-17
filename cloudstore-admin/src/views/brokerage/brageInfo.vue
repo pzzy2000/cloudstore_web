@@ -6,9 +6,9 @@
     -->
     <el-divider content-position="left"><i class="el-icon-search"></i>商品SKU信息</el-divider>
     <el-form :model="goodskuform" ref="goodskuform" label-width="150px" size="small">
-      <el-form-item label="商品名称：">
-        <el-input-dispatcher v-model="goodskuform.financeProfitId" style="width: 650px;" readonly></el-input-dispatcher>
-      </el-form-item>
+<!--      <el-form-item label="商品名称：">-->
+<!--        <el-input-dispatcher v-model="goodskuform.financeProfitId" style="width: 650px;" readonly></el-input-dispatcher>-->
+<!--      </el-form-item>-->
       <!--<el-form-item label="属性类型：">-->
       <!--<el-select v-model="goodsku.propertyId" placeholder="请选择属性类型" @change="handleProductAttrChange">-->
       <!--<el-option v-for="item in productAttributeCategoryOptions" :key="item.id" :label="item.propertyName" :value="item.id">-->
@@ -31,88 +31,52 @@
           <!--</div>-->
           <div>
             <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border>
-              <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center"
-                               width="100">
+<!--              <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center"-->
+<!--                               width="100">-->
+<!--                <template slot-scope="scope">-->
+<!--                  {{getProductSkuSp(scope.row,index,item)}}-->
+<!--                </template>-->
+<!--              </el-table-column>-->
+              <el-table-column label="销售价格" align="center" prop="goodsSkuBean.price">
+              </el-table-column>
+              <el-table-column label="商品库存" align="center" prop="goodsSkuBean.stock">
+              </el-table-column>
+              <el-table-column label="库存预警值" align="center" prop="goodsSkuBean.warnQuantity">
+              </el-table-column>
+              <el-table-column label="SKU编号" align="center" prop="goodsSkuBean.skuCode">
+              </el-table-column>
+              <el-table-column label="团长佣金" align="center">
                 <template slot-scope="scope">
-                  {{getProductSkuSp(scope.row,index,item)}}
+                  <el-input v-model="scope.row.colonelbro"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="销售价格" align="center">
-                <template slot-scope="scope">{{scope.row.agent}}
-                  <!--<el-input-dispatcher v-model="scope.row.price"></el-input-dispatcher>-->
-                </template>
-              </el-table-column>
-              <el-table-column label="商品库存" align="center">
-                <template slot-scope="scope">{{scope.row.stock}}
-                  <!--<el-input-dispatcher v-model="scope.row.stock"></el-input-dispatcher>-->
-                </template>
-              </el-table-column>
-              <el-table-column label="库存预警值" align="center">
-                <template slot-scope="scope">{{scope.row.warnQuantity}}
-                  <!--<el-input-dispatcher v-model="scope.row.warnQuantity"></el-input-dispatcher>-->
-                </template>
-              </el-table-column>
-              <el-table-column label="SKU编号" align="center">
-                <template slot-scope="scope">{{scope.row.skuCode}}
-                  <!--<el-input-dispatcher v-model="scope.row.skuCode"></el-input-dispatcher>-->
-                </template>
-              </el-table-column>
-              <el-table-column label="属性图片：" align="left" width="400">
-                <template slot-scope="scope">
-                  <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
-                </template>
-              </el-table-column>
-              <el-table-column label="代理商佣金" align="center">
+              <el-table-column label="代理佣金" align="center">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.agentbro"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="佣金" align="center">
+              <el-table-column label="客户佣金" align="center">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.bro"></el-input>
+                  <el-input v-model="scope.row.userbro"></el-input>
                 </template>
               </el-table-column>
-              <!--<el-table-column fixed="right" label="操作" width="80" align="center">-->
-              <!--<template slot-scope="scope">-->
-              <!--<el-button type="text" @click="handleRemoveProductSku(scope.$index, scope.row)">删除-->
-              <!--</el-button>-->
-              <!--</template>-->
-              <!--</el-table-column>-->
+              <el-table-column label="积分" align="center">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.integral"></el-input>
+                </template>
+              </el-table-column>
             </el-table>
-            <!--<div>-->
-            <!--<el-button type="primary" style="margin-top: 20px" @click="handleRefreshProductSkuList">刷新列表-->
-            <!--</el-button>-->
-            <!--</div>-->
-          </div>
-        </el-card>
-
-      </el-form-item>
-      <el-form-item label="商品参数：">
-        <el-card shadow="never" class="cardBg">
-          <div v-for="(item,index) in goodsku.attr">
-            <div>
-              <p> <a style="width: 150px;"> {{item.attr.name}}:</a>
-                <el-input v-model="item.value" style="width: 160px;margin-left: 10px" clearable></el-input>
-              </p>
-            </div>
           </div>
         </el-card>
       </el-form-item>
-      <!--
-      <el-form-item label="商品相册：">
-        <multi-upload v-model="goodsku.goodsPics"></multi-upload>
-      </el-form-item>
-      -->
     </el-form>
     <br/>
-    <!--
-  </el-card>
-  -->
     <div style="width: 100%;text-align:center">
       <br /> <br /> <br /> <br />
       <el-button style="margin-bottom: 10px;" @click="updateGoodsProperties" size="small">
-        更新
+        提 交
       </el-button>
+      <el-button @click="backPage" size="small">返 回</el-button>
     </div>
   </div>
 </template>
@@ -123,7 +87,7 @@
     pageSize: 10,
     optType:'search'
   };
-  import {getSkulist} from '@/api/brokerage';
+  import {getSkulist, updateBrosku} from '@/api/brokerage';
   import SingleUpload from '@/components/Upload/singleUpload';
   export default {
     name: "brageInfo",
@@ -179,78 +143,29 @@
     },
     methods: {
       updateGoodsProperties() {
-        let good_sku = this.goodsku;
-        let data = {};
-        data.propertyId = good_sku.propertyId;
-        data.skuStockList = good_sku.skuStockList;
-        data.goodsId = good_sku.goods.id;
-        //data.goodsPics = good_sku.goodsPics;
-        data.attr = [];
-        console.log(this.goodsku.skuStockList)
-        good_sku.attr.forEach(function(value, index, array) {
-          let xx = {
-            attrid: value.attr.id,
-            value: value.value
-          }
-          data.attr.push(xx);
-        });
-
-        data.mobileHtml=good_sku.mobileHtml
-        // updateGoodsAttr(data).then(response => {
-        //   if(response.rusult.code == 0){
-        //     this.loading = false;
-        //     msg("更新商品SKU成功");
-        //     this.$router.go(-1);
-        //     // let list = response.result.result;
-        //     // this.goodsku.goods = list;
-        //     // this.getproductAttributeCategory();
-        //   }
-        // });
+        console.log(this.goodsku.skuStockList);
+        let arr = [];
+        for (let i=0; i<this.goodsku.skuStockList.length; i++) {
+          let obj = {};
+          obj.id = this.goodsku.skuStockList[i].id;
+          obj.leader = this.goodsku.skuStockList[i].colonelbro;
+          obj.agent = this.goodsku.skuStockList[i].agentbro;
+          obj.client = this.goodsku.skuStockList[i].userbro;
+          obj.clientPoints = this.goodsku.skuStockList[i].integral;
+          arr.push(obj);
+        }
+        let str = JSON.stringify(arr);
+        console.log(str);
+        updateBrosku(str).then(res => {
+          console.log(res);
+        })
       },
       async getgoodsInfo() {
         let id = this.$route.query.id;
-        defaultList.id = id;
+        defaultList.financeProfitId = id;
         getSkulist(defaultList).then(response => {
           console.log(response);
           this.goodsku.skuStockList = response.result.result.records;
-          // let tr = response.result.result;
-          // let goods = tr.goodsPicesBean;
-          // if (goods.propertyId == null) {
-          //   this.loading = false;
-          //   this.getproductAttributeCategory();
-          //   this.goodsku.goods = goods;
-          // } else {
-          //   getAttributetypes(0).then(response => {
-          //     this.loading = false;
-          //     let list = response.result.result;
-          //     this.productAttributeCategoryOptions = list.records;
-          //     this.goodsku.goods = goods;
-          //     this.goodsku.propertyId = goods.propertyId;
-          //     let goodsku_ = this.goodsku;
-          //     this.handleProductAttrChange(goods.propertyId, function() {
-          //       let goodsPropertyValue = tr.goodsPropertyValue;
-          //       for (let ix in goodsPropertyValue) {
-          //         let pv = goodsPropertyValue[ix];
-          //         if (pv.propertyType == 0) {
-          //           let gkv = pv.propertyValue.split(",");
-          //           for (let gkvix in gkv) {
-          //             goodsku_.guigeValue[pv.goodsSkuId].push(gkv[gkvix]);
-          //           }
-          //         } else {
-          //           //参数
-          //           for (let attix in goodsku_.attr) {
-          //             if (goodsku_.attr[attix].attr.id == pv.goodsSkuId) {
-          //               goodsku_.attr[attix].value = pv.propertyValue;
-          //             }
-          //           }
-          //         }
-          //         //TABLE
-          //         goodsku_.skuStockList = tr.goodsSku;
-          //         goodsku_.mobileHtml =goods.mobileHtml;
-          //       }
-          //     });
-          //   });
-          // }
         });
 
       },
@@ -373,6 +288,9 @@
         var obj = eval('(' + sgk + ')');
         // console.log("  row  " + (obj[item.id]));
         return (obj[item.id]);
+      },
+      backPage() {
+        this.$router.go(-1);
       }
 
     },

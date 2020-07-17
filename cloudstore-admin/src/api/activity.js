@@ -79,3 +79,19 @@ export function delActivity(params) {
     data: switchForm(params)
   })
 }
+
+export function showInnavigate(params) {
+  return request({
+    url: '/activity/updateNavigateStatus',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function onoffAct(params) {
+  return request({
+    url: '/activity/updateStatus',
+    method: "POST",
+    data: switchForm(params)
+  })
+}

@@ -119,8 +119,9 @@
     <div style="width: 100%;text-align:center">
  <br /> <br /> <br /> <br />
     <el-button style="margin-bottom: 10px;" @click="updateGoodsProperties" size="small">
-      更新
+      更 新
     </el-button>
+      <el-button size="small" @click="backPage">返 回</el-button>
     </div>
   </div>
 </template>
@@ -238,37 +239,40 @@
       // this.getproductAttributeCategory();
     },
     methods: {
-
       updateGoodsProperties() {
-        console.log(this.goodsku.mobileHtml);
-        return;
-        let good_sku = this.goodsku;
-        let data = {};
-        data.propertyId = good_sku.propertyId;
-        data.skuStockList = good_sku.skuStockList;
-        data.goodsId = good_sku.goods.id;
-        //data.goodsPics = good_sku.goodsPics;
-        data.attr = [];
-        good_sku.attr.forEach(function(value, index, array) {
-          let xx = {
-            attrid: value.attr.id,
-            value: value.value
-          }
-          data.attr.push(xx);
-        });
-
-        data.mobileHtml=good_sku.mobileHtml
-
-        updateGoodsAttr(data).then(response => {
-          if(response.result.code == 0){
-            this.loading = false;
-            msg("更新商品SKU成功");
-            this.$router.go(-1);
-            // let list = response.result.result;
-            // this.goodsku.goods = list;
-            // this.getproductAttributeCategory();
-          }
-        });
+        if (this.goodsku.mobileHtml !== null && this.goodsku.mobileHtml !== '') {
+          let good_sku = this.goodsku;
+          let data = {};
+          data.propertyId = good_sku.propertyId;
+          data.skuStockList = good_sku.skuStockList;
+          data.goodsId = good_sku.goods.id;
+          //data.goodsPics = good_sku.goodsPics;
+          data.attr = [];
+          good_sku.attr.forEach(function(value, index, array) {
+            let xx = {
+              attrid: value.attr.id,
+              value: value.value
+            }
+            data.attr.push(xx);
+          });
+          data.mobileHtml=good_sku.mobileHtml
+          updateGoodsAttr(data).then(response => {
+            if(response.result.code == 0){
+              this.loading = false;
+              msg("更新商品SKU成功");
+              this.$router.go(-1);
+              // let list = response.result.result;
+              // this.goodsku.goods = list;
+              // this.getproductAttributeCategory();
+            }
+          });
+        }else{
+          this.$message({
+            message: '商品规格参数介绍不能为空！',
+            type: 'warning',
+            duration: 1000
+          })
+        }
       },
 
       async getgoodsInfo() {
@@ -397,7 +401,6 @@
           list.splice(index, 1);
         }
       },
-
       refreshProductSkuList() {
         this.goodsku.skuStockList = [];
         let skuList = this.goodsku.skuStockList;
@@ -431,17 +434,17 @@
           })
         }
       },
-
       getProductSkuSp(row, index, item) {
         // console.log("  row  " + row);
         let sgk = row.sgk;
         var obj = eval('(' + sgk + ')');
         // console.log("  row  " + (obj[item.id]));
         return (obj[item.id]);
+      },
+      backPage() {
+        this.$router.go(-1);
       }
-
-    },
-
+    }
   }
 </script>
 <style scoped>

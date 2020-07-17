@@ -13,11 +13,8 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="活动名称：">
+          <el-form-item label="商品 名称：">
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
-          </el-form-item>
-          <el-form-item label="物流编码：">
-            <el-input style="width: 214px" v-model="listQuery.access" placeholder="访问账号"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -61,7 +58,7 @@
     <div class="pagination-container">
       <div class="pagination-container">
         <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-          :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">
+          :page-size="listQuery.pageSize" :page-sizes="[10]" :current-page.sync="listQuery.pageNum" :total="total">
         </el-pagination>
       </div>
     </div>
@@ -77,7 +74,7 @@
   } from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
-    pageSize: 20,
+    pageSize: 10,
     optType: 'search'
   };
   export default {

@@ -35,12 +35,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="审核状态：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
-              <el-option v-for="item in verifyStatusOptions" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -156,7 +150,7 @@
     -->
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">
+        :page-size="listQuery.pageSize" :page-sizes="[10]" :current-page.sync="listQuery.pageNum" :total="total">
       </el-pagination>
     </div>
     <el-dialog title="编辑货品信息" :visible.sync="editSkuInfo.dialogVisible" width="40%">
@@ -224,7 +218,7 @@
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
-    pageSize: 20,
+    pageSize: 10,
     publishStatus: null,
     verifyStatus: null,
     productSn: null,
@@ -569,9 +563,18 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let ids = [];
-          ids.push(row.id);
-          this.updateDeleteStatus(1, ids);
+          // let ids = [];
+          // ids.push(row.id);
+          updateDeleteStatus({ids: row.id}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: '删除成功',
+                type: 'success',
+                duration: 1000
+              });
+              this.getList();
+            }
+          });
         });
       },
       handleUpdateProduct(index, row) {
@@ -620,11 +623,11 @@
         }
       },
 
-      updateDeleteStatus(deleteStatus, ids) {
-        let params = new URLSearchParams();
-        params.append('ids', ids);
-        params.append('deleteStatus', deleteStatus);
-        updateDeleteStatus(params).then(response => {
+      updateDeleteStatus(obj) {
+        // let params = new URLSearchParams();
+        // params.append('ids', ids);
+        // params.append('deleteStatus', deleteStatus);
+        updateDeleteStatus(obj).then(response => {
           this.$message({
             message: '删除成功',
             type: 'success',
