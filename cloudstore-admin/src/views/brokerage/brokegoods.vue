@@ -84,7 +84,7 @@
 <!--        </el-table-column>-->
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU管理
+            <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU佣金管理
             </el-button>
           </template>
         </el-table-column>
