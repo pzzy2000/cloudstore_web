@@ -134,16 +134,34 @@
 						uni.hideLoading();
 						if (res.data.result.code === 100006) {
 							var data = res.data.result
+							// uni.showModal({
+							// 	title: '提示',
+							// 	content: '您的微信号暂未注册，请前往注册',
+							// 	showCancel: false,
+							// 	cancelText: '取消',
+							// 	confirmText: '确定',
+							// 	success: res => {
+							// 		if (res.confirm) {
+							// 			uni.navigateTo({
+							// 				url: '/pages/client/public/reg'
+							// 			});
+							// 		} else if (res.cancel) {
+							// 			uni.navigateTo({
+							// 				url: '/pages/client/public/reg'
+							// 			});
+							// 		}
+							// 	}
+							// });
 							uni.showModal({
 								title: '提示',
-								content: '您的微信号暂未注册，请前往注册',
-								showCancel: false,
-								cancelText: '取消',
-								confirmText: '确定',
+								content: '您的微信暂未绑定手机号，请前往绑定。若没有使用手机号注册过请前往注册。',
+								showCancel: true,
+								cancelText: '注册',
+								confirmText: '绑定',
 								success: res => {
 									if (res.confirm) {
 										uni.navigateTo({
-											url: '/pages/client/public/reg'
+											url: '/pages/client/public/getVxPhone?openId=' + data.msg
 										});
 									} else if (res.cancel) {
 										uni.navigateTo({
@@ -152,24 +170,6 @@
 									}
 								}
 							});
-							// uni.showModal({
-							// 	title: '提示',
-							// 	content: '您的微信暂未绑定手机号，请前往绑定',
-							// 	showCancel: false,
-							// 	cancelText: '取消',
-							// 	confirmText: '确定',
-							// 	success: res => {
-							// 		if (res.confirm) {
-							// 			uni.navigateTo({
-							// 				url: '/pages/client/public/getVxPhone?openId=' + data.msg
-							// 			});
-							// 		} else if (res.cancel) {
-							// 			uni.navigateTo({
-							// 				url: '/pages/client/public/getVxPhone?openId=' + data.msg
-							// 			});
-							// 		}
-							// 	}
-							// });
 						} else if (res.data.result.code === 0) {
 							uni.showToast({
 								title: '登录成功',
@@ -178,7 +178,8 @@
 							var userInfo = {
 								name: res.data.result.result.name,
 								url: res.data.result.result.url,
-								userType: res.data.result.result.userType
+								userType: res.data.result.result.userType,
+								relationId: res.data.result.result.relationId
 							}
 							uni.setStorageSync('userInfo', userInfo)
 							uni.setStorageSync('token', res.data.result.result.token)

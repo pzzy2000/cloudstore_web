@@ -42,18 +42,18 @@
 					<text class="yticon icon-shouye"></text>
 					<text>全部订单</text>
 				</view>
-				<view class="order-item" @click="navTo('/pages/order/order?status=2')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo('/pages/client/order/order?status=1')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-daifukuan"></text>
-					<text>待付款</text>
+					<text>已支付</text>
 				</view>
-				<view class="order-item" @click="navTo('/pages/order/order?status=3')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo('/pages/client/order/order?status=2')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-yishouhuo"></text>
-					<text>待收货</text>
+					<text>待配送</text>
 				</view>
 
-				<view class="order-item" @click="navTo('../../pagesA/after_sale/list')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo('/pages/client/order/order?status=3')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>售后</text>
+					<text>已完成</text>
 				</view>
 			</view>
 			<!-- 浏览历史 -->

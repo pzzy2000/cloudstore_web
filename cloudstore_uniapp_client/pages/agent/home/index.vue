@@ -20,11 +20,11 @@
 				</view>
 			</view>
 			<view class="agency-list">
-				<view v-for="(item, index) in headerList" :key='index' class="agency-list-main">
-					<p>{{item.name}}</p>
-					<text class="span">{{item.number}}</text>
+					<view v-for="(item, index) in headerList" :key='index' class="agency-list-main">
+						<p>{{item.name}}</p>
+						<text class="span">{{item.number}}</text>
+					</view>
 				</view>
-			</view>
 			<view class="agency-apply">
 				<view class="agency-apply-main">
 					<view class="apply-detail" v-for="(item, index) in apply" :key='index' @click="toAgentList(item)">
@@ -34,7 +34,7 @@
 				</view>
 			</view>
 			<!-- 今日爆款 -->
-			<view class="faddish-main">
+			<!-- <view class="faddish-main">
 				<view class="faddish-title">
 					<view class="title-main">
 						<span class='left-chunk'></span>
@@ -58,7 +58,7 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 			<!-- 今日上新 -->
 			<view class="faddish-main">
 				<view class="faddish-title">
@@ -74,7 +74,7 @@
 						<view class="goods-detail">
 							<view class="detail-title">
 								<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
-								<view class="number">{{goods.goodsPicesBean.goodsSubtitle}}</view>
+								<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
 							</view>
 							<view class="detail-price">
 								<view class="price-main">
@@ -126,13 +126,13 @@
 				apply: [
 					{
 						name: '代理商品',
-						detailListUrl: '../goods/agentGoodsList/agentGoodsList',
+						detailListUrl: './agentGoodsList/agentGoodsList',
 						imgUrl: '/static/temp/c3.png'
 					},
 					{
-						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						name: '订单管理',
+						detailListUrl: './order/order',
+						imgUrl: '/static/tab-cart.png'
 					},
 					{
 						name: '敬请期待',

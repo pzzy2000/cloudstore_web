@@ -12,20 +12,29 @@
 			</view>
 		</view>
 
-		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
+		<!-- <swiper :current="tabCurrentIndex" class="swiper-box" duration="300">
 			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
 				<scroll-view 
 					class="list-scroll-content" 
 					scroll-y
-				>
+				> -->
 					<!-- @scrolltolower="loadData" -->
 					<!-- 空白页 -->
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
-					
 					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
 							<text class="time">{{item.orderId}}</text>
-							<text class="state">{{item.orderBean.orderStatus}}</text>
+							<template>
+								<text class="state" v-if="item.orderBean.orderStatus === 'wait'">待支付</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'pay'">支付待确认</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'payed'">已支付</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'close'">超时关闭</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'peisong'">待配送</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'peisoged'">已配送</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'complete'">已完成</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'returns'">退货</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'retud'">已退货</text>
+							</template>
 						</view>
 						<view class="goods-box-single" :key="index" @click="toOrder(item)">
 							<image class="goods-img" :src="item.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
@@ -35,22 +44,11 @@
 								<text class="price">{{item.payPrice}}</text>
 							</view>
 						</view>
-						<view class="action-box b-t" v-if="item.orderBean.orderStatus === 'wait'">
-							<button class="action-btn" @click="cancelOrder(item)">取消订单</button>
-							<button class="action-btn recom" @click="toBuy(item.detailPicBean)">立即支付</button>
-						</view>
-						<view class="" v-if="item.orderBean.orderStatus === 'complete'">
-							<view class="price-box">
-								实付款
-								<text class="price">{{item.payPrice}}</text>
-								<button class="action-btn recom" @click="refundNotifyOrder(item.detailPicBean)">申请退款</button>
-							</view>
-						</view>
 					</view>
-					<uni-load-more :status="tabItem.loadingType"></uni-load-more>
-				</scroll-view>
-			</swiper-item>
-		</swiper>
+					<!-- <uni-load-more :status="tabItem.loadingType"></uni-load-more> -->
+				<!-- </scroll-view>
+			</swiper-item> -->
+		<!-- </swiper> -->
 	</view>
 </template> 
 
@@ -70,6 +68,7 @@
 			return {
 				tabCurrentIndex: 0,
 				orderList: [],
+				pageNum: 1,
 				navList: [{
 						state: 0,
 						text: '全部',
@@ -78,25 +77,25 @@
 					},
 					{
 						state: 1,
-						text: '待付款',
+						text: '已支付',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 2,
-						text: '待收货',
+						text: '待配送',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 3,
-						text: '待评价',
+						text: '已完成',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 4,
-						text: '售后',
+						text: '其他',
 						loadingType: 'more',
 						orderList: []
 					}
@@ -104,7 +103,6 @@
 				goodsDetail: ''
 			};
 		},
-		
 		onLoad(options){
 			/**
 			 * 修复app端点击除全部订单外的按钮进入时不加载数据的问题
@@ -119,81 +117,78 @@
 			// 	this.loadData()
 			// }
 			// #endif
-			this.getOrderData()
+			this.getOrderData(0)
 		},
-		 
+		onPullDownRefresh() { //下拉刷新
+			this.pageNum = 1
+			this.getOrderData(this.tabCurrentIndex);
+		},
+		onReachBottom() { //上拉加载
+		 	this.pageNum = this.pageNum + 1;
+			this.getOrderData(this.tabCurrentIndex)
+		},
 		methods: {
-			async getOrderData () {
+			async getOrderData (tabIndex) {
+				uni.showLoading({
+					title: '正在加载',
+					mask: false
+				});
 				let parmas = {
-					pageNum: 1,
+					pageNum: this.pageNum,
 					pageSize: 10
 				}
 				let data = await Api.apiCall('post',Api.agent.order.getAgentOrder,parmas)
 				if (data) {
-					this.orderList = data.result.records
-					console.log(this.orderList)
+					const tmpData = data.result.records
+					if(tmpData.length === 0) {
+						this.$api.msg('暂无更多数据了')
+					}else{
+						switch (tabIndex) {
+							case 0:
+							this.orderList = tmpData
+							break;
+							case 1:
+								for (let tmp in tmpData) {
+									if (tmpData[tmp].orderBean.orderStatus === 'payed') {
+										this.orderList.push(tmpData[tmp])
+									}
+								}
+							break;
+							case 2:
+								for (let tmp in tmpData) {
+									if (tmpData[tmp].orderBean.orderStatus === 'peisong') {
+										this.orderList.push(tmpData[tmp])
+									}
+								}
+							break;
+							case 3:
+								for (let tmp in tmpData) {
+									if (tmpData[tmp].orderBean.orderStatus === 'complete') {
+										this.orderList.push(tmpData[tmp])
+									}
+								}
+							break;
+							case 4:
+								this.$api.msg('敬请期待')
+							break;
+						}
+					}
+					uni.stopPullDownRefresh();
+					uni.hideLoading()
 				}
 			},
 			//顶部tab点击
 			tabClick(index){
+				this.pageNum = 1
+				this.orderList =[]
 				this.tabCurrentIndex = index;
+				this.getOrderData(this.tabCurrentIndex)
 			},
-			//删除订单
-			deleteOrder(index){
-				uni.showLoading({
-					title: '请稍后'
-				})
-				setTimeout(()=>{
-					this.navList[this.tabCurrentIndex].orderList.splice(index, 1);
-					uni.hideLoading();
-				}, 600)
-			},
-			toBuy (item) {
-				console.log(item)
+			toOrder (item) {
 				uni.navigateTo({
 					url: '/pages/client/order/orderDetail?orderId='+item.orderId+'&price='+item.payPrice,
 				});
 			},
-			//取消订单
-			cancelOrder(item){
-				uni.showLoading({
-					title: '请稍后'
-				})
-				setTimeout(()=>{
-					let {stateTip, stateTipColor} = this.orderStateExp(9);
-					item = Object.assign(item, {
-						state: 9,
-						stateTip, 
-						stateTipColor
-					})
-					
-					//取消订单后删除待付款中该项
-					let list = this.navList[1].orderList;
-					let index = list.findIndex(val=>val.id === item.id);
-					index !== -1 && list.splice(index, 1);
-					
-					uni.hideLoading();
-				}, 600)
-			},
-
-			//订单状态文字和颜色
-			orderStateExp(state){
-				let stateTip = '',
-					stateTipColor = '#fa436a';
-				switch(+state){
-					case 1:
-						stateTip = '待付款'; break;
-					case 2:
-						stateTip = '待发货'; break;
-					case 9:
-						stateTip = '订单已关闭'; 
-						stateTipColor = '#909399';
-						break;
-						
-					//更多自定义
-				}
-				return {stateTip, stateTipColor};
-			}
 		},
 	}
 </script>

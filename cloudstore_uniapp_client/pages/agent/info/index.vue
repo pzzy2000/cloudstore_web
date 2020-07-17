@@ -54,7 +54,7 @@
 			@touchend="coverTouchend"
 		>
 			<image class="arc" src="/static/arc.png"></image>
-			<view class="tj-sction">
+			<!-- <view class="tj-sction">
 				<view class="tj-item" @click="toNav('../../pagesU/user/deposit')">
 					<text class="num">{{ userDetailInfo.blance || 0 }}</text>
 					<text>余额</text>
@@ -67,9 +67,9 @@
 					<text class="num">{{ userDetailInfo.integration || 0 }}</text>
 					<text>积分</text>
 				</view>
-			</view>
+			</view> -->
 			<!-- 订单 -->
-			<view class="order-section">
+			<!-- <view class="order-section">
 				<view class="order-item" @click="navTo('/pages/agent/order/order?status=0')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouye"></text>
 					<text>全部订单</text>
@@ -87,7 +87,7 @@
 					<text class="yticon icon-shouhoutuikuan"></text>
 					<text>退款/售后</text>
 				</view>
-			</view>
+			</view> -->
 			<!-- 浏览历史 -->
 			<view class="history-section icon">
 				<view class="sec-header" v-if="viewList && viewList.length > 0">

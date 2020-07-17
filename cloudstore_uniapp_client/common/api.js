@@ -109,7 +109,8 @@ export default {
 			updateAddressStatus: 'app/client/address/updateAddressStatus'
 		},
 		order: {
-			getAgentOrder: 'order/app/getAgentOrder'
+			getAgentOrder: 'order/app/getAgentOrder',
+			getClientOrder:　'order/app/getClientOrder'
 		}
 	},
 	
