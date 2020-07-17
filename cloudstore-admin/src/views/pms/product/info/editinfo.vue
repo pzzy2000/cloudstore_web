@@ -455,10 +455,20 @@
         udpobj.unit = this.baseinfo.unit;
         udpobj.goodsName = this.baseinfo.goodsName;
         udpobj.supplierId = this.baseinfo.supplierId;
+		    udpobj.id= this.goodsId;
         console.log(udpobj);
         console.log(this.baseinfo);
         updateGood(udpobj).then(res => {
-          console.log(res);
+          if(res){
+             let  reuslt  = res.result;
+             if(reuslt.code==0){
+                msg("更新商品数据成功");
+             }else{
+                msg("更新商品数据失败["+reuslt.msg+"]");
+             }
+          }else{
+            msg("更新商品数据错误");
+          }
         })
       },
       resetProduct() {
