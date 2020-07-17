@@ -48,14 +48,14 @@
         <el-table-column label="是否删除" align="center" :formatter="deleteStatus">
         </el-table-column>
 
-        <el-table-column label="操作" width="260" align="center">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="showinfo(scope.$index, scope.row)">查看
             </el-button>
 <!--            <el-button size="mini" @click="editinfo(scope.$index, scope.row)">编辑-->
 <!--            </el-button>-->
-            <el-button type="danger" size="mini" @click="deleteinfo(scope.$index, scope.row)">删除
-            </el-button>
+<!--            <el-button type="danger" size="mini" @click="deleteinfo(scope.$index, scope.row)">删除-->
+<!--            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
