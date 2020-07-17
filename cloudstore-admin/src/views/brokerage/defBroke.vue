@@ -21,11 +21,11 @@
           <el-table-column label="佣金比例" align="center">
             <template slot-scope="scope">1</template>
           </el-table-column>
-          <el-table-column label="操作" width="200px"  align="center">
-            <template slot-scope="scope">
-              <el-button size="mini" @click="delLogis(scope.row)">修改</el-button>
-            </template>
-          </el-table-column>
+<!--          <el-table-column label="操作" width="200px"  align="center">-->
+<!--            <template slot-scope="scope">-->
+<!--              <el-button size="mini" @click="delLogis(scope.row)">修改</el-button>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
         </el-table>
       </div>
     </div>
@@ -45,9 +45,9 @@
       this.getList();
     },
     methods: {
-      delLogis() {
-        console.log("1");
-      },
+      // delLogis() {
+      //   console.log("1");
+      // },
       getList() {
         getdefbroke({id: 1}).then(res => {
           console.log(res);

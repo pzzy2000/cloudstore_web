@@ -228,9 +228,22 @@
         })
       },
       handeldelGoods(row) {
-        console.log(row);
-        delActivity({ids: row.id}).then(res => {
-          console.log(res);
+        this.$confirm('确定要删除吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delActivity({ids: row.id}).then(res => {
+            console.log(res);
+            if (res.result.code == 0) {
+              this.$message({
+                message: '删除活动成功!',
+                type: 'success',
+                duration: 800
+              })
+              this.getList();
+            }
+          })
         })
       }
     }

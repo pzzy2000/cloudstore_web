@@ -34,6 +34,7 @@ const user = {
       userInfo['bean.access'] = userInfo['bean.access'].trim()
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
+          console.log("++++++++++++")
           console.log(response);
           const data = response.result.result;
           const tokenStr = data.token
@@ -41,6 +42,8 @@ const user = {
           commit('SET_TOKEN', tokenStr)
           // commit('SET_userType', data.userType)
           localStorage.setItem('userType', data.userType);
+          localStorage.setItem('userAccont', data.access);
+          localStorage.setItem('userName', data.name);
           resolve()
         }).catch(error => {
           reject(error)

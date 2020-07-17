@@ -286,6 +286,14 @@
         }).then(() => {
           updateDeleteStatus({ids: row.id}).then(res => {
             console.log(res);
+            if (res.result.code == 0) {
+              this.$message({
+                message: '删除成功！',
+                type: 'success',
+                duration: 800
+              })
+              this.getList();
+            }
           });
         });
       },
