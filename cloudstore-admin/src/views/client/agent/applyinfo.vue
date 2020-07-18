@@ -34,7 +34,7 @@
           <br />
           <el-form-item label="身份证正反面：">
             <el-table :data="baseinfoForm.goodsPhotos">
-              <el-table-column width="100" align="center">
+              <el-table-column width="200" align="center">
                 <template slot-scope="scope">
                   <el-image :src="scope.row.url"></el-image>
                 </template>

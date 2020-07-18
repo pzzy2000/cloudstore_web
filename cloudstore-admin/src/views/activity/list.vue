@@ -82,7 +82,7 @@
         <el-table-column label="是否参加佣金" align="center">
           <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
         </el-table-column>
-        <el-table-column label="操作"  align="center">
+        <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
             <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow">删除</el-button>
@@ -274,11 +274,14 @@
               })
             }
           }else{
-            this.$message({
-              type: 'warning',
-              message: '操作不成功，请联系管理员！',
-              duration: 800
-            })
+            // this.$message({
+            //   type: 'warning',
+            //   message: '操作不成功，请联系管理员！',
+            //   duration: 800
+            // })
+            setTimeout(function(){
+              row.status =0;
+            },500);
           }
         })
       },
@@ -305,11 +308,14 @@
               })
             }
           }else{
-            this.$message({
-              type: 'warning',
-              message: '操作不成功，请联系管理员！',
-              duration: 800
-            })
+            // this.$message({
+            //   type: 'warning',
+            //   message: '操作不成功，请联系管理员！',
+            //   duration: 800
+            // })
+            setTimeout(function(){
+              row.navigateIndex =0;
+            },500);
           }
         })
       }

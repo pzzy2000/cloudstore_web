@@ -12,9 +12,9 @@
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="商品标题图片(只有1个)：" prop="goodsName">
+          <el-form-item label="商品标题图片(只有1个)：" prop="goodsPics">
             <div v-if="rwDispatcherState =='read'">
-              <el-image v-for=" (item,index) in goodsPics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;">
+              <el-image v-for=" (item,index) in goodsPics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;" v-model="baseinfo.goodsPics">
                 <div slot="placeholder" class="image-slot">
                   加载中<span class="dot">...</span>
                 </div>
@@ -25,9 +25,9 @@
             </div>
           </el-form-item>
           <br />
-          <el-form-item label="商品详情图片(最多5个)：" prop="goodsName">
+          <el-form-item label="商品详情图片(最多5个)：" prop="goodsDetailPics">
             <div v-if="rwDispatcherState =='read'">
-              <el-image v-for=" (item,index) in goodsDetailPics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;">
+              <el-image v-for=" (item,index) in goodsDetailPics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;" v-model="baseinfo.goodsDetailPics">
                 <div slot="placeholder" class="image-slot">
                   加载中<span class="dot">...</span>
                 </div>
@@ -183,7 +183,9 @@
           // goodsPics:[],
           categoryOneId: '',
           categoryTwoId: '',
-          categoryThreeId: ''
+          categoryThreeId: '',
+          goodsPics: [],
+          goodsDetailPics: []
         },
         category: {
           one: [],
@@ -207,6 +209,8 @@
         goodsDetailPics:[],
         rules: {
           goodsName: [{required: true, message: '请输入商品名称', trigger: 'blur'}],
+          goodsPics: [{ required: true, message: '不能为空', trigger: 'change' }],
+          goodsDetailPics: [{ required: true, message: '不能为空', trigger: 'change' }],
           categoryOneId: [{required: true, message: '请输入一级分类', trigger: ['blur', 'change']}],
           categoryTwoId: [{required: true, message: '请输入二级分类', trigger: ['blur', 'change']}],
           categoryThreeId: [{required: true, message: '请输入三级分类', trigger: ['blur', 'change']}],
@@ -463,6 +467,7 @@
              let  reuslt  = res.result;
              if(reuslt.code==0){
                 msg("更新商品数据成功");
+                this.$router.go(-1);
              }else{
                 msg("更新商品数据失败["+reuslt.msg+"]");
              }
@@ -476,50 +481,51 @@
       },
 
       addProduct() {
-        this.$refs['baseinfo'].validate((valid) => {
-          if (valid) {
-            this.$confirm('是否提交数据', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              let goodsPics = [];
-              for (let i = 0; i < this.goodsPics.length; i++) {
-                let x = this.goodsPics[i];
-                goodsPics.push(this.goodsPics[i].uid);
-              }
-              this.baseinfo.goodsPics = goodsPics;
-              let goodsDetailPics = [];
-              for (let i = 0; i < this.goodsDetailPics.length; i++) {
-                let x = this.goodsDetailPics[i];
-                goodsDetailPics.push(this.goodsDetailPics[i].uid);
-              }
-              this.baseinfo.goodsDetailPics = goodsDetailPics;
-              this.baseinfo.provinceId = 1;
-              this.baseinfo.cityId = 1;
-              this.baseinfo.areaId = 1;
-              createProduct(this.baseinfo).then(response => {
-                if (!response) return;
-                this.$refs['baseinfo'].resetFields();
-                this.goodsPics = [];
-                this.goodsDetailPics=[],
-                this.$message({
-                  message: '增加商品成功',
-                  type: 'success',
-                  duration: 1000
-                });
-                this.$router.push("/sys/goods/list");
-                //this.$router.go(0)
-              });
-            });
-          } else {
-            this.$message({
-              message: '验证失败',
-              type: 'error',
-              duration: 1000
-            });
-            return false;
+        this.$confirm('是否提交数据', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let goodsPics = [];
+          for (let i = 0; i < this.goodsPics.length; i++) {
+            let x = this.goodsPics[i];
+            goodsPics.push(this.goodsPics[i].uid);
           }
+          this.baseinfo.goodsPics = goodsPics;
+          console.log(this.baseinfo.goodtitimg)
+          let goodsDetailPics = [];
+          for (let i = 0; i < this.goodsDetailPics.length; i++) {
+            let x = this.goodsDetailPics[i];
+            goodsDetailPics.push(this.goodsDetailPics[i].uid);
+          }
+          this.baseinfo.goodsDetailPics = goodsDetailPics;
+          this.baseinfo.provinceId = 1;
+          this.baseinfo.cityId = 1;
+          this.baseinfo.areaId = 1;
+          this.$refs['baseinfo'].validate((valid) => {
+            if (valid) {
+              createProduct(this.baseinfo).then(response => {
+                if (response.result.code == 0) {
+                  this.$refs['baseinfo'].resetFields();
+                  this.goodsPics = [];
+                  this.goodsDetailPics=[],
+                    this.$message({
+                      message: '增加商品成功',
+                      type: 'success',
+                      duration: 1000
+                    });
+                  this.$router.push("/sys/goods/list");
+                }
+              });
+            } else {
+              this.$message({
+                message: '验证失败',
+                type: 'error',
+                duration: 1000
+              });
+              return false;
+            }
+          });
         });
       },
     }
