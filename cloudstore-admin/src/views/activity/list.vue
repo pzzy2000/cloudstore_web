@@ -191,12 +191,14 @@
                 message: '首页不显示了！',
                 duration: 800
               })
+              this.getList();
             }else{
               this.$message({
                 type: 'success',
                 message: '显示在首页了！',
                 duration: 800
               })
+              this.getList();
             }
           }else{
             this.$message({
@@ -204,6 +206,10 @@
               message: '操作不成功，请联系管理员！',
               duration: 800
             })
+            setTimeout(function(){
+              row.status =0;
+            },500);
+            this.getList();
           }
         })
       },
@@ -266,12 +272,14 @@
                 message: '活动没启用！',
                 duration: 800
               })
+              this.getList();
             }else{
               this.$message({
                 type: 'success',
                 message: '活动启用了！',
                 duration: 800
               })
+              this.getList();
             }
           }else{
             // this.$message({
@@ -282,6 +290,7 @@
             setTimeout(function(){
               row.status =0;
             },500);
+            this.getList();
           }
         })
       },
@@ -300,12 +309,14 @@
                 message: '导航栏不显示了！',
                 duration: 800
               })
+              this.getList();
             }else{
               this.$message({
                 type: 'success',
                 message: '显示在导航栏了！',
                 duration: 800
               })
+              this.getList();
             }
           }else{
             // this.$message({
@@ -316,6 +327,7 @@
             setTimeout(function(){
               row.navigateIndex =0;
             },500);
+            this.getList();
           }
         })
       }

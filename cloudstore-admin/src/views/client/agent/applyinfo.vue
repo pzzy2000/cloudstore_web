@@ -84,7 +84,7 @@
           if (this.baseinfoForm.provinceBean == null){
             this.baseinfoForm.address = ''
           }else{
-            this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
+            this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
           }
           console.log(this.baseinfoForm.address)
           switch (this.baseinfoForm.status) {

@@ -56,7 +56,7 @@
         <el-table-column label="手机号" align="center">
           <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
-        <el-table-column label="地址" align="center" :formatter="showAddress">
+        <el-table-column label="地址" width="300" align="center" :formatter="showAddress">
         </el-table-column>
         <el-table-column label="商铺名称" align="center">
           <template slot-scope="scope">{{scope.row.shopName}}</template>
@@ -155,7 +155,7 @@
       },
       showAddress(row, column) {
         try {
-          return row.provinceBean.name + " " + row.cityBean.name + " " + row.areaBean.name;
+          return row.provinceBean.name + row.cityBean.name + row.areaBean.name + row.villageBean.name + row.townBean.name;
         } catch (e) {
           return '数据读取错误';
         }
