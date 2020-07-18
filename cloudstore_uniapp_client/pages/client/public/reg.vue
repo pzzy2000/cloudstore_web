@@ -323,11 +323,7 @@
 					},
 					success: res => {
 						if(res.data.result.code === 0) {
-							console.log(res)
-							uni.showToast({
-								title: '微信注册成功，正在前往登录界面',
-								icon: 'none'
-							});
+							this.$refs.popupRef.close() // 关闭
 							uni.showModal({
 								title: '提示',
 								content: '微信注册成功，前往登录界面',

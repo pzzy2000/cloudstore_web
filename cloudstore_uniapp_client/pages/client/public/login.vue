@@ -108,7 +108,7 @@
 			},
 			vxLogin (loginRes) {
 				var that = this
-				uni.setStorageSync('code',loginRes.code)
+				// uni.setStorageSync('code',loginRes.code)
 				var code = loginRes.code
 				let params = {
 					'bean.logintype': 'client',

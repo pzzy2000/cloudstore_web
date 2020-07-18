@@ -6,7 +6,7 @@
 				<image :src="detailUrl" mode="" alt='头像' class="info-img"></image>
 				<view class="header-info">
 					<text class="title samp">{{shopInfo.name}}</text>
-					<text class="header-address">地址：{{shopInfo.detailAddress}}</text>
+					<!-- <text class="header-address">地址：{{shopInfo.detailAddress}}</text> -->
 				</view>
 			</view>
 			<view class="agency-apply">
@@ -81,7 +81,10 @@ import Api from '@/common/api.js'
 export default {
 		data(){
 			return {
-				shopInfo: '',
+				shopInfo: {
+					name: '',
+					detailAddress: ''
+				},
 				name:'',
 				url:'',
 				updateList: '',
@@ -152,7 +155,9 @@ export default {
 				let parmas = {}
 				let data = await Api.apiCall('post',Api.client.recommend.newShopinfoByOrder,parmas)
 				if (data) {
-					this.shopInfo = data.result
+					console.log(data.result)
+					this.shopInfo.name = data.result.name || '暂无店铺'
+					this.shopInfo.detailAddress = data.result.detailAddress || '暂无地址'
 				}
 			},
 			async getDateList () {

@@ -100,7 +100,7 @@ export default {
 		},
 		hot: {
 			hotList: 'activity/app/listActivityGoods',
-			alllist: '/activity/app/alllist'
+			alllist: 'activity/app/alllist'
 		},
 		address: {
 			saveAddress: 'app/client/address/saveAddress',
