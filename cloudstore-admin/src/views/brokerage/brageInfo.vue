@@ -40,22 +40,28 @@
               <el-table-column label="SKU编号" align="center" prop="goodsSkuBean.skuCode" width="250">
               </el-table-column>
 
-              <el-table-column label="团长佣金" align="center" width="250">
+              <el-table-column :label='specslabel'  align="center" prop="goodsSkuBean.skuValue" width="200">
+              </el-table-column>
+
+              <el-table-column label="单价" align="center" prop="goodsSkuBean.price" width="80">
+              </el-table-column>
+
+              <el-table-column label="团长佣金" align="center" width="180">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.leader"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="代理佣金" align="center" width="250">
+              <el-table-column label="代理佣金" align="center" width="180">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.agent"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="客户佣金" align="center" width="250">
+              <el-table-column label="客户佣金" align="center" width="180">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.client"></el-input>
                 </template>
               </el-table-column>
-              <el-table-column label="积分" align="center" width="250">
+              <el-table-column label="积分" align="center" width="180">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.clientPoints"></el-input>
                 </template>
@@ -104,7 +110,9 @@
           type: 1
         },
         rwDispatcherState: 'read',
+         specslabel:'规格',
         goodsku: {
+
           goods: {},
           //goodsPics: [],
           skuStockList: [], //table 显示的  规格头
@@ -163,7 +171,17 @@
         defaultList.financeProfitId = id;
         getSkulist(defaultList).then(response => {
           console.log(response);
-          this.goodsku.skuStockList = response.result.result.records;
+           // this.specslabel= 'ssss' //skuStockListt[0].skuKey;
+           let  skuStockListt = response.result.result.records;
+
+          if( skuStockListt.length>0){
+            try{
+               this.specslabel='规格['+skuStockListt[0].goodsSkuBean.skuKey+"]"; //skuStockListt[0].skuKey;
+              }catch(e){
+               this.specslabel="规格数据出错";
+            }
+          }
+          this.goodsku.skuStockList =skuStockListt;
         });
 
       },
