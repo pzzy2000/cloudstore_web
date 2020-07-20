@@ -215,7 +215,6 @@
 								'user': 'test'
 							},
 							success: (uploadFileRes) => {
-								console.log(uploadFileRes)
 								var data = JSON.parse(uploadFileRes.data)
 								this.imgUid.push(data.result.result.id)
 							}

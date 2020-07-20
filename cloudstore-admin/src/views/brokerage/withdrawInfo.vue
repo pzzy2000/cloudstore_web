@@ -58,6 +58,9 @@
         <el-table-column label="商品佣金" align="center" prop="profit">
 <!--          <template slot-scope="scope">{{scope.row.showIndex}}</template>-->
         </el-table-column>
+        <el-table-column label="购买积分" align="center" prop="points">
+        <!--          <template slot-scope="scope">{{scope.row.showIndex}}</template>-->
+        </el-table-column>
 <!--        <el-table-column label="一级佣金" align="center">-->
 <!--          <template slot-scope="scope">{{scope.row.payPrice}}</template>-->
 <!--        </el-table-column>-->

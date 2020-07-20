@@ -5,9 +5,8 @@
 			<li :class="showIndex==0?'select':''" @click="anewSelect(0)">{{province.name}}</li>
 			<li :class="showIndex==1?'select':''" @click="anewSelect(1)" v-if="showIndex>=1">{{city.name}}</li>
 			<li :class="showIndex==2?'select':''" @click="anewSelect(2)" v-if="showIndex>=2">{{area.name}}</li>
-			<!--
-			<li :class="showIndex==3?'select':''" @click="anewSelect(3)" v-if="showIndex>=3">{{street}}</li>
-			-->
+			<!-- <li :class="showIndex==3?'select':''" @click="anewSelect(3)" v-if="showIndex>=3">{{street.name}}</li> -->
+			
 			
 		</ul>
 		<ul v-if="showIndex==0" class="content" :style="'height:'+ heightCot + 'upx'">
@@ -21,11 +20,11 @@
 		<ul v-if="showIndex==2" class="content" :style="'height:'+ heightCot + 'upx'">
 			<li @click="selectaArea(index,item)" v-for="(item,index) in areaData" :key="item.id">{{item.name}}</li>
 		</ul>
-		<!-- 
-		<ul v-if="showIndex==3" class="content" :style="'height:'+ heightCot + 'upx'">
+		
+		<!-- <ul v-if="showIndex==3" class="content" :style="'height:'+ heightCot + 'upx'">
 			<li @click="selectStreet(index,item)" v-for="(item,index) in streetsData" :key="item">{{item}}</li>
-		</ul>
-		-->
+		</ul> -->
+		
 
 		
 	</view>
@@ -81,6 +80,7 @@
 		mounted() {
 			
 			let serp = this.setProvinceData;
+			console.log(serp)
 			this.selectareas(0,function(data){
 				serp(data);
 			});
@@ -213,6 +213,7 @@
 						city,
 						area
 					})
+					
 					// this.showIndex = 4;
 				
 				// let setStreet = this.setStreetdata;
@@ -245,7 +246,7 @@
 			// 		area,
 			// 		street
 			// 	})
-			// 	// this.showIndex = 4;
+			// 	this.showIndex = 4;
 			// }
 		}
 	}

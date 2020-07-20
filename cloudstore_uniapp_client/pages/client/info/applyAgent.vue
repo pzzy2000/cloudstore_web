@@ -57,7 +57,20 @@
 				<button class="cu-btn bg-red margin-tb-sm lg" @tap="applyAgent">上传</button>
 			</view>
 		</form>
-		<ehPicker @conceal="conceal" v-if="popup" @close="close" />
+		<!-- <ehPicker @conceal="conceal" v-if="popup" @close="close" /> -->
+		<uni-popup ref="popup" type="bottom">
+			<tui-cascade-selection
+				height="280px"
+				activeColor="#EB0909"
+				lineColor="#EB0909"
+				checkMarkColor="#EB0909"
+				:itemList="itemList"
+				request
+				@complete="complete"
+				:receiveData="receiveData"
+				@change="addressChange"
+			></tui-cascade-selection>
+		</uni-popup>
 	</view>
 </template>
 
@@ -66,6 +79,8 @@
 	import Api from '@/common/api.js'
 	import easyUpload from '@/components/easy-upload/easy-upload'
 	import ehPicker from '@/pages/tabbar/erha-picker.vue'; 
+	import tuiCascadeSelection from '@/components/tui-cascade-selection/tui-cascade-selection.vue'
+	import uniPopup from '@/components/uni-popup/uni-popup'
 	export default {
 		data() {
 			return {
@@ -78,12 +93,21 @@
 					cardType: 'IDCard',
 					cardId: '',
 					cardPhoto: [],
-					provinceName: '请选择省市区',
+					provinceName: '请选择省、市、区、街道、社区',
 					provinceId: '',
 					cityId: '',
 					areaId: '',
+					townId: '',
+					villageId: '',
 					address: '',
 					optType: 'save'
+				},
+				addressName: {
+					province:'',
+					city: '',
+					area: '',
+					town: '',
+					village: ''
 				},
 				picker:['身份证'],
 				index: 0,
@@ -93,16 +117,41 @@
 				imglistId: [],
 				checkText: '',
 				isCheck: false,
-				isEdit: false
+				isEdit: false,
+				itemList: [],
+				receiveData: []
 			}
 		},
 		components:{
-			navBar, easyUpload, ehPicker
+			navBar, easyUpload, ehPicker, tuiCascadeSelection, uniPopup
 		},
 		onLoad() {
 			this.getApplyAgentData()
+			this.getAddressData()
 		},
 		methods: {
+			async getAddressData () {
+				let params ={
+					pageNum:1,
+					pageSize:100,
+					parentId:0,
+					dirctType:'areas',
+				};
+				let list = await Api.apiCall('post', Api.areas.province, params);
+				if (list) {
+					if (list.code === 0 && list.result.total != 0) {
+						for (let tmp in list.result.records) {
+							this.itemList.push({
+								text: list.result.records[tmp].name,
+								value: list.result.records[tmp].id
+							})
+						}
+					}else {
+						this.$refs.popup.close()
+						this.itemList = []
+					}
+				}
+			},
 			async getApplyAgentData () {
 				uni.showLoading({
 					title: '正在加载中',
@@ -123,7 +172,7 @@
 						this.agentfrom.provinceId = data.result.provinceBean.id
 						this.agentfrom.cityId = data.result.cityBean.id
 						this.agentfrom.areaId = data.result.areaBean.id
-						this.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name
+						this.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name +" / "+ data.result.villageBean.name
 						for (let tmp in data.result.goodsPhotos) {
 							this.imageList.push(data.result.goodsPhotos[tmp].url)
 							this.imglistId.push(data.result.goodsPhotos[tmp].uid)
@@ -147,6 +196,61 @@
 				if (e.detail.value === 1) {
 					this.agentfrom.cardType = 'IDCard'
 				}
+			},
+			complete(e) { //点击了地址的上一级分类
+			},
+			async addressChange (e) {
+				console.log(e)
+				switch(e.layer) {
+					case 0:
+					this.addressName.province = e.text;
+					this.agentfrom.provinceId = e.value;
+					break;
+					case 1:
+					this.addressName.city = e.text;
+					this.agentfrom.cityId = e.value;
+					break;
+					case 2:
+					this.addressName.area = e.text;
+					this.agentfrom.areaId = e.value;
+					break;
+					case 3:
+					this.addressName.town = e.text;
+					this.agentfrom.townId = e.value;
+					break;
+					case 4:
+					this.addressName.village = e.text;
+					this.agentfrom.villageId = e.value;
+					break;
+				}
+				this.agentfrom.provinceName = this.addressName.province + '/' +this.addressName.city + '/' +this.addressName.area + '/' +this.addressName.town + '/' +this.addressName.village
+				uni.showLoading({
+					title: '正在加载',
+					mask: false
+				});
+				this.receiveData.length = 0
+				let params ={
+					pageNum:1,
+					pageSize:50,
+					parentId:e.value,
+					dirctType:'areas',
+				};
+				let list = await Api.apiCall('post', Api.areas.province, params);
+				if (list) {
+					if (list.code === 0 && list.result.total != 0) {
+						for (let tmp in list.result.records) {
+							this.receiveData.push({
+								text: list.result.records[tmp].name,
+								value: list.result.records[tmp].id
+							})
+						}
+					}else {
+						this.$refs.popup.close()
+						this.receiveData = []
+					}
+					uni.hideLoading()
+				}
+				console.log(this.agentfrom)
 			},
 			close(){
 				this.popup = false;
@@ -195,9 +299,14 @@
 				}
 			},
 			seletctAddress () {
-				this.popup = !this.popup
+				this.$refs.popup.open()
+				// this.popup = !this.popup
 			},
-			verify () {
+			async applyAgent () {
+				if (this.isEdit === true) {
+					this.$api.msg('资料正在审核，请勿重复提交')
+					return;
+				}
 				if (!this.agentfrom.shopName) {
 					this.$api.msg('请输入店铺名称')
 					return;
@@ -226,13 +335,6 @@
 					this.$api.msg('请选择图片')
 					return;
 				}
-			},
-			async applyAgent () {
-				if (this.isEdit === true) {
-					this.$api.msg('资料正在审核，请勿重复提交')
-					return;
-				}
-				this.verify()
 				let params = {
 					shopName: this.agentfrom.shopName,
 					name: this.agentfrom.name,
@@ -243,6 +345,8 @@
 					provinceId: this.agentfrom.provinceId,
 					cityId: this.agentfrom.cityId,
 					areaId: this.agentfrom.areaId,
+					townId: this.agentfrom.townId,
+					villageId: this.agentfrom.villageId,
 					detailAddress: this.agentfrom.address,
 					optType: this.agentfrom.optType
 				}
@@ -251,7 +355,6 @@
 				}
 				let data = await Api.apiCall('post', Api.client.applyAgent.save, params);
 				if (data) {
-					console.log(data)
 					if (data.code === 0) {
 						uni.showModal({
 						    title: '提示',
