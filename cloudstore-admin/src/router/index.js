@@ -84,7 +84,7 @@ export const asyncRouterMap = [
 		       path: 'list',
 		       name: 'activity_list',
 		       component: () => import('@/views/activity/list'),
-		       meta: {title: '活动列表', icon: 'product-list'}
+		       meta: {title: '活动列表', icon: 'product-list', keepAlive: true}
 		     },{
 		       path: 'addact',
 		       name: 'add_activity',
@@ -839,7 +839,7 @@ export const asyncRouterMap = [
 ]
 
 export default new Router({
-  mode: 'history', //后端支持可开
+  // mode: 'history', //后端支持可开
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
