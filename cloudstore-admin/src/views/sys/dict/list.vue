@@ -124,7 +124,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[10,20]"
+        :page-sizes="[10]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>

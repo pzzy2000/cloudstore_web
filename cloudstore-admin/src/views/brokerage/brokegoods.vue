@@ -93,7 +93,7 @@
     </div>
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-                     :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">
+                     :page-size="listQuery.pageSize" :page-sizes="[10]" :current-page.sync="listQuery.pageNum" :total="total">
       </el-pagination>
     </div>
     <el-dialog title="编辑货品信息" :visible.sync="editSkuInfo.dialogVisible" width="40%">
@@ -146,7 +146,7 @@
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
-    pageSize: 20,
+    pageSize: 10,
     publishStatus: null,
     verifyStatus: null,
     productSn: null,
@@ -202,7 +202,7 @@
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
-        total: null,
+        total: 0,
         listLoading: true,
         selectProductCateValue: null,
         multipleSelection: [],
@@ -307,7 +307,7 @@
       getBrandList() {
         fetchBrandList({
           pageNum: 1,
-          pageSize: 100
+          pageSize: 10
         }).then(response => {
           this.brandOptions = [];
           let brandList = response.data.list;
@@ -392,7 +392,7 @@
         });
       },
       handleSearchList() {
-        this.listQuery.pageNum = 1;
+        // this.listQuery.pageNum = 1;
         this.getList();
       },
       handleBatchOperate() {

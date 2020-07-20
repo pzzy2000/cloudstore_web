@@ -70,7 +70,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -97,7 +97,7 @@
         listLoading: true,
         listQuery: {
           pageNum: 1,
-          pageSize: 5,
+          pageSize: 10,
           goodsPropertyId: this.$route.query.goodsPropertyId,
           type: this.$route.query.type,
         },
@@ -124,6 +124,9 @@
         case 'supplier': this.isshow = true;
           break;
       }
+    },
+    activated() {
+      this.getList();
     },
     methods: {
       getList() {
@@ -213,7 +216,7 @@
         this.handleDeleteProductAttr({'ids':row.id});
       },
       backPage() {
-        this.$router.go(-1);
+        this.$router.back();
       }
     },
     filters: {
