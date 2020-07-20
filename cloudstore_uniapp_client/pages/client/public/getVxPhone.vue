@@ -118,7 +118,9 @@
 								if (res.data.result.code === 0 ) {
 									var userInfo = {
 										name: res.data.result.result.name,
-										url: res.data.result.result.url
+										url: res.data.result.result.url,
+										userType: res.data.result.userType,
+										relationId: res.data.result.relationId
 									}
 									uni.setStorageSync('userInfo',userInfo)
 									uni.setStorageSync('token',res.data.result.result.token)

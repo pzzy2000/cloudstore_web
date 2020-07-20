@@ -181,20 +181,21 @@ export default {
 			goodsHtml: '',
 			specList: [],
 			specChildList: [],
-			userType: 'Client'
+			userType: ''
 		};
 	},
 	onShareAppMessage(res) {
 		if (res.from === 'button') {// 来自页面内分享按钮
+			this.$refs.share.toggleMask();
 			var shareObj = {
 				title: this.goodsName,
 				params: {
 					goodsId: this.goodsId,
 					agentGoodsId: this.agentGoodsId,
 					shareClientId: this.shareClientId || '-1',
-					userType: 'Client'
+					userType: this.userType
 				},
-				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType='+this.userType,
 			}
 		}
 		return shareObj
@@ -203,6 +204,7 @@ export default {
 		
 	},
 	onLoad(ops) {
+		this.userType = uni.getStorageSync('userInfo').agent
 		this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
@@ -360,10 +362,14 @@ export default {
 					
 					var skuValue =  this.skuList[data].skuValue.split(',').sort().toString()
 					if (specArray.sort().toString() === skuValue) {
+						this.goodsSkuId = this.skuList[data].id
 						this.sku.stock = this.skuList[data].stock
 						this.sku.price = this.skuList[data].price
-						this.sku.imgUrl = this.skuList[data].photos[0].url
-						this.goodsSkuId = this.skuList[data].id
+						try{
+							this.sku.imgUrl = this.skuList[data].photos[0].url
+						}catch(e){
+							console.log('sku图片出错')
+						}
 						break;
 					}
 				}

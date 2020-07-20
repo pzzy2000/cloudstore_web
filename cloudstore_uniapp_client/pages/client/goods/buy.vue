@@ -340,15 +340,19 @@
 					success: function(res) {
 						console.log(res)
 						if (res.errMsg === 'requestPayment:ok') {
+							that.paySuccess(that.orderId)
 							uni.showModal({
 								title: '提示',
 								content: '支付成功',
 								showCancel: false,
 								cancelText: '取消',
 								confirmText: '确定',
-								success: res => {},
+								success: res => {
+									uni.navigateTo({
+										url: '/pages/client/order/order',
+									});
+								},
 							});
-							that.paySuccess(that.orderId)
 						}
 					},
 					fail: function(err) {

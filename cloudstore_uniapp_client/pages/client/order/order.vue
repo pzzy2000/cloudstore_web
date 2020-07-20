@@ -22,7 +22,7 @@
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
 					
 					<!-- 订单列表 -->
-					<view v-for="(item,index) in orderList" :key="index" class="order-item">
+					<view v-for="(item,index) in orderList" :key="index" class="order-item" @click="toOrder(item)">
 						<view class="i-top b-b">
 							<text class="time">{{item.createTime}}</text>
 							<template>
@@ -37,7 +37,7 @@
 								<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
 							</template>
 						</view>
-						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index" @click="toOrder(item)">
+						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index">
 							<image class="goods-img" :src="item1.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
 								<text class="title clamp">{{item1.goodsPicesBean.goodsName}}</text>
@@ -218,7 +218,6 @@
 				});
 			},
 			toBuy (item) {
-				console.log(item)
 				uni.navigateTo({
 					url: '/pages/client/goods/buy?goodsId='+item[0].goodsId+'&agentGoodsId='+item[0].agentGoodsId+'&goodsSkuId='+item[0].goodsSkuId+'&orderType=buyOrder'+'&orderId='+item[0].orderId
 				});

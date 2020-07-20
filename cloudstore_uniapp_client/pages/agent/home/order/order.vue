@@ -120,6 +120,7 @@
 			this.getOrderData(0)
 		},
 		onPullDownRefresh() { //下拉刷新
+			this.orderList.length = 0
 			this.pageNum = 1
 			this.getOrderData(this.tabCurrentIndex);
 		},
@@ -145,7 +146,9 @@
 					}else{
 						switch (tabIndex) {
 							case 0:
-							this.orderList = tmpData
+							for (let tmp in tmpData) {
+								this.orderList.push(tmpData[tmp])
+							}
 							break;
 							case 1:
 								for (let tmp in tmpData) {

@@ -90,15 +90,17 @@
 						}
 					}
 				},
-				async lisFinancetData () {
+				async lisFinancetData (condition = '2', type = '1') {
 					uni.showLoading({
 						title: '正在加载',
 						mask: false
 					});
 					let parmas = {
 						userType: 'Client',
+						status: condition,
+						type: type,
 						pageNum: '1',
-						pageSize: '10'
+						pageSize: '10',
 					}
 					let data = await Api.apiCall('post', Api.finance.list, parmas)
 					if (data) {
@@ -116,11 +118,20 @@
 					}
 				},
 				earninngType (index) {
-					if (index === 1 || index === 2) {
-						this.financetDataList = []
-						this.tabEarning = index
-						this.lisFinancetData()
+					this.financetDataList = []
+					this.tabEarning = index
+					if (index === 2) {
+						this.lisFinancetData(2, 1)
+					} else if (index === 1) {
+						this.lisFinancetData(1, 1)
+					} else if (index === 3) {
+						this.lisFinancetData(2, 2)
 					}
+					// if (index === 1 || index === 2) {
+					// 	this.financetDataList = []
+					// 	this.tabEarning = index
+					// 	this.lisFinancetData()
+					// }
 				}
 			}
 		}

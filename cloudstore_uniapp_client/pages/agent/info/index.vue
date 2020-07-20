@@ -32,13 +32,10 @@
 			</view>
 			<view class="vip-card-box" @click="toNav('../../pagesU/user/applyMember')">
 				<image class="card-bg" src="/static/vip-card-bg.png" mode=""></image>
-				<view class="b-btn">立即升级</view>
-				<view class="tit" v-if="userDetailInfo">
-					<text class="yticon icon-iLinkapp-"></text>
-					{{ userDetailInfo.memberLevelName || '开通会员' }}
+				<view class="b-btn" v-if='isLeader'>立即升级</view>
+				<view class="tit">
+					<text class="yticon icon-iLinkapp-">{{userTypeName}}</text>
 				</view>
-				<text class="e-m">Mallplus</text>
-				<text class="e-b">升级会员享受更多折扣 一测就上线</text>
 			</view>
 		</view>
 		<view
@@ -101,7 +98,6 @@
 				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="代理资料" @eventClick="navTo('../../pagesU/user/profile')"></list-cell>
 				<!--<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell>
 				<list-cell icon="icon-pinglun-copy" iconColor="#ee883b" title="晒单" tips="晒单抢红包"></list-cell>-->
-				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="navTo('../../pagesU/user/collect')"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="代理商退出" border="" @eventClick="navTo('/pages/client/info/index','client')"></list-cell>
 				<!-- <list-cell icon="icon-shezhi1" iconColor="#e07472" title="test" border="" @eventClick="navTo('/pages/search/test')"></list-cell> -->
 			</view>
@@ -125,6 +121,8 @@ import { mapState,mapMutations } from 'vuex';
 	},
 	data() {
 		return {
+			isLeader: false,
+			userTypeName: '',
 			inputShow: false,
 			feild: undefined,
 			inputContent: '',
@@ -219,6 +217,12 @@ import { mapState,mapMutations } from 'vuex';
 				if (!userInfo.url) {
 					this.user.url = this.user.detailUrl
 				}
+			}
+			if (userInfo.agent === 'agent') {
+				this.userTypeName = '代理商'
+				this.isLeader = true
+			}else {
+				this.userTypeName = '团长'
 			}
 		},
 		// 获取h5用户信息

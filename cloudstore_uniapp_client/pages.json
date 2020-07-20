@@ -208,7 +208,7 @@
             "style" : {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
         }
     ],
