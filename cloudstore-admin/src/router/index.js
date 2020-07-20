@@ -199,7 +199,7 @@ export const asyncRouterMap = [
          path: 'property/list',
          name: 'property_list',
          component: () => import('@/views/pms/productAttr/index'),
-         meta: {title: '商品规格参数', icon: 'product-list'}
+         meta: {title: '商品规格参数', icon: 'product-list', keepAlive: true}
        },{
          path: 'property/add',
          name: 'property_add',
@@ -216,7 +216,7 @@ export const asyncRouterMap = [
          path: 'property/specs/list',
          name: 'goods_specs_list',
          component: () => import('@/views/pms/productAttr/productAttrList'),
-         meta: {title: '规格列表'},
+         meta: {title: '规格列表', keepAlive: true},
          hidden: true
        }, {
          path: 'property/specs/add',
@@ -234,7 +234,7 @@ export const asyncRouterMap = [
          path: 'property/param/list',
          name: 'goods_param_list',
          component: () => import('@/views/pms/productAttr/productAttrList'),
-         meta: {title: '参数列表'},
+         meta: {title: '参数列表', keepAlive: true},
          hidden: true
        }, {
          path: 'property/param/add',

@@ -64,12 +64,13 @@ export default {
     },
     logout() {
       this.setCookie('loginToken', "", -1);
+      console.log("+++++++++")
       this.setCookie('username', "", -1);
       this.setCookie('password', "", -1);
-      location.reload() // 为了重新实例化vue-router对象 避免bug
+      location.reload()  //为了重新实例化vue-router对象 避免bug
     },
     setCookie(c_name,value,expire) {
-      var date=new Date()
+      let date=new Date()
       date.setSeconds(date.getSeconds()+expire)
       document.cookie=c_name+ "="+escape(value)+"; expires="+date.toGMTString()
     }

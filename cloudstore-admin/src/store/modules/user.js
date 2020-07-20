@@ -34,8 +34,6 @@ const user = {
       userInfo['bean.access'] = userInfo['bean.access'].trim()
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          console.log("++++++++++++")
-          console.log(response);
           const data = response.result.result;
           const tokenStr = data.token
           setToken(tokenStr)
