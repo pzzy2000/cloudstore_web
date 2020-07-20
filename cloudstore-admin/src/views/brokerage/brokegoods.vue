@@ -47,6 +47,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button size="mini" @click="backPage" style="float: right">返 回</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
@@ -478,6 +479,9 @@
           });
         });
         this.getList();
+      },
+      backPage() {
+        this.$router.go(-1);
       }
     }
   }

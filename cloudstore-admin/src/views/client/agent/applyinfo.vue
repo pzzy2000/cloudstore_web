@@ -119,7 +119,7 @@
               type: 'success',
               duration: 800
             });
-            this.$router.push('/sys/agent/list');
+            this.$router.go(-1);
           }
         })
       },
@@ -132,7 +132,7 @@
         });
       },
       backpage() {
-        this.$router.go(-1);
+        this.$router.back();
       }
     }
   }

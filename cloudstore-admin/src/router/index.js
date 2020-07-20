@@ -349,7 +349,7 @@ export const asyncRouterMap = [
         path: 'user/list',
         name: 'user_list',
         component: () => import('@/views/sys/user/index'),
-        meta: {title: '系统用户列表', icon: 'product-list'}
+        meta: {title: '系统用户列表', icon: 'product-list', keepAlive: true}
       },
       {
         path: 'user/edit',
@@ -390,7 +390,7 @@ export const asyncRouterMap = [
           path: 'list',
           name: 'client_list',
           component: () => import('@/views/client/list'),
-          meta: {title: '客户列表', icon: 'product-list'}
+          meta: {title: '客户列表', icon: 'product-list', keepAlive: true}
         },
         {
           path: 'info',
@@ -403,7 +403,7 @@ export const asyncRouterMap = [
           path: 'agent/apply/list',
           name: 'agent_apply_list',
           component: () => import('@/views/client/agent/applylist'),
-          meta: {title: '代理申请列表', icon: 'product-list'}
+          meta: {title: '代理申请列表', icon: 'product-list', keepAlive: true}
         },
         {
           path: 'agent/apply/info',
@@ -467,7 +467,7 @@ export const asyncRouterMap = [
         path: 'orderlist',
         name: 'order_list',
         component: () => import('@/views/order/orderlist/index'),
-        meta: {title: '订单列表', icon: 'product-list'},
+        meta: {title: '订单列表', icon: 'product-list', keepAlive: true},
       },
       {
         path: 'readorder',
@@ -839,7 +839,13 @@ export const asyncRouterMap = [
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
-  scrollBehavior: () => ({y: 0}),
+  mode: 'history', //后端支持可开
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
   routes: constantRouterMap
 })

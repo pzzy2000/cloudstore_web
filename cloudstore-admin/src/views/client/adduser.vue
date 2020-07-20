@@ -60,7 +60,7 @@
         }
       },
       created() {
-        switch (this.$route.params.operaType){
+        switch (this.$route.query.operaType){
           case "add": this.titMsg = "添加客户";
             break;
           case "read": this.titMsg = "查看客户";
@@ -68,20 +68,20 @@
           case "edit": this.titMsg = "编辑客户";
             break;
         }
-        this.rwDispatcherState = this.$route.params.rds;
-        this.operaType = this.$route.params.operaType;
+        this.rwDispatcherState = this.$route.query.rds;
+        this.operaType = this.$route.query.operaType;
         this.getOneclient();
       },
       methods: {
         getOneclient() {
-          getoneClient({id: this.$route.params.id}).then(res => {
+          getoneClient({id: this.$route.query.id}).then(res => {
             console.log(res)
             this.userForm = res.result.result;
             console.log(this.userForm)
           })
         },
         backLastpage() {
-          this.$router.go(-1);
+          this.$router.back();
         },
         resetForm(formName) {
           this.$refs[formName].resetFields();

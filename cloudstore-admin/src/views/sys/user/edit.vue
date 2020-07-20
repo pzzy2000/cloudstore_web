@@ -158,7 +158,7 @@
          })
        },
       toback(){
-        this.$router.push('/sys/manager/user/list');
+        this.$router.back();
       },
       // loadData() {
       //   this.userinfo.name = '12121212';

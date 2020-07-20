@@ -74,14 +74,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="pagination-container" style="margin-right: 20px">
+      <div class="pagination-container">
         <el-pagination
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           layout="total, sizes,prev, pager, next,jumper"
           :page-size="pageList.pageSize"
-          :page-sizes="[10]"
+          :page-sizes="[5,10,15]"
           :current-page.sync="pageList.pageNum"
           :total="total">
         </el-pagination>
@@ -94,7 +94,7 @@
   import {getUserlist} from '@/api/client'
   let defaultList = {
     pageNum: 1,
-    pageSize: 20
+    pageSize: 10
   };
   export default {
     data() {
@@ -102,9 +102,7 @@
         userForm: {},
         pageList: Object.assign({}, defaultList),
         listLoading: false,
-        list: [
-          {name: "123123", access: "123456"}
-        ],
+        list: [],
         total: 0
       }
     },
@@ -113,7 +111,7 @@
     },
     methods: {
       getList() {
-        getUserlist(defaultList).then(res => {
+        getUserlist(this.pageList).then(res => {
           console.log(res);
           this.list = res.result.result.records;
           this.total = parseInt(res.result.result.total);
@@ -123,13 +121,20 @@
       //   this.$router.push({path: '/sys/client/add', query: {operaType: "add", rds: 'write'}})
       // },
       readUser(row) {
-        this.$router.push({name: 'client_info', params: {operaType: "read", rds: 'read', id: row.id}})
+        this.$router.push({path: '/sys/client/info', query: {operaType: "read", rds: 'read', id: row.id}})
       },
       deleteUser() {
         alert("删除事件");
       },
-      handleSizeChange() {},
-      handleCurrentChange() {}
+      handleSizeChange(val) {
+        this.pageList.pageNum = 1;
+        this.pageList.pageSize = val;
+        this.getList();
+      },
+      handleCurrentChange(val) {
+        this.pageList.pageNum = val;
+        this.getList();
+      },
     }
   }
 </script>
