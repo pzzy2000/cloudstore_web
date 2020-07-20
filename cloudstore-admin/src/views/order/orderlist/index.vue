@@ -232,7 +232,6 @@
           this.getList();
         },
         readOrder(index, row){
-          console.log(row);
           this.$router.push({name: "read_order", query: {id: row.id}});
         },
         handleClose(done) {

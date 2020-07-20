@@ -34,7 +34,7 @@
           <br />
           <el-form-item label="身份证正反面：">
             <el-table :data="baseinfoForm.goodsPhotos">
-              <el-table-column width="100" align="center">
+              <el-table-column width="200" align="center">
                 <template slot-scope="scope">
                   <el-image :src="scope.row.url"></el-image>
                 </template>
@@ -84,7 +84,7 @@
           if (this.baseinfoForm.provinceBean == null){
             this.baseinfoForm.address = ''
           }else{
-            this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
+            this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
           }
           console.log(this.baseinfoForm.address)
           switch (this.baseinfoForm.status) {
@@ -119,7 +119,7 @@
               type: 'success',
               duration: 800
             });
-            this.$router.push('/sys/agent/list');
+            this.$router.go(-1);
           }
         })
       },
@@ -132,7 +132,7 @@
         });
       },
       backpage() {
-        this.$router.go(-1);
+        this.$router.back();
       }
     }
   }

@@ -145,13 +145,9 @@
 
 <style scoped lang="scss">
 .content {
-	background: $page-color-base;
 	padding-bottom: 160upx;
-}
-.content {
 	padding-top: 96upx;
 }
-
 .navbar {
 	position: absolute;
 	left: 0;

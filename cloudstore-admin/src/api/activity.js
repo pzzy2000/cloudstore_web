@@ -66,7 +66,7 @@ export function fetchAllgoods(params) {
 
 export function changeShowidx(params) {
   return request({
-    url: '/activity/save',
+    url: '/activity/updateIndexStatus',
     method: 'POST',
     data: switchForm(params)
   })

@@ -66,7 +66,7 @@
 						<span class='left-chunk'></span>
 						今日上新
 					</view>
-					<span class='more'>更多></span>
+					<!-- <span class='more'>更多></span> -->
 				</view>
 				<view class="goods-list">
 					<view v-for="(goods, index) in updateList" :key="index" class="goods-item" @click="navToDetailPage(goods)">

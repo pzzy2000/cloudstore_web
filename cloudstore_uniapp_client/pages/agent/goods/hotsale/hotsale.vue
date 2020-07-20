@@ -34,15 +34,15 @@
 			<!-- 活动 -->
 			<view class="activity-main">
 				<view class="cate-section">
-					<view class="cate-item" v-for="item in activity.nav.one" :key="item.id">
-						<image v-if="item.isadd == 0" src="/static/temp/c1.png" @click="navToCategory(item)"></image>
+					<view class="cate-item" v-for="item in activity.nav.one" :key="item.id" @click="navToCategory(item)">
+						<image v-if="item.isadd == 0" src="/static/temp/c1.png"></image>
 						<image v-else src="/static/temp/c5.png"></image>
 						<text class="clamp">{{item.name}}</text>
 					</view>
 				</view>
 				<view class="cate-section">
-					<view class="cate-item" v-for="item in activity.nav.two" :key="item.id" >
-						<image v-if="item.isadd == 0" src="/static/temp/c1.png"  @click="navToCategory(item)"></image>
+					<view class="cate-item" v-for="item in activity.nav.two" :key="item.id" @click="navToCategory(item)">
+						<image v-if="item.isadd == 0" src="/static/temp/c1.png"></image>
 						<image v-else src="/static/temp/c5.png"></image>
 						<text class="clamp">{{item.name}}</text>
 					</view>

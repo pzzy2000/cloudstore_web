@@ -163,9 +163,13 @@
         let status = row.status;
         switch (status) {
           case 0:
-            return '未删除';
-          case 1:
             return '已删除';
+            break;
+          case 1:
+            return '未删除';
+            break;
+          default: return "正常";
+            break;
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
         },

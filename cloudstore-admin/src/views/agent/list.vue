@@ -158,12 +158,12 @@
       showStatus(row, column) {
         let status = row.status;
         switch (status) {
-          case 1:
+          case 0:
             return '待审核';
+          case 1:
+            return '已通过';
           case 2:
             return '已拒绝';
-          case 3:
-            return '已通过';
           default:
             return '正常';
         }
@@ -173,9 +173,9 @@
         let status = row.status;
         switch (status) {
           case 0:
-            return '未删除';
-          case 1:
             return '已删除';
+          case 1:
+            return '未删除';
           default:
             return '正常';
         }

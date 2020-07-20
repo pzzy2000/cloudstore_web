@@ -70,26 +70,26 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center" fixed ></el-table-column>
-        <el-table-column label="用户名称"  align="center" fixed>
+        <el-table-column label="用户名称"  align="center">
            <template slot-scope="scope">{{scope.row.name}}</template>
          </el-table-column>
         <el-table-column label="登录名"  align="center">
           <template slot-scope="scope">{{scope.row.access}}</template>
         </el-table-column>
-        <el-table-column label="注册电话" width="140" align="center">
+        <el-table-column label="注册电话" align="center">
          <template slot-scope="scope">{{scope.row.access}}</template>
         </el-table-column>
-        <el-table-column label="用户类型" width="120" align="center">
-          <template slot-scope="scope">{{scope.row.userType}}</template>
+        <el-table-column label="用户类型" align="center">
+          <template slot-scope="scope">{{scope.row.userType | changeUser}}</template>
         </el-table-column>
 
-         <el-table-column label="创建时间" width="200" align="center">
+         <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">{{scope.row.createDate}}</template>
         </el-table-column>
 
-        <el-table-column label="审核状态" width="140" align="center" :formatter="showStatus" >
+        <el-table-column label="审核状态" align="center" :formatter="showStatus" >
         </el-table-column>
-        <el-table-column label="操作" width="260" align="center">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -109,28 +109,6 @@
         </el-table-column>
       </el-table>
     </div>
-    <!--
-    <div class="batch-operate-container">
-      <el-select
-        size="small"
-        v-model="operateType" placeholder="批量操作">
-        <el-option
-          v-for="item in operates"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-button
-        style="margin-left: 20px"
-        class="search-button"
-        @click="handleBatchOperate()"
-        type="primary"
-        size="small">
-        确定
-      </el-button>
-    </div>
-    -->
     <div class="pagination-container">
       <el-pagination
         background
@@ -138,7 +116,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[20]"
+        :page-sizes="[10]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -151,7 +129,7 @@
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
-    pageSize: 20
+    pageSize: 10
     // userType:'platform',
   };
   export default {
@@ -211,6 +189,18 @@
           return '审核通过';
         } else {
           return '未审核';
+        }
+      },
+      changeUser(data) {
+        switch (data) {
+          case "platform": return "平台管理员";
+            break;
+          case "supplier": return "供应商";
+            break;
+          case "agent": return "代理商";
+            break;
+          default: return "数据读取出错";
+            break;
         }
       }
     },

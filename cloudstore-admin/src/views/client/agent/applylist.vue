@@ -56,15 +56,18 @@
         <el-table-column label="手机号" align="center">
           <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
-        <el-table-column label="地址" align="center" :formatter="showAddress">
+        <el-table-column label="地址" width="300" align="center" :formatter="showAddress">
         </el-table-column>
         <el-table-column label="商铺名称" align="center">
           <template slot-scope="scope">{{scope.row.shopName}}</template>
         </el-table-column>
+        <el-table-column label="申请代理类型" align="center">
+          <template slot-scope="scope">{{scope.row.agentType | changeType}}</template>
+        </el-table-column>
         <el-table-column label="证件类型" align="center">
           <template slot-scope="scope">{{scope.row.cardType | changeCt}}</template>
         </el-table-column>
-        <el-table-column label="证件号码" align="center">
+        <el-table-column label="证件号码" align="center" width="200">
           <template slot-scope="scope">{{scope.row.cardNo}}</template>
         </el-table-column>
         <el-table-column label="详细住址" align="center">
@@ -73,7 +76,7 @@
         <el-table-column label="审核状态" align="center">
           <template slot-scope="scope">{{scope.row.status | changeStatus}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="200px"  align="center">
+        <el-table-column label="操作" width="180px"  align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="delLogis(scope.row)">{{scope.row.status | changeMsg}}</el-button>
           </template>
@@ -144,6 +147,16 @@
           case 2: return "已拒绝";
             break;
         }
+      },
+      changeType(data) {
+        switch (data) {
+          case "leader": return "团长";
+            break;
+          case "agent": return "代理";
+            break;
+          default: return "数据读取出错";
+            break;
+        }
       }
     },
     methods: {
@@ -151,11 +164,12 @@
         fetchList(this.listQuery).then(res => {
           console.log(res);
           this.orderList = res.result.result.records;
+          this.total = parseInt(res.result.result.total);
         })
       },
       showAddress(row, column) {
         try {
-          return row.provinceBean.name + " " + row.cityBean.name + " " + row.areaBean.name;
+          return row.provinceBean.name + row.cityBean.name + row.areaBean.name + row.villageBean.name + row.townBean.name;
         } catch (e) {
           return '数据读取错误';
         }

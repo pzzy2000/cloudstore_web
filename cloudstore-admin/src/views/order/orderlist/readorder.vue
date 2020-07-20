@@ -36,7 +36,8 @@
       </el-table-column>
       <el-table-column prop="createTime" label="下单时间" align="center">
       </el-table-column>
-      <el-table-column prop="payTime" label="支付时间" align="center">
+      <el-table-column label="支付时间" align="center">
+        <template slot-scope="scope">{{scope.row.payTime | formatDate}}</template>
       </el-table-column>
       <el-table-column prop="weixinNumber" label="微信流水号" align="center">
       </el-table-column>
@@ -82,8 +83,8 @@
     <el-table :data="baseInfo.orderDetailsBean" border style="width: 96%; margin-left: 2%">
       <el-table-column prop="goodsName" label="商品名称" align="center" :formatter="showgoods">
       </el-table-column>
-      <el-table-column prop="goodsId" label="商品名称" align="center">
-      </el-table-column>
+<!--      <el-table-column prop="goodsId" label="商品名称" align="center">-->
+<!--      </el-table-column>-->
       <el-table-column prop="price" label="单价" align="center" :formatter="showgoods">
       </el-table-column>
       <el-table-column prop="quantity" label="数量" align="center" :formatter="showgoods">
@@ -144,6 +145,7 @@
 
 <script>
   import {getOneorder} from '@/api/order'
+  import { formatDate } from '@/assets/common/data.js'
 
   export default {
     name: "readorder",
@@ -176,6 +178,10 @@
         }catch (e) {
           return "获取地址出错";
         }
+      },
+      formatDate(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
       }
     },
     created() {
@@ -236,7 +242,7 @@
         })
       },
       backPage() {
-        this.$router.go(-1);
+        this.$router.back();
       }
     }
   }

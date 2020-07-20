@@ -77,7 +77,7 @@
     data() {
       return {
         list: null,
-        total: null,
+        total: 0,
         listLoading: true,
         listQuery: {
           pageNum: 1,
@@ -103,7 +103,7 @@
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.result.result.records;
-          this.total = response.result.result.records.total;
+          this.total = parseInt(response.result.result.total);
         });
       },
       addProductAttrCate() {

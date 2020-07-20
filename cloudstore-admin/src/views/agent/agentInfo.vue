@@ -44,7 +44,12 @@
       },
       data() {
         return {
-          baseinfoForm: {},
+          baseinfoForm: {
+            name: '123',
+            address: '广东省深圳市宝安区',
+            detailAddress: '广东省深圳市宝安区华丰智谷B栋119',
+            phone: '13300000001'
+          },
           rwDispatcherState: 'write',
           titleMsg: '',
           optType: '',

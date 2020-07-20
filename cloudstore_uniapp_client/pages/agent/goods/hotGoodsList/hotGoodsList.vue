@@ -8,23 +8,19 @@
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 		</view>
 		<view class="goods-list">
-			<text class="goods-item" v-if="goodsList.length === 0">没有更多数据了</text>
 			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
-				<view class="image-wrapper">
-					<image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
-				</view>
+				<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
-					<text class="title clamp">{{ goods.goodsPicesBean.goodsName }}</text>
-					<text class="title clamp subhead ">{{goods.goodsPicesBean.goodsSubtitle}}</text>
-					<text class="title clamp subhead ">供应商:{{goods.goodsPicesBean.supplierBean.name}}/{{goods.goodsPicesBean.supplierShopBean.shopName}}</text>
-					<view class="price-box">
-						<view class="price">
-							<text class="price1">价格:</text>
-							<text class="priceSale">{{ goods.goodsPicesBean.salePrice }}</text>
-							/<text class="pricemart">{{ goods.goodsPicesBean.martPrice}}</text>
+					<view class="detail-title">
+						<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
+						<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
+					</view>
+					<view class="detail-price">
+						<view class="price-main">
+							<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
+							<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 						</view>
-						<!--<button class="goodsBtn">去代理</button> -->
-
+						<button type="primary" class="price-btn">立即代理</button>
 					</view>
 				</view>
 			</view>
@@ -269,7 +265,7 @@
 <style lang="scss">
 	page,
 	.content {
-		background: $page-color-base;
+		background: #fff;
 	}
 
 	.content {
@@ -425,94 +421,70 @@
 	.goods-list {
 		display: flex;
 		flex-wrap: wrap;
-		padding: 0 15upx;
-		background: #fff;
-
+		margin: 40upx 30upx;
+		padding-bottom: 40upx;
 		.goods-item {
 			display: flex;
 			flex-direction: column;
 			flex-flow: nowrap;
 			width: 100%;
-			height: 100px;
+			height: 200upx;
+			margin-bottom: 20upx;
 		}
-
 		.image-wrapper {
-			width: 100px;
-			height: 100px;
-			border-radius: 3px;
+			width: 200upx;
+			height:200upx;
+			border-radius: 3upx;
 			overflow: hidden;
-
 			image {
 				opacity: 1;
 			}
 		}
-
 		.goods-detail {
 			display: inline-block;
-			width: 75%;
-			padding: 1px;
-
-			.title {
+			margin-left: 20upx;
+			display: flex;
+			justify-content: flex-start;
+			flex-wrap: wrap;
+			width: 65%;
+			.detail-title {
 				font-size: 16px;
-				color: $font-color-dark;
-				//line-height: 80upx;
+				color: #000;
+				width: 100%;
+				.number {
+					color: #999;
+					font-size: 26upx;
+					line-height: 50upx;
+					height: 50upx;
+				}
 			}
-
-			.subhead {
-				color: #333;
-				font-size: 25upx;
-			}
-
-			.price-box {
+			.detail-price {
 				display: flex;
-				align-items: left;
 				justify-content: space-between;
-				padding: 30px 0px 0px 0px;
-				font-size: 14upx;
-				color: $font-color-light;
-
-				.price1 {
-					font-size: 14px;
-					color: $uni-color-primary;
-					line-height: 1;
-				}
-
-				.price {
-					bottom: 0px;
-
-					.priceSale {
-						font-size: 14px;
-						color: $uni-color-primary;
-						line-height: 1;
-
-						&:before {
-							content: '￥';
-							font-size: 14px;
-						}
-					}
-
-					.pricemart {
-						font-size: 12px;
+				align-items: flex-end;
+				width: 100%;
+				padding-bottom: 20upx;
+				.price-main {
+					color: #999;
+					font-size: 24upx;
+					.surprised {
+						font-size: 30upx;
 						color: #000;
-						text-decoration: line-through;
-						line-height: 1;
-
-						&:before {
-							content: '￥';
-							font-size: 12px;
+						.surprised-price {
+							font-size: 35upx;
+							color: red;
 						}
 					}
 				}
-
-				.goodsBtn {
-					font-size: 30upx;
-					color: #fff;
-					background: red;
-					height: 70upx;
-					line-height: 70upx;
-					width: 150upx;
+				.price-btn {
 					padding: 0;
 					margin: 0;
+					font-size: 30upx;
+					padding: 0 20upx;
+					height: 60upx;
+					line-height: 60upx;
+					color: #fff;
+					background: #ff4f50;
 				}
 			}
 		}

@@ -170,20 +170,30 @@
 					params.id = data.id
 					params.status = data.status
 				}
-	 			let resullt = await Api.apiCall('post', Api.client.address.save, params, true);
-				if(resullt){
+	 			let result = await Api.apiCall('post', Api.client.address.save, params, true);
+				if(result){
 					//this.$api.prePage()获取上一页实例，可直接调用上页所有数据和方法，在App.vue定义
 					// this.$api.prePage().refreshList(data, this.manageType);
 					// this.$api.msg(`地址${this.manageType=='edit' ? '修改': '添加'}成功`);
 					// setTimeout(()=>{
 					// 	uni.navigateBack()
 					// }, 800)
-					this.$api.msg("添加新地址成功");
-					this.$api.prePage();
-					this.$api.prePage().searchAddressList ();
-					setTimeout(()=>{
-						uni.navigateBack()
-					}, 1000);
+					console.log(result.code)
+					if (result.code === 0) {
+						uni.showModal({
+							title: '提示',
+							content: '添加地址成功',
+							showCancel: false,
+							cancelText: '取消',
+							confirmText: '确定',
+							success: res => {
+								this.$api.prePage().searchAddressList ();
+								uni.navigateBack()
+							},
+						});
+					} else {
+						this.$api.msg(result.msg);
+					}
 				}
 			}
 		}

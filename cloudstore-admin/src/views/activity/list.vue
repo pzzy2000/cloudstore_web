@@ -82,7 +82,7 @@
         <el-table-column label="是否参加佣金" align="center">
           <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
         </el-table-column>
-        <el-table-column label="操作"  align="center">
+        <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
             <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow">删除</el-button>
@@ -191,12 +191,14 @@
                 message: '首页不显示了！',
                 duration: 800
               })
+              this.getList();
             }else{
               this.$message({
                 type: 'success',
                 message: '显示在首页了！',
                 duration: 800
               })
+              this.getList();
             }
           }else{
             this.$message({
@@ -204,6 +206,10 @@
               message: '操作不成功，请联系管理员！',
               duration: 800
             })
+            setTimeout(function(){
+              row.status =0;
+            },500);
+            this.getList();
           }
         })
       },
@@ -266,19 +272,25 @@
                 message: '活动没启用！',
                 duration: 800
               })
+              this.getList();
             }else{
               this.$message({
                 type: 'success',
                 message: '活动启用了！',
                 duration: 800
               })
+              this.getList();
             }
           }else{
-            this.$message({
-              type: 'warning',
-              message: '操作不成功，请联系管理员！',
-              duration: 800
-            })
+            // this.$message({
+            //   type: 'warning',
+            //   message: '操作不成功，请联系管理员！',
+            //   duration: 800
+            // })
+            setTimeout(function(){
+              row.status =0;
+            },500);
+            this.getList();
           }
         })
       },
@@ -297,19 +309,25 @@
                 message: '导航栏不显示了！',
                 duration: 800
               })
+              this.getList();
             }else{
               this.$message({
                 type: 'success',
                 message: '显示在导航栏了！',
                 duration: 800
               })
+              this.getList();
             }
           }else{
-            this.$message({
-              type: 'warning',
-              message: '操作不成功，请联系管理员！',
-              duration: 800
-            })
+            // this.$message({
+            //   type: 'warning',
+            //   message: '操作不成功，请联系管理员！',
+            //   duration: 800
+            // })
+            setTimeout(function(){
+              row.navigateIndex =0;
+            },500);
+            this.getList();
           }
         })
       }

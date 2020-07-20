@@ -623,7 +623,6 @@
               setTimeout(function(){
                 row.shelfStatus =0;
               },1000);
-
             }
           })
         }
