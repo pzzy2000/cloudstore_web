@@ -173,9 +173,9 @@
         let status = row.status;
         switch (status) {
           case 0:
-            return '未删除';
-          case 1:
             return '已删除';
+          case 1:
+            return '未删除';
           default:
             return '正常';
         }
