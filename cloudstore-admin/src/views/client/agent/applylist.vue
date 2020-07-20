@@ -121,6 +121,9 @@
     created() {
       this.getList();
     },
+    activated() {
+      this.getList();
+    },
     filters: {
       changeCt(data) {
         switch (data) {
@@ -177,8 +180,15 @@
       delLogis(row) {
         this.$router.push({path: "/sys/client/agent/apply/info", query: {id: row.id}})
       },
-      handleSizeChange() {},
-      handleCurrentChange() {}
+      handleCurrentChange(val) {
+        this.listQuery.pageNum = val;
+        this.getList();
+      },
+      handleSizeChange(val) {
+        this.listQuery.pageNum = 1;
+        this.listQuery.pageSize = val;
+        this.getList();
+      },
     }
   }
 </script>

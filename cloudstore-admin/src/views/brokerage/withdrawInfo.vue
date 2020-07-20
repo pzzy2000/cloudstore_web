@@ -27,15 +27,6 @@
         <el-table-column label="未结算积分" align="center">
           <template slot-scope="scope">{{scope.row.pointsing}}</template>
         </el-table-column>
-<!--        <el-table-column label="申请时间" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.payPrice}}</template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="操作" width="200px"  align="center">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-button size="mini" @click="receptRqs(scope.$index, scope.row)">审核通过</el-button>-->
-<!--            <el-button size="mini" @click="refuse(scope.row)" type="danger">拒绝</el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
     </div>
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
@@ -146,12 +137,6 @@
           this.total = parseInt(res.result.result.total);
         })
       },
-      receptRqs(index, row) {
-        alert("通过了")
-      },
-      refuse(row) {
-        alert("拒绝了")
-      },
       changeMsg(row) {
         switch (row.profitStauts) {
           case 1: return "未结算";
@@ -169,7 +154,7 @@
         this.getList();
       },
       backPage() {
-        this.$router.go(-1);
+        this.$router.back();
       }
     }
   }

@@ -20,6 +20,10 @@
             <el-input-dispatcher v-model="baseinfoForm.shopName" />
           </el-form-item>
           <br />
+          <el-form-item label="申请代理类型：" prop="agentType">
+            <el-input-dispatcher v-model="baseinfoForm.agentType" />
+          </el-form-item>
+          <br />
           <el-form-item label="证件类型：" prop="cardType">
             <el-input-dispatcher v-model="baseinfoForm.cardType" />
           </el-form-item>
@@ -106,7 +110,7 @@
               type: 'success',
               duration: 800
             });
-            this.$router.push('/sys/agent/list');
+            this.$router.go(-1);
           }
         })
       },

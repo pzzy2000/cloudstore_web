@@ -79,16 +79,17 @@
       methods: {
         getAgent() {
           getOneagent({id: this.$route.query.agentId}).then(res => {
-            this.baseinfoForm = res.result.result;
-            if (this.baseinfoForm.provinceBean == null){
-              this.baseinfoForm.address = ''
-            }else{
-              this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
-            }
+            console.log(res);
+            // this.baseinfoForm = res.result.result;
+            // if (this.baseinfoForm.provinceBean == null){
+            //   this.baseinfoForm.address = ''
+            // }else{
+            //   this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
+            // }
           })
         },
         toLastpage() {
-          this.$router.push('/sys/agent/list');
+          this.$router.back();
         },
         submitAgent(formName) {
           this.$refs[formName].validate((valid) => {

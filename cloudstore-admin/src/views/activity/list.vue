@@ -216,12 +216,10 @@
       handleSelectionChange(val){
         this.multipleSelection = val;
       },
-
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
         this.getList();
       },
-
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;

@@ -260,7 +260,7 @@ export const asyncRouterMap = [
         path: 'index',
         name: 'broke_rage',
         component: () => import('@/views/brokerage/index'),
-        meta: {title: '佣金活动列表', icon: 'product-list'}
+        meta: {title: '佣金活动列表', icon: 'product-list', keepAlive: true}
       },
       {
         path: 'brokegoods',
@@ -286,7 +286,7 @@ export const asyncRouterMap = [
         path: 'withdrawbrage',
         name: 'withdraw_brage',
         component: () => import('@/views/brokerage/withdrawBrage'),
-        meta: {title: '客户佣金列表', icon: 'product-list'}
+        meta: {title: '客户佣金列表', icon: 'product-list', keepAlive: true}
       },
       {
         path: 'withdrawinfo',
@@ -306,7 +306,7 @@ export const asyncRouterMap = [
          path: 'list',
         name: 'agent_list',
         component: () => import('@/views/agent/list'),
-        meta: {title: '代理列表', icon: 'product-list'}
+        meta: {title: '代理列表', icon: 'product-list', keepAlive: true}
      },{
         path: 'info',
         name: 'agent_info',
