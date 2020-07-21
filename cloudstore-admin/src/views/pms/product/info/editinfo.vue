@@ -39,17 +39,16 @@
             <span style="color: #ccc">格式要求：每张图片大小不超过1M</span>
           </el-form-item>
           <br />
-          <el-form-item label="退货规则：" prop="returnRuleId">
-            <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">
-
-            </el-select-dispatcher>
-          </el-form-item>
-          <br />
-          <el-form-item label="运费规则：" prop="freightRuleId">
-            <el-select-dispatcher v-model="baseinfo.freightRuleId" id="freightRuleId">
-            </el-select-dispatcher>
-          </el-form-item>
-          <br />
+<!--          <el-form-item label="退货规则：" prop="returnRuleId">-->
+<!--            <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">-->
+<!--            </el-select-dispatcher>-->
+<!--          </el-form-item>-->
+<!--          <br />-->
+<!--          <el-form-item label="运费规则：" prop="freightRuleId">-->
+<!--            <el-select-dispatcher v-model="baseinfo.freightRuleId" id="freightRuleId">-->
+<!--            </el-select-dispatcher>-->
+<!--          </el-form-item>-->
+<!--          <br />-->
           <el-form-item label="商品分类：" prop="categoryOneId">
             <el-select-dispatcher v-model="baseinfo.categoryOneId" :options="category1" remote placeholder="一级分类"
               :loading="loading" v-on:change="seclectCategory($event, 1)">
@@ -457,9 +456,10 @@
         udpobj.unit = this.baseinfo.unit;
         udpobj.goodsName = this.baseinfo.goodsName;
         udpobj.supplierId = this.baseinfo.supplierId;
+        udpobj.goodsBrand = this.baseinfo.goodsBrand;
+        udpobj.goodsNumber = this.baseinfo.goodsNumber
 		    udpobj.id= this.goodsId;
         console.log(udpobj);
-        console.log(this.baseinfo);
         updateGood(udpobj).then(res => {
           if(res){
              let  reuslt  = res.result;

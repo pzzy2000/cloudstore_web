@@ -21,7 +21,7 @@
           </el-form-item>
           <br />
           <el-form-item label="申请代理类型：" prop="agentType">
-            <el-input-dispatcher v-model="baseinfoForm.agentType" />
+            <el-input-dispatcher v-model="baseinfoForm.AT" />
           </el-form-item>
           <br />
           <el-form-item label="证件类型：" prop="cardType">
@@ -85,12 +85,6 @@
           if (res.result.result.status !== 0) {
             this.isshow = false;
           }
-          if (this.baseinfoForm.provinceBean == null){
-            this.baseinfoForm.address = ''
-          }else{
-            this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
-          }
-          console.log(this.baseinfoForm.address)
           switch (this.baseinfoForm.status) {
             case 0: this.baseinfoForm.msg = '待审核';
               break;
@@ -98,6 +92,30 @@
               break;
             case 2: this.baseinfoForm.msg = '已拒绝';
               break;
+            default: return this.baseinfoForm.msg = "数据读取错误";
+              break;
+          }
+          switch (this.baseinfoForm.agentType) {
+            case "leader": return this.baseinfoForm.AT = "团长";
+              break;
+            case "supplier": return this.baseinfoForm.AT = "供应商";
+              break;
+            case "agent": return this.baseinfoForm.AT = "代理商";
+              break;
+            default: return this.baseinfoForm.AT = "数据读取错误";
+              break;
+          }
+          // if (this.baseinfoForm.provinceBean == null){
+          //   this.baseinfoForm.address = ''
+          // }else{
+          //   this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
+          // }
+          try{
+            return this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
+          }catch (e) {
+            return this.baseinfoForm.address = '';
+          }finally {
+            return this.baseinfoForm.detailAddress = this.baseinfoForm.address + this.baseinfoForm.detailAddress;
           }
         })
       },

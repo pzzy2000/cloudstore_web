@@ -180,7 +180,7 @@ export const asyncRouterMap = [
            path: 'category/list',
            name: 'category_list',
            component: () => import('@/views/pms/productCate/index'),
-           meta: {title: '商品分类', icon: 'product-list'}
+           meta: {title: '商品分类', icon: 'product-list', keepAlive: true}
          },
          // {
          //   path: 'category',
