@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="container">
 		<nav-bar>我的收益</nav-bar>
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view class="cu-item" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
@@ -16,7 +16,7 @@
 			<view class="cu-item" v-for='(item, index) in financetDataList' :key='index'>
 				<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
 				<view class="content">
-					<view class="text-grey">{{item.orderDetailBean.goodsBean.goodsName}}</view>
+					<view class="text-grey clamp">{{item.orderDetailBean.goodsBean.goodsName}}</view>
 					<view class="text-gray text-sm flex">
 						<view class="text-cut">
 							收益:{{item.profit}}元
@@ -91,13 +91,15 @@
 						}
 					}
 				},
-				async lisFinancetData () {
+				async lisFinancetData (condition = '2', type = '1') {
 					uni.showLoading({
 						title: '正在加载',
 						mask: false
 					});
 					let parmas = {
 						userType: 'agent',
+						status: condition,
+						type: type,
 						pageNum: '1',
 						pageSize: '10'
 					}
@@ -117,10 +119,14 @@
 					}
 				},
 				earninngType (index) {
-					if (index === 1 || index === 2) {
-						this.financetDataList = []
-						this.tabEarning = index
-						this.lisFinancetData()
+					this.financetDataList = []
+					this.tabEarning = index
+					if (index === 2) {
+						this.lisFinancetData(2, 1)
+					} else if (index === 1) {
+						this.lisFinancetData(1, 1)
+					} else if (index === 3) {
+						this.lisFinancetData(2, 2)
 					}
 				}
 			}
@@ -128,8 +134,19 @@
 </script>
 
 <style scoped>
+	.container {
+		padding-bottom: 100upx;
+	}
 	.cu-list.menu-avatar>.cu-item .action {
 		width: auto;
 		text-align: right;
+	}
+	.menu-avatar .cu-item .content {
+		flex: 1;
+		width: 40%;
+		overflow: hidden;  /*也可以用 width:0 代替*/
+	}
+	.menu-avatar .cu-item .content .clamp {
+		display: block;
 	}
 </style>

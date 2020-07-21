@@ -233,7 +233,6 @@
 				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params);
 				if (data) {
 					activity.goodsList = data.result.records;
-					console.log(activity.goodsList)
 				}
 			},
 			/**
@@ -243,7 +242,6 @@
 				let params = {
 					storeId: 0
 				};
-				console.log(uni.getSystemInfoSync().platform);
 				switch (uni.getSystemInfoSync().platform) {
 					case 'android':
 						params.type = 2;
@@ -314,14 +312,12 @@
 					couponId: item.id
 				};
 				let data = await Api.apiCall('post', Api.index.acceptCoupon, params);
-				console.log(data);
 				if (data) {
 					this.$api.msg(data);
 				}
 				uni.hideLoading();
 			},
 			navToCategory(item) {
-				console.log(item)
 				let activitId = item.id;
 				uni.navigateTo({
 						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?id='+activitId

@@ -29,7 +29,7 @@
 			<view class="forget-section">
 				<text @click="getWxCode">微信注册</text>
 			</view>
-			<view class="forget-section">已经有账号?<text @click="toLoginPwd">马上登录</text></view>
+			<view class="forget-section text-blue" @click="toLoginPwd">已经有账号?马上登录</view>
 		</view>
 		<uni-popup ref="popup" type="center">
 			<button type="primary" open-type='getPhoneNumber' @getphonenumber="getPhoneNumber">微信授权手机号码</button>

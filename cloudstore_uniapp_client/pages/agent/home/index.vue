@@ -16,7 +16,6 @@
 				<image :src="user.url" mode="" alt='头像' class="info-img"></image>
 				<view class="header-info">
 					<text class="title samp">{{user.name}}</text>
-					<text>回头率：50 &nbsp;&nbsp;&nbsp;&nbsp;收藏量： 40</text>
 				</view>
 			</view>
 			<view class="agency-list">

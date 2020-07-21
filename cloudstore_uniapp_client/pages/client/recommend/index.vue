@@ -155,7 +155,6 @@ export default {
 				let parmas = {}
 				let data = await Api.apiCall('post',Api.client.recommend.newShopinfoByOrder,parmas)
 				if (data) {
-					console.log(data.result)
 					this.shopInfo.name = data.result.name || '暂无店铺'
 					this.shopInfo.detailAddress = data.result.detailAddress || '暂无地址'
 				}

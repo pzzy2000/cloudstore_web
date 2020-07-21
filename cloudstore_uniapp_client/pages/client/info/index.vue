@@ -63,7 +63,6 @@
 				<!-- <list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="toapplyAgent"></list-cell> -->
 				<list-cell icon="icon-pinglun-copy"  v-if="user.relationId > 0" iconColor="#54b4ef" title="我的代理" @eventClick="toAgent"></list-cell>
 				<list-cell icon="icon-pinglun-copy" v-else iconColor="#54b4ef" title="申请代理" @eventClick="toapplyAgent('/pages/client/info/applyAgent')"></list-cell>
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="敬请期待" border="" @eventClick="toapplyAgent"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统退出" border="" @eventClick="navTo('/pages/client/public/login','exit')"></list-cell>
 			</view>
 		</view>

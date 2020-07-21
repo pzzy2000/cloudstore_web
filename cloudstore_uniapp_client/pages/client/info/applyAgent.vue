@@ -19,10 +19,18 @@
 				<input placeholder="请输入电话号码" name="input" :value="agentfrom.phone" :disabled='isEdit' @input="editInput($event,'phone')"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">证件类型</view>
+				<view class="title">代理类型：</view>
 				<picker @change="typeChange" :value="index" :range="picker" :disabled='isEdit'>
 					<view class="picker">
 						{{index>-1?picker[index]:'请选择'}}
+					</view>
+				</picker>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">证件类型</view>
+				<picker @change="typePickerChange" :value="typePickerIndex" :range="typePicker" :disabled='isEdit'>
+					<view class="picker">
+						{{typePickerIndex>-1?typePicker[typePickerIndex]:'请选择'}}
 					</view>
 				</picker>
 			</view>
@@ -43,15 +51,8 @@
 					上传身份证正反面
 				</view>
 			</view>
-			<view class="cu-form-group">
-				<easy-upload
-				:dataList="imageList" :uploadUrl="upImgUrl" :types="category"
-				deleteUrl='' :uploadCount="2"
-				uploadIcon="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1049033917,3033202092&fm=26&gp=0.jpg"
-				@successImage="successImage" 
-				@successVideo="successvideo"
-				@delectIndex= 'delectIndex'
-				></easy-upload>
+			<view class="cu-form-group" v-if="isUpload">
+				<tui-upload :serverUrl="serverUrl" @complete="uploadResult" @remove="uploadRemove" :value='imageList' :valueId= 'imgListId'></tui-upload>
 			</view>
 			<view class="padding flex flex-direction">
 				<button class="cu-btn bg-red margin-tb-sm lg" @tap="applyAgent">上传</button>
@@ -77,10 +78,10 @@
 <script>
 	import navBar from '@/components/zhouWei-navBar';
 	import Api from '@/common/api.js'
-	import easyUpload from '@/components/easy-upload/easy-upload'
 	import ehPicker from '@/pages/tabbar/erha-picker.vue'; 
 	import tuiCascadeSelection from '@/components/tui-cascade-selection/tui-cascade-selection.vue'
 	import uniPopup from '@/components/uni-popup/uni-popup'
+	import tuiUpload from '@/components/tui-upload/tui-upload.vue'
 	export default {
 		data() {
 			return {
@@ -90,6 +91,7 @@
 					shopName: '',
 					name: '',
 					phone: '',
+					agentType: '1',
 					cardType: 'IDCard',
 					cardId: '',
 					cardPhoto: [],
@@ -111,23 +113,31 @@
 				},
 				picker:['身份证'],
 				index: 0,
-				imageList: [],
+				typePicker: ['代理', '团长'],
+				typePickerIndex: 0,
 				upImgUrl: Api.BASEURI +'sys/upload/entity/image/update',
 				category: 'image',
-				imglistId: [],
+				imgListId: [],
+				imageList: [],
 				checkText: '',
 				isCheck: false,
 				isEdit: false,
 				itemList: [],
-				receiveData: []
+				receiveData: [],
+				isUpload: true,
+				//上传地址
+				serverUrl: Api.BASEURI +'sys/upload/entity/image/update'
 			}
 		},
 		components:{
-			navBar, easyUpload, ehPicker, tuiCascadeSelection, uniPopup
+			navBar, ehPicker, tuiCascadeSelection, uniPopup, tuiUpload
 		},
 		onLoad() {
 			this.getApplyAgentData()
 			this.getAddressData()
+		},
+		onPullDownRefresh() { //下拉刷新
+			this.getApplyAgentData()
 		},
 		methods: {
 			async getAddressData () {
@@ -166,18 +176,26 @@
 						this.agentfrom.shopName = data.result.shopName
 						this.agentfrom.name = data.result.name
 						this.agentfrom.phone = data.result.phone
+						if (data.result.agentType === 'agent') {
+							this.typePickerIndex = 0
+							this.agentfrom.agentType = data.result.agentType
+						} else {
+							this.typePickerIndex = 1
+							this.agentfrom.agentType = data.result.agentType
+						}
 						this.agentfrom.cardType = data.result.cardType
 						this.agentfrom.address = data.result.detailAddress
 						this.agentfrom.cardId = data.result.cardNo
-						this.agentfrom.provinceId = data.result.provinceBean.id
-						this.agentfrom.cityId = data.result.cityBean.id
-						this.agentfrom.areaId = data.result.areaBean.id
+						this.agentfrom.provinceId = data.result.provinceId
+						this.agentfrom.cityId = data.result.cityId
+						this.agentfrom.areaId = data.result.areaId
+						this.agentfrom.townId = data.result.townId
+						this.agentfrom.villageId = data.result.villageId
 						this.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name +" / "+ data.result.villageBean.name
 						for (let tmp in data.result.goodsPhotos) {
 							this.imageList.push(data.result.goodsPhotos[tmp].url)
-							this.imglistId.push(data.result.goodsPhotos[tmp].uid)
+							this.imgListId.push(data.result.goodsPhotos[tmp].uid)
 						}
-						console.log(this.imglistId)
 						if (data.result.status === 0) {
 							this.checkText = '正在审核中,资料不能修改'
 							this.isCheck = true
@@ -190,11 +208,20 @@
 						}
 					}
 				}
+				uni.stopPullDownRefresh()
 			},
 			typeChange (e) {
 				this.index = e.detail.value
 				if (e.detail.value === 1) {
 					this.agentfrom.cardType = 'IDCard'
+				}
+			},
+			typePickerChange (e) {
+				this.typePickerIndex = e.detail.value
+				if (e.detail.value === 0) {
+					this.agentfrom.agentType = 'agent'
+				} else {
+					this.agentfrom.agentType = 'leader'
 				}
 			},
 			complete(e) { //点击了地址的上一级分类
@@ -266,17 +293,15 @@
 				}
 				this.popup = false;
 			},
-			successImage(e){
-				if (e) {
-					this.imglistId = e
+			uploadResult (e) {
+				this.imgListId = e.imgListId
+			},
+			uploadRemove (e) {
+				let index = e.index
+				if (this.imgListId.length != 0) {
+					this.imageList.splice(index, 1)
+					this.imgListId.splice(index, 1)
 				}
-			},
-			successvideo(e){
-				console.log(e)
-			},
-			delectIndex (e) {
-				this.imglistId.splice(e,1)
-				this.imageList.splice(e,1)
 			},
 			editInput (e,data) { //修改input里面的值的时候
 				switch(data)
@@ -331,17 +356,18 @@
 					this.$api.msg('请输入详细地址')
 					return;
 				}
-				if (this.imglistId.length === 0) {
-					this.$api.msg('请选择图片')
-					return;
-				}
+				// if (this.imglistId.length === 0) {
+				// 	this.$api.msg('请选择图片')
+				// 	return;
+				// }
 				let params = {
 					shopName: this.agentfrom.shopName,
 					name: this.agentfrom.name,
 					phone: this.agentfrom.phone,
+					agentType: this.agentfrom.agentType,
 					cardType: this.agentfrom.cardType,
 					cardNo: this.agentfrom.cardId,
-					cardPhoto: this.imglistId.toString(),
+					cardPhoto: this.imgListId,
 					provinceId: this.agentfrom.provinceId,
 					cityId: this.agentfrom.cityId,
 					areaId: this.agentfrom.areaId,

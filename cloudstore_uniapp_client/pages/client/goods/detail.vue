@@ -211,8 +211,6 @@ export default {
 		}else{
 			this.shareClientId = ops.shareClientId
 		}
-		console.log(ops)
-		console.log(this.shareClientId)
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 	},
 	methods: {
@@ -235,8 +233,12 @@ export default {
 				//赋值默认商品价格，库存和图片
 				this.sku.price = this.skuList[0].price
 				this.sku.stock = this.skuList[0].stock
-				if (this.skuList[0].photos[0]) {
-					this.sku.imgUrl = this.skuList[0].photos[0].url
+				try{
+					if (this.skuList[0].photos[0]) {
+						this.sku.imgUrl = this.skuList[0].photos[0].url
+					}
+				}catch(e){
+					console.log('sku图片出错')
 				}
 				this.goodsSkuId = this.skuList[0].id
 				//遍历商品数据展示规格
@@ -355,13 +357,16 @@ export default {
 				}
 				specArray.join(',')
 				for (let data in this.skuList) {
-					
 					var skuValue =  this.skuList[data].skuValue.split(',').sort().toString()
 					if (specArray.sort().toString() === skuValue) {
+						this.goodsSkuId = this.skuList[data].id
 						this.sku.stock = this.skuList[data].stock
 						this.sku.price = this.skuList[data].price
-						this.sku.imgUrl = this.skuList[data].photos[0].url
-						this.goodsSkuId = this.skuList[data].id
+						try{
+							this.sku.imgUrl = this.skuList[data].photos[0].url
+						}catch(e){
+							console.log('sku图片出错')
+						}
 						break;
 					}
 				}
