@@ -219,17 +219,16 @@
 				this.categoryOneId = '';
 				this.categoryTwoId = '';
 				this.categoryThreeId = '';
-				this.filterIndex = 1;
 				this.pageNum = '1';
 				this.loadData();
 				this.toggleCateMask('hide');
 			},
 			tabClick(index) { //点击tab列表
 				if (index === 0) {
-					
+					this.filterIndex = 0
 				}
 				if (index === 1) {
-					
+					this.filterIndex = 1
 				}
 				if (index === 2) {
 					this.filterIndex = 2

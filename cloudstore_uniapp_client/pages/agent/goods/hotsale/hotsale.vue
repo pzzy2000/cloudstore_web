@@ -302,12 +302,10 @@
 					url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
 				});
 			},
-
 			async acceptCoupon(item) {
 				uni.showLoading({
 					title: '请稍后'
 				});
-
 				let params = {
 					couponId: item.id
 				};
@@ -319,9 +317,13 @@
 			},
 			navToCategory(item) {
 				let activitId = item.id;
-				uni.navigateTo({
+				if (item.status) {
+					uni.navigateTo({
 						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?id='+activitId
-				});
+					});
+				} else {
+					this.$api.msg('敬请期待')
+				}
 			},
 			search() {
 				uni.navigateTo({

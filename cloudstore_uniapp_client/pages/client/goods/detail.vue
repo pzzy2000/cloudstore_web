@@ -202,6 +202,7 @@ export default {
 		
 	},
 	onLoad(ops) {
+		console.log(ops)
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
 		this.userType = ops.userType

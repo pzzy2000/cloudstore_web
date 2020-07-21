@@ -2,9 +2,9 @@
 	<view class="content">
 		<nav-bar>商品分类</nav-bar>
 		<view class="navbar">
-			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
+			<view class="nav-item" :class="{ current: filterIndex === 0 }">综合排序</view>
+			<view class="nav-item" :class="{ current: filterIndex === 1 }">销量排序</view>
+			<view class="nav-item" :class="{ current: filterIndex === 2 }">
 				<text>价格</text>
 				<view class="p-box">
 					<text :class="{ active: priceOrder === 1 && filterIndex === 2 }" class="yticon icon-shang"></text>

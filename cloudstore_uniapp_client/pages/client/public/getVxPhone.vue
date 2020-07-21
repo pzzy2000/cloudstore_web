@@ -120,6 +120,7 @@
 										name: res.data.result.result.name,
 										url: res.data.result.result.url,
 										userType: res.data.result.userType,
+										agent: res.data.result.agent,
 										relationId: res.data.result.relationId
 									}
 									uni.setStorageSync('userInfo',userInfo)

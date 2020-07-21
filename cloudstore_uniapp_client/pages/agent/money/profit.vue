@@ -39,6 +39,7 @@
 	export default {
 			data(){
 				return {
+					userType: '',
 					cuIconList: [{
 						cuIcon: 'recharge',
 						color: 'red',
@@ -72,13 +73,14 @@
 				navBar
 			},
 			onLoad () {
+				this.userType = uni.getStorageSync('userInfo').agent
 				this.getFinanceData()
 				this.lisFinancetData()
 			},
 			methods:{
 				async getFinanceData () {
 					let parmas = {
-						userType: 'agent'
+						userType: this.userType
 					}
 					let data = await Api.apiCall('post', Api.finance.get, parmas)
 					if (data) {
@@ -97,7 +99,7 @@
 						mask: false
 					});
 					let parmas = {
-						userType: 'agent',
+						userType: this.userType,
 						status: condition,
 						type: type,
 						pageNum: '1',
