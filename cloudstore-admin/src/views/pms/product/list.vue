@@ -327,6 +327,9 @@
         }
       }
     },
+    activated() {
+      this.getList();
+    },
     methods: {
       suppilerShop(row, column) {
         try {

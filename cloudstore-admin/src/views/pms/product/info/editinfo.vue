@@ -289,7 +289,6 @@
         this.searchRootCategory();
         this.selectRootDistrict();
       },
-
       searchRootCategory() {
         this.loading = true;
         fetchListWithChildren(0).then(response => {
@@ -428,8 +427,7 @@
         });
       },
       cancelList() {
-        this.$router.go(-1)
-
+        this.$router.back()
       },
 
       updateProduct() {

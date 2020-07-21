@@ -115,7 +115,7 @@ export const asyncRouterMap = [
        path: 'list',
        name: 'supplier_list',
        component: () => import('@/views/supplier/list'),
-       meta: {title: '供应商列表', icon: 'product-list'}
+       meta: {title: '供应商列表', icon: 'product-list', keepAlive: true}
      },
      {
        path: 'edit',
@@ -142,7 +142,7 @@ export const asyncRouterMap = [
          path: 'list',
          name: 'goods_list',
          component: () => import('@/views/pms/product/list'),
-         meta: {title: '商品列表', icon: 'product-list'}
+         meta: {title: '商品列表', icon: 'product-list', keepAlive: true}
        },
        {
         path: 'add',

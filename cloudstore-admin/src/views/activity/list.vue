@@ -147,6 +147,9 @@
       //   }
       // }
     },
+    activated() {
+      this.getList();
+    },
     filters: {
       changeMsg(data) {
         switch (data) {
@@ -201,11 +204,6 @@
               this.getList();
             }
           }else{
-            this.$message({
-              type: 'warning',
-              message: '操作不成功，请联系管理员！',
-              duration: 800
-            })
             setTimeout(function(){
               row.status =0;
             },500);

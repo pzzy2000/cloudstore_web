@@ -125,14 +125,14 @@
     },
     methods: {
       getList() {
-        defaultList.userId = this.$route.query.id;
-        getUserinfo(defaultList).then(res => {
+        this.pageList.userId = this.$route.query.id;
+        getUserinfo(this.pageList).then(res => {
           if (res.result.code == 0) {
             this.userList = res.result.result.records;
             // this.total = parseInt(res.result.result.total);
           }
         })
-        getBrokeinfo(defaultList).then(res => {
+        getBrokeinfo(this.pageList).then(res => {
           this.brokeList = res.result.result.records;
           this.total = parseInt(res.result.result.total);
         })
@@ -147,10 +147,13 @@
             break;
         }
       },
-      handleSizeChange() {
+      handleCurrentChange(val) {
+        this.pageList.pageNum = val;
         this.getList();
       },
-      handleCurrentChange() {
+      handleSizeChange(val) {
+        this.pageList.pageNum = 1;
+        this.pageList.pageSize = val;
         this.getList();
       },
       backPage() {
