@@ -169,6 +169,12 @@
             if (res.result.code == 0) {
               msg('申请退出活动成功');
               this.disabled = false;
+            }else{
+              setTimeout(function () {
+                row.link = 1;
+                this.disabled = false;
+              }, 800)
+              this.getList(this.activityId);
             }
           })
         } else { //关联
@@ -182,6 +188,12 @@
               console.log(res);
               msg('申请加入活动成功');
               this.disabled = false;
+            }else{
+              setTimeout(function () {
+                row.link = 0;
+                this.disabled = false;
+              }, 800)
+              this.getList(this.activityId);
             }
           })
         }
