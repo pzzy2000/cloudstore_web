@@ -118,17 +118,13 @@
 						number: '20',
 					},
 					{
-						name : '今日订单数',
+						name : '今日代付款',
 						number: '20'
 					},
 					{
-						name : '今日订单',
+						name : '今日已付款',
 						number: '20'
-					},
-					{
-						name : '分享店铺',
-						number: '20'
-					},
+					}
 				],
 				apply: [
 					{
@@ -234,28 +230,6 @@
 					this.agentInfo.detailAddress = data.result.detailAddress || '暂无店铺地址信息'
 				}
 			},
-			// 获取微信用户信息
-			// getuserInfo(){
-			// 	let userInfo = uni.getStorageSync('userInfo');
-			// 	if (userInfo) {
-			// 		if (userInfo.name) {
-			// 		 this.user.name = userInfo.name
-			// 		}else {
-			// 		   this.user.name = userInfo.nickName
-			// 		}
-			// 		if (!userInfo.url) {
-			// 			this.user.url = this.user.detailUrl
-			// 		}
-			// 	}
-			// },
-			// // 获取h5用户信息
-			// getH5info () {
-			// 	let userInfo = uni.getStorageSync('userInfo');
-			// 	if (userInfo) {
-			// 		this.user.name = userInfo.name
-			// 		console.log(this.user.name)
-			// 	}
-			// },
 			search () {
 			},
 			toAgentList (data) { //去个人的代理商品列表

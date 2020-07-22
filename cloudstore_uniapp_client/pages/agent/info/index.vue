@@ -212,9 +212,9 @@ import { mapState,mapMutations } from 'vuex';
 		getuserinfo(){
 			let userInfo = uni.getStorageSync('userInfo');
 			if (userInfo) {
-				this.user.name = userInfo.name || userInfo.nickName
-				this.user.url = userInfo.url || userInfo.detailUrl
-				if (!userInfo.url) {
+				this.user.name = userInfo.name || user.nickName
+				this.user.url = userInfo.wxPic || user.detailUrl
+				if (!userInfo.wxPic) {
 					this.user.url = this.user.detailUrl
 				}
 			}

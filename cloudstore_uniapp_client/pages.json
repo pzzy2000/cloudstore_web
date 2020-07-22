@@ -112,7 +112,7 @@
 			"style": { //用户 首页
 				"navigationBarTitleText": "商品分类",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 		 { 
@@ -152,7 +152,7 @@
 			"style": { //代理商代理商品列表
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 		{
