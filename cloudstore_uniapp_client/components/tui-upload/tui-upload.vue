@@ -71,13 +71,20 @@
 			}
 		},
 		mounted () {
-			this.$nextTick(function(){
-				this.imageList = this.value;
-				this.imgListId = this.valueId;
-				for (let item of this.imageList) {
-					this.statusArr.push("1")
-				}
-			})
+			this.imageList = this.value;
+			this.imgListId = this.valueId;
+			for (let item of this.imageList) {
+				this.statusArr.push("1")
+			}
+			// console.log(this.imgListId)
+			// console.log(this.imageList)
+			// this.$nextTick(function(){
+			// 	this.imageList = this.value;
+			// 	this.imgListId = this.valueId;
+			// 	for (let item of this.imageList) {
+			// 		this.statusArr.push("1")
+			// 	}
+			// })
 		},
 		computed: {
 			isShowAdd() {
@@ -87,9 +94,6 @@
 				}
 				return isShow
 			}
-		},
-		beforeDestroy () {
-			console.log('上传组件被销毁了')
 		},
 		methods: {
 			// 重新上传
@@ -300,7 +304,7 @@
 		border-radius: 50%;
 		color: white;
 		font-size: 34rpx;
-		z-index: 999;
+		z-index: 10;
 	}
 
 	.tui-img-del::before {

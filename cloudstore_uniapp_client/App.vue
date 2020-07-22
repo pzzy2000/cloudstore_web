@@ -54,7 +54,9 @@
 </script>
 
 <style lang='scss'>
-	
+	page {
+		background: #fff;
+	}
 	/*
 			全局公共样式和字体图标
 		*/

@@ -49,7 +49,7 @@
 		data() {
 			return {
 				access: '',
-				password: '123456',
+				password: '',
 				sysInfo: '',
 				logining: false,
 				wxloginCode: '', //获取code

@@ -6,7 +6,7 @@
 				<image :src="detailUrl" mode="" alt='头像' class="info-img"></image>
 				<view class="header-info">
 					<text class="title samp">{{shopInfo.name}}</text>
-					<!-- <text class="header-address">地址：{{shopInfo.detailAddress}}</text> -->
+					<text class="header-address">地址：{{shopInfo.detailAddress}}</text>
 				</view>
 			</view>
 			<view class="agency-apply">
@@ -83,7 +83,7 @@ export default {
 			return {
 				shopInfo: {
 					name: '',
-					detailAddress: ''
+					detailAddress: '' || '暂无地址'
 				},
 				name:'',
 				url:'',

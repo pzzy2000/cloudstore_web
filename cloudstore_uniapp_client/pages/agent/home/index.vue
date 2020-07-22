@@ -13,9 +13,10 @@
 		<nav-bar type='fixed'>我的小店</nav-bar>
 		<view class="agency-main">
 			<view class="agency-header">
-				<image :src="user.url" mode="" alt='头像' class="info-img"></image>
+				<image :src="user.detailUrl" mode="" alt='头像' class="info-img"></image>
 				<view class="header-info">
-					<text class="title samp">{{user.name}}</text>
+					<text class="title clamp">{{agentInfo.shopName}}</text>
+					<text class="address clamp">{{agentInfo.detailAddress}}</text>
 				</view>
 			</view>
 			<view class="agency-list">
@@ -80,23 +81,30 @@
 									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
 									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 								</view>
-								<!-- <button type="primary" class="price-btn">立即抢购</button> -->
+								<button type="primary" class="price-btn" @click.stop="shareSave(goods)">立即分享</button>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
+			<!-- 分享 -->
+			<share ref="share" :contentHeight="580" :shareList="shareList"></share>
+			<tabbar :role="'agent'" :ids="'awddl'"></tabbar>
 		</view>
-		<tabbar :role="'agent'" :ids="'awddl'"></tabbar>	
 	</view>
 </template>
 
 <script>
 	import Api from '@/common/api';
+	import share from '@/components/share';
 	import navBar from '@/components/zhouWei-navBar';
 	export default {
 		data() {
 			return {
+				agentInfo: {
+					name: '' || '暂无店铺信息',
+					detailAddress: '' || '暂无店铺地址信息'
+				},
 				user: {
 					name:'',
 					url:'',
@@ -175,50 +183,79 @@
 					}
 				],
 				goodsList: [],
-				updateList: []
+				updateList: [],
+				shareList: [
+					{
+					  icon: "/static/temp/share_wechat.png",
+					  text: "微信好友",
+					  type: 1
+					}
+				],
+				userType: '',
+				goodsName: '',
+				goodsId: '',
+				agentGoodsId: '',
+				shareClientId: ''
 			}
 		},
 		components:{
-			navBar
+			navBar, share
 		},
 		onLoad () {
+			this.userType = uni.getStorageSync('userInfo').agent
 			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 			this.height = uni.getSystemInfoSync().windowHeight - (this.statusBarHeight+80)
-			// #ifdef H5
-				this.getH5info()
-			// #endif
-			// #ifdef MP-WEIXIN
-				this.getuserInfo();
-			// #endif
-			this.getDateList ()
+			this.getAgentInfo()
+			this.getDateList()
 		},
-		onShow () {
-			// this.getUserInfo()
-			// this.loadData()
+		onShareAppMessage(res) {
+			if (res.from === 'button') {// 来自页面内分享按钮
+				this.$refs.share.toggleMask();
+				var shareObj = {
+					title: this.goodsName,
+					params: {
+						goodsId: this.goodsId,
+						agentGoodsId: this.agentGoodsId,
+						shareClientId: this.shareClientId || '-1',
+						userType: this.userType
+					},
+					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType='+this.userType,
+				}
+			}
+			return shareObj
 		},
 		methods: {
+			async getAgentInfo () {
+				let params = {}
+				let data = await Api.apiCall('post',Api.agent.agentInfo.getAgentShop, params);
+				if(data) {
+					console.log(data)
+					this.agentInfo.shopName = data.result.name || '暂无店铺信息'
+					this.agentInfo.detailAddress = data.result.detailAddress || '暂无店铺地址信息'
+				}
+			},
 			// 获取微信用户信息
-			getuserInfo(){
-				let userInfo = uni.getStorageSync('userInfo');
-				if (userInfo) {
-					if (userInfo.name) {
-					 this.user.name = userInfo.name
-					}else {
-					   this.user.name = userInfo.nickName
-					}
-					if (!userInfo.url) {
-						this.user.url = this.user.detailUrl
-					}
-				}
-			},
-			// 获取h5用户信息
-			getH5info () {
-				let userInfo = uni.getStorageSync('userInfo');
-				if (userInfo) {
-					this.user.name = userInfo.name
-					console.log(this.user.name)
-				}
-			},
+			// getuserInfo(){
+			// 	let userInfo = uni.getStorageSync('userInfo');
+			// 	if (userInfo) {
+			// 		if (userInfo.name) {
+			// 		 this.user.name = userInfo.name
+			// 		}else {
+			// 		   this.user.name = userInfo.nickName
+			// 		}
+			// 		if (!userInfo.url) {
+			// 			this.user.url = this.user.detailUrl
+			// 		}
+			// 	}
+			// },
+			// // 获取h5用户信息
+			// getH5info () {
+			// 	let userInfo = uni.getStorageSync('userInfo');
+			// 	if (userInfo) {
+			// 		this.user.name = userInfo.name
+			// 		console.log(this.user.name)
+			// 	}
+			// },
 			search () {
 			},
 			toAgentList (data) { //去个人的代理商品列表
@@ -246,6 +283,37 @@
 					// goodsId=7604921082513985536&userType=agent&agentGoodsId=7630608619278438400
 					url: '/pages/agent/goods/goodsDetail/goodsDetail?agentGoodsId='+agentGoodsId+'&goodsId='+goodsId+'&userType=agent',
 				});
+			},
+			toShare () {
+				this.$refs.share.toggleMask();
+			},
+			async shareSave (item) {
+				this.goodsId = item.goodsId
+				this.agentGoodsId = item.id
+				this.goodsName = item.goodsPicesBean.goodsName
+				uni.showLoading({
+					title: '正在加载',
+					mask: false
+				});
+				let params = {
+					'agentGoodsId': this.agentGoodsId,
+					'shareId': this.shareClientId || '-1',
+					'type': this.userType
+				} 
+				let data = await Api.apiCall('post', Api.agent.share.save, params);
+				if (data) {
+					uni.hideLoading() 
+					if (data.code === 0) {
+						this.shareClientId = data.result.id
+						if (this.shareClientId) {
+							this.toShare()
+						}
+					}else{
+						uni.showToast({
+							title: data.msg
+						});
+					}
+				}
 			}
 		}
 	}
@@ -263,7 +331,7 @@
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
-		padding-left: 50upx;
+		padding-left: 30upx;
 		height: 238upx;
 		uni-image{
 			height: 90upx;
@@ -280,8 +348,12 @@
 			padding: 30upx;
 			.title {
 				color: #000000;
-				font-size: 50upx;
+				font-size: 45upx;
 				display: block;
+			}
+			.address {
+				color: #999;
+				font-size: 25upx;
 			}
 		}
 	}
@@ -329,15 +401,14 @@
 		.agency-apply-main {
 			display: flex;
 			flex-wrap: wrap;
-			border: 1upx solid #eee;
 			border-radius: 10upx;
-			padding: 20upx;
 			.apply-detail {
 				width: 20%;
 				font-size: 26upx;
 				color: #303133;
 				text-align: center;
 				padding-top: 20upx;
+				margin-bottom: 20rpx;
 			}
 			.apply-img{
 				height: 60upx;

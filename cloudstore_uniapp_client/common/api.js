@@ -111,6 +111,9 @@ export default {
 		order: {
 			getAgentOrder: 'order/app/getAgentOrder',
 			getClientOrder:　'order/app/getClientOrder'
+		},
+		agentInfo: {
+			getAgentShop: 'agent/goods/app/getAgentShop'
 		}
 	},
 	

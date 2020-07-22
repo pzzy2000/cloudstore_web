@@ -16,7 +16,7 @@
 			<view class="cu-item" v-for='(item, index) in financetDataList' :key='index'>
 				<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
 				<view class="content">
-					<view class="text-grey">{{item.orderDetailBean.goodsBean.goodsName}}</view>
+					<view class="text-grey clamp">{{item.orderDetailBean.goodsBean.goodsName}}</view>
 					<view class="text-gray text-sm flex">
 						<view class="text-cut">
 							收益:{{item.profit}}元
@@ -141,5 +141,8 @@
 	.cu-list.menu-avatar>.cu-item .action {
 		width: auto;
 		text-align: right;
+	}
+	.cu-list.menu-avatar>.cu-item .content {
+		width: 40%;
 	}
 </style>
