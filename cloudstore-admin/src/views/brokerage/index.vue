@@ -50,7 +50,7 @@
           <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
         </el-table-column>
         <el-table-column label="状态" align="center">
-          <template slot-scope="scope">{{scope.row.showIndex}}</template>
+          <template slot-scope="scope">{{scope.row.status | changeStatus}}</template>
         </el-table-column>
         <el-table-column label="关联商品数量" align="center">
           <template slot-scope="scope">{{scope.row.payPrice}}</template>
@@ -108,11 +108,24 @@
       // this.rwDispatcherState = "write";
       this.getList();
     },
+    activated() {
+      this.getList();
+    },
     filters: {
       formatDate(time) {
         let date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd');
       },
+      changeStatus(data) {
+        switch (data) {
+          case 0: return "未启用";
+            break;
+          case 1: return "已启用";
+            break;
+          default: return "数据读取出错";
+            break;
+        }
+      }
     },
     methods: {
       handleSearchList() {

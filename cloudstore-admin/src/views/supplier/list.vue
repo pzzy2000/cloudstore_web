@@ -30,8 +30,8 @@
         <el-table-column label="供应商名称"  align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="供应商等级"  align="center">
-          <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>
+        <el-table-column label="供应商电话"  align="center">
+          <template slot-scope="scope">{{scope.row.phone | changeMis}}</template>
         </el-table-column>
         <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
         </el-table-column>
@@ -84,7 +84,6 @@
     name: "productList",
     data() {
       return {
-
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,
@@ -140,6 +139,13 @@
         } else {
           return '未审核';
         }
+      },
+      changeMis(data) {
+        if (data !== null) {
+          return data;
+        }else{
+          return "数据读取错误"
+        }
       }
     },
     methods: {
@@ -159,7 +165,7 @@
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },
 
- deleteStatus(row, column) {
+      deleteStatus(row, column) {
         let status = row.status;
         switch (status) {
           case 0:
@@ -172,8 +178,7 @@
             break;
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
-        },
-
+      },
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {

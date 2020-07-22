@@ -266,14 +266,14 @@ export const asyncRouterMap = [
         path: 'brokegoods',
         name: 'broke_goods',
         component: () => import('@/views/brokerage/brokegoods'),
-        meta: {title: '佣金商品', icon: 'product-list'},
+        meta: {title: '佣金商品', icon: 'product-list', keepAlive: true},
         hidden: true
       },
       {
         path: 'brageinfo',
         name: 'brage_info',
         component: () => import('@/views/brokerage/brageInfo'),
-        meta: {title: '佣金sku', icon: 'product-list'},
+        meta: {title: '佣金sku', icon: 'product-list', keepAlive: true},
         hidden: true
       },
       {

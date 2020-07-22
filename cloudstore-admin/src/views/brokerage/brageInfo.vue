@@ -158,6 +158,7 @@
           if(res){
              if(res.result.code == 0){
                msg('更新SKU佣金成功');
+               this.$router.back();
              }else{
                 msg('更新SKU佣金失败['+res.result.msg+']');
              }
@@ -297,7 +298,6 @@
           })
         }
       },
-
       getProductSkuSp(row, index, item) {
         // console.log("  row  " + row);
         let sgk = row.sgk;
@@ -306,11 +306,9 @@
         return (obj[item.id]);
       },
       backPage() {
-        this.$router.go(-1);
+        this.$router.back();
       }
-
     },
-
   }
 </script>
 <style scoped>
