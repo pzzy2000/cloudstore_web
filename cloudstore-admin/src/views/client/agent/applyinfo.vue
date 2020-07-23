@@ -96,26 +96,23 @@
               break;
           }
           switch (this.baseinfoForm.agentType) {
-            case "leader": return this.baseinfoForm.AT = "团长";
+            case "leader": this.baseinfoForm.AT = "团长";
               break;
-            case "supplier": return this.baseinfoForm.AT = "供应商";
+            case "supplier": this.baseinfoForm.AT = "供应商";
               break;
-            case "agent": return this.baseinfoForm.AT = "代理商";
+            case "agent": this.baseinfoForm.AT = "代理商";
               break;
-            default: return this.baseinfoForm.AT = "数据读取错误";
+            default: this.baseinfoForm.AT = "数据读取错误";
               break;
           }
-          // if (this.baseinfoForm.provinceBean == null){
-          //   this.baseinfoForm.address = ''
-          // }else{
-          //   this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
-          // }
           try{
             return this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
           }catch (e) {
-            return this.baseinfoForm.address = '';
+            return this.baseinfoForm.address = '数据读取出错';
           }finally {
-            return this.baseinfoForm.detailAddress = this.baseinfoForm.address + this.baseinfoForm.detailAddress;
+            if (this.baseinfoForm.address !== '数据读取出错'){
+              return this.baseinfoForm.detailAddress = this.baseinfoForm.address + this.baseinfoForm.detailAddress;
+            }
           }
         })
       },
