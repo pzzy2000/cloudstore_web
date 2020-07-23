@@ -1,13 +1,14 @@
 <template>
 	<view class="container">
-		<nav-bar>推荐</nav-bar>
+		<!-- <nav-bar>推荐</nav-bar> -->
 		<view class="agency-main">
 			<view class="agency-header">
-				<image :src="detailUrl" mode="" alt='头像' class="info-img"></image>
+				<!-- <image :src="detailUrl" mode="" alt='头像' class="info-img"></image> -->
 				<view class="header-info">
 					<text class="title samp">{{shopInfo.name}}</text>
-					<text class="header-address">地址：{{shopInfo.detailAddress}}</text>
+					<!-- <text class="header-address">地址：{{shopInfo.detailAddress}}</text> -->
 				</view>
+				<image src="/static/arc.png" mode="" class="agency-header-bg"></image>
 			</view>
 			<view class="agency-apply">
 				<view class="agency-apply-main">
@@ -17,57 +18,29 @@
 					</view>
 				</view>
 			</view>
-			<!-- <view class="faddish-main">
-				<view class="faddish-title">
-					<view class="title-main">
-						<span class='left-chunk'></span>
-						今日爆款
-					</view>
-					<span class='more'>更多></span>
-				</view>
-				<view class="goods-list">
-					<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
-						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
-						<view class="goods-detail">
-							<view class="detail-title">
-								<view class="">{{ goods.goodsPicesBean.goodsName }}</view>
-								<view class="number">{{goods.goodsPicesBean.goodsSubtitle}}</view>
-							</view>
-							<view class="detail-price">
-								<view class="price-main">
-									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
-									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
-								</view>
-								<button type="primary" class="price-btn">立即抢购</button>
-							</view>
-						</view>
-					</view>
-				</view>
-			</view> -->
 			<view class="faddish-main">
 				<view class="faddish-title">
 					<view class="title-main">
-						<span class='left-chunk'></span>
 						最新商品
 					</view>
-					<span class='more'>更多></span>
 				</view>
 				<view class="goods-list">
-					<view v-for="(goods, index) in item.updateList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
+					<view v-for="(goods, index) in newsList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
 						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 						<view class="goods-detail">
-							<view class="detail-title">
-								<view class="">{{ goods.goodsPicesBean.goodsName }}</view>
-								<view class="number">{{goods.goodsPicesBean.goodsSubtitle}}</view>
+							<view class="detail-title clamp">{{ goods.goodsPicesBean.goodsName }}</view>
+							<view class="sub-title clamp">
+								<button class="cu-btn round bg-orange sm" v-if="!goods.activeBean.name">无活动</button>
+								<button class="cu-btn round bg-orange sm" v-else>{{goods.activeBean.name}}</button>
 							</view>
-							<view class="detail-price">
-								<view class="price-main">
-									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
-									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
+							<view class="price-box">
+								<!-- <view class="clamp subhead">供应商:{{goods.supplierShopBean.shopName}}</view> -->
+								<view class="price">
+									 <text class="priceSale">￥{{ goods.goodsPicesBean.salePrice }}</text>
+									 <text class="pricemart">￥{{ goods.goodsPicesBean.martPrice}}</text>
 								</view>
-								<button type="primary" class="price-btn">立即抢购</button>
 							</view>
-						</view>
+						</view>	
 					</view>
 				</view>
 			</view>
@@ -87,18 +60,8 @@ export default {
 				},
 				name:'',
 				url:'',
-				updateList: '',
+				newsList: '',
 				apply: [
-					{
-						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
-					},
-					{
-						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
-					},
 					{
 						name: '敬请期待',
 						detailListUrl: '',
@@ -148,26 +111,35 @@ export default {
 		},
 		onLoad() {
 			this.getRecommendData()
-			//this.getDateList()
 		},
 		methods:{
 			async getRecommendData () {
+				uni.showLoading({
+					title: '正在加载',
+					mask: false
+				});
 				let parmas = {}
 				let data = await Api.apiCall('post',Api.client.recommend.newShopinfoByOrder,parmas)
 				if (data) {
 					this.shopInfo.name = data.result.name || '暂无店铺'
 					this.shopInfo.detailAddress = data.result.detailAddress || '暂无地址'
+					this.getNewsList(data.result.agentId)
 				}
 			},
-			async getDateList () {
+			async getNewsList (agentId) {
 				let params = {
-					pageNum:1,
-					pageSize: 10
+					agentId: agentId
 				}
-				let list = await Api.apiCall('post', Api.client.recommend.list, params);
+				let list = await Api.apiCall('post', Api.client.goods.searchMyAgentGoods, params);
 				if (list) {
-					this.updateList = list.result.records
+					if (list.code === 0) {
+						this.newsList = list.result
+						console.log(this.newsList)
+					} else {
+						this.$api.msg(list.msg)
+					}
 				}
+				uni.hideLoading()
 			},
 			navToDetailPage (item) {
 				let id = item.goodsId,agentGoodsId = item.id
@@ -181,17 +153,17 @@ export default {
 
 <style lang="scss" scoped>
 	.container {
-		background: #fff;
+		background: #f1f1f1;
 	}
 	.agency-main{
-		width: 94%;
-		margin: 0 auto;
+		position: relative;
 		.agency-header {
 			display: flex;
-			justify-content: flex-start;
+			justify-content: center;
 			align-items: center;
-			padding-left: 50upx;
-			height: 238upx;
+			height: 300upx;
+			background: #00a79d;
+			position: relative;
 			uni-image{
 				height: 90upx;
 				width: 90upx;
@@ -203,13 +175,19 @@ export default {
 			}
 			.header-info {
 				font-size: 20upx;
-				color: #999;
+				color: #fff;
 				padding: 30upx;
 				.title {
-					color: #000000;
-					font-size: 50upx;
+					color: #fff;
+					font-size: 35upx;
 					display: block;
 				}
+			}
+			.agency-header-bg {
+				height: 36upx;
+				width: 100%;
+				position: absolute;
+				bottom: -6upx;
 			}
 		}
 		.agency-list {
@@ -223,6 +201,13 @@ export default {
 		}
 	}
 	.agency-apply {
+		width: 94%;
+		position: absolute;
+		background: #fff;
+		top: 210rpx;
+		border-radius: 10upx;
+		margin-left: -47%;
+		left: 50%;
 		uni-image {
 			height: 80upx;
 			width: 80upx;
@@ -241,15 +226,15 @@ export default {
 		.agency-apply-main {
 			display: flex;
 			flex-wrap: wrap;
-			border: 1upx solid #eee;
 			border-radius: 10upx;
-			padding: 20upx;
+			width: 100%;
+			margin: 0 auto;
 			.apply-detail {
-				width: 20%;
+				width: 25%;
 				font-size: 26upx;
 				color: #303133;
 				text-align: center;
-				padding-top: 20upx;
+				padding: 20upx 0;
 			}
 			.apply-img{
 				height: 60upx;
@@ -264,28 +249,23 @@ export default {
 		}
 	}
 	.faddish-main {
+		padding-top: 200upx;
+		margin: 0 auto;
+		width: 94%;
+		position: relative;
 		.faddish-title {
+			position: absolute;
+			top: 200upx;
+			left: 30upx;
 			font-size: 30upx;
-			line-height: 40upx;
-			height: 40upx;
-			margin-top: 20upx;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
+			padding: 5upx 10upx;
+			background-color: #b48e4f;
+			border-bottom-right-radius: 10upx;
+			border-bottom-left-radius: 10upx;
+			color: #fff;
 			.title-main {
 				display: flex;
 				align-items: center;
-				.left-chunk {
-					display: inline-block;
-					height: 40upx;
-					width: 10upx;
-					background-color: green;
-					margin-right: 10upx;
-				}
-			}
-			.more {
-				color: #999;
-				font-size: 20upx;
 			}
 		}
 	}
@@ -293,14 +273,18 @@ export default {
 	.goods-list {
 		display: flex;
 		flex-wrap: wrap;
-		padding: 40rpx 0 40rpx 40rpx;
+		margin: 0 auto;
 		background: #fff;
+		border-radius: 20upx;
+		padding-top: 80upx;
 		.goods-item {
 			display: flex;
 			flex-direction: column;
 			flex-flow: nowrap;
 			width: 100%;
-			height: 200upx;
+			padding: 20upx 30upx;
+			box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+			margin-bottom: 10upx;
 		}
 		.image-wrapper {
 			width: 200upx;
@@ -309,18 +293,20 @@ export default {
 			overflow: hidden;
 			image {
 				opacity: 1;
+				border-radius: 15upx;
 			}
 		}
 		.goods-detail {
 			display: inline-block;
 			margin-left: 20upx;
-			display: flex;
-			justify-content: flex-start;
-			flex-wrap: wrap;
 			width: 65%;
+			font-size: 30upx;
+			height: 100%;
 			.detail-title {
-				font-size: 16px;
+				font-size: 30upx;
 				color: #000;
+				width: 100%;
+				height: 33%;
 				.number {
 					color: #999;
 					font-size: 26upx;
@@ -328,31 +314,37 @@ export default {
 					height: 50upx;
 				}
 			}
-			.detail-price {
+			.sub-title {
+				height: 33%;
+				display: flex;
+				align-items: flex-end;
+			}
+			.price-box {
 				display: flex;
 				justify-content: space-between;
 				align-items: flex-end;
 				width: 100%;
-				padding-bottom: 20upx;
-				.price-main {
-					color: #999;
-					font-size: 24upx;
-					.surprised {
-						font-size: 30upx;
-						color: #000;
-						.surprised-price {
-							font-size: 35upx;
-							color: red;
-						}
+				height: 33%;
+				.price {
+					.priceSale {
+						color: red;
+						font-size: 35upx;
+						margin-right: 15upx;
+					}
+					.pricemart {
+						color: #999;
+						font-size: 25upx;
+						text-decoration: line-through;
 					}
 				}
 				.price-btn {
 					padding: 0;
 					margin: 0;
-					font-size: 30upx;
+					font-size: 24upx;
 					padding: 0 20upx;
-					height: 60upx;
-					line-height: 60upx;
+					height: 50upx;
+					line-height: 50upx;
+					border-radius: 40upx;
 					color: #fff;
 					background: #ff4f50;
 				}

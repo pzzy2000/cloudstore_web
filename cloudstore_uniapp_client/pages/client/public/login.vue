@@ -48,8 +48,8 @@
 		},
 		data() {
 			return {
-				access: '',
-				password: '',
+				access: '15773281581',
+				password: '123456',
 				sysInfo: '',
 				logining: false,
 				wxloginCode: '', //获取code
@@ -179,7 +179,8 @@
 								name: res.data.result.result.name,
 								url: res.data.result.result.url,
 								userType: res.data.result.result.userType,
-								relationId: res.data.result.result.relationId
+								relationId: res.data.result.result.relationId,
+								wxPic: res.data.result.result.wxPic
 							}
 							uni.setStorageSync('userInfo', userInfo)
 							uni.setStorageSync('token', res.data.result.result.token)

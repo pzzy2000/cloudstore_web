@@ -2,64 +2,76 @@
 	<view class="content">
 		<nav-bar>商品分类</nav-bar>
 		<view class="navbar">
-			<view class="nav-item" :class="{ current: filterIndex === 0 }">综合排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 1 }">销量排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 2 }">
-				<text>价格</text>
-				<view class="p-box">
+			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
+			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
+			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
+				<text>商品分类</text>
+				<!-- <view class="p-box">
 					<text :class="{ active: priceOrder === 1 && filterIndex === 2 }" class="yticon icon-shang"></text>
 					<text :class="{ active: priceOrder === 2 && filterIndex === 2 }" class="yticon icon-shang xia"></text>
-				</view>
+				</view> -->
 			</view>
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 		</view>
 		<view class="goods-list">
-			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
-			<view class="image-wrapper"><image :src="goods.goodsPhotos[0].url" mode="aspectFill"></image></view>
-			<view class="goods-detail">
-				<text class="title clamp">{{ goods.goodsName }}</text>
-				<text class="title clamp subhead ">{{goods.goodsSubtitle}}</text>
-				<text class="title clamp subhead ">供应商:{{goods.supplierBean.name}}/{{goods.supplierShopBean.shopName}}</text>
-				<view class="price-box">
-					<view class="price">
-						 <text class="price1">价格:</text>
-						 <text class="priceSale">{{ goods.salePrice }}</text>
-					 /<text class="pricemart">{{ goods.martPrice}}</text>
-					</view><!--<button class="goodsBtn">去代理</button> -->
-				</view>
-			</view>	
+			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
+				<view class="image-wrapper"><image :src="goods.goodsPhotos[0].url" mode="aspectFill"></image></view>
+				<view class="goods-detail">
+					<view class="detail-title clamp">{{ goods.goodsName }}</view>
+					<view class="sub-title clamp">
+						<button class="cu-btn round bg-orange sm" v-if="!goods.activityBean.name">无活动</button>
+						<button class="cu-btn round bg-orange sm" v-else>{{ goods.activityBean.name }}</button>
+					</view>
+					<view class="price-box">
+						<!-- <view class="clamp subhead">供应商:{{goods.supplierShopBean.shopName}}</view> -->
+						<view class="price">
+							 <text class="priceSale">￥{{ goods.salePrice }}</text>
+							 <text class="pricemart">￥{{ goods.martPrice}}</text>
+						</view>
+						<button class="price-btn">去代理</button>
+					</view>
+				</view>	
 			</view>
 		</view>
+		<!-- 分类筛选组件 -->
 		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+45+'px'}]">
-					<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
-						<scroll-view scroll-y class="cate-list">
-							<view v-for="item in cateList" :key="item.id">
-								<!-- <view class="cate-item b-b two">{{ item.name }}</view>
-								<view v-for="tItem in item.child" :key="tItem.id" class="cate-item b-b" :class="{ active: tItem.id == cateId }" @click="changeCate(tItem)">
-									{{ tItem.name }}
-								</view> -->
-								<view class="cate-item b-b two" @click="changeCate(item)">{{ item.name }}</view>
-							</view>
-						</scroll-view>
+			<view class="cate-content">
+				<scroll-view scroll-y class="cate-list">
+					<view v-for="item in cateList" :key="item.id">
+						<view class="cate-item b-b two" @click="selectActivity(item)">{{ item.name }}</view>
 					</view>
-				</view>
-
-<tabbar :role="'agent'" :ids="'aspfl'"></tabbar>
+					<view class="cate-item b-b two" v-if='!cateList.length'>暂无活动</view>
+				</scroll-view>
+			</view>
+		</view>
+		<uni-popup ref="popup" type="bottom">
+			<tui-cascade-selection
+				height="350px"
+				activeColor="#EB0909"
+				lineColor="#EB0909"
+				checkMarkColor="#EB0909"
+				:itemList="itemList"
+				request
+				@complete="complete"
+				:receiveData="receiveData"
+				@change="typeChange"
+			></tui-cascade-selection>
+		</uni-popup>
+		<tabbar :role="'agent'" :ids="'aspfl'"></tabbar>
 	</view>
 </template>
 
 <script>
 import Api from '@/common/api';
 import navBar from '@/components/zhouWei-navBar';
-//import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import tuiCascadeSelection from '@/components/tui-cascade-selection/tui-cascade-selection.vue'
+	import uniPopup from '@/components/uni-popup/uni-popup'
 export default {
 	components: {
-		navBar
-	//	uniLoadMore
+		navBar, tuiCascadeSelection, uniPopup
 	},
 	data() {
 		return {
-			activityId:null,
 			statusBarHeight:1,
 			cateMaskState: 0, //分类面板展开状态
 			headerPosition: 'fixed',
@@ -69,21 +81,29 @@ export default {
 			filterIndex: 0,
 			pageNum: 1,
 			priceOrder: 0, //1 价格从低到高 2价格从高到低
-			goodsList: [],
+			goodsList: {
+				activityBean: {
+					name: '不参与活动'
+				}
+			},
 			cateList:[],
-			cateId:null
+			cateId:null,
+			itemList: [],
+			receiveData: [],
+			categoryOneId: '',
+			categoryTwoId: '',
+			categoryThreeId: '',
+			activityId: ''
 		};
 	},
 
 	onLoad(options) {
-		//this.activityId = options.id;
 		// #ifdef H5
 		//this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight + 'px';
 		// #endif
-		// this.keyword = options.keyword;
-		// this.cateId = options.sid;
-		// this.loadActiviList();
-		// this.loadData();
+		this.loadActiviList();
+		this.loadgoodsType();
+		this.loadData();
 	},
 	onPageScroll(e) {
 		//兼容iOS端下拉时顶部漂移
@@ -95,101 +115,86 @@ export default {
 	},
 	//下拉刷新
 	onPullDownRefresh() {
-		this.pageNum = this.pageNum + 1;
-		this.loadData('refresh');
+		this.pageNum = 1;
+		this.loadData('initialize');
 	},
 	//加载更多
 	onReachBottom() {
 		this.pageNum = this.pageNum + 1;
-		this.loadData();
+		this.loadData('next');
 	},
 	methods: {
-		async loadActiviList() {
+		async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
+			uni.showLoading({
+				title: '正在加载',
+				mask: false
+			});
+			if (type === 'initialize') {
+				this.activityId = ''
+				this.categoryOneId = ''
+				this.categoryTwoId = ''
+				this.categoryThreeId = ''
+				this.receiveData = []
+				this.pageNum = 1;
+			}
+			var params = {
+				activityId: this.activityId,
+				pageNum: this.pageNum,
+				pageSize: '10',
+				categoryOneId: this.categoryOneId,
+				categoryTwoId: this.categoryTwoId,
+				categoryThreeId: this.categoryThreeId
+			};
+			let list = await Api.apiCall('post', Api.agent.goods.list, params);
+			if (list) {
+				let goodsList = list.result.records;
+				if (type === 'next') {
+					if (goodsList.length === 0) {
+						this.$api.msg('没有更多了')
+					}
+					this.goodsList = this.goodsList.concat(goodsList);
+				}else{
+					this.goodsList = goodsList;
+				}
+				uni.hideLoading()
+				uni.stopPullDownRefresh()
+			}
+		},
+		async loadgoodsType () { //初始化加载商品一级分类
 			let params = {
 				pageNum: '1',
-				// pageSize: '20',
 				parentId: 0
 			};
 			let list = await Api.apiCall('post', Api.agent.category.list, params);
-			//console.log(list)
+			if (list) {
+				for (let tmp in list.result.records) {
+					this.itemList.push({
+						text: list.result.records[tmp].name,
+						value: list.result.records[tmp].id
+					})
+				}
+			}
+		},
+		async loadActiviList () { //获取活动分类
+			let params = {
+				pageNum: 1,
+				pageSize: 20
+			};
+			let list = await Api.apiCall('post', Api.agent.hot.alllist, params);
 			if (list) {
 				this.cateList = list.result.records
 			}
 		},
-		//加载商品 ，带下拉刷新和上滑加载
-		async loadData(type = 'add', loading) {
-			//没有更多直接返回
-			if (type === 'add') {
-				if (this.loadingType === 'nomore') {
-					return;
-				}
-				this.loadingType = 'loading';
-			} else {
-				this.loadingType = 'more';
-			}
-			let params={pageNum: this.pageNum};
-			if (this.cateId) {
-				params['categoryOneId'] = this.cateId;
-			} 
-			
-			if (this.keyword) {
-				//这里要在后台改SQL
-				// params['keyword'] = this.keyword;
-			} 
-			let list = await Api.apiCall('post', Api.agent.goods.list, params);
-			if(list){
-			let goodsList = list.result.records;
-			// let goodsList = await this.$api.json('goodsList');
-			if (type === 'refresh') {
-				this.goodsList = [];
-			}
-			// //筛选，测试数据直接前端筛选了
-			// if (this.filterIndex === 1) {
-			// 	goodsList.sort((a, b) => b.sales - a.sales);
-			// }
-			// if (this.filterIndex === 2) {
-			// 	goodsList.sort((a, b) => {
-			// 		if (this.priceOrder == 1) {
-			// 			return a.price - b.price;
-			// 		}
-			// 		return b.price - a.price;
-			// 	});
-			// }
-
-			// this.goodsList = this.goodsList.concat(goodsList);
-             this.goodsList = goodsList;
-			//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
-			this.loadingType = this.goodsList.length > list.total ? 'nomore' : 'more';
-			if (type === 'refresh') {
-				if (loading == 1) {
-					uni.hideLoading();
-				} else {
-					uni.stopPullDownRefresh();
-				}
-			}
-			}
+		selectActivity (item) { //点击活动后加载数据
+			this.activityId = item.id;
+			this.categoryOneId = '';
+			this.categoryTwoId = '';
+			this.categoryThreeId = '';
+			this.pageNum = '1';
+			this.loadData();
+			this.toggleCateMask('hide');
 		},
-		//筛选点击
-		tabClick(index) {
-			this.pageNum = 1;
-			if (this.filterIndex === index && index !== 2) {
-				return;
-			}
-			this.filterIndex = index;
-			if (index === 2) {
-				this.priceOrder = this.priceOrder === 1 ? 2 : 1;
-			} else {
-				this.priceOrder = 0;
-			}
-			uni.pageScrollTo({
-				duration: 300,
-				scrollTop: 0
-			});
-			this.loadData('refresh', 1);
-
-		},
-		//显示分类面板
-		toggleCateMask(type) {
+		toggleCateMask (type) {
 			let timer = type === 'show' ? 10 : 300;
 			let state = type === 'show' ? 1 : 0;
 			this.cateMaskState = 2;
@@ -197,29 +202,82 @@ export default {
 				this.cateMaskState = state;
 			}, timer);
 		},
-		//分类点击
-		changeCate(item) {
-			console.log(item.id);
-			this.pageNum = 1;
-			this.cateId = item.id;
-			this.toggleCateMask();
+		tabClick(index) { //点击tab列表
+			if (index === 0) {
+				this.filterIndex = 0
+			}
+			if (index === 1) {
+				this.filterIndex = 1
+			}
+			if (index === 2) {
+				this.filterIndex = 2
+				this.$refs.popup.open()
+			}
 			uni.pageScrollTo({
 				duration: 300,
 				scrollTop: 0
 			});
-			this.loadData('refresh', 1);
-
 		},
-		//详情
+		async typeChange(e) { //选择商品类型
+			this.pageNum = 1
+			this.receiveData = []
+			switch (e.layer) {
+				case 0:
+				this.categoryOneId = e.value
+				this.categoryTwoId = ''
+				this.categoryThreeId = ''
+				break;
+				case 1:
+				this.categoryTwoId = e.value
+				this.categoryThreeId = ''
+				break;
+				case 2:
+				this.categoryThreeId = e.value
+				break;
+			}
+			let params = {
+				pageNum: '1',
+				parentId: e.value
+			};
+			let list = await Api.apiCall('post', Api.agent.category.list, params);
+			if (list) {
+				if (list.code === 0 && list.result.total != 0) {
+					for (let tmp in list.result.records) {
+						this.receiveData.push({
+							text: list.result.records[tmp].name,
+							value: list.result.records[tmp].id
+						})
+					}
+				}else {
+					this.$refs.popup.close()
+					this.receiveData = []
+				}
+			}
+			this.loadData()
+		},
+		complete(e) { //点击了商品分类的上一级分类
+		},
+		//查询分类的具体数据
+		async searchtype () {
+			let params = {
+				pageNum: '1',
+				pageSize: '10',
+				categoryOneId: this.typeId
+			};
+			let list = await Api.apiCall('post', Api.agent.goods.list, params);
+			if (list) {				
+				this.goodsList = list.result.records
+				uni.hideLoading();
+			}
+		},
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
-			let goodsId = item.id;
 			console.log(item)
-			// let activitId = -1;
-			// let agoodsid= -1;
-			// uni.navigateTo({
-			// 	url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agoodsid=${agoodsid}`
-			// });
+			let goodsId = item.id;
+			let activitId = item.activityId;
+			uni.navigateTo({
+				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}`
+			});
 		},
 		stopPrevent() {}
 	}
@@ -229,7 +287,7 @@ export default {
 <style lang="scss">
 page,
 .content {
-	background: $page-color-base;
+	padding-bottom: 100upx;
 }
 .content {
 	padding-top: 96upx;
@@ -238,7 +296,7 @@ page,
 .navbar {
 	position: fixed;
 	left: 0;
-	top: 150upx;
+	top: 135upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;
@@ -321,8 +379,8 @@ page,
 	z-index: 95;
 	transition: 0.3s;
 	.cate-content {
-		padding-top: 40rpx;
-		width: 630upx;
+		padding-top: 50rpx;
+		width: 45%;
 		height: 100%;
 		background: #fff;
 		float: right;
@@ -354,7 +412,7 @@ page,
 		position: relative;
 	}
 	.two {
-		height: 64upx;
+		height: 120upx;
 		color: #303133;
 		font-size: 30upx;
 		background: #f8f8f8;
@@ -368,80 +426,79 @@ page,
 .goods-list {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 0 15upx;
+	width: 94%;
+	margin: 0 auto;
 	background: #fff;
 	.goods-item {
 		display: flex;
 		flex-direction: column;
 		flex-flow: nowrap;
 		width: 100%;
-		height: 100px;
+		padding: 20rpx 30rpx;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+		margin-bottom: 10rpx;
 	}
 	.image-wrapper {
-		width: 100px;
-		height:100px;
-		border-radius: 3px;
+		width: 200upx;
+		height:200upx;
+		border-radius: 3upx;
 		overflow: hidden;
 		image {
 			opacity: 1;
+			border-radius: 15upx;
 		}
 	}
 	.goods-detail {
 		display: inline-block;
-		width: 75%;
-		padding: 1px;
-		.title {
-			font-size: 16px;
-			color: $font-color-dark;
-			//line-height: 80upx;
+		margin-left: 20upx;
+		width: 65%;
+		font-size: 12px;
+		height: 100%;
+		.detail-title {
+			font-size: 30rpx;
+			color: #000;
+			width: 100%;
+			height: 33%;
+			.number {
+				color: #999;
+				font-size: 26upx;
+				line-height: 50upx;
+				height: 50upx;
+			}
 		}
-		.subhead {
-			color: #333;
-			font-size: 25upx;
+		.sub-title {
+			height: 33%;
+			display: flex;
+			align-items: flex-end;
 		}
 		.price-box {
 			display: flex;
-			align-items: left;
 			justify-content: space-between;
-			padding: 30px 0px 0px 0px;
-			font-size: 14upx;
-			color: $font-color-light;
-			.price1 {
-				font-size: 14px;
-				color: $uni-color-primary;
-				line-height: 1;
-				}
+			align-items: flex-end;
+			width: 100%;
+			height: 33%;
 			.price {
-				 bottom: 0px; 
 				.priceSale {
-					font-size: 14px;
-					color: $uni-color-primary;
-					line-height: 1;
-					&:before {
-						content: '￥';
-						font-size: 14px;
-					}	
+					color: red;
+					font-size: 35upx;
+					margin-right: 15upx;
 				}
 				.pricemart {
-					font-size: 12px;
-					color: #000;
-					text-decoration:line-through;
-					line-height: 1;
-					&:before {
-						content: '￥';
-						font-size: 12px;
-					}	
+					color: #999;
+					font-size: 25upx;
+					text-decoration: line-through;
 				}
 			}
-			.goodsBtn {
-				font-size: 30upx;
-				color: #fff;
-				background: red;
-				height: 70upx;
-				line-height: 70upx;
-				width: 150upx;
+			.price-btn {
 				padding: 0;
 				margin: 0;
+				font-size: 24upx;
+				padding: 0 20upx;
+				height: 50upx;
+				line-height: 50upx;
+				border-radius: 40upx;
+				color: #fff;
+				background: #ff4f50;
 			}
 		}
 	}

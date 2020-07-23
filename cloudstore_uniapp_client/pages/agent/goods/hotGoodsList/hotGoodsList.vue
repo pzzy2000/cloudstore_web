@@ -37,7 +37,7 @@
 		</view>
 		<uni-popup ref="popup" type="bottom">
 			<tui-cascade-selection
-				height="280px"
+				height="350px"
 				activeColor="#EB0909"
 				lineColor="#EB0909"
 				checkMarkColor="#EB0909"
@@ -249,6 +249,7 @@
 			},
 			navToDetailPage(item) { //去商品详情
 				//测试数据没有写id，用title代替
+				console.log(item)
 				let goodsId = item.goodsId;
 				let activitId = item.activityId;
 				let agentGoodsId = item.id;
@@ -368,7 +369,7 @@
 
 		.cate-content {
 			padding-top: 50rpx;
-			width: 630upx;
+			width: 45%;
 			height: 100%;
 			background: #fff;
 			float: right;
@@ -405,7 +406,7 @@
 		}
 
 		.two {
-			height: 80upx;
+			height: 120upx;
 			color: #303133;
 			font-size: 30upx;
 			background: #f8f8f8;

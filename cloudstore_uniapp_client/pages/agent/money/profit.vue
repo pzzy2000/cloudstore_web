@@ -11,22 +11,21 @@
 				<text>{{item.name}}:{{item.num}}</text>
 			</view>
 		</view>
-		<view class="cu-list menu-avatar">
-			<p style='text-align: center;' v-if='financetDataList.length === 0'>暂无订单数据</p>
-			<view class="cu-item" v-for='(item, index) in financetDataList' :key='index'>
-				<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
-				<view class="content">
-					<view class="text-grey clamp">{{item.orderDetailBean.goodsBean.goodsName}}</view>
-					<view class="text-gray text-sm flex">
-						<view class="text-cut">
-							收益:{{item.profit}}元
+		<p style='text-align: center;line-height: 100upx;' v-if='financetDataList.length === 0'>暂无订单数据</p>
+		<view class="goods-list">
+			<view v-for="(item, index) in financetDataList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
+				<view class="image-wrapper"><image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
+				<view class="goods-detail">
+					<view class="detail-title clamp">{{item.orderDetailsPic.goodsPicBean.goodsName}}</view>
+					<view class="price-box">
+						<view class="price">
+							<text class="priceSale">收益: ￥{{item.profit}}</text>
+							 <!-- <text class="priceSale">{{item.orderId}}</text>
+							 <text class="pricemart">收益:￥{{item.profit}}</text> -->
 						</view>
 					</view>
-				</view>
-				<view class="action">
-					<view class="text-grey text-ls">{{item.orderBean.createTime}}</view>
-					<view class="sm">订单Id：{{item.orderId}}</view>
-				</view>
+					<view class="sub-title clamp">日期: {{item.orderBean.createTime}}</view>
+				</view>	
 			</view>
 		</view>
 		<tabbar :role="'agent'" :ids="'awdsy'"></tabbar>	
@@ -114,6 +113,7 @@
 									this.financetDataList.push(tmpData[tmp])
 								}
 							}
+							console.log(this.financetDataList)
 						}else{
 							this.$api.msg(data.msg)
 						}
@@ -135,7 +135,7 @@
 		}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 	.container {
 		padding-bottom: 100upx;
 	}
@@ -143,12 +143,84 @@
 		width: auto;
 		text-align: right;
 	}
-	.menu-avatar .cu-item .content {
-		flex: 1;
-		width: 40%;
-		overflow: hidden;  /*也可以用 width:0 代替*/
-	}
-	.menu-avatar .cu-item .content .clamp {
-		display: block;
+	/* 商品列表 */
+	.goods-list {
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0 auto;
+		background: #fff;
+		.goods-item {
+			display: flex;
+			flex-direction: column;
+			flex-flow: nowrap;
+			width: 100%;
+			padding: 20rpx 30rpx;
+			box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+			margin-top: 10rpx;
+		}
+		.image-wrapper {
+			width: 200upx;
+			height:200upx;
+			border-radius: 3upx;
+			overflow: hidden;
+			image {
+				opacity: 1;
+				border-radius: 15upx;
+			}
+		}
+		.goods-detail {
+			display: inline-block;
+			margin-left: 20upx;
+			width: 65%;
+			font-size: 25upx;
+			height: 100%;
+			.detail-title {
+				font-size: 30upx;
+				color: #000;
+				width: 100%;
+				height: 60%;
+				.number {
+					color: #999;
+					font-size: 26upx;
+					line-height: 50upx;
+					height: 50upx;
+				}
+			}
+			.sub-title {
+				height: 20%;
+				display: flex;
+				align-items: flex-end;
+			}
+			.price-box {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-end;
+				width: 100%;
+				height: 20%;
+				.price {
+					.priceSale {
+						color: red;
+						font-size: 35upx;
+						margin-right: 15upx;
+					}
+					.pricemart {
+						color: #999;
+						font-size: 25upx;
+						text-decoration: line-through;
+					}
+				}
+			}
+			.price-btn {
+				padding: 0;
+				margin: 0;
+				font-size: 24upx;
+				padding: 0 20upx;
+				height: 50upx;
+				line-height: 50upx;
+				border-radius: 40upx;
+				color: #fff;
+				background: #ff4f50;
+			}
+		}
 	}
 </style>

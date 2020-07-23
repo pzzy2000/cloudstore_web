@@ -121,7 +121,8 @@
 										url: res.data.result.result.url,
 										userType: res.data.result.userType,
 										agent: res.data.result.agent,
-										relationId: res.data.result.relationId
+										relationId: res.data.result.relationId,
+										wxPic: res.data.result.result.wxPic
 									}
 									uni.setStorageSync('userInfo',userInfo)
 									uni.setStorageSync('token',res.data.result.result.token)
