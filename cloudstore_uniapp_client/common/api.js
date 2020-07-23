@@ -36,7 +36,8 @@ export default {
 		},
 		goods:{
 			buy:"agent/goods/app/buyGoodsDetail",
-			detail:"agent/goods/app/searchGoodsDetail"
+			detail:"agent/goods/app/searchGoodsDetail",
+			searchMyAgentGoods: 'agent/goods/app/searchMyAgentGoods'
 		},
 		address:{
 			list:'app/client/address/searchClientAddress',
@@ -110,13 +111,13 @@ export default {
 		},
 		order: {
 			getAgentOrder: 'order/app/getAgentOrder',
-			getClientOrder:　'order/app/getClientOrder'
+			getClientOrder:　'order/app/getClientOrder',
+			getAgentOrderCount: 'order/app/getAgentOrderCount' //我的小店的订单数量，代理商品
 		},
 		agentInfo: {
 			getAgentShop: 'agent/goods/app/getAgentShop'
 		}
 	},
-	
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
 		if (load) {
 			uni.showLoading({

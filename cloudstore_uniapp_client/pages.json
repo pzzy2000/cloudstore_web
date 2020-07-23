@@ -118,9 +118,11 @@
 		 { 
 			"path": "pages/agent/home/index",
 			"style": { //用户 首页
-				"navigationBarTitleText": "我的代理",
+				"navigationBarTitleText": "我的小店",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor":"#18b6ff",
+				"navigationBarTextStyle":"#ffffff"  //状态栏字体颜色
 			}
 		}, 
 		{

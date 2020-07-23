@@ -18,7 +18,10 @@
 				<view class="image-wrapper"><image :src="goods.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
 					<view class="detail-title clamp">{{ goods.goodsName }}</view>
-					<view class="sub-title clamp">{{ goods.supplierShopBean.shopName }}</view>
+					<view class="sub-title clamp">
+						<button class="cu-btn round bg-orange sm" v-if="!goods.activityBean.name">无活动</button>
+						<button class="cu-btn round bg-orange sm" v-else>{{ goods.activityBean.name }}</button>
+					</view>
 					<view class="price-box">
 						<!-- <view class="clamp subhead">供应商:{{goods.supplierShopBean.shopName}}</view> -->
 						<view class="price">
@@ -78,7 +81,11 @@ export default {
 			filterIndex: 0,
 			pageNum: 1,
 			priceOrder: 0, //1 价格从低到高 2价格从高到低
-			goodsList: [],
+			goodsList: {
+				activityBean: {
+					name: '不参与活动'
+				}
+			},
 			cateList:[],
 			cateId:null,
 			itemList: [],
@@ -266,11 +273,10 @@ export default {
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
 			console.log(item)
-			let goodsId = item.goodsId;
+			let goodsId = item.id;
 			let activitId = item.activityId;
-			let agentGoodsId = item.id;
 			uni.navigateTo({
-				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
+				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}`
 			});
 		},
 		stopPrevent() {}
@@ -281,7 +287,7 @@ export default {
 <style lang="scss">
 page,
 .content {
-	padding-bottom: 50upx;
+	padding-bottom: 100upx;
 }
 .content {
 	padding-top: 96upx;
@@ -449,7 +455,7 @@ page,
 		font-size: 12px;
 		height: 100%;
 		.detail-title {
-			font-size: 14px;
+			font-size: 30rpx;
 			color: #000;
 			width: 100%;
 			height: 33%;
