@@ -2,10 +2,11 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
-    <div style="display: inline-block; float: right; margin-right: 50px">{{userType}}&nbsp;{{userAccont}}&nbsp;{{userName}}</div>
     <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-<!--        <img class="user-avatar" :src="avatar">-->
+<!--      <div class="avatar-wrapper">-->
+<!--&lt;!&ndash;        <img class="user-avatar" :src="avatar">&ndash;&gt;-->
+<!--      </div>-->
+      <div style="display: inline-block; float: right; cursor: pointer; color: #1f2d3d">{{userType}}<span style="margin: 0 10px">/</span>{{userName}}
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">

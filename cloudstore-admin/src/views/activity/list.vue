@@ -41,11 +41,11 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productTable"
-                :data="list"
-                style="width:100%"
-                @selection-change="handleSelectionChange"
-                v-loading="listLoading"
-                border>
+        :data="list"
+        style="width:100%"
+        @selection-change="handleSelectionChange"
+        v-loading="listLoading"
+        border>
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
         <el-table-column label="活动名称" align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
@@ -205,7 +205,7 @@
             }
           }else{
             setTimeout(function(){
-              row.status =0;
+              row.status = 0;
             },500);
             this.getList();
           }

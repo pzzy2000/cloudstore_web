@@ -40,7 +40,7 @@
             <el-table :data="baseinfoForm.goodsPhotos">
               <el-table-column width="200" align="center">
                 <template slot-scope="scope">
-                  <el-image :src="scope.row.url"></el-image>
+                  <el-image :src="scope.row.url" @dblclick="preview(scope.row)"></el-image>
                 </template>
               </el-table-column>
             </el-table>
@@ -53,11 +53,13 @@
         </el-form>
       </div>
     </el-card>
+    <el-image-viewer v-if="showViewer" :on-close="closeViewer" :url-list="srcList"/>
   </div>
 </template>
 
 <script>
   import { getOneapply, verified } from '@/api/client'
+  import ElImageViewer from "element-ui/packages/image/src/image-viewer";
   export default {
     name: "agent-info",
     provide () {
@@ -65,13 +67,16 @@
         rwDispatcherProvider: this
       }
     },
+    components: { ElImageViewer },
     data() {
       return {
         baseinfoForm: {
           goodsPhotos: []
         },
         rwDispatcherState: 'read',
-        isshow: true
+        isshow: true,
+        showViewer: false,
+        srcList: []
       }
     },
     created() {
@@ -115,6 +120,14 @@
             }
           }
         })
+      },
+      preview(row) {
+        console.log("+++++++++")
+        this.showViewer = true;
+        this.srcList[0] = row.url;
+      },
+      closeViewer() {
+        this.showViewer = false
       },
       refused() {
         verified({status: 2, id: this.$route.query.id}).then(res => {
