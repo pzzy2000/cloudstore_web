@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="user-section">
-			<image class="bg" src="/static/user-bg.jpg"></image>
+			<!-- <image class="bg" src="/static/user-bg.jpg"></image> -->
 			<view class="user-info-box">
 				<view class="member-top-c">
 					<template v-if="userDetailInfo && userDetailInfo.id">
@@ -212,8 +212,8 @@ import { mapState,mapMutations } from 'vuex';
 		getuserinfo(){
 			let userInfo = uni.getStorageSync('userInfo');
 			if (userInfo) {
-				this.user.name = userInfo.name || user.nickName
-				this.user.url = userInfo.wxPic || user.detailUrl
+				this.user.name = userInfo.name || this.user.nickName
+				this.user.url = userInfo.wxPic || this.user.detailUrl
 				if (!userInfo.wxPic) {
 					this.user.url = this.user.detailUrl
 				}
@@ -341,155 +341,10 @@ import { mapState,mapMutations } from 'vuex';
 				_this.toWxLogin(data);
 			}
 		},
-		getALICode() {
-			let that = this;
-			uni.login({
-				scopes: 'auth_user',
-				success: res => {
-					if (res.authCode) {
-						uni.getUserInfo({
-							provider: 'alipay',
-							success: function(infoRes) {
-								if (infoRes.errMsg == 'getUserInfo:ok') {
-									let user_info = {
-										nickname: infoRes.nickName,
-										avatar: infoRes.avatar
-									};
-									that.aLiLoginStep1(res.authCode, user_info);
-								}
-							},
-							fail: function(errorRes) {
-								this.$common.errorToShow('未取得用户昵称头像信息');
-							}
-						});
-					} else {
-						this.$common.errorToShow('未取得code');
-					}
-				},
-				fail: function(res) {
-					this.$common.errorToShow('用户授权失败my.login');
-				}
-			});
-		},
-		getWxCode(e) {
-			console.log('-------',e)
-			let that = this;
-			uni.login({
-				provider: 'weixin',
-				success: function(res) {
-					if (res.code) {
-						console.log(res.code)
-						that.wxLoginStep1(res.code);
-					} else {
-						this.$common.errorToShow('未取得code');
-					}
-				},
-				fail: function(res) {
-					this.$common.errorToShow('用户授权失败wx.login');
-				}
-			});
-		},
-		wxLoginStep1(code) {
-			var data = {
-				code: code
-			}
-			this.$api.login1(data, res => {
-				if (res.status) {
-					this.open_id = res.data;
-
-					this.getUserInfo()
-				} else {
-					this.$common.errorToShow(res.msg, function() {
-						uni.navigateBack({
-							delta: 1
-						});
-					});
-				}
-			});
-		},
-		aLiLoginStep1(code, user_info) {
-			let data = {
-				code: code,
-				user_info: user_info
-			};
-			this.$api.alilogin1(data, res => {
-				this.alipayNoLogin = false;
-				if (res.status) {
-					this.open_id = res.data.user_wx_id;
-					//判断是否返回了token，如果没有，就说明没有绑定账号，跳转到绑定页面
-					if (!res.data.hasOwnProperty('token')) {
-						this.$common.redirectTo('/pages/public/index?user_wx_id=' + res.data.user_wx_id);
-					} else {
-						this.$db.set('userToken', res.data.token);
-						this.initData();
-					}
-				} else {
-					this.$common.errorToShow(res.msg);
-				}
-			});
-		},
-		toWxLogin(data) {
-			console.log('----------data---------', data);
-			let _this = this;
-			_this.$api.login2(data, function(res) {
-				if (res.status) {
-					//判断是否返回了token，如果没有，就说明没有绑定账号，跳转到绑定页面
-					if (typeof res.data.token == 'undefined') {
-						uni.redirectTo({
-							url: '/pages/public/index?user_wx_id=' + res.data.user_wx_id
-						});
-					} else {
-						_this.$db.set('userToken', res.data.token);
-						_this.initData();
-					}
-				} else {
-					_this.$common.errorToShow('登录失败，请重试');
-				}
-			});
-		},
 		toLogin() {
 			uni.navigateTo({
 				url: '/pages/client/public/login'
 			});
-		}, 
-		//在线客服,只有手机号的，请自己替换为手机号
-		showChat() {
-			// #ifdef H5
-			let _this = this;
-			window._AIHECONG('ini', {
-				entId: this.config.ent_id,
-				button: false,
-				appearance: {
-					panelMobile: {
-						tone: '#FF7159',
-						sideMargin: 30,
-						ratio: 'part',
-						headHeight: 50
-					}
-				}
-			});
-			//传递客户信息
-			window._AIHECONG('customer', {
-				head: _this.userInfo.avatar,
-				名称: _this.userInfo.nickname,
-				手机: _this.userInfo.mobile
-			});
-			window._AIHECONG('showChat');
-			// #endif
-
-			// 拨打电话
-			// #ifdef APP-PLUS
-			if (this.kfmobile) {
-				uni.makePhoneCall({
-					phoneNumber: '' + this.kfmobile,
-					success: () => {
-						// console.log("成功拨打电话")
-					}
-				});
-			} else {
-				this.$common.errorToShow('商户未设置客服手机号');
-			}
-			// #endif
 		}
 	}
 };
@@ -536,6 +391,7 @@ page{
 	height: 520upx;
 	padding: 100upx 30upx 0;
 	position: relative;
+	background: #00a79d;
 	.bg {
 		position: absolute;
 		left: 0;
@@ -561,6 +417,7 @@ page{
 		height: 130upx;
 		border: 5upx solid #fff;
 		border-radius: 50%;
+		margin-right: 20rpx;
 	}
 	.username {
 		font-size: $font-lg + 6upx;

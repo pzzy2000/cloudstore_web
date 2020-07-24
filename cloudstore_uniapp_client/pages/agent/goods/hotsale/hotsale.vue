@@ -9,7 +9,7 @@
 
 		<!-- 头部轮播 -->
 		<!-- #ifdef MP -->
-		<view class="carousel-section" style="margin-top: 80upx;margin-bottom: 20upx;">
+		<view class="carousel-section">
 			<!-- #endif -->
 			<!-- #ifndef MP -->
 			<view class="carousel-section">
@@ -34,29 +34,26 @@
 			<!-- 活动 -->
 			<view class="activity-main">
 				<view class="cate-section">
-					<view class="cate-item" v-for="item in activity.nav.one" :key="item.id" @click="navToCategory(item)">
-						<image v-if="item.isadd == 0" src="/static/temp/c1.png"></image>
-						<image v-else src="/static/temp/c5.png"></image>
+					<view class="cate-item" v-for="(item,index) in activity.nav.one" :key="item.id" @click="navToCategory(item)">
+						<image :src="'/static/agent/nav'+ Number(index+1) +'.png'"></image>
 						<text class="clamp">{{item.name}}</text>
 					</view>
 				</view>
 				<view class="cate-section">
-					<view class="cate-item" v-for="item in activity.nav.two" :key="item.id" @click="navToCategory(item)">
-						<image v-if="item.isadd == 0" src="/static/temp/c1.png"></image>
-						<image v-else src="/static/temp/c5.png"></image>
+					<view class="cate-item" v-for="(item,index) in activity.nav.two" :key="item.id" @click="navToCategory(item)">
+						<image :src="'/static/agent/nav'+ Number(index+5) +'.png'"></image>
 						<text class="clamp">{{item.name}}</text>
 					</view>
 				</view>
 			</view>
 			<!-- 热门活动列表 -->
-			<view  v-for='item  in activity.show' :key="item.id">
+			<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
 				<view   class="f-header m-t" @click="navToCategory(item)">
 					<view class="faddish-title">
 						<view class="title-main">
-							<span class='left-chunk'></span>
 							{{item.name}}
 						</view>
-						<span class='more'>更多></span>
+						<text class='more'>更多></text>
 					</view>
 				</view>
 				
@@ -295,6 +292,7 @@
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
+				console.log(item)
 				let goodsId = item.goodsId;
 				let activitId = item.activityId;
 				let agentGoodsId= item.id;
@@ -362,11 +360,11 @@
 
 <style lang="scss" scoped>
 	.container {
-		background: #fff;
+		background: #f1f1f1;
 		padding-bottom: 30rpx;
 	}
 	.MP-search {
-		background: #ffffff;
+		background: #00A79D;
 		height: 80upx;
 		display: flex;
 		justify-content: center;
@@ -410,9 +408,6 @@
 		padding-bottom: 160upx;
 		.activity-main {
 			width: 100%;
-			margin: 0 auto;
-			background: rgb(248,248,248);
-			border: 1upx solid #eee;
 			.cate-section {
 				position: relative;
 				z-index: 5;
@@ -449,11 +444,13 @@
 	/* 头部 轮播图 */
 	.carousel-section {
 		position: relative;
-		padding-top: 10px;
+		padding-top: 100upx;
+		width: 94%;
+		margin: 0 auto;
 
 		.titleNview-placing {
 			height: var(--status-bar-height);
-			padding-top: 44px;
+			padding-top: 44upx;
 			box-sizing: content-box;
 		}
 
@@ -521,7 +518,7 @@
 		justify-content: space-around;
 		align-items: center;
 		flex-wrap: wrap;
-		padding: 30upx 0;
+		padding: 15upx 0;
 		.cate-item {
 			display: flex;
 			flex-direction: column;
@@ -536,8 +533,8 @@
 
 		/* 原图标颜色太深,不想改图了,所以加了透明度 */
 		image {
-			width: 70upx;
-			height: 70upx;
+			width: 96upx;
+			height: 96upx;
 			margin-bottom: 14upx;
 			border-radius: 50%;
 			opacity: 0.7;
@@ -557,36 +554,47 @@
 		}
 	}
 
-
+	.activity-list {
+		background: #fff;
+		margin: 0 auto;
+		width: 94%;
+		border-radius: 20upx;
+	}
 	.f-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		background: #fff;
 		padding: 0 15upx;
+		border-top-left-radius: 25rpx;
+		border-top-right-radius: 25rpx;
 		.faddish-title {
 			font-size: 30upx;
-			margin-top: 20upx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			background: #fff;
 			width: 100%;
 			height: 60rpx;
+			position: relative;
 			.title-main {
-				display: flex;
-				align-items: center;
-				.left-chunk {
-					display: inline-block;
-					height: 40upx;
-					width: 10upx;
-					background-color: green;
-					margin-right: 10upx;
-				}
+				font-size: 30rpx;
+				padding: 5rpx 10rpx;
+				background-color: #b48e4f;
+				border-bottom-right-radius: 10rpx;
+				border-bottom-left-radius: 10rpx;
+				position: absolute;
+				left: 20rpx;
+				top: 0;
+				color: #fff;
+
 			}
 			.more {
 				color: #999;
-				font-size: 22upx;
+				font-size: 24rpx;
+				text-align: right;
+				display: inline-block;
+				width: 100%;
 			}
 		}
 		image {
@@ -671,10 +679,10 @@
 .goods-list {
 	display: flex;
 	flex-wrap: wrap;
-	margin: 40upx 30upx;
+	margin-top: 20upx;
 	background: #fff;
 	border-bottom: 1upx solid #eee;
-	padding-bottom: 40upx;
+	padding:0 20upx 40upx;
 	.goods-item {
 		display: flex;
 		flex-direction: column;
@@ -682,10 +690,13 @@
 		width: 100%;
 		height: 200upx;
 		margin-bottom: 20upx;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+		border-radius: 10rpx;
+		padding: 10rpx;
 	}
 	.image-wrapper {
-		width: 200upx;
-		height:200upx;
+		width: 180upx;
+		height: 180upx;
 		border-radius: 3upx;
 		overflow: hidden;
 		image {
@@ -700,7 +711,7 @@
 		flex-wrap: wrap;
 		width: 65%;
 		.detail-title {
-			font-size: 16px;
+			font-size: 30upx;
 			color: #000;
 			width: 100%;
 			.number {

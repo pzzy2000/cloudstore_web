@@ -11,20 +11,26 @@
 				<text>{{item.name}}:{{item.num}}</text>
 			</view>
 		</view>
-		<p style='text-align: center;line-height: 100upx;' v-if='financetDataList.length === 0'>暂无订单数据</p>
+		<!-- <p style='text-align: center;line-height: 100upx;' v-if='financetDataList.length === 0'>暂无订单数据</p> -->
 		<view class="goods-list">
 			<view v-for="(item, index) in financetDataList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
 				<view class="image-wrapper"><image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
-					<view class="detail-title clamp">{{item.orderDetailsPic.goodsPicBean.goodsName}}</view>
+					<view class="detail-title clamp">
+						{{item.orderDetailsPic.goodsPicBean.goodsName}}
+						<view class="text-gray">
+							{{item.orderDetailsPic.activityBean.name}}
+						</view>
+					</view>
+					<view class="sub-title clamp">订单时间: {{item.orderBean.createTime}}</view>
 					<view class="price-box">
 						<view class="price">
 							<text class="priceSale">收益: ￥{{item.profit}}</text>
-							 <!-- <text class="priceSale">{{item.orderId}}</text>
-							 <text class="pricemart">收益:￥{{item.profit}}</text> -->
+							 <!-- <text class="priceSale">{{item.orderId}}</text> -->
+							 <text class="line">/</text>
+							 <text class="text-gray">总价:{{item.orderDetailsPic.payPrice}}</text>
 						</view>
 					</view>
-					<view class="sub-title clamp">日期: {{item.orderBean.createTime}}</view>
 				</view>	
 			</view>
 		</view>
@@ -64,6 +70,9 @@
 					gridCol: 3,
 					gridBorder: false,
 					tabEarning: 2,
+					pageNum: 1,
+					status: 2,
+					type: 1,
 					financeData: '',
 					financetDataList: ''
 				}
@@ -76,8 +85,17 @@
 				this.getFinanceData()
 				this.lisFinancetData()
 			},
+			onPullDownRefresh() { //下拉刷新
+				this.pageNum = 1;
+				this.financetDataList = []
+				this.lisFinancetData(1,1)
+			},
+			onReachBottom() { //加载更多
+				this.pageNum = this.pageNum + 1;
+				this.lisFinancetData(this.status, this.type)
+			},
 			methods:{
-				async getFinanceData () {
+				async getFinanceData () { //查询收益总数和未付款，已付款的总数
 					let parmas = {
 						userType: this.userType
 					}
@@ -92,43 +110,51 @@
 						}
 					}
 				},
-				async lisFinancetData (condition = '2', type = '1') {
+				async lisFinancetData (status, type) { //查询订单列表的收益
 					uni.showLoading({
 						title: '正在加载',
 						mask: false
 					});
 					let parmas = {
 						userType: this.userType,
-						status: condition,
+						status: status,
 						type: type,
-						pageNum: '1',
+						pageNum: this.pageNum,
 						pageSize: '10'
 					}
 					let data = await Api.apiCall('post', Api.finance.list, parmas)
 					if (data) {
-						if (data.code === 0 && data.result != null) {
+						if (data.code === 0 && data.result.records != false) {
 							const tmpData = data.result.records;
 							for (let tmp in tmpData) {
 								if (this.tabEarning === tmpData[tmp].profitStauts) {
 									this.financetDataList.push(tmpData[tmp])
 								}
 							}
-							console.log(this.financetDataList)
+							uni.hideLoading()
 						}else{
-							this.$api.msg(data.msg)
+							uni.hideLoading()
+							this.$api.msg('没有更多数据了')
 						}
-						uni.hideLoading()
 					}
 				},
-				earninngType (index) {
+				earninngType (index) { // 点击收益tab选项
+					console.log(index)
 					this.financetDataList = []
 					this.tabEarning = index
-					if (index === 2) {
+					this.pageNum = 1
+					if (index === 2) { //已收益
 						this.lisFinancetData(2, 1)
-					} else if (index === 1) {
+						this.status = 2;
+						this.type = 1;
+					} else if (index === 1) { //待收益
 						this.lisFinancetData(1, 1)
-					} else if (index === 3) {
+						this.status = 1;
+						this.type = 1;
+					} else if (index === 3) { //积分
 						this.lisFinancetData(2, 2)
+						this.status = 2;
+						this.type = 2;
 					}
 				}
 			}
@@ -143,12 +169,16 @@
 		width: auto;
 		text-align: right;
 	}
+	.cu-list.grid {
+		margin-bottom: 20upx;
+	}
 	/* 商品列表 */
 	.goods-list {
 		display: flex;
 		flex-wrap: wrap;
 		margin: 0 auto;
 		background: #fff;
+		width: 94%;
 		.goods-item {
 			display: flex;
 			flex-direction: column;
@@ -156,7 +186,7 @@
 			width: 100%;
 			padding: 20rpx 30rpx;
 			box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-			margin-top: 10rpx;
+			margin-bottom: 10rpx;
 		}
 		.image-wrapper {
 			width: 200upx;
@@ -188,20 +218,23 @@
 			}
 			.sub-title {
 				height: 20%;
-				display: flex;
-				align-items: flex-end;
+				text-align: right;
 			}
 			.price-box {
-				display: flex;
-				justify-content: space-between;
-				align-items: flex-end;
+				text-align: right;
+				// display: flex;
+				// justify-content: space-between;
+				// align-items: flex-end;
 				width: 100%;
 				height: 20%;
 				.price {
+					font-size: 30upx;
 					.priceSale {
 						color: red;
-						font-size: 35upx;
-						margin-right: 15upx;
+						font-size: 25upx;
+					}
+					.line {
+						margin: 0 15upx;
 					}
 					.pricemart {
 						color: #999;

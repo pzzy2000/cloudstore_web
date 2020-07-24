@@ -92,7 +92,8 @@
 			</view>
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toBuy">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave">立即分享</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" v-if="shareClientId" @click="shareSave" >立即分享</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -202,17 +203,12 @@ export default {
 		
 	},
 	onLoad(ops) {
-		console.log(ops)
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
 		this.userType = ops.userType
 		this.activeId = ops.activeId
-		if ( ops.shareClientId == undefined) {
-			this.shareClientId = '-1'
-		}else{
-			this.shareClientId = ops.shareClientId
-		}
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
+		this.shareClientId = ops.shareClientId
 	},
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
@@ -375,6 +371,17 @@ export default {
 		},
 		share() { //分享显示弹窗
 			this.$refs.share.toggleMask();
+		},
+		toApply () {
+			uni.showModal({
+				title: '申请团长',
+				content: '请联系客服',
+				showCancel: false,
+				cancelText: '取消',
+				confirmText: '确定',
+				success: res => {
+				},
+			});
 		},
 		async shareSave () { //分享调用接口
 			uni.showLoading({

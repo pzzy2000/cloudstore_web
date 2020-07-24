@@ -6,7 +6,7 @@
 				<!-- <image :src="detailUrl" mode="" alt='头像' class="info-img"></image> -->
 				<view class="header-info">
 					<text class="title samp">{{shopInfo.name}}</text>
-					<!-- <text class="header-address">地址：{{shopInfo.detailAddress}}</text> -->
+					<text class="header-address">{{shopInfo.detailAddress}}</text>
 				</view>
 				<image src="/static/arc.png" mode="" class="agency-header-bg"></image>
 			</view>
@@ -29,9 +29,10 @@
 						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 						<view class="goods-detail">
 							<view class="detail-title clamp">{{ goods.goodsPicesBean.goodsName }}</view>
+							<view class="clamp text-gray sm">{{ goods.goodsPicesBean.goodsSubtitle }}</view>
 							<view class="sub-title clamp">
-								<button class="cu-btn round bg-orange sm" v-if="!goods.activeBean.name">无活动</button>
-								<button class="cu-btn round bg-orange sm" v-else>{{goods.activeBean.name}}</button>
+								<text class="text-gray" v-if="!goods.activeBean.name">无活动</text>
+								<text class="text-gray" v-else>{{goods.activeBean.name}}</text>
 							</view>
 							<view class="price-box">
 								<!-- <view class="clamp subhead">供应商:{{goods.supplierShopBean.shopName}}</view> -->
@@ -39,6 +40,7 @@
 									 <text class="priceSale">￥{{ goods.goodsPicesBean.salePrice }}</text>
 									 <text class="pricemart">￥{{ goods.goodsPicesBean.martPrice}}</text>
 								</view>
+								<button class="price-btn">立即购买</button>
 							</view>
 						</view>	
 					</view>
@@ -177,6 +179,7 @@ export default {
 				font-size: 20upx;
 				color: #fff;
 				padding: 30upx;
+				text-align: center;
 				.title {
 					color: #fff;
 					font-size: 35upx;
@@ -306,7 +309,6 @@ export default {
 				font-size: 30upx;
 				color: #000;
 				width: 100%;
-				height: 33%;
 				.number {
 					color: #999;
 					font-size: 26upx;
@@ -314,17 +316,20 @@ export default {
 					height: 50upx;
 				}
 			}
+			.text-gray {
+				font-size: 24upx;
+			}
 			.sub-title {
-				height: 33%;
 				display: flex;
 				align-items: flex-end;
+				font-size: 24upx;
+				height: 40%;
 			}
 			.price-box {
 				display: flex;
 				justify-content: space-between;
 				align-items: flex-end;
 				width: 100%;
-				height: 33%;
 				.price {
 					.priceSale {
 						color: red;

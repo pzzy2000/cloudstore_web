@@ -22,40 +22,32 @@
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
 					
 					<!-- 订单列表 -->
-					<view v-for="(item,index) in orderList" :key="index" class="order-item" @click="toOrder(item)">
+					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
-							<text class="time">{{item.createTime}}</text>
+							<text class="time">订单号: {{item.id}}</text>
 							<template>
-								<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
-								<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
-								<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
-								<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
-								<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
-								<text class="state" v-else-if="item.orderStatus === 'peisoged'">已配送</text>
-								<text class="state" v-else-if="item.orderStatus === 'complete'">已完成</text>
-								<text class="state" v-else-if="item.orderStatus === 'returns'">退货</text>
-								<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
+								<text class="state" v-if="item.orderBean.orderStatus === 'wait'">待支付</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'pay'">支付待确认</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'payed'">已支付</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'close'">超时关闭</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'peisong'">待配送</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'peisoged'">已配送</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'complete'">已完成</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'returns'">退货</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'retud'">已退货</text>
 							</template>
 						</view>
-						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index">
-							<image class="goods-img" :src="item1.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
+						<view class="goods-box-single" :key="index" @click="toOrder(item)">
+							<image class="goods-img" :src="item.detailPicBean[0].goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
-								<text class="title clamp">{{item1.goodsPicesBean.goodsName}}</text>
-								<text class="attr-box">{{item1.price}}  x {{item1.quantity}}</text>
-								<text class="price">{{item1.payPrice}}</text>
+								<text class="title clamp">{{item.detailPicBean[0].goodsPicesBean.goodsName}}</text>
+								<text class="attr-box">{{item.detailPicBean[0].activityBean.name}}</text>
+								<view class="price">
+									<text>总价: ￥{{item.payPrice}}</text>
+									<text>订单时间: {{item.createTime}}</text>
+								</view>
 							</view>
 						</view>
-						<view class="action-box b-t" v-if="item.orderStatus === 'wait'">
-							<!-- <button class="action-btn" @click="cancelOrder(item)">取消订单</button> -->
-							<button class="action-btn recom" @click="toBuy(item.detailPicBean)">立即支付</button>
-						</view>
-						<!-- <view class="" v-if="item.orderStatus === 'complete'">
-							<view class="price-box">
-								实付款
-								<text class="price">{{item.payPrice}}</text>
-								<button class="action-btn recom" @click="refundNotifyOrder(item.detailPicBean)">申请退款</button>
-							</view>
-						</view> -->
 					</view>
 				<!-- </scroll-view>
 			</swiper-item>
@@ -343,16 +335,19 @@
 				.attr-box{
 					font-size: $font-sm + 2upx;
 					color: $font-color-light;
-					padding: 10upx 12upx;
+					padding: 10rpx 30rpx;
+					height: 45%;
 				}
 				.price{
-					font-size: $font-base + 2upx;
+					font-size: 24upx;
 					color: $font-color-dark;
-					&:before{
-						content: '￥';
-						font-size: $font-sm;
-						margin: 0 2upx 0 8upx;
-					}
+					display: flex;
+					justify-content: space-between;
+				// 	&:before{
+				// 		content: '￥';
+				// 		font-size: $font-sm;
+				// 		margin: 0 2upx 0 8upx;
+				// 	}
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="user-section">
-			<image class="bg" src="/static/user-bg.jpg"></image>
+			<!-- <image class="bg" src="/static/user-bg.jpg"></image> -->
 			<view class="user-info-box">
 				<view class="member-top-c">
 					<template>
@@ -294,6 +294,7 @@ page{
 	height: 520upx;
 	padding: 100upx 30upx 0;
 	position: relative;
+	background: #00a79d;
 	.bg {
 		position: absolute;
 		left: 0;
@@ -319,6 +320,7 @@ page{
 		height: 130upx;
 		border: 5upx solid #fff;
 		border-radius: 50%;
+		margin-right: 20rpx;
 	}
 	.username {
 		font-size: $font-lg + 6upx;

@@ -1,11 +1,8 @@
 <template>
 	<view class="container">
-		<view class="left-bottom-sign"></view>
-		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign">欢迎</view>
 			<view class="welcome">用户注册</view>
 			<view class="input-content">
 				<view class="input-item">
@@ -39,7 +36,8 @@
 				<input type="text" :value="vxPhone" class="input-height"/>
 				<view class="phone-code">
 					<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input" @input="editInput($event,'code')"/>
-					<button type="primary" class="code-btn">发送验证码</button>
+					<button type="primary" class="code-btn" v-if="registerCoding == false" @click="getRegisterCode()">发送验证码</button>
+					<button type="primary" class="code-btn" v-else>{{ auth_register_time }}秒</button>
 				</view>
 				<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height" @input="editInput($event,'pwd')"/>
 				<view class="regBox-btn">
@@ -71,7 +69,9 @@
 				password: '',
 				logining: false,
 				coding: false,
+				registerCoding: false,
 				auth_time: 180,
+				auth_register_time: 180,
 				codekey: '',
 				title: '注册',
 				//以下为微信注册
@@ -153,35 +153,64 @@
 				}
 			},
 			// 获取验证码
-			// async getCode() {
-			// 	var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
-			// 	if (!myreg.test(this.phone)) {
-			// 		uni.showToast({
-			// 			icon: 'none',
-			// 			title: '请输入正确的手机号码'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	//设置倒计时秒
-			// 	this.auth_time = 60;
-			// 	this.coding = true;
-			// 	var auth_timetimer = setInterval(() => {
-			// 		this.auth_time--;
-			// 		if (this.auth_time < 0) {
-			// 			this.coding = false;
-			// 			clearInterval(auth_timetimer);
-			// 		}
-			// 	}, 1000);
-			// 	//获取验证码
-			// 	let params = {
-			// 		phone: this.phone,
-			// 		codeType: 'reg'
-			// 	};
-			// 	let data = await Api.apiCall('post', Api.index.sendCodes, params);
-			// 	if (data) {
-			// 		this.codekey = data.key;
-			// 	}
-			// },
+			async getCode() {
+				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+				if (!myreg.test(this.phone)) {
+					uni.showToast({
+						icon: 'none',
+						title: '请输入正确的手机号码'
+					});
+					return false;
+				}
+				//设置倒计时秒
+				this.auth_time = 60;
+				this.coding = true;
+				var auth_timetimer = setInterval(() => {
+					this.auth_time--;
+					if (this.auth_time < 0) {
+						this.coding = false;
+						clearInterval(auth_timetimer);
+					}
+				}, 1000);
+				//获取验证码
+				let params = {
+					phone: this.phone,
+					codeType: 'reg'
+				};
+				let data = await Api.apiCall('post', Api.index.sendCodes, params);
+				if (data) {
+					this.codekey = data.key;
+				}
+			},
+			getRegisterCode () {
+				// var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+				// if (!myreg.test(this.phone)) {
+				// 	uni.showToast({
+				// 		icon: 'none',
+				// 		title: '请输入正确的手机号码'
+				// 	});
+				// 	return false;
+				// }
+				//设置倒计时秒
+				this.auth_register_time = 60;
+				this.registerCoding = true;
+				var auth_timetimer = setInterval(() => {
+					this.auth_register_time--;
+					if (this.auth_register_time < 0) {
+						this.registerCoding = false;
+						clearInterval(auth_timetimer);
+					}
+				}, 1000);
+				//获取验证码
+				// let params = {
+				// 	phone: this.phone,
+				// 	codeType: 'reg'
+				// };
+				// let data = await Api.apiCall('post', Api.index.sendCodes, params);
+				// if (data) {
+				// 	this.codekey = data.key;
+				// }
+			},
 			getWxCode () {
 				this.$refs.popup.open()
 				var that = this;
@@ -587,15 +616,17 @@
 				width: 65%;
 			}
 			.code-btn {
-				width: 35%;
-				font-size: 25upx;
+				width: 30%;
+				font-size: 25rpx;
+				line-height: 70rpx;
+				height: 70rpx;
 			}
 		}
 		.regBox-btn {
 			display: flex;
 			justify-content: space-between;
 			button {
-				width: 50%;
+				width: 40%;
 			}
 		}
 	}

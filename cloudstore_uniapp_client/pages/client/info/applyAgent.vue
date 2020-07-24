@@ -20,22 +20,28 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">代理类型</view>
-				<picker @change="typePickerChange" :value="typePickerIndex" :range="typePicker" :disabled='isEdit'>
-					<view class="picker">
-						{{typePickerIndex>-1?typePicker[typePickerIndex]:'请选择'}}
-					</view>
-				</picker>
+				<template>
+					<picker @change="typePickerChange" :value="typePickerIndex" :range="typePicker" :disabled='isEdit' v-if="!isEdit">
+						<view class="picker">
+							{{typePickerIndex>-1?typePicker[typePickerIndex]:'请选择'}}
+						</view>
+					</picker>
+					<input  name="input" :value="typePicker[typePickerIndex]" :disabled='isEdit' v-else>
+				</template>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">证件类型：</view>
-				<picker @change="typeChange" :value="index" :range="picker" :disabled='isEdit'>
-					<view class="picker">
-						{{index>-1?picker[index]:'请选择'}}
-					</view>
-				</picker>
+				<template>
+					<picker @change="typeChange" :value="index" :range="picker" :disabled='isEdit' v-if="!isEdit">
+						<view class="picker">
+							{{index>-1?picker[index]:'请选择'}}
+						</view>
+					</picker>
+					<input  name="input" :value="picker[index]" :disabled='isEdit' v-else>
+				</template>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">证件ID：</view>
+				<view class="title">证件号码：</view>
 				<input placeholder="请输入证件ID" name="input" :value="agentfrom.cardId" :disabled='isEdit' @input="editInput($event,'cardId')"></input>
 			</view>
 			<view class="cu-form-group" @tap='seletctAddress' :disabled='isEdit'>
@@ -498,7 +504,7 @@
 
 <style scoped>
 	.container {
-		padding: 20rpx 0 50rpx 0;
+		padding-bottom: 50upx;
 	}
 	.tui-line-cell {
 		width: 100%;

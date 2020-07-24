@@ -53,7 +53,8 @@
 						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 						<view class="goods-detail">
 							<view class="detail-title clamp">{{ goods.goodsPicesBean.goodsName }}</view>
-							<view class="sub-title clamp">{{ goods.activeBean.name }}</view>
+							<view class="sub-title clamp text-gray">{{ goods.goodsPicesBean.goodsSubtitle }}</view>
+							<view class="active clamp text-gray">{{ goods.activeBean.name }}</view>
 							<view class="price-box">
 								<view class="price">
 									 <text class="priceSale">￥{{ goods.goodsPicesBean.salePrice }}</text>
@@ -274,9 +275,9 @@
 <style scoped lang="scss">
 page,.container {
 	height: 100%;
-	padding-bottom: 160upx;
 }
 .agency-main{ 
+	padding-bottom: 100upx;
 	margin: 0 auto;
 	position: relative;
 	.agency-header {
@@ -444,7 +445,7 @@ page,.container {
 			font-size: 14px;
 			color: #000;
 			width: 100%;
-			height: 33%;
+			height: 20%;
 			.number {
 				color: #999;
 				font-size: 26upx;
@@ -453,7 +454,14 @@ page,.container {
 			}
 		}
 		.sub-title {
-			height: 33%;
+			height: 20%;
+			display: flex;
+			align-items: flex-end;
+			font-size: 24upx;
+		}
+		.active {
+			font-size: 24upx;
+			height: 35%;
 			display: flex;
 			align-items: flex-end;
 		}
@@ -462,7 +470,7 @@ page,.container {
 			justify-content: space-between;
 			align-items: flex-end;
 			width: 100%;
-			height: 33%;
+			height: 25%;
 			.price {
 				.priceSale {
 					color: red;
