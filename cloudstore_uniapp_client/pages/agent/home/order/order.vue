@@ -23,7 +23,7 @@
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
 					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
-							<text class="time">{{item.orderId}}</text>
+							<text class="time">订单号: {{item.orderId}}</text>
 							<template>
 								<text class="state" v-if="item.orderBean.orderStatus === 'wait'">待支付</text>
 								<text class="state" v-else-if="item.orderBean.orderStatus === 'pay'">支付待确认</text>
@@ -40,8 +40,11 @@
 							<image class="goods-img" :src="item.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
 								<text class="title clamp">{{item.goodsPicesBean.goodsName}}</text>
-								<text class="attr-box">{{item.price}}  x {{item.quantity}}</text>
-								<text class="price">{{item.payPrice}}</text>
+								<text class="attr-box">{{item.activityBean.name}}</text>
+								<view class="price">
+									<text>总价: ￥{{item.payPrice}}</text>
+									<text>订单时间:{{item.orderBean.createTime}}</text>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -176,6 +179,7 @@
 							break;
 						}
 					}
+					console.log(this.orderList)
 					uni.stopPullDownRefresh();
 					uni.hideLoading()
 				}
@@ -322,16 +326,19 @@
 				.attr-box{
 					font-size: $font-sm + 2upx;
 					color: $font-color-light;
-					padding: 10upx 12upx;
+					padding: 10rpx 30rpx;
+					height: 45%;
 				}
 				.price{
-					font-size: $font-base + 2upx;
+					font-size: 24upx;
 					color: $font-color-dark;
-					&:before{
-						content: '￥';
-						font-size: $font-sm;
-						margin: 0 2upx 0 8upx;
-					}
+					display: flex;
+					justify-content: space-between;
+				// 	&:before{
+				// 		content: '￥';
+				// 		font-size: $font-sm;
+				// 		margin: 0 2upx 0 8upx;
+				// 	}
 				}
 			}
 		}

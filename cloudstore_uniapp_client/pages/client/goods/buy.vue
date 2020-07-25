@@ -74,10 +74,6 @@
 				<text class="cell-tip">￥{{totalPrice}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">优惠金额</text>
-				<text class="cell-tip red">无</text>
-			</view>
-			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">免运费</text>
 			</view>

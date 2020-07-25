@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<nav-bar>我的收益</nav-bar>
+		<nav-bar bgColor='#00a79d' fontColor='#fff'>我的收益</nav-bar>
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view class="cu-item" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
 				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
@@ -17,14 +17,15 @@
 				<view class="image-wrapper"><image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
 					<view class="detail-title clamp">{{item.orderDetailsPic.goodsPicBean.goodsName}}</view>
+					<view class="sub-title clamp">订单时间: {{item.orderBean.createTime}}</view>
 					<view class="price-box">
 						<view class="price">
 							<text class="priceSale">收益: ￥{{item.profit}}</text>
-							 <!-- <text class="priceSale">{{item.orderId}}</text>
-							 <text class="pricemart">收益:￥{{item.profit}}</text> -->
+							 <!-- <text class="priceSale">{{item.orderId}}</text> -->
+							 <text class="line">/</text>
+							 <text class="text-gray">总价:{{item.orderDetailsPic.payPrice}}</text>
 						</view>
 					</view>
-					<view class="sub-title clamp">日期: {{item.orderBean.createTime}}</view>
 				</view>	
 			</view>
 		</view>
@@ -62,6 +63,9 @@
 					gridCol: 3,
 					gridBorder: false,
 					tabEarning: 2,
+					pageNum: 1,
+					status: 2,
+					type: 1,
 					financeData: 2,
 					financetDataList: []
 				}
@@ -72,6 +76,15 @@
 			onLoad () {
 				this.getFinanceData()
 				this.lisFinancetData()
+			},
+			onPullDownRefresh() { //下拉刷新
+				this.pageNum = 1;
+				this.financetDataList = []
+				this.lisFinancetData(1,1)
+			},
+			onReachBottom() { //加载更多
+				this.pageNum = this.pageNum + 1;
+				this.lisFinancetData(this.status, this.type)
 			},
 			methods:{
 				async getFinanceData () {
@@ -89,42 +102,50 @@
 						}
 					}
 				},
-				async lisFinancetData (condition = '2', type = '1') {
+				async lisFinancetData (status , type) {
 					uni.showLoading({
 						title: '正在加载',
 						mask: false
 					});
 					let parmas = {
 						userType: 'Client',
-						status: condition,
+						status: status,
 						type: type,
-						pageNum: '1',
+						pageNum: this.pageNum,
 						pageSize: '10',
 					}
 					let data = await Api.apiCall('post', Api.finance.list, parmas)
 					if (data) {
-						if (data.code === 0 && data.result != null) {
+						if (data.code === 0 && data.result.records != false) {
 							const tmpData = data.result.records;
 							for (let tmp in tmpData) {
 								if (this.tabEarning === tmpData[tmp].profitStauts) {
 									this.financetDataList.push(tmpData[tmp])
 								}
 							}
+							uni.hideLoading()
 						}else{
-							this.$api.msg(data.msg)
+							uni.hideLoading()
+							this.$api.msg('没有更多了')
 						}
-						uni.hideLoading()
 					}
 				},
 				earninngType (index) {
 					this.financetDataList = []
 					this.tabEarning = index
+					this.pageNum = 1
 					if (index === 2) {
 						this.lisFinancetData(2, 1)
+						this.status = 2;
+						this.type = 1;
 					} else if (index === 1) {
 						this.lisFinancetData(1, 1)
+						this.status = 1;
+						this.type = 1;
 					} else if (index === 3) {
 						this.lisFinancetData(2, 2)
+						this.status = 2;
+						this.type = 2;
 					}
 					// if (index === 1 || index === 2) {
 					// 	this.financetDataList = []
@@ -144,20 +165,24 @@
 	.cu-list.menu-avatar>.cu-item .content {
 		width: 40%;
 	}
+	.cu-list.grid {
+		margin-bottom: 20upx;
+	}
 	/* 商品列表 */
 	.goods-list {
 		display: flex;
 		flex-wrap: wrap;
 		margin: 0 auto;
 		background: #fff;
+		width: 94%;
 		.goods-item {
 			display: flex;
 			flex-direction: column;
 			flex-flow: nowrap;
 			width: 100%;
-			padding: 20rpx 30rpx;
+			padding: 20upx 30upx;
 			box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-			margin-top: 10rpx;
+			margin-bottom: 10upx;
 		}
 		.image-wrapper {
 			width: 200upx;
@@ -189,20 +214,23 @@
 			}
 			.sub-title {
 				height: 20%;
-				display: flex;
-				align-items: flex-end;
+				text-align: right;
 			}
 			.price-box {
-				display: flex;
-				justify-content: space-between;
-				align-items: flex-end;
+				text-align: right;
+				// display: flex;
+				// justify-content: space-between;
+				// align-items: flex-end;
 				width: 100%;
 				height: 20%;
 				.price {
+					font-size: 30upx;
 					.priceSale {
 						color: red;
-						font-size: 35upx;
-						margin-right: 15upx;
+						font-size: 25upx;
+					}
+					.line {
+						margin: 0 15upx;
 					}
 					.pricemart {
 						color: #999;

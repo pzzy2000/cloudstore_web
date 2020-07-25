@@ -1,11 +1,10 @@
 <template>
 	<view class="container">
-		<view class="left-bottom-sign"></view>
-		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
+		<!-- <view class="left-bottom-sign"></view> -->
+		<!-- <view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view> -->
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign">{{ sysInfo.name }}LOGIN</view>
 			<view class="welcome">用户登录</view>
 			<view class="input-content">
 				<view class="input-item">
@@ -30,7 +29,7 @@
 		<view class="register-section">
 			还没有账号?<text @click="toRegist">马上注册</text>
 		</view>
-		<mallplusCopyright></mallplusCopyright>
+		<mallplusCopyright class='copy'></mallplusCopyright>
 	</view>
 </template>
 
@@ -417,9 +416,9 @@
 	}
 
 	.register-section {
-		position: absolute;
-		left: 0;
-		bottom: 100upx;
+		// position: absolute;
+		// left: 0;
+		// bottom: 100upx;
 		width: 100%;
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
@@ -429,5 +428,12 @@
 			color: $font-color-spec;
 			margin-left: 10upx;
 		}
+	}
+	.copy {
+		position: absolute;
+		left: 0;
+		bottom: 100upx;
+		width: 100%;
+		text-align: center;
 	}
 </style>

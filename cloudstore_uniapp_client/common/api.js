@@ -31,12 +31,12 @@ export default {
 			searchInfo:"client/app/searchClientInfo" //查询当前登录信息
 		},
 		recommend: {
-			newShopinfoByOrder: 'agent/goods/app/newShopinfoByOrder',
+			newShopinfoByOrder: 'agent/goods/app/newShopinfoByOrder', //查询客户端最新买的商品的商店信息
 			list: 'agent/goods/app/list'
 		},
 		goods:{
 			buy:"agent/goods/app/buyGoodsDetail",
-			detail:"agent/goods/app/searchGoodsDetail",
+			detail:"agent/goods/app/searchGoodsDetail", 
 			searchMyAgentGoods: 'agent/goods/app/searchMyAgentGoods'
 		},
 		address:{

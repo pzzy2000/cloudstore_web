@@ -74,7 +74,7 @@ export default {
 		bgColor: {
 			type: [String, Array],
 			default: function() {
-				return '#FFF';
+				return '#00a79d';
 			}
 		},
 		// 导航背景色渐变角度
@@ -88,7 +88,7 @@ export default {
 		fontColor: {
 			type: String,
 			default: function() {
-				return '#000';
+				return '#fff';
 			}
 		},
 		//标题是否居中

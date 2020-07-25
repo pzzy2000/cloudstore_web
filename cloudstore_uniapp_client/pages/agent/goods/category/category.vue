@@ -18,9 +18,10 @@
 				<view class="image-wrapper"><image :src="goods.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
 					<view class="detail-title clamp">{{ goods.goodsName }}</view>
-					<view class="sub-title clamp">
-						<button class="cu-btn round bg-orange sm" v-if="!goods.activityBean.name">无活动</button>
-						<button class="cu-btn round bg-orange sm" v-else>{{ goods.activityBean.name }}</button>
+					<view class="sub-title clamp text-gray">{{ goods.goodsSubtitle }}</view>
+					<view class="activity clamp">
+						<text class="text-gray" v-if="!goods.activityBean.name">无活动</text>
+						<text class="text-gray" v-else>{{ goods.activityBean.name }}</text>
 					</view>
 					<view class="price-box">
 						<!-- <view class="clamp subhead">供应商:{{goods.supplierShopBean.shopName}}</view> -->
@@ -150,13 +151,14 @@ export default {
 				let goodsList = list.result.records;
 				if (type === 'next') {
 					if (goodsList.length === 0) {
+						uni.hideLoading()
 						this.$api.msg('没有更多了')
 					}
 					this.goodsList = this.goodsList.concat(goodsList);
 				}else{
 					this.goodsList = goodsList;
+					uni.hideLoading()
 				}
-				uni.hideLoading()
 				uni.stopPullDownRefresh()
 			}
 		},
@@ -273,10 +275,9 @@ export default {
 		navToDetailPage(item) {
 			//测试数据没有写id，用title代替
 			console.log(item)
-			let goodsId = item.id;
-			let activitId = item.activityId;
+			let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
 			uni.navigateTo({
-				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}`
+				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}`
 			});
 		},
 		stopPrevent() {}
@@ -458,7 +459,7 @@ page,
 			font-size: 30rpx;
 			color: #000;
 			width: 100%;
-			height: 33%;
+			height: 20%;
 			.number {
 				color: #999;
 				font-size: 26upx;
@@ -467,16 +468,23 @@ page,
 			}
 		}
 		.sub-title {
-			height: 33%;
+			height: 15%;
+			font-size: 24upx;
 			display: flex;
 			align-items: flex-end;
+		}
+		.activity {
+			height: 35%;
+			display: flex;
+			align-items: flex-end;
+			font-size: 24upx;
 		}
 		.price-box {
 			display: flex;
 			justify-content: space-between;
 			align-items: flex-end;
 			width: 100%;
-			height: 33%;
+			height: 25%;
 			.price {
 				.priceSale {
 					color: red;
