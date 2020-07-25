@@ -24,13 +24,13 @@
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称"></el-input>
           </el-form-item>
           <el-form-item label="活动状态：">
-            <el-select v-model="listQuery.activityStatus" placeholder="请选择活动状态" clearable>
+            <el-select v-model="listQuery.status" placeholder="请选择活动状态" clearable>
               <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="是否参加佣金：">
-            <el-select v-model="listQuery.brokerage" placeholder="请选择是否参加佣金" clearable>
+            <el-select v-model="listQuery.addProfit" placeholder="请选择是否参加佣金" clearable>
               <el-option v-for="item in brokerageList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -139,12 +139,12 @@
         listLoading: true,
         multipleSelection: [],
         isshow: false,
-        statusList: [{label: "已开启", value: '0'}, {label: "未开启", value: '1'}],
-        brokerageList: [{label: "已参加", value: '0'}, {label: "未参加", value: '1'}]
+        statusList: [{label: "已开启", value: '1'}, {label: "未开启", value: '0'}],
+        brokerageList: [{label: "已参加", value: '1'}, {label: "未参加", value: '0'}]
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
       switch (localStorage.getItem('userType')){
         case 'platform': this.isshow = true;
           break;
@@ -162,7 +162,7 @@
       // }
     },
     activated() {
-      this.getList();
+      this.getList(1);
     },
     filters: {
       changeMsg(data) {
@@ -179,18 +179,40 @@
       }
     },
     methods: {
-      getList() {
+      getList(idx) {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          if (idx == 0) {
+            if (response.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         });
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
       },
       changeSwitch(row){
         console.log(row);
@@ -208,20 +230,20 @@
                 message: '首页不显示了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }else{
               this.$message({
                 type: 'success',
                 message: '显示在首页了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           }else{
             setTimeout(function(){
               row.status = 0;
             },500);
-            this.getList();
+            this.getList(1);
           }
         })
       },
@@ -230,16 +252,16 @@
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
-        this.getList();
+        this.getList(2);
       },
       addactivity() {
         this.$router.push({
@@ -267,7 +289,7 @@
                 type: 'success',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           })
         })
@@ -282,14 +304,14 @@
                 message: '活动没启用！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }else{
               this.$message({
                 type: 'success',
                 message: '活动启用了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           }else{
             // this.$message({
@@ -300,7 +322,7 @@
             setTimeout(function(){
               row.status =0;
             },500);
-            this.getList();
+            this.getList(1);
           }
         })
       },
@@ -319,14 +341,14 @@
                 message: '导航栏不显示了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }else{
               this.$message({
                 type: 'success',
                 message: '显示在导航栏了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           }else{
             // this.$message({
@@ -337,7 +359,7 @@
             setTimeout(function(){
               row.navigateIndex =0;
             },500);
-            this.getList();
+            this.getList(1);
           }
         })
       }

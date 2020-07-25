@@ -13,18 +13,18 @@
         </el-button>
         <el-button
           style="float: right;margin-right: 15px;margin-bottom: 10px;"
-          @click="handleResetSearch('searchList')"
+          @click="handleResetSearch()"
           size="small">
           重置
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="searchList" size="small" label-width="130px" ref="searchList">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="130px" ref="searchList">
           <el-form-item label="活动名称：" prop="name">
-            <el-input style="width: 214px" v-model="searchList.name" placeholder="活动名称"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称"></el-input>
           </el-form-item>
           <el-form-item label="活动状态：" prop="ordertype">
-            <el-select v-model="searchList.status" placeholder="请选择">
+            <el-select v-model="listQuery.status" placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -91,12 +91,9 @@
     name: "brokerage",
     data() {
       return {
-        searchList: {},
         options: [
-          {label: "全部", value: "0"},
-          {label: "进行中", value: "1"},
-          {label: "已结束", value: "2"},
-          {label: "未开始", value: "3"}
+          {label: "未启用", value: "0"},
+          {label: "已启用", value: "1"}
         ],
         orderList: [],
         listLoading: false,
@@ -106,10 +103,10 @@
     },
     created() {
       // this.rwDispatcherState = "write";
-      this.getList();
+      this.getList(1);
     },
     activated() {
-      this.getList();
+      this.getList(1);
     },
     filters: {
       formatDate(time) {
@@ -129,22 +126,55 @@
     },
     methods: {
       handleSearchList() {
-        alert("搜索")
+        this.listQuery.pageNum = 1;
+        this.getList(0);
+      },
+      handleResetSearch() {
+        this.listQuery = Object.assign({}, defaultList);
+        this.getList(2)
       },
       readOrder(index, row) {
         this.$router.push({path: "/broke/rage/brokegoods", query: {id: row.id}})
       },
-      getList() {
+      getList(idx) {
+        this.listLoading = true;
         this.listQuery.addProfit = 1;
         getActlist(this.listQuery).then(res => {
+          this.listLoading = false
           this.orderList = res.result.result.records;
+          this.total = parseInt(res.result.result.total);
+          if (idx == 0) {
+            if (res.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         })
       },
-      handleSizeChange() {
-        console.log("1");
+      handleCurrentChange(val) {
+        this.listQuery.pageNum = val;
+        this.getList(1);
       },
-      handleCurrentChange() {
-        console.log("1");
+      handleSizeChange(val) {
+        this.listQuery.pageNum = 1;
+        this.listQuery.pageSize = val;
+        this.getList(1);
       },
       // read(row) {
       //   console.log(row)

@@ -19,6 +19,12 @@
           <el-form-item label="代理商账号：">
             <el-input style="width: 214px" v-model="listQuery.accont" placeholder="代理商账号"></el-input>
           </el-form-item>
+          <el-form-item label="审核状态：">
+            <el-select v-model="listQuery.status" placeholder="请选择审核状态" clearable>
+              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -99,16 +105,16 @@
         listLoading: true,
         multipleSelection: [],
         brandOptions: [],
-        // userStatuses: [{ //0:正常;1:违规关闭;2:永久关闭
-        //   value: 0,
-        //   label: '正常'
-        // }, {
-        //   value: 1,
-        //   label: '违规关闭'
-        // }, {
-        //   value: 2,
-        //   label: '永久关闭'
-        // }],
+        statusList: [{
+          value: 0,
+          label: '待审核'
+        }, {
+          value: 1,
+          label: '已通过'
+        }, {
+          value: 2,
+          label: '已拒绝'
+        }],
         // userTypes: [
         //   //   {
         //   //   value: 'supplier',
@@ -129,25 +135,24 @@
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
     },
     watch: {
 
     },
-    filters: {
-      verifyStatusFilter(value) {
-        if (value == 1) {
-          return '审核通过';
-        } else {
-          return '未审核';
-        }
-      }
-    },
+    // filters: {
+    //   verifyStatusFilter(value) {
+    //     if (value == 1) {
+    //       return '审核通过';
+    //     } else {
+    //       return '未审核';
+    //     }
+    //   }
+    // },
     methods: {
       showAccess(row, column) {
         return (row.sysManagerUserBean == null) ? '数据读取错误' : row.sysManagerUserBean.name;
       },
-
       showAddress(row, column) {
         try {
           return row.provinceBean.name + " " + row.cityBean.name + " " + row.areaBean.name;
@@ -170,7 +175,6 @@
           default:
             return '正常';
         }
-        // 状态;0:正常;1:违规关闭;2:永久关闭
       },
       deleteStatus(row, column) {
         let status = row.status;
@@ -184,18 +188,40 @@
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },
-      getList() {
+      getList(idx) {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          if (idx == 0) {
+            if (response.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         });
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
       },
       showinfo(index, row) {
         let pageNum = this.listQuery.pageNum;
@@ -217,11 +243,11 @@
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -242,13 +268,8 @@
         this.updateRecommendStatus(row.recommandStatus, ids);
       },
       handleResetSearch() {
-        this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
-        this.$message({
-          message: '重置成功',
-          type: 'success',
-          duration: 800
-        })
+        this.getList(2);
       },
       handleDelete(index, row) {
         this.$confirm('是否要进行删除操作?', '提示', {

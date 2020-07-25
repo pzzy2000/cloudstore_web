@@ -13,18 +13,18 @@
         </el-button>
         <el-button
           style="float: right;margin-right: 15px;margin-bottom: 10px;"
-          @click="handleResetSearch('searchList')"
+          @click="handleResetSearch()"
           size="small">
           重置
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="searchList" size="small" label-width="130px" ref="searchList">
-          <el-form-item label="用户账号：" prop="count">
-            <el-input style="width: 214px" v-model="searchList.count" placeholder="用户账号"></el-input>
+        <el-form :inline="true" :model="listQuery" size="small" label-width="130px" ref="searchList">
+          <el-form-item label="用户账号：" prop="phone">
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="用户账号"></el-input>
           </el-form-item>
           <el-form-item label="用户昵称：" prop="name">
-            <el-input style="width: 214px" v-model="searchList.name" placeholder="用户昵称"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户昵称"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -37,7 +37,7 @@
       <el-table ref="productTable" :data="list" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="用户账号" align="center" prop="userBean.access" :formatter="showAcc">
+        <el-table-column label="用户账号" align="center" prop="userBean.phone" :formatter="showAcc">
 <!--          <template slot-scope="scope">{{scope.row.userBean.access}}</template>-->
         </el-table-column>
         <el-table-column label="用户昵称" align="center" prop="userBean.name" :formatter="showName">
@@ -80,9 +80,9 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           layout="total, sizes,prev, pager, next,jumper"
-          :page-size="pageList.pageSize"
+          :page-size="listQuery.pageSize"
           :page-sizes="[10]"
-          :current-page.sync="pageList.pageNum"
+          :current-page.sync="listQuery.pageNum"
           :total="total">
         </el-pagination>
       </div>
@@ -105,7 +105,7 @@
         searchList: {},
         list:[],
         total:0,
-        pageList: Object.assign({}, defaultList),
+        listQuery: Object.assign({}, defaultList),
         listLoading: false
       }
     },
@@ -114,7 +114,7 @@
     },
     methods: {
       getList() {
-        listUserBroke(this.pageList).then(res => {
+        listUserBroke(this.listQuery).then(res => {
           if (res.result.code == 0) {
             this.list = res.result.result.records;
             this.total = parseInt(res.result.result.total);
@@ -122,7 +122,8 @@
         })
       },
       handleSearchList() {
-        alert("搜索")
+        this.listQuery.pageNum = 1;
+        this.getList();
       },
       handleResetSearch(formName) {
         this.$refs[formName].resetFields();

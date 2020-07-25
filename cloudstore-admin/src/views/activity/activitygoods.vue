@@ -14,7 +14,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="商品名称：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="商品名称"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -163,9 +163,8 @@
         }
       },
       handleSearchList() {
-        // this.listQuery.pageNum = 1;
-        // this.getList();
-        alert("搜索")
+        this.listQuery.pageNum = 1;
+        this.getList();
       },
       changeSwitch() {
 

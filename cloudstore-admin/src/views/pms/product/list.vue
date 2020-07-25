@@ -5,7 +5,7 @@
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
         <el-button style="float: right" @click="handleSearchList()" type="primary" size="small">
-          查询结果
+          查询
         </el-button>
         <el-button style="float: right;margin-right: 15px" @click="handleResetSearch()" size="small">
           重置
@@ -13,24 +13,20 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
+          <el-form-item label="商品名称：">
             <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
           </el-form-item>
           <el-form-item label="商品货号：">
             <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号"></el-input>
           </el-form-item>
           <el-form-item label="商品分类：">
-            <el-cascader clearable v-model="selectProductCateValue" :options="productCateOptions">
-            </el-cascader>
+            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品分类"></el-input>
           </el-form-item>
           <el-form-item label="商品品牌：">
-            <el-select v-model="listQuery.brandId" placeholder="请选择品牌" clearable>
-              <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
+            <el-input style="width: 203px" v-model="listQuery.goodsBrand" placeholder="商品品牌"></el-input>
           </el-form-item>
           <el-form-item label="上架状态：">
-            <el-select v-model="listQuery.publishStatus" placeholder="全部" clearable>
+            <el-select v-model="listQuery.shelfStatus" placeholder="全部" clearable>
               <el-option v-for="item in publishStatusOptions" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -65,10 +61,8 @@
         <el-table-column label="商品规格类别" width="150" align="center" :formatter="propertyBean">
         </el-table-column>
         <el-table-column label="产地" width="250" align="center" :formatter="showAddress">
-
         </el-table-column>
         <el-table-column label="商品分类" width="200" align="center" :formatter="goodsCategory">
-
         </el-table-column>
         <el-table-column label="销售价格/市场价" width="150" align="left">
           <template slot-scope="scope"> ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>
@@ -298,7 +292,7 @@
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
       switch (localStorage.getItem('userType')){
         case 'platform': this.isshow = false;
           break;
@@ -328,7 +322,7 @@
       }
     },
     activated() {
-      this.getList();
+      this.getList(1);
     },
     methods: {
       suppilerShop(row, column) {
@@ -382,13 +376,35 @@
           return null;
         }
       },
-      getList() {
+      getList(idx) {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          if (idx == 0) {
+            if (response.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         });
       },
       getBrandList() {
@@ -480,7 +496,7 @@
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
       },
       handleAddProduct() {
         this.$router.push({
@@ -540,17 +556,17 @@
             default:
               break;
           }
-          this.getList();
+          this.getList(1);
         });
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -559,6 +575,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.getList(2)
       },
       handleDelete(index, row) {
         this.$confirm('是否要进行删除操作?', '提示', {
@@ -575,7 +592,7 @@
                 type: 'success',
                 duration: 1000
               });
-              this.getList();
+              this.getList(1);
             }
           });
         });
@@ -642,7 +659,7 @@
             duration: 1000
           });
         });
-        this.getList();
+        this.getList(1);
       }
     }
   }
