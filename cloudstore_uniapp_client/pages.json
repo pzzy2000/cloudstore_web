@@ -213,6 +213,14 @@
 				"enablePullDownRefresh": true
 			}
         }
+        ,{
+            "path" : "pages/client/recommend/agentGoodsList/agentGoodsList",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

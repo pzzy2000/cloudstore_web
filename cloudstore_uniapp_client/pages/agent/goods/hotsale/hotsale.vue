@@ -3,8 +3,18 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<nav-bar>丫咪购</nav-bar>
-		<view class="MP-search" @click="search()" style=""><input class="MP-search-input" type="text" disabled="true"
-			 placeholder="输入关键字搜索" /></view>
+		<view class="MP-search">
+			<view class="cu-bar search" style="width: 100%;">
+				<view class="search-form round">
+					<text class="cuIcon-search"></text>
+					<input :adjust-position="false" type="text" placeholder="搜索商品" confirm-type="search" @input="inputName"></input>
+				</view>
+				<view class="action">
+					<button class="cu-btn bg-green shadow-blur round" @click="search">搜索</button>
+				</view>
+			</view>
+			<!-- <input class="MP-search-input" type="text"  placeholder="输入关键字搜索" :value="searchName" @click="search"/> -->
+		</view>
 		<!-- #endif -->
 
 		<!-- 头部轮播 -->
@@ -107,6 +117,7 @@
 		},
 		data() {
 			return {
+				searchName: '',
 				loadingType: 'more', //加载更多状态
 				activity: {
 					nav: {},
@@ -323,9 +334,12 @@
 					this.$api.msg('敬请期待')
 				}
 			},
+			inputName (e) {
+				this.searchName = e.detail.value
+			},
 			search() {
 				uni.navigateTo({
-					url: '/pages/search/search'
+					url: "/pages/agent/goods/category/category?goodsName=" + this.searchName
 				});
 			}
 		},
@@ -333,7 +347,7 @@
 		// 标题栏input搜索框点击
 		onNavigationBarSearchInputClicked: async function(e) {
 			uni.navigateTo({
-				url: '/pages/search/search'
+				url: '/pages/agent/goods/category/category'
 			});
 		},
 		//点击导航栏 buttons 时触发
@@ -373,41 +387,12 @@
 		width: 100%;
 		z-index: 999;
 	}
-
-	.MP-search-input {
-		font-size: 28upx;
-		background: #f5f5f5;
-		height: 60upx;
-		width: 90%;
-		border-radius: 50upx;
-		text-align: center;
-	}
-
-	.mp-search-box {
-		position: absolute;
-		left: 0;
-		top: 30upx;
-		z-index: 9999;
-		width: 100%;
-		padding: 0 80upx;
-
-		.ser-input {
-			flex: 1;
-			height: 60upx;
-			line-height: 60upx;
-			text-align: center;
-			font-size: 28upx;
-			color: $font-color-base;
-			border-radius: 20px;
-			background: rgba(255, 255, 255, 0.6);
-		}
-	}
-
 	page {
 		background: $page-color-base;
 		padding-bottom: 160upx;
 		.activity-main {
 			width: 100%;
+			margin-top: 20upx;
 			.cate-section {
 				position: relative;
 				z-index: 5;

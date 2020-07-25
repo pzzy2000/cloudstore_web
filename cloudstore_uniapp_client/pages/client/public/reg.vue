@@ -17,7 +17,7 @@
 					<text class="tit">验证码</text>
 					<view class="input-item-right">
 						<input type="number" maxlength="6" placeholder="请输入验证码" v-model="code" @confirm="toLogin" style="width: 70%;" />
-						<view class="codeText" v-if="coding == false" @click="getCode()">获取验证码</view>
+						<view class="codeText" v-if="coding == false" @click.stop="getCode">获取验证码</view>
 						<view class="authTime" v-else>{{ auth_time }}秒</view>
 					</view>
 				</view>
@@ -36,8 +36,8 @@
 				<input type="text" :value="vxPhone" class="input-height"/>
 				<view class="phone-code">
 					<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input" @input="editInput($event,'code')"/>
-					<button type="primary" class="code-btn" v-if="registerCoding == false" @click="getRegisterCode()">发送验证码</button>
-					<button type="primary" class="code-btn" v-else>{{ auth_register_time }}秒</button>
+					<view class="code-btn" v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</view>
+					<view type="primary" class="code-btn" v-else>{{ auth_register_time }}秒</view>
 				</view>
 				<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height" @input="editInput($event,'pwd')"/>
 				<view class="regBox-btn">
@@ -64,7 +64,7 @@
 		},
 		data() {
 			return {
-				phone: '',
+				phone: '15773281581',
 				code: '',
 				password: '',
 				logining: false,
@@ -152,8 +152,7 @@
 					}
 				}
 			},
-			// 获取验证码
-			async getCode() {
+			getCode() { // 号码获取验证码
 				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
 				if (!myreg.test(this.phone)) {
 					uni.showToast({
@@ -175,22 +174,39 @@
 				//获取验证码
 				let params = {
 					phone: this.phone,
-					codeType: 'reg'
+					// codeType: 'reg'
 				};
-				let data = await Api.apiCall('post', Api.index.sendCodes, params);
-				if (data) {
-					this.codekey = data.key;
-				}
+				var that = this
+				uni.request({
+					url: Api.BASEURI + Api.client.reg.sendCode,
+					method: 'post',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: params,
+					success: res => {
+						if (res) {
+							var data = res.data.result
+							if (data.code === 0) {
+								that.codekey = data.result.key
+							} else {
+								that.$api.msg(data.msg)
+							}
+						} else {
+							that.$api.msg('发送验证码失败')
+						}
+					}
+				});
 			},
-			getRegisterCode () {
-				// var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
-				// if (!myreg.test(this.phone)) {
-				// 	uni.showToast({
-				// 		icon: 'none',
-				// 		title: '请输入正确的手机号码'
-				// 	});
-				// 	return false;
-				// }
+			getRegisterCode () { // 微信号码获取验证码
+				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+				if (!myreg.test(this.vxPhone)) {
+					uni.showToast({
+						icon: 'none',
+						title: '请输入正确的手机号码'
+					});
+					return false;
+				}
 				//设置倒计时秒
 				this.auth_register_time = 60;
 				this.registerCoding = true;
@@ -202,14 +218,34 @@
 					}
 				}, 1000);
 				//获取验证码
-				// let params = {
-				// 	phone: this.phone,
-				// 	codeType: 'reg'
-				// };
-				// let data = await Api.apiCall('post', Api.index.sendCodes, params);
-				// if (data) {
-				// 	this.codekey = data.key;
-				// }
+				let params = {
+					phone: this.vxPhone,
+					// codeType: 'reg'
+				};
+				var that = this
+				uni.request({
+					url: Api.BASEURI + Api.client.reg.sendCode,
+					method: 'post',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: params,
+					success: res => {
+						if (res) {
+							console.log(res)
+							var data = res.data.result
+							if (data.code === 0) {
+								console.log(data.result.key)
+								that.vxPhoneKey = data.result.key
+								console.log(that.vxPhoneKey)
+							} else {
+								that.$api.msg(data.msg)
+							}
+						} else {
+							that.$api.msg('发送验证码失败')
+						}
+					}
+				});
 			},
 			getWxCode () {
 				this.$refs.popup.open()
@@ -266,7 +302,6 @@
 				});
 			},
 			getPhoneNumber (res) { //点击按钮获取用户的手机号码
-				console.log(res)
 				if (res.detail.iv === '') {
 					uni.showToast({
 						title: '授权失败'
@@ -341,7 +376,7 @@
 					'bean.openId': this.vxOpenId,
 					'bean.password': this.userPwd,
 					'bean.phone': this.vxPhone,
-					'bean.userInfo': this.vxUserInfo.rawData
+					'bean.userInfo': this.vxUserInfo.rawData,
 				}
 				uni.request({
 					url: Api.BASEURI + Api.client.reg.saveClientInfo,
@@ -507,7 +542,7 @@
 	.welcome {
 		position: relative;
 		left: 50upx;
-		top: -90upx;
+		top: -40upx;
 		font-size: 46upx;
 		color: #555;
 		text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);

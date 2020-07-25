@@ -12,8 +12,8 @@
 			</view>
 			<view class="agency-apply">
 				<view class="agency-apply-main">
-					<view class="apply-detail" v-for="(item, index) in apply" :key='index'>
-						<image :src="item.imgUrl" mode="" class="apply-img"></image>
+					<view class="apply-detail" v-for="(item, index) in apply" :key='index' @click="toDetailList(item.detailUrl)">
+						<text :class='item.icon' class="apply-img"></text>
 						<text>{{item.name}}</text>
 					</view>
 				</view>
@@ -60,49 +60,50 @@ export default {
 					name: '',
 					detailAddress: '' || '暂无地址'
 				},
+				agentId: '',
 				name:'',
 				url:'',
 				newsList: '',
 				apply: [
 					{
-						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						name: '代理商品列表',
+						icon: 'icon text-blue cuIcon-shop',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList'
 					},
 					{
 						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						icon: 'icon text-blue cuIcon-shop',
+						detailUrl: ''
 					},
 					{
 						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						icon: 'icon text-blue cuIcon-shop',
+						detailUrl: ''
 					},
 					{
 						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						icon: 'icon text-blue cuIcon-shop',
+						detailUrl: ''
 					},
 					{
 						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						icon: 'icon text-blue cuIcon-shop',
+						detailUrl: ''
 					},
 					{
 						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						icon: 'icon text-blue cuIcon-shop',
+						detailUrl: ''
 					},
 					{
 						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						icon: 'icon text-blue cuIcon-shop',
+						detailUrl: ''
 					},
 					{
 						name: '敬请期待',
-						detailListUrl: '',
-						imgUrl: '/static/temp/nav1.png'
+						icon: 'icon text-blue cuIcon-shop',
+						detailUrl: ''
 					}
 				],
 				detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
@@ -115,6 +116,15 @@ export default {
 			this.getRecommendData()
 		},
 		methods:{
+			async listAactivityData(agentId) {
+				let params = {
+					agentId: agentId
+				}
+				let list = await Api.apiCall('post', Api.client.recommend.listAactivity, params);
+				if (list) {
+					console.log(list)
+				}
+			},
 			async getRecommendData () {
 				uni.showLoading({
 					title: '正在加载',
@@ -123,9 +133,12 @@ export default {
 				let parmas = {}
 				let data = await Api.apiCall('post',Api.client.recommend.newShopinfoByOrder,parmas)
 				if (data) {
+					console.log(data.result)
 					this.shopInfo.name = data.result.name || '暂无店铺'
 					this.shopInfo.detailAddress = data.result.detailAddress || '暂无地址'
 					this.getNewsList(data.result.agentId)
+					this.listAactivityData (data.result.agentId)
+					// this.agentId = data.result.agentId
 				}
 			},
 			async getNewsList (agentId) {
@@ -136,12 +149,18 @@ export default {
 				if (list) {
 					if (list.code === 0) {
 						this.newsList = list.result
-						console.log(this.newsList)
 					} else {
 						this.$api.msg(list.msg)
 					}
 				}
 				uni.hideLoading()
+			},
+			toDetailList (url) {
+				if(url) {
+					uni.navigateTo({
+						url: url+'?agentId='+this.agentId,
+					});
+				}
 			},
 			navToDetailPage (item) {
 				let id = item.goodsId,agentGoodsId = item.id
@@ -244,6 +263,7 @@ export default {
 				width: 60upx;
 				display: block;
 				margin: 0 auto;
+				font-size: 50upx;
 			}
 			span {
 				display: block;
