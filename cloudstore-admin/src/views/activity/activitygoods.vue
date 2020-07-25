@@ -13,8 +13,8 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="商品 名称：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
+          <el-form-item label="商品名称：">
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="商品名称"></el-input>
           </el-form-item>
         </el-form>
       </div>

@@ -21,7 +21,19 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="活动名称：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称"></el-input>
+          </el-form-item>
+          <el-form-item label="活动状态：">
+            <el-select v-model="listQuery.activityStatus" placeholder="请选择活动状态" clearable>
+              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否参加佣金：">
+            <el-select v-model="listQuery.brokerage" placeholder="请选择是否参加佣金" clearable>
+              <el-option v-for="item in brokerageList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -126,7 +138,9 @@
         total: 0,
         listLoading: true,
         multipleSelection: [],
-        isshow: false
+        isshow: false,
+        statusList: [{label: "已开启", value: '0'}, {label: "未开启", value: '1'}],
+        brokerageList: [{label: "已参加", value: '0'}, {label: "未参加", value: '1'}]
       }
     },
     created() {

@@ -5,7 +5,7 @@
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
         <el-button style="float: right;margin-bottom: 10px;" @click="handleSearchList()" type="primary" size="small">
-          查询结果
+          查询
         </el-button>
         <el-button style="float: right;margin-right: 15px;margin-bottom: 10px;" @click="handleResetSearch()" size="small">
           重置
@@ -14,7 +14,16 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="供应商名字：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名字"></el-input>
+          </el-form-item>
+          <el-form-item label="供应商电话：">
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="供应商电话"></el-input>
+          </el-form-item>
+          <el-form-item label="审核状态：">
+            <el-select v-model="listQuery.checkStatus" placeholder="请选择活动状态" clearable>
+              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -116,7 +125,8 @@
         }, {
           value: 0,
           label: '未审核'
-        }]
+        }],
+        statusList: [{label: "待审核", value: '0'}, {label: "已通过", value: '1'}, {label: "已拒绝", value: '2'}],
       }
     },
     created() {
@@ -192,7 +202,6 @@
         this.getList();
       },
       handleUpdateUserInfo(index, row) {
-
         let pageNum = this.listQuery.pageNum;
         let pageSize = this.listQuery.pageSize;
         let userId = row.id;
@@ -237,6 +246,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.getList()
       },
       handleDelete(index, row) {
         this.$confirm('是否要进行删除操作?', '提示', {

@@ -38,8 +38,8 @@
           <el-form-item label="用户账号：" prop="count">
             <el-input style="width: 214px" v-model="searchList.count" placeholder="用户账号"></el-input>
           </el-form-item>
-          <el-form-item label="订单类型：" prop="ordertype">
-            <el-select v-model="searchList.ordertype" placeholder="请选择">
+          <el-form-item label="订单状态：" prop="orderstatus">
+            <el-select v-model="searchList.orderstatus" placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -139,7 +139,12 @@
       data() {
         return {
           activeIndex: '1',
-          searchList: {},
+          searchList: {
+            code: '',
+            ordertime: '',
+            count: '',
+            orderstatus: ''
+          },
           orderList: [],
           listLoading: false,
           pageList: Object.assign({}, defaultList),
@@ -150,9 +155,9 @@
             }
           },
           options: [
-            {label: "APP订单", value: "1"},
-            {label: "小程序订单", value: "2"},
-            {label: "微信订单", value: "3"}
+            {label: "超时关闭", value: "closed"},
+            // {label: "小程序订单", value: "2"},
+            // {label: "微信订单", value: "3"}
           ],
           dialogVisible: false,
           btnMsg: '',

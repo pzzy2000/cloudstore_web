@@ -13,25 +13,21 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
+          <el-form-item label="名字：">
+            <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="名字"></el-input>
           </el-form-item>
-          <el-form-item label="商品货号：">
-            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号"></el-input>
+          <el-form-item label="手机号：">
+            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="手机号"></el-input>
           </el-form-item>
-<!--          <el-form-item label="商品分类：">-->
-<!--            <el-cascader clearable v-model="selectProductCateValue" :options="productCateOptions">-->
-<!--            </el-cascader>-->
-<!--          </el-form-item>-->
-          <el-form-item label="商品品牌：">
-            <el-select v-model="listQuery.brandId" placeholder="请选择品牌" clearable>
-              <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value">
+          <el-form-item label="申请代理类型：">
+            <el-select v-model="listQuery.brandId" placeholder="请选择申请代理类型" clearable>
+              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="上架状态：">
-            <el-select v-model="listQuery.publishStatus" placeholder="全部" clearable>
-              <el-option v-for="item in publishStatusOptions" :key="item.value" :label="item.label" :value="item.value">
+          <el-form-item label="商铺名称：">
+            <el-select v-model="listQuery.brandId" placeholder="商铺名称" clearable>
+              <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -115,7 +111,8 @@
         brandOptions: [],
         publishStatusOptions: [],
         verifyStatusOptions: [],
-        total: 0
+        total: 0,
+        statusList: [{label: "团长", value: 'leader'}, {label: "代理", value: 'agent'}]
       }
     },
     created() {

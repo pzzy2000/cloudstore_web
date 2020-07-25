@@ -16,6 +16,9 @@
           <el-form-item label="代理商名字：">
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="代理商名字"></el-input>
           </el-form-item>
+          <el-form-item label="代理商账号：">
+            <el-input style="width: 214px" v-model="listQuery.accont" placeholder="代理商账号"></el-input>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
