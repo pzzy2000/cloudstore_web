@@ -9,7 +9,7 @@
           @click="handleSearchList()"
           type="primary"
           size="small">
-          查询结果
+          查询
         </el-button>
         <el-button
           style="float: right;margin-right: 15px;margin-bottom: 10px;"
@@ -38,6 +38,9 @@
                 :value="item.value">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="创建时间：">
+            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="审核状态：">
             <el-select v-model="listQuery.status" placeholder="审核状态" clearable>
@@ -171,7 +174,7 @@
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
     },
     watch: {
       selectProductCateValue: function (newValue) {
@@ -217,18 +220,40 @@
 
       },
 
-      getList() {
+      getList(idx) {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt( response.result.result.total);
+          if (idx == 0) {
+            if (response.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         });
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
       },
       handleUpdateUserInfo(index, row){
         let  pageNum = this.listQuery.pageNum;
@@ -240,11 +265,11 @@
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -267,6 +292,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.getList(2);
       },
       handleDelete(index, row){
         this.$confirm('是否要进行删除操作?', '提示', {
@@ -282,7 +308,7 @@
                 type: 'success',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           });
         });

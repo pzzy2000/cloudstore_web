@@ -239,10 +239,9 @@
       '$route'(to, from) {
         console.log('to=' + to)
         this.reload()
-      }
+      },
     },
     methods: {
-
       showinfoBut() {
         this.button.add = "none";
         this.button.reset = "none";
@@ -319,6 +318,10 @@
               this.category.three = [];
               // this.baseinfo.categoryTwoId = '';
               // this.baseinfo.categoryThreeId = '';
+              if (this.baseinfo.categoryTwoId !== undefined) {
+                this.$set(this.baseinfo, 'categoryTwoId', '');
+                this.$set(this.baseinfo, 'categoryThreeId', '');
+              }
               fetchListWithChildren(event).then(response => {
                 let list = response.result.result;
                 this.category.two = list;
@@ -328,7 +331,7 @@
           case 2:
             {
               this.category.three = [];
-              // this.baseinfo.categoryThreeId = '';
+              this.$set(this.baseinfo, 'categoryThreeId', '');
               fetchListWithChildren(event).then(response => {
                 let list = response.result.result;
                 this.category.three = list;
@@ -346,6 +349,10 @@
               this.district.area = [];
               // this.baseinfo.cityId = '';
               // this.baseinfo.areaId = '';
+              if (this.baseinfo.cityId !== undefined) {
+                this.$set(this.baseinfo, 'cityId', '');
+                this.$set(this.baseinfo, 'areaId', '');
+              }
               fetchDistrictList({
                 codeType: 'city',
                 parentId: type
@@ -359,6 +366,7 @@
             {
               this.category.area = [];
               // this.baseinfo.areaId = '';
+              this.$set(this.baseinfo, 'areaId', '');
               fetchDistrictList({
                 codeType: 'district',
                 parentId: type
@@ -497,9 +505,9 @@
             goodsDetailPics.push(this.goodsDetailPics[i].uid);
           }
           this.baseinfo.goodsDetailPics = goodsDetailPics;
-          this.baseinfo.provinceId = 1;
-          this.baseinfo.cityId = 1;
-          this.baseinfo.areaId = 1;
+          // this.baseinfo.provinceId = 1;
+          // this.baseinfo.cityId = 1;
+          // this.baseinfo.areaId = 1;
           this.$refs['baseinfo'].validate((valid) => {
             if (valid) {
               createProduct(this.baseinfo).then(response => {

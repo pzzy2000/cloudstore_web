@@ -110,37 +110,55 @@
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
     },
     methods: {
-      getList() {
+      getList(idx) {
         listUserBroke(this.listQuery).then(res => {
           if (res.result.code == 0) {
             this.list = res.result.result.records;
             this.total = parseInt(res.result.result.total);
+            if (idx == 0) {
+              if (res.result.result.records.length == 0) {
+                this.$message({
+                  message: "暂无数据",
+                  type: 'warning',
+                  duration: 800
+                })
+              }else {
+                this.$message({
+                  message: "查询成功",
+                  type: 'success',
+                  duration: 800
+                })
+              }
+            }
+            if (idx == 2) {
+              this.$message({
+                message: "重置成功",
+                type: 'success',
+                duration: 800
+              })
+            }
           }
         })
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
       },
-      handleResetSearch(formName) {
-        this.$refs[formName].resetFields();
-        this.$message({
-          message: "重置成功",
-          type: "success",
-          duration: 800
-        })
+      handleResetSearch() {
+        this.listQuery = Object.assign({}, defaultList);
+        this.getList(2);
       },
       readInfo(index, row) {
         this.$router.push({path: "/broke/rage/withdrawinfo", query: {id: row.userId}})
       },
       handleSizeChange() {
-        this.getList();
+        this.getList(1);
       },
       handleCurrentChange() {
-        this.getList();
+        this.getList(1);
       },
       showAcc(row) {
         try{

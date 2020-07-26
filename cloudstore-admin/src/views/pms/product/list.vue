@@ -16,18 +16,45 @@
           <el-form-item label="商品名称：">
             <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
           </el-form-item>
-          <el-form-item label="商品货号：">
-            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号"></el-input>
-          </el-form-item>
-          <el-form-item label="商品分类：">
-            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品分类"></el-input>
-          </el-form-item>
           <el-form-item label="商品品牌：">
             <el-input style="width: 203px" v-model="listQuery.goodsBrand" placeholder="商品品牌"></el-input>
           </el-form-item>
+          <el-form-item label="商品货号：">
+            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号"></el-input>
+          </el-form-item>
+          <el-form-item label="所属供应商：">
+            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="所属供应商"></el-input>
+          </el-form-item>
+<!--          <el-form-item label="商品分类：">-->
+<!--            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品分类"></el-input>-->
+<!--          </el-form-item>-->
           <el-form-item label="上架状态：">
-            <el-select v-model="listQuery.shelfStatus" placeholder="全部" clearable>
+            <el-select v-model="listQuery.shelfStatus" placeholder="请选择上架状态" clearable>
               <el-option v-for="item in publishStatusOptions" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否删除：">
+            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
+              <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="商品分类：">
+            <el-select v-model="listQuery.categoryOneId" remote placeholder="一级分类" :loading="loading" v-on:change="seclectCategory($event, 1)">
+              <el-option v-for="item in category.one" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-select v-model="listQuery.categoryTwoId" remote v-on:change="seclectCategory($event, 2)" placeholder="二级分类" :loading="loading">
+              <el-option v-for="item in category.two" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading">
+              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -232,38 +259,21 @@
           productAttr: [],
           keyword: null
         },
-        operates: [{
-            label: "商品上架",
-            value: "publishOn"
-          },
-          {
-            label: "商品下架",
-            value: "publishOff"
-          },
-          {
-            label: "设为推荐",
-            value: "recommendOn"
-          },
-          {
-            label: "取消推荐",
-            value: "recommendOff"
-          },
-          {
-            label: "设为新品",
-            value: "newOn"
-          },
-          {
-            label: "取消新品",
-            value: "newOff"
-          },
-          {
-            label: "转移到分类",
-            value: "transferCategory"
-          },
-          {
-            label: "移入回收站",
-            value: "recycle"
-          }
+        delList: [{label: "已删除", value: '1'}, {label: "正常", value: '0'}],
+        category: {
+          one: [],
+          two: [],
+          three: []
+        },
+        operates: [
+          {label: "商品上架", value: "publishOn"},
+          {label: "商品下架", value: "publishOff"},
+          {label: "设为推荐", value: "recommendOn"},
+          {label: "取消推荐", value: "recommendOff"},
+          {label: "设为新品", value: "newOn"},
+          {label: "取消新品", value: "newOff"},
+          {label: "转移到分类", value: "transferCategory"},
+          {label: "移入回收站", value: "recycle"}
         ],
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
@@ -299,6 +309,7 @@
         case 'supplier': this.isshow = true;
           break;
       }
+      this.searchRootCategory();
       //this.getBrandList();
       //this.getProductCateList();
     },
@@ -352,6 +363,14 @@
         } catch (e) {
           return null;
         }
+      },
+      searchRootCategory() {
+        this.loading = true;
+        fetchListWithChildren(0).then(response => {
+          this.loading = false;
+          let list = response.result.result;
+          this.category.one = list;
+        });
       },
       showAddress(row, column) {
         try {
@@ -575,6 +594,8 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.category.two = [];
+        this.category.three = [];
         this.getList(2)
       },
       handleDelete(index, row) {
@@ -660,7 +681,36 @@
           });
         });
         this.getList(1);
-      }
+      },
+      seclectCategory(event, item) {
+        switch (item) {
+          case 1:
+          { //一级分类
+            this.category.two = [];
+            this.category.three = [];
+            if (this.listQuery.categoryTwoId !== undefined) {
+              this.$set(this.listQuery, 'categoryTwoId', '');
+              this.$set(this.listQuery, 'categoryThreeId', '');
+            }
+            fetchListWithChildren(event).then(response => {
+              let list = response.result.result;
+              this.category.two = list;
+            });
+            break;
+          }
+          case 2:
+          {
+            this.category.three = [];
+            this.$set(this.listQuery, 'categoryThreeId', '');
+            fetchListWithChildren(event).then(response => {
+              let list = response.result.result;
+              this.category.three = list;
+            });
+            break;
+          }
+        }
+        this.$forceUpdate();
+      },
     }
   }
 </script>

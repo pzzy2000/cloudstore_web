@@ -21,10 +21,16 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="活动名称：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="开始时间：">
+            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="创建时间：">
+            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="活动状态：">
-            <el-select v-model="listQuery.status" placeholder="请选择活动状态" clearable>
+            <el-select v-model="listQuery.status" placeholder="请选择是否启用" clearable>
               <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -32,6 +38,12 @@
           <el-form-item label="是否参加佣金：">
             <el-select v-model="listQuery.addProfit" placeholder="请选择是否参加佣金" clearable>
               <el-option v-for="item in brokerageList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否删除：">
+            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
+              <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -62,6 +74,18 @@
         <el-table-column label="活动名称" align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
          </el-table-column>
+        <el-table-column label="开始时间" align="center">
+          <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="结束时间" align="center">
+          <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center">
+          <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="是否参加佣金" align="center">
+          <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
+        </el-table-column>
         <el-table-column label="是否显示在首页" align="center">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">
@@ -80,24 +104,12 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="活动状态" align="center">
-        </el-table-column>
-        <el-table-column label="开始时间" align="center">
-          <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
-        </el-table-column>
-        <el-table-column label="结束时间" align="center">
-          <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
-        </el-table-column>
-        <el-table-column label="创建时间" align="center">
-          <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
-        </el-table-column>
-        <el-table-column label="是否参加佣金" align="center">
-          <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
+        <el-table-column label="是否删除" align="center" :formatter="changeStatus">
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow">删除</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow" v-if="scope.row.isDelete == 1 ? false : true">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -134,13 +146,14 @@
       return {
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
-        list: null,
+        list: [],
         total: 0,
         listLoading: true,
         multipleSelection: [],
         isshow: false,
         statusList: [{label: "已开启", value: '1'}, {label: "未开启", value: '0'}],
-        brokerageList: [{label: "已参加", value: '1'}, {label: "未参加", value: '0'}]
+        brokerageList: [{label: "已参加", value: '1'}, {label: "未参加", value: '0'}],
+        delList: [{label: "已删除", value: '1'}, {label: "正常", value: '0'}]
       }
     },
     created() {
@@ -160,7 +173,15 @@
       //     this.listQuery.productCategoryId = null;
       //   }
       // }
+      // isDelete() {
+      //   console.log(this.isDelete)
+      // }
     },
+    // computed: {
+    //   isDelete() {
+    //     return this.list[0].isDelete;
+    //   }
+    // },
     activated() {
       this.getList(1);
     },
@@ -246,6 +267,16 @@
             this.getList(1);
           }
         })
+      },
+      changeStatus(row) {
+        switch (row.isDelete) {
+          case 0: return "正常";
+            break;
+          case 1: return "已删除";
+            break;
+          default: return "数据读取错误";
+            break;
+        }
       },
       handleSelectionChange(val){
         this.multipleSelection = val;

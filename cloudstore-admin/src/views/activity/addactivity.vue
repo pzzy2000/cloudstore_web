@@ -6,10 +6,10 @@
           <el-input-dispatcher v-model="activityForm.activityName" placeholder="请输入活动名称" style="width: 350px" />
         </el-form-item>
         <el-form-item label="开始时间：" prop="startTime" >
-          <el-date-picker v-model="activityForm.startTime"  format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="startDatePicker" type="date"  placeholder="请输入订阅开始时间"></el-date-picker>
+          <el-date-picker v-model="activityForm.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="startDatePicker" type="date" placeholder="请选择活动开始时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间：" prop="endTime">
-          <el-date-picker v-model="activityForm.endTime"  format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="endDatePicker" type="date" placeholder="请输入订阅结束时间"></el-date-picker>
+          <el-date-picker v-model="activityForm.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="endDatePicker" type="date" placeholder="请选择活动结束时间"></el-date-picker>
         </el-form-item>
         <!--<el-form-item label="上架/下架：" prop="endTime">-->
           <!--<el-radio-group v-model="activityForm.radio">-->

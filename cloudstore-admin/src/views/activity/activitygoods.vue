@@ -14,7 +14,28 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="商品名称：">
-            <el-input style="width: 214px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.goodsName" placeholder="商品名称" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="商品分类：" prop="categoryOneId">
+            <el-select v-model="listQuery.categoryOneId" remote placeholder="一级分类" :loading="loading" v-on:change="seclectCategory($event, 1)" clearable>
+              <el-option v-for="item in category.one" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="categoryTwoId" clearable>
+            <el-select v-model="listQuery.categoryTwoId" remote v-on:change="seclectCategory($event, 2)" placeholder="二级分类" :loading="loading">
+              <el-option v-for="item in category.two" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="categoryThreeId" clearable>
+            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading">
+              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="供应商：">
+            <el-input style="width: 214px" v-model="listQuery.supplierBean" placeholder="供应商" clearable></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -66,12 +87,8 @@
   </div>
 </template>
 <script>
-  import {
-    fetchActivityGoodsList,delActivityGoodsList
-  } from '@/api/activity'
-  import {
-    msg
-  } from '@/api/iunits'
+  import {fetchActivityGoodsList, delActivityGoodsList, fetchListWithChildren} from '@/api/activity'
+  import {msg} from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -86,12 +103,18 @@
         list: null,
         total: null,
         listLoading: true,
-        multipleSelection: []
+        multipleSelection: [],
+        category: {
+          one: [],
+          two: [],
+          three: []
+        },
       }
     },
     created() {
       this.listQuery.activityId = this.$route.query.id;
-      this.getList();
+      this.getList(1);
+      this.searchRootCategory();
     },
     watch: {
       // selectProductCateValue: function (newValue) {
@@ -113,12 +136,34 @@
       // }
     },
     methods: {
-      getList() {
+      getList(idx) {
         this.listLoading = true;
         fetchActivityGoodsList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          if (idx == 0) {
+            if (response.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         });
       },
       goodsinfo(row, column) {
@@ -162,28 +207,39 @@
             }
         }
       },
+      searchRootCategory() {
+        this.loading = true;
+        fetchListWithChildren(0).then(response => {
+          this.loading = false;
+          let list = response.result.result;
+          this.category.one = list;
+        });
+      },
       handleSearchList() {
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
       },
-      changeSwitch() {
-
-      },
+      // changeSwitch() {
+      //
+      // },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.listQuery.activityId = this.$route.query.id;
+        this.category.two = [];
+        this.category.three = [];
+        this.getList(2)
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       addactivity() {
         this.$router.push({
@@ -210,14 +266,43 @@
           ids.push(row.id);
           delActivityGoodsList({ids:ids}).then(response => {
             msg("删除活动商品成功");
-            this.getList();
+            this.getList(1);
           });
         });
 
       },
       backPage() {
         this.$router.back();
-      }
+      },
+      seclectCategory(event, item) {
+        switch (item) {
+          case 1:
+          { //一级分类
+            this.category.two = [];
+            this.category.three = [];
+            if (this.listQuery.categoryTwoId !== undefined) {
+              this.$set(this.listQuery, 'categoryTwoId', '');
+              this.$set(this.listQuery, 'categoryThreeId', '');
+            }
+            fetchListWithChildren(event).then(response => {
+              let list = response.result.result;
+              this.category.two = list;
+            });
+            break;
+          }
+          case 2:
+          {
+            this.category.three = [];
+            this.$set(this.listQuery, 'categoryThreeId', '');
+            fetchListWithChildren(event).then(response => {
+              let list = response.result.result;
+              this.category.three = list;
+            });
+            break;
+          }
+        }
+        // this.$forceUpdate();
+      },
     }
   }
 </script>

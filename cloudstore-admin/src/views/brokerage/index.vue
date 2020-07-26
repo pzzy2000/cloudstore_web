@@ -21,10 +21,16 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px" ref="searchList">
           <el-form-item label="活动名称：" prop="name">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="开始时间：">
+            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="创建时间：">
+            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="活动状态：" prop="ordertype">
-            <el-select v-model="listQuery.status" placeholder="请选择">
+            <el-select v-model="listQuery.status" placeholder="请选择" clearable>
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -49,12 +55,15 @@
         <el-table-column label="结束时间" align="center">
           <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
         </el-table-column>
+        <el-table-column label="创建时间" align="center">
+          <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
+        </el-table-column>
         <el-table-column label="状态" align="center">
           <template slot-scope="scope">{{scope.row.status | changeStatus}}</template>
         </el-table-column>
-        <el-table-column label="关联商品数量" align="center">
-          <template slot-scope="scope">{{scope.row.payPrice}}</template>
-        </el-table-column>
+<!--        <el-table-column label="关联商品数量" align="center">-->
+<!--          <template slot-scope="scope">{{scope.row.payPrice}}</template>-->
+<!--        </el-table-column>-->
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">商品佣金</el-button>
@@ -111,7 +120,7 @@
     filters: {
       formatDate(time) {
         let date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd');
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
       },
       changeStatus(data) {
         switch (data) {

@@ -14,14 +14,23 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="代理商名字：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="代理商名字"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="代理商名字" clearable></el-input>
           </el-form-item>
           <el-form-item label="代理商账号：">
-            <el-input style="width: 214px" v-model="listQuery.accont" placeholder="代理商账号"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.accont" placeholder="代理商账号" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="代理商电话：">
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="代理商电话" clearable></el-input>
           </el-form-item>
           <el-form-item label="审核状态：">
             <el-select v-model="listQuery.status" placeholder="请选择审核状态" clearable>
               <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否删除：">
+            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
+              <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -40,9 +49,12 @@
         <el-table-column label="代理商名字" align="center" fixed>
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-
+        <el-table-column label="所属账号" align="center" :formatter="showAccess">
+        </el-table-column>
+        <el-table-column label="联系电话" align="center">
+          <template slot-scope="scope">{{scope.row.phone}}</template>
+        </el-table-column>
         <el-table-column label="地址" align="center" width="300" :formatter="showAddress">
-
         </el-table-column>
         <el-table-column label="详细地址" align="center" width="300">
           <template slot-scope="scope">{{scope.row.detailAddress}}</template>
@@ -51,8 +63,6 @@
 <!--          <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>-->
 <!--        </el-table-column>-->
         <el-table-column label="审核状态" align="center" :formatter="showStatus">
-        </el-table-column>
-        <el-table-column label="所属账号" align="center" :formatter="showAccess">
         </el-table-column>
         <el-table-column label="是否删除" align="center" :formatter="deleteStatus">
         </el-table-column>
@@ -115,6 +125,7 @@
           value: 2,
           label: '已拒绝'
         }],
+        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}]
         // userTypes: [
         //   //   {
         //   //   value: 'supplier',

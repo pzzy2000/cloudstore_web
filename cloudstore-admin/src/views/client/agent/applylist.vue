@@ -5,7 +5,7 @@
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
         <el-button style="float: right" @click="handleSearchList()" type="primary" size="small">
-          查询结果
+          查询
         </el-button>
         <el-button style="float: right;margin-right: 15px" @click="handleResetSearch()" size="small">
           重置
@@ -14,25 +14,22 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="名字：">
-            <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="名字"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.name" placeholder="名字"></el-input>
           </el-form-item>
           <el-form-item label="手机号：">
-            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="手机号"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.phone" placeholder="手机号"></el-input>
+          </el-form-item>
+          <el-form-item label="商铺名称：">
+            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="商铺名称"></el-input>
           </el-form-item>
           <el-form-item label="申请代理类型：">
-            <el-select v-model="listQuery.brandId" placeholder="请选择申请代理类型" clearable>
+            <el-select v-model="listQuery.agentType" placeholder="请选择申请代理类型" clearable>
               <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="商铺名称：">
-            <el-select v-model="listQuery.brandId" placeholder="商铺名称" clearable>
-              <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item label="审核状态：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
+            <el-select v-model="listQuery.status" placeholder="全部" clearable>
               <el-option v-for="item in verifyStatusOptions" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -110,16 +107,16 @@
         listLoading: false,
         brandOptions: [],
         publishStatusOptions: [],
-        verifyStatusOptions: [],
+        verifyStatusOptions: [{label: '待审核', value: '0'}, {label: '已通过', value: '1'}, {label: '已拒绝', value: '2'}],
         total: 0,
         statusList: [{label: "团长", value: 'leader'}, {label: "代理", value: 'agent'}]
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
     },
     activated() {
-      this.getList();
+      this.getList(1);
     },
     filters: {
       changeCt(data) {
@@ -160,11 +157,33 @@
       }
     },
     methods: {
-      getList() {
+      getList(idx) {
         fetchList(this.listQuery).then(res => {
           console.log(res);
           this.orderList = res.result.result.records;
           this.total = parseInt(res.result.result.total);
+          if (idx == 0) {
+            if (res.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         })
       },
       showAddress(row, column) {
@@ -179,12 +198,20 @@
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
+      },
+      handleSearchList() {
+        this.listQuery.pageNum = 1;
+        this.getList(0);
+      },
+      handleResetSearch() {
+        this.listQuery = Object.assign({}, defaultList);
+        this.getList(2);
       },
     }
   }

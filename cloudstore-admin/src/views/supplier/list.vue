@@ -11,17 +11,26 @@
           重置
         </el-button>
       </div>
-      <div style="margin-top: 15px">
+      <div style="padding-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="供应商名字：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名字"></el-input>
+          <el-form-item label="供应商名称：">
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名称"></el-input>
           </el-form-item>
           <el-form-item label="供应商电话：">
             <el-input style="width: 214px" v-model="listQuery.phone" placeholder="供应商电话"></el-input>
           </el-form-item>
+          <el-form-item label="所属账号：">
+            <el-input style="width: 214px" v-model="listQuery.accont" placeholder="所属账号"></el-input>
+          </el-form-item>
           <el-form-item label="审核状态：">
-            <el-select v-model="listQuery.status" placeholder="请选择活动状态" clearable>
+            <el-select v-model="listQuery.status" placeholder="请选择审核状态" clearable>
               <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否删除：">
+            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
+              <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -42,11 +51,11 @@
         <el-table-column label="供应商电话"  align="center">
           <template slot-scope="scope">{{scope.row.phone | changeMis}}</template>
         </el-table-column>
-        <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
+        <el-table-column label="所属账号"  align="center" :formatter="showAccess">
         </el-table-column>
         <el-table-column label="审核状态"  align="center" :formatter="showStatus">
         </el-table-column>
-        <el-table-column label="所属账号"  align="center" :formatter="showAccess">
+        <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
@@ -127,6 +136,7 @@
           label: '未审核'
         }],
         statusList: [{label: "待审核", value: '1'}, {label: "已通过", value: '3'}, {label: "已拒绝", value: '2'}],
+        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}]
       }
     },
     created() {

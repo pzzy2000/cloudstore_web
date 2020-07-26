@@ -61,11 +61,11 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productTable"
-                :data="list"
-                style="width: 100%"
-                @selection-change="handleSelectionChange"
-                v-loading="listLoading"
-                border>
+        :data="list"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+        v-loading="listLoading"
+        border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
 
         <el-table-column label="字典code"  align="center">
