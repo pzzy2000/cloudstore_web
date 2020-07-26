@@ -2,9 +2,9 @@
 	<view class="content">
 		<nav-bar>商品分类</nav-bar>
 		<view class="navbar">
-			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
+			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click.stop="tabClick(0)">综合排序</view>
+			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click.stop="tabClick(1)">销量排序</view>
+			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click.stop="tabClick(2)">
 				<text>商品分类</text>
 				<!-- <view class="p-box">
 					<text :class="{ active: priceOrder === 1 && filterIndex === 2 }" class="yticon icon-shang"></text>
@@ -211,11 +211,13 @@ export default {
 		tabClick(index) { //点击tab列表
 			if (index === 0) {
 				this.filterIndex = 0
-				this.loadData('initialize');
+				this.pageNum = 1;
+				this.loadData();
 			}
 			if (index === 1) {
 				this.filterIndex = 1
-				this.loadData('initialize');
+				this.pageNum = 1;
+				this.loadData();
 			}
 			if (index === 2) {
 				this.filterIndex = 2
@@ -303,7 +305,7 @@ page,
 .navbar {
 	position: fixed;
 	left: 0;
-	top: 135upx;
+	top: 150upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;

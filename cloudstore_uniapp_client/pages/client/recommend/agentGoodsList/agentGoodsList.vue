@@ -1,12 +1,7 @@
 <template>
 	<view class="content">
 		<nav-bar backState="1000" type='fixed'>代理商品列表</nav-bar>
-		<!-- #ifdef H5 -->
 		<view class="navbar">
-		<!-- #endif -->
-		<!-- #ifdef MP-WEIXIN -->
-		<view class="navbar">
-		<!-- #endif -->
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">商品分类</view>
@@ -35,7 +30,8 @@
 							/
 							<text class="pricemart">{{item.goodsPicesBean.martPrice}}</text>
 						</view>
-						<button class="goodsBtn" @click.stop="shareSave(item)">立即分享</button>
+						<!-- <button class="goodsBtn" @click.stop="shareSave(item)">立即分享</button> -->
+						<button class="goodsBtn">立即购买</button>
 					</view>
 				</view>
 			</view>
@@ -130,10 +126,11 @@
 		onLoad (option) {
 			console.log(option)
 			this.agentId = option.agentId
+			this.activityId = option.activityId
 			this.userType = uni.getStorageSync('userInfo').agent
 			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 			//获取代理商代理的商品列表
-			this.loadData('initialize')
+			this.loadData()
 			this.loadgoodsType()
 			this.loadActiviList()
 		},
@@ -160,7 +157,7 @@
 					this.pageNum = 1;
 				}
 				var params = {
-					agentId: this.agentId, 
+					agentId: this.agentId,
 					activeId: this.activityId,
 					pageNum: this.pageNum,
 					pageSize: '10',
@@ -168,7 +165,7 @@
 					categoryTwoId: this.categoryTwoId,
 					categoryThreeId: this.categoryThreeId
 				};
-				let list = await Api.apiCall('post', Api.client.recommend.listAactivity, params);
+				let list = await Api.apiCall('post', Api.client.recommend.listbyagentid, params);
 				if (list) {
 					console.log(list)
 					let goodsList = list.result.records;
@@ -229,11 +226,13 @@
 			tabClick(index) { //点击tab列表
 				if (index === 0) {
 					this.filterIndex = 0
-					this.loadData('initialize');
+					this.pageNum = 1
+					this.loadData();
 				}
 				if (index === 1) {
 					this.filterIndex = 1
-					this.loadData('initialize');
+					this.pageNum = 1
+					this.loadData();
 				}
 				if (index === 2) {
 					this.filterIndex = 2
@@ -298,7 +297,7 @@
 			navToDetailPage(item) {
 				let id = item.goodsId,agentGoodsId = item.id,userType = 'agent',activeId = item.activeId
 				uni.navigateTo({
-					url: '/pages/agent/goods/goodsDetail/goodsDetail?goodsId='+id+'&userType='+userType+'&agentGoodsId='+agentGoodsId+'&activeId='+item.activeId
+           url: '/pages/client/goods/detail?goodsId='+id+'&agentGoodsId='+agentGoodsId
 				});
 			},
 			toShare () {
@@ -345,7 +344,7 @@
 .navbar {
 	position: absolute;
 	left: 0;
-	top: 130upx;
+	top: 150upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;
@@ -537,7 +536,7 @@
 						content: '￥';
 						font-size: 26upx;
 					}	
-				}
+				}+
 				.pricemart {
 					font-size: 25upx;
 					color: #000;

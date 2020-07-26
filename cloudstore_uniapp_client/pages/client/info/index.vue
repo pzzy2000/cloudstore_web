@@ -62,7 +62,7 @@
 						<text class="text-block">地址管理</text>
 					</view>
 				</view>
-				<view class="cu-item arrow" @click="toapplyAgent">
+				<view class="cu-item arrow" @click="toapplyAgent(false)">
 					<view class="content">
 						<text class="cuIcon-people text-pink"></text>
 						<text class="text-block">个人资料</text>
@@ -228,7 +228,7 @@
 			navTo(url,type) {
 				if (type === 'exit') {
 					uni.clearStorage();
-					uni.navigateTo({
+					uni.reLaunch({
 						url: url
 					});
 				} else {

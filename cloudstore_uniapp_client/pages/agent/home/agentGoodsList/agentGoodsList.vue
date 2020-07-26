@@ -101,6 +101,7 @@
 					  type: 1
 					}
 				],
+				imageUrl: ''
 			}
 		},
 		components: {
@@ -111,6 +112,7 @@
 				this.$refs.share.toggleMask();
 				var shareObj = {
 					title: this.goodsName,
+					imageUrl: this.imageUrl,
 					params: {
 						goodsId: this.goodsId,
 						agentGoodsId: this.agentGoodsId,
@@ -224,11 +226,11 @@
 			tabClick(index) { //点击tab列表
 				if (index === 0) {
 					this.filterIndex = 0
-					this.loadData('initialize');
+					this.loadData();
 				}
 				if (index === 1) {
 					this.filterIndex = 1
-					this.loadData('initialize');
+					this.loadData();
 				}
 				if (index === 2) {
 					this.filterIndex = 2
@@ -300,6 +302,7 @@
 				this.$refs.share.toggleMask();
 			},
 			async shareSave (item) {
+				this.imageUrl = item.goodsPicesBean.goodsPhotos[0].url
 				this.goodsId = item.goodsId
 				this.agentGoodsId = item.id
 				this.goodsName = item.goodsPicesBean.goodsName
@@ -340,7 +343,7 @@
 .navbar {
 	position: absolute;
 	left: 0;
-	top: 130upx;
+	top: 150upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;

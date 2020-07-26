@@ -152,7 +152,8 @@
 					payOrder: 0,
 					toDayOrder: 0,
 					waitOrder: 0
-				}
+				},
+				imageUrl: ''
 			}
 		},
 		components:{
@@ -171,6 +172,7 @@
 				this.$refs.share.toggleMask();
 				var shareObj = {
 					title: this.goodsName,
+					imageUrl: this.imageUrl,
 					params: {
 						goodsId: this.goodsId,
 						agentGoodsId: this.agentGoodsId,
@@ -241,6 +243,8 @@
 				this.$refs.share.toggleMask();
 			},
 			async shareSave (item) {
+				console.log(item)
+				this.imageUrl = item.goodsPicesBean.goodsPhotos[0].url
 				this.goodsId = item.goodsId
 				this.agentGoodsId = item.id
 				this.goodsName = item.goodsPicesBean.goodsName

@@ -56,7 +56,7 @@
 			"style": { //我的收益
 				"navigationBarTitleText": "我的收益",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/client/cart/index",
@@ -219,6 +219,14 @@
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
+			}
+        }
+        ,{
+            "path" : "pages/client/public/goodDetail",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
 			}
         }
     ],

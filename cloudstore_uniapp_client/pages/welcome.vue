@@ -9,10 +9,10 @@
 <script>
 	import mallplusCopyright from '@/components/mall-copyright/mallplusCopyright.vue';
 	import Api from '@/common/api';
-	import {
-		mapMutations,
-		mapState
-	} from 'vuex';
+	// import {
+	// 	mapMutations,
+	// 	mapState
+	// } from 'vuex';
 	export default {
 		components: {
 			mallplusCopyright
@@ -33,7 +33,7 @@
 			// });
 			const timeout = setTimeout(function() {
 				that.getAgentInfo(timeout);
-			},1000)
+			},2000)
 		},
 		onLoad(ops) {
 			// this.getAgentInfo();
@@ -43,13 +43,15 @@
 			uni.setStorageSync('goodsInfo', ops)
 		},
 		computed: {
-			...mapState(['hasLogin', 'userInfo'])
+			// ...mapState(['hasLogin', 'userInfo'])
 		},
 		methods: {
-			...mapMutations(['login']),
+			// ...mapMutations(['login']),
 			async getAgentInfo(timeout) {
 				this.logining = false;
 				let params = {};
+				var that = this;
+				
 				let data = await Api.apiCall('post', Api.client.info.searchInfo, params, true, false);
 				if (data) {
 					let loginuser = data.result;
@@ -61,13 +63,14 @@
 						uni.navigateTo({
 							url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
 						});
-					} else {
+					} 
+					else {
 						uni.switchTab({
 							url:'/pages/client/recommend/index'
 						})
 					}
-				}
-				console.log(data)
+				} 
+				// console.log(data)
 			}
 		}
 	};

@@ -6,7 +6,7 @@
 				v-for="(item, index) in navList" :key="index" 
 				class="nav-item" 
 				:class="{current: tabCurrentIndex === index}"
-				@click="tabClick(index)"
+				@click="tabClick(item)"
 			>
 				{{item.text}}
 			</view>
@@ -70,35 +70,41 @@
 		data() {
 			return {
 				tabCurrentIndex: 0,
+				orderStatus: '',
 				orderList: [],
 				pageNum: 1,
 				navList: [{
 						state: 0,
 						text: '全部',
+						type: '',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 1,
 						text: '已支付',
+						type: 'payed',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 2,
 						text: '待配送',
+						type: 'peisong',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 3,
 						text: '已完成',
+						type: 'complete',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 4,
 						text: '其他',
+						type: 'more',
 						loadingType: 'more',
 						orderList: []
 					}
@@ -138,6 +144,7 @@
 					mask: false
 				});
 				let parmas = {
+					orderStatus: this.orderStatus,
 					pageNum: this.pageNum,
 					pageSize: 10
 				}
@@ -149,9 +156,9 @@
 					}else{
 						switch (tabIndex) {
 							case 0:
-							for (let tmp in tmpData) {
-								this.orderList.push(tmpData[tmp])
-							}
+								for (let tmp in tmpData) {
+									this.orderList.push(tmpData[tmp])
+								}
 							break;
 							case 1:
 								for (let tmp in tmpData) {
@@ -185,10 +192,15 @@
 				}
 			},
 			//顶部tab点击
-			tabClick(index){
+			tabClick(item){
+				if (item.state === 4) {
+					this.$api.msg('敬请期待')
+					return false;
+				}
+				this.orderStatus = item.type
 				this.pageNum = 1
 				this.orderList =[]
-				this.tabCurrentIndex = index;
+				this.tabCurrentIndex = item.state;
 				this.getOrderData(this.tabCurrentIndex)
 			},
 			toOrder (item) {
