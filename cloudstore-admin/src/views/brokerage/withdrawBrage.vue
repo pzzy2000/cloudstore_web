@@ -21,10 +21,10 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px" ref="searchList">
           <el-form-item label="用户账号：" prop="phone">
-            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="用户账号"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="用户账号" clearable></el-input>
           </el-form-item>
           <el-form-item label="用户昵称：" prop="name">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户昵称"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户昵称" clearable></el-input>
           </el-form-item>
         </el-form>
       </div>

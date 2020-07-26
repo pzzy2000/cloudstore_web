@@ -20,11 +20,11 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="pageList" size="small" label-width="130px">
-          <el-form-item label="客户账号：">
-            <el-input style="width: 214px" v-model="pageList.name" placeholder="客户名称"></el-input>
-          </el-form-item>
           <el-form-item label="客户昵称：">
-            <el-input style="width: 214px" v-model="pageList.phone" placeholder="客户电话"></el-input>
+            <el-input style="width: 214px" v-model="pageList.name" placeholder="客户昵称" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="客户电话：">
+            <el-input style="width: 214px" v-model="pageList.phone" placeholder="客户电话" clearable></el-input>
           </el-form-item>
           <el-form-item label="创建时间：">
             <el-date-picker v-model="pageList.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择创建时间"></el-date-picker>
@@ -49,11 +49,11 @@
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" v-loading="listLoading" border>
         <el-table-column type="selection" width="60" align="center" fixed ></el-table-column>
-        <el-table-column label="客户账号" align="center">
-          <template slot-scope="scope">{{scope.row.phone}}</template>
-        </el-table-column>
         <el-table-column label="客户昵称" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
+        </el-table-column>
+        <el-table-column label="客户电话" align="center">
+          <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
         <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">{{scope.row.createDate}}</template>

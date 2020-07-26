@@ -29,20 +29,20 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="pageList" size="small" label-width="130px" ref="searchList">
           <el-form-item label="订单编号：" prop="name">
-            <el-input style="width: 214px" v-model="pageList.number" placeholder="订单编号"></el-input>
+            <el-input style="width: 214px" v-model="pageList.number" placeholder="订单编号" clearable></el-input>
           </el-form-item>
           <el-form-item label="下单时间：" prop="code">
-            <el-date-picker v-model="pageList.createTime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
+            <el-date-picker v-model="pageList.createTime" type="date" placeholder="选择日期" :picker-options="pickerOptions" clearable>
             </el-date-picker>
           </el-form-item>
           <el-form-item label="用户账号：" prop="count">
-            <el-input style="width: 214px" v-model="pageList.access" placeholder="用户账号"></el-input>
+            <el-input style="width: 214px" v-model="pageList.access" placeholder="用户账号" clearable></el-input>
           </el-form-item>
           <el-form-item label="用户名称：" prop="count">
-            <el-input style="width: 214px" v-model="pageList.name" placeholder="用户名称"></el-input>
+            <el-input style="width: 214px" v-model="pageList.name" placeholder="用户名称" clearable></el-input>
           </el-form-item>
           <el-form-item label="订单状态：" prop="orderstatus">
-            <el-select v-model="pageList.orderStatus" placeholder="请选择">
+            <el-select v-model="pageList.orderStatus" placeholder="请选择" clearable>
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>

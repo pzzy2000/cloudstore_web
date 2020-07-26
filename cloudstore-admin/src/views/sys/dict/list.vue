@@ -9,7 +9,7 @@
           @click="handleSearchList()"
           type="primary"
           size="small">
-          查询结果
+          查询
         </el-button>
         <el-button
           style="float: right;margin-right: 15px"
@@ -21,25 +21,25 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="字典code：">
-            <el-input style="width: 203px" v-model="listQuery.code" placeholder="字典code"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.code" placeholder="字典code" clearable></el-input>
           </el-form-item>
           <el-form-item label="字典名称：">
-            <el-input style="width: 203px" v-model="listQuery.name" placeholder="字典名称"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.name" placeholder="字典名称" clearable></el-input>
           </el-form-item>
           <el-form-item label="字典类型：">
-            <el-select v-model="listQuery.dirctType" placeholder="字典类型">
+            <el-select v-model="listQuery.dirctType" placeholder="字典类型" clearable>
               <el-option label="服务保证" value="fubz"></el-option>
               <el-option label="行政划分" value="area"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="是否有子类：">
-            <el-select v-model="listQuery.childs" placeholder="是否有子类">
+            <el-select v-model="listQuery.childs" placeholder="是否有子类" clearable>
               <el-option label="有子类" value="1"></el-option>
               <el-option label="无子类" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="是否删除：">
-            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除">
+            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
               <el-option label="未删除" value="0"></el-option>
               <el-option label="已删除" value="1"></el-option>
             </el-select>
@@ -74,49 +74,27 @@
         <el-table-column label="字典名称" align="center">
          <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-
         <el-table-column label="字典类型" align="center">
          <template slot-scope="scope">{{scope.row.dirctType.name}}</template>
         </el-table-column>
-
         <el-table-column label="是否有子类" align="center" :formatter="haveChild">
-
         </el-table-column>
-
-
-
         <el-table-column label="是否删除" align="center" :formatter="showStatus" >
-
         </el-table-column>
-
         <el-table-column label="描述" align="center">
            <template slot-scope="scope">{{scope.row.desc}}</template>
         </el-table-column>
-
         <el-table-column label="操作" width="160" align="center">
-
           <template slot-scope="scope">
-            <!--
-              <el-button
-                size="mini"
-                @click="handleShowProduct(scope.$index, scope.row)">查看
-              </el-button>
-              <el-button
-                size="mini"
-                @click="handleUpdateProduct(scope.$index, scope.row)">编辑
-              </el-button>
-               -->
-              <el-button
-                size="mini"
-                :disabled="scope.row.childs | disableNextLevel"
-                @click="tochild(scope.$index, scope.row)">查看子类
-              </el-button>
+            <el-button
+              size="mini"
+              :disabled="scope.row.childs | disableNextLevel"
+              @click="tochild(scope.$index, scope.row)">查看子类
+            </el-button>
           </template>
-
         </el-table-column>
       </el-table>
     </div>
-
     <div class="pagination-container">
       <el-pagination
         background
@@ -133,7 +111,6 @@
 </template>
 <script>
   import {fetchList,searchDictionaries} from '@/api/sysdict'
-
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -155,7 +132,7 @@
     },
     created() {
        this.resetParentId();
-       this.getList();
+       this.getList(1);
        console.log(this.$route.query.parentId)
        if (this.$route.query.parentId !== undefined) {
          this.isshow = true;
@@ -166,7 +143,7 @@
     watch: {
      $route(route) {
        this.resetParentId();
-       this.getList();
+       this.getList(1);
        if (this.$route.query.parentId !== undefined) {
          this.isshow = true;
        }else {
@@ -218,7 +195,7 @@
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },
-      getList() {
+      getList(idx) {//0：搜索    1：正常列表    2：重置
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           console.log(response);
@@ -226,12 +203,36 @@
             this.listLoading = false;
             this.list = response.result.result.records;
             this.total = parseInt(response.result.result.total);
+            if (idx == 0) {
+              if (response.result.result.records.length == 0) {
+                this.$message({
+                  message: "暂无数据",
+                  type: 'warning',
+                  duration: 800
+                })
+              }else {
+                this.$message({
+                  message: "查询成功",
+                  type: 'success',
+                  duration: 800
+                })
+              }
+            }
+            if (idx == 2) {
+              this.$message({
+                message: "重置成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }else {
+            this.getList(1);
           }
         });
       },
       handleSearchList() {
-        // this.listQuery.pageNum = 1;
-        // this.getList();
+        this.listQuery.pageNum = 1;
+        this.getList(0);
         // let obj = {
         //   code: this.verifyList.dictcode,
         //   province: this.verifyList.dictname,
@@ -240,26 +241,26 @@
         //   isDelete: this.verifyList.isdelete
         // }
         // if (this.listQuery.)
-        searchDictionaries(this.listQuery).then(res => {
-          if (res.result.code == 0) {
-            this.$message({
-              message: '查询成功',
-              type: 'success'
-            })
-            console.log(res);
-            this.list = res.result.result.records;
-            this.total = parseInt(res.result.result.total);
-          }
-        })
+        // searchDictionaries(this.listQuery).then(res => {
+        //   if (res.result.code == 0) {
+        //     this.$message({
+        //       message: '查询成功',
+        //       type: 'success'
+        //     })
+        //     console.log(res);
+        //     this.list = res.result.result.records;
+        //     this.total = parseInt(res.result.result.total);
+        //   }
+        // })
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -267,7 +268,9 @@
       handleResetSearch() {
         // this.selectProductCateValue = [];
         // this.listQuery = Object.assign({}, defaultListQuery);
-        this.listQuery = {};
+        this.listQuery = Object.assign({}, defaultListQuery);
+        this.resetParentId();
+        this.getList(2);
       },
       handleDelete(index, row){
         this.$confirm('是否要进行删除操作?', '提示', {

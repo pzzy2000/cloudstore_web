@@ -22,14 +22,14 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="categoryTwoId" clearable>
-            <el-select v-model="listQuery.categoryTwoId" remote v-on:change="seclectCategory($event, 2)" placeholder="二级分类" :loading="loading">
+          <el-form-item prop="categoryTwoId">
+            <el-select v-model="listQuery.categoryTwoId" remote v-on:change="seclectCategory($event, 2)" placeholder="二级分类" :loading="loading" clearable>
               <el-option v-for="item in category.two" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="categoryThreeId" clearable>
-            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading">
+          <el-form-item prop="categoryThreeId">
+            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>
               <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>

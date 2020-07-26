@@ -21,13 +21,13 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="用户名称：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名称"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名称" clearable></el-input>
           </el-form-item>
           <el-form-item label="登录名：">
-            <el-input style="width: 214px" v-model="listQuery.access" placeholder="登录名"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.access" placeholder="登录名" clearable></el-input>
           </el-form-item>
           <el-form-item label="注册电话：">
-            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="注册电话"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="注册电话" clearable></el-input>
           </el-form-item>
           <el-form-item label="用户类型：">
             <el-select v-model="listQuery.userType" placeholder="用户类型" clearable>

@@ -14,13 +14,13 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="名字：">
-            <el-input style="width: 203px" v-model="listQuery.name" placeholder="名字"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.name" placeholder="名字" clearable></el-input>
           </el-form-item>
           <el-form-item label="手机号：">
-            <el-input style="width: 203px" v-model="listQuery.phone" placeholder="手机号"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.phone" placeholder="手机号" clearable></el-input>
           </el-form-item>
           <el-form-item label="商铺名称：">
-            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="商铺名称"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="商铺名称" clearable></el-input>
           </el-form-item>
           <el-form-item label="申请代理类型：">
             <el-select v-model="listQuery.agentType" placeholder="请选择申请代理类型" clearable>

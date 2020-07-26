@@ -14,16 +14,16 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="商品名称：">
-            <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称" clearable></el-input>
           </el-form-item>
           <el-form-item label="商品品牌：">
-            <el-input style="width: 203px" v-model="listQuery.goodsBrand" placeholder="商品品牌"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.goodsBrand" placeholder="商品品牌" clearable></el-input>
           </el-form-item>
           <el-form-item label="商品货号：">
-            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号" clearable></el-input>
           </el-form-item>
           <el-form-item label="所属供应商：">
-            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="所属供应商"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="所属供应商" clearable></el-input>
           </el-form-item>
 <!--          <el-form-item label="商品分类：">-->
 <!--            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品分类"></el-input>-->
@@ -41,19 +41,19 @@
             </el-select>
           </el-form-item>
           <el-form-item label="商品分类：">
-            <el-select v-model="listQuery.categoryOneId" remote placeholder="一级分类" :loading="loading" v-on:change="seclectCategory($event, 1)">
+            <el-select v-model="listQuery.categoryOneId" remote placeholder="一级分类" :loading="loading" v-on:change="seclectCategory($event, 1)" clearable>
               <el-option v-for="item in category.one" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-select v-model="listQuery.categoryTwoId" remote v-on:change="seclectCategory($event, 2)" placeholder="二级分类" :loading="loading">
+            <el-select v-model="listQuery.categoryTwoId" remote v-on:change="seclectCategory($event, 2)" placeholder="二级分类" :loading="loading" clearable>
               <el-option v-for="item in category.two" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading">
+            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>
               <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
