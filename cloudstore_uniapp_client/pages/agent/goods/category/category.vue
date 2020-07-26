@@ -73,6 +73,7 @@ export default {
 	},
 	data() {
 		return {
+			goodsName: '',
 			statusBarHeight:1,
 			cateMaskState: 0, //分类面板展开状态
 			headerPosition: 'fixed',
@@ -99,9 +100,8 @@ export default {
 	},
 
 	onLoad(options) {
-		// #ifdef H5
-		//this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight + 'px';
-		// #endif
+		this.goodsName = options.goodsName
+		console.log(this.goodsName)
 		this.loadActiviList();
 		this.loadgoodsType();
 		this.loadData();
@@ -122,6 +122,7 @@ export default {
 	//加载更多
 	onReachBottom() {
 		this.pageNum = this.pageNum + 1;
+		this.goodsName = ''
 		this.loadData('next');
 	},
 	methods: {
@@ -131,6 +132,7 @@ export default {
 				mask: false
 			});
 			if (type === 'initialize') {
+				this.goodsName = ''
 				this.activityId = ''
 				this.categoryOneId = ''
 				this.categoryTwoId = ''
@@ -139,12 +141,13 @@ export default {
 				this.pageNum = 1;
 			}
 			var params = {
+				goodsName: this.goodsName || '',
 				activityId: this.activityId,
 				pageNum: this.pageNum,
 				pageSize: '10',
 				categoryOneId: this.categoryOneId,
 				categoryTwoId: this.categoryTwoId,
-				categoryThreeId: this.categoryThreeId
+				categoryThreeId: this.categoryThreeId,
 			};
 			let list = await Api.apiCall('post', Api.agent.goods.list, params);
 			if (list) {
@@ -189,6 +192,7 @@ export default {
 		},
 		selectActivity (item) { //点击活动后加载数据
 			this.activityId = item.id;
+			this.goodsName = ''
 			this.categoryOneId = '';
 			this.categoryTwoId = '';
 			this.categoryThreeId = '';
@@ -207,9 +211,11 @@ export default {
 		tabClick(index) { //点击tab列表
 			if (index === 0) {
 				this.filterIndex = 0
+				this.loadData('initialize');
 			}
 			if (index === 1) {
 				this.filterIndex = 1
+				this.loadData('initialize');
 			}
 			if (index === 2) {
 				this.filterIndex = 2

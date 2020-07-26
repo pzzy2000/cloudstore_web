@@ -25,6 +25,11 @@ export default {
 	text-align: center;
 	font-size: 24upx;
 	margin: 20upx 0;
+	position: absolute;
+	left: 0;
+	bottom: 100upx;
+	width: 100%;
+	text-align: center;
 }
 .beian a{
 	text-decoration: none;

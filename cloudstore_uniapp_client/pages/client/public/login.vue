@@ -29,7 +29,7 @@
 		<view class="register-section">
 			还没有账号?<text @click="toRegist">马上注册</text>
 		</view>
-		<mallplusCopyright class='copy'></mallplusCopyright>
+		<mallplusCopyright></mallplusCopyright>
 	</view>
 </template>
 
@@ -329,7 +329,7 @@
 	.welcome {
 		position: relative;
 		left: 50upx;
-		top: -90upx;
+		top: -40upx;
 		font-size: 46upx;
 		color: #555;
 		text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
@@ -428,12 +428,5 @@
 			color: $font-color-spec;
 			margin-left: 10upx;
 		}
-	}
-	.copy {
-		position: absolute;
-		left: 0;
-		bottom: 100upx;
-		width: 100%;
-		text-align: center;
 	}
 </style>
