@@ -79,7 +79,6 @@
     pageSize: 10,
     optType: 'search'
   };
-  let that;
   export default {
     name: "list",
     data() {
@@ -94,14 +93,10 @@
         type: ''
       }
     },
-    beforeCreate() {
-      that = this;
-    },
     created() {
       this.getList();
     },
     filters: {
-
       // 时间格式自定义 只需把字符串里面的改成自己所需的格式
       formatDate(time) {
         let date = new Date(time);
@@ -196,11 +191,9 @@
           }
         })
       },
-
       backPage() {
         this.$router.back();
       },
-
       showDanger() {
         this.isshow = false;
       },
@@ -218,9 +211,6 @@
       },
       handleCurrentChange() {
         this.getList();
-      },
-      readOrder(index, row) {
-        this.$router.push({name: "read_order", query: {id: row.id}});
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
