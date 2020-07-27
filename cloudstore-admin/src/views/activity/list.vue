@@ -232,6 +232,9 @@
         });
       },
       handleSearchList() {
+        if (this.listQuery.isDelete == '') {
+          delete this.listQuery.isDelete;
+        }
         this.listQuery.pageNum = 1;
         this.getList(0);
       },
