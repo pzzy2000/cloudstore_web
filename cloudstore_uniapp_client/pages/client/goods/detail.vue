@@ -101,32 +101,34 @@
 			<!-- 遮罩层 -->
 			<view class="mask"></view>
 			<view class="layer attr-content" @click.stop="stopPrevent">
-				<view class="a-t">
-					<image :src="sku.imgUrl"></image>
-					<view class="right">
-						<text class="price">¥{{ sku.price }}</text>
-						<text class="stock">库存：{{ sku.stock }}件</text>
-						<view class="selected">
-							已选：
-							<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
+				<div class='sku-detail'>
+					<view class="a-t">
+						<image :src="sku.imgUrl"></image>
+						<view class="right">
+							<text class="price">¥{{ sku.price }}</text>
+							<text class="stock">库存：{{ sku.stock }}件</text>
+							<view class="selected">
+								已选：
+								<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
+							</view>
 						</view>
 					</view>
-				</view>
-				<view v-for="(item, index) in specList" :key="index" class="attr-list">
-					<text>{{ item.goodsPropertyParamName }}</text>
-					<view class="item-list">
-						<text
-							v-for="(childItem, childIndex) in specChildList"
-							v-if="childItem.pid === item.id"
-							:key="childIndex"
-							class="tit"
-							:class="{ selected: childItem.selected }"
-							@click="selectSpec(childIndex, childItem.pid)"
-						>
-							{{ childItem.name }}
-						</text>
+					<view v-for="(item, index) in specList" :key="index" class="attr-list">
+						<text>{{ item.goodsPropertyParamName }}</text>
+						<view class="item-list">
+							<text
+								v-for="(childItem, childIndex) in specChildList"
+								v-if="childItem.pid === item.id"
+								:key="childIndex"
+								class="tit"
+								:class="{ selected: childItem.selected }"
+								@click="selectSpec(childIndex, childItem.pid)"
+							>
+								{{ childItem.name }}
+							</text>
+						</view>
 					</view>
-				</view>
+				</div>
 				<view class="buyBtn" @click.stop="toBuy">
 					<button class="cu-btn bg-red lg">确定</button>
 				</view>
@@ -679,6 +681,9 @@ page {
 /* 规格选择弹窗 */
 .attr-content {
 	position: relative;
+	.sku-detail {
+	  padding: 0 40rpx 100rpx 40rpx;
+	}
 	.a-t {
 		display: flex;
 		image {
