@@ -5,7 +5,11 @@
   "author": "macro",
   "private": true,
   "scripts": {
+<<<<<<< HEAD
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 0.0.0.0",
+=======
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 127.0.0.1",
+>>>>>>> branch 'master' of https://github.com/pzzy2000/cloudstore_web.git
     "start": "npm run dev",
     "build": "node build/build.js"
   },

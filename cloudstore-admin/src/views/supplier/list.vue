@@ -34,6 +34,7 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <remoteCom></remoteCom>
         </el-form>
       </div>
     </el-card>
@@ -87,19 +88,18 @@
   </div>
 </template>
 <script>
-  import {
-    fetchList
-  } from '@/api/supplier'
-  import {
-    msg
-  } from '@/api/iunits'
+  import {fetchList} from '@/api/supplier'
+  import remoteCom from '@/components/remoteCom'
+  import {msg} from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
-
   };
   export default {
     name: "productList",
+    components: {
+      remoteCom
+    },
     data() {
       return {
         listQuery: Object.assign({}, defaultListQuery),
@@ -175,12 +175,14 @@
       showStatus(row, column) {
         let status = row.status;
         switch (status) {
-          case 1:
+          case 0:
             return '待审核';
+          case 1:
+            return '正常';
           case 2:
-            return '已拒绝';
-          case 3:
-            return '已通过';
+            return '违规关闭';
+          default: return "数据读取错误";
+            breal;
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },

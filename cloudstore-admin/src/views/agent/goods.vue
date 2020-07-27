@@ -49,23 +49,27 @@
 
 <script>
   import {getAgentgoods} from '@/api/agent'
+  const defaultList = {
+    pageNum: 1,
+    pageSize: 10,
+    optType: 'search'
+  };
   export default {
     name: 'goods',
     data() {
       return {
         levelForm: {},
         listLoading: false,
-        list: [
-          {name: "123123", level: "123456"}
-        ]
+        list: [{name: "123123", level: "123456"}],
+        listQuery: Object.assign({}, defaultList),
       }
     },
     created() {
-      // this.getList();
+      this.getList();
     },
     methods: {
       getList() {
-        getAgentgoods(defaultList).then(res => {
+        getAgentgoods(this.listQuery).then(res => {
           console.log(res);
         })
       },
