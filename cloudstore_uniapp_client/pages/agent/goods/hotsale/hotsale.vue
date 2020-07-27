@@ -375,7 +375,7 @@
 <style lang="scss" scoped>
 	.container {
 		background: #f1f1f1;
-		padding-bottom: 30rpx;
+		padding-bottom: 100upx;
 	}
 	.MP-search {
 		background: #00A79D;
@@ -668,6 +668,8 @@
 	background: #fff;
 	border-bottom: 1upx solid #eee;
 	padding:0 20upx 40upx;
+	border-bottom-left-radius: 25rpx;
+	border-bottom-right-radius: 25rpx;
 	.goods-item {
 		display: flex;
 		flex-direction: column;

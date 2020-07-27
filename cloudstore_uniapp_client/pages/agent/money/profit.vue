@@ -88,6 +88,7 @@
 			onPullDownRefresh() { //下拉刷新
 				this.pageNum = 1;
 				this.financetDataList = []
+				this.getFinanceData()
 				this.lisFinancetData(1,1)
 			},
 			onReachBottom() { //加载更多
@@ -124,6 +125,7 @@
 					}
 					let data = await Api.apiCall('post', Api.finance.list, parmas)
 					if (data) {
+						uni.stopPullDownRefresh();
 						if (data.code === 0 && data.result.records != false) {
 							const tmpData = data.result.records;
 							for (let tmp in tmpData) {

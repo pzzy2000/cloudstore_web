@@ -12,7 +12,7 @@
 			</view>
 			<view class="agency-apply">
 				<view class="agency-apply-main">
-					<view class="apply-detail" v-for="(item, index) in apply" :key='index' @click="toDetailList(item.detailUrl)">
+					<view class="apply-detail" v-for="(item, index) in apply" :key='index' @click="toDetailList(item)">
 						<text :class='item.icon' class="apply-img"></text>
 						<text>{{item.name}}</text>
 					</view>
@@ -67,43 +67,51 @@ export default {
 				apply: [
 					{
 						name: '代理商品列表',
-						icon: 'icon text-blue cuIcon-shop',
-						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList'
+						icon: 'icon text-red cuIcon-shop',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList',
+						id: ''
 					},
 					{
 						name: '敬请期待',
-						icon: 'icon text-blue cuIcon-shop',
-						detailUrl: ''
+						icon: 'icon text-gray cuIcon-repair',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList',
+						id: '-1'
 					},
 					{
 						name: '敬请期待',
-						icon: 'icon text-blue cuIcon-shop',
-						detailUrl: ''
+						icon: 'icon text-gray cuIcon-repair',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList',
+						id: '-1'
 					},
 					{
 						name: '敬请期待',
-						icon: 'icon text-blue cuIcon-shop',
-						detailUrl: ''
+						icon: 'icon text-gray cuIcon-repair',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList',
+						id: '-1'
 					},
 					{
 						name: '敬请期待',
-						icon: 'icon text-blue cuIcon-shop',
-						detailUrl: ''
+						icon: 'icon text-gray cuIcon-repair',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList',
+						id: '-1'
 					},
 					{
 						name: '敬请期待',
-						icon: 'icon text-blue cuIcon-shop',
-						detailUrl: ''
+						icon: 'icon text-gray cuIcon-repair',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList',
+						id: '-1'
 					},
 					{
 						name: '敬请期待',
-						icon: 'icon text-blue cuIcon-shop',
-						detailUrl: ''
+						icon: 'icon text-gray cuIcon-repair',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList',
+						id: '-1'
 					},
 					{
 						name: '敬请期待',
-						icon: 'icon text-blue cuIcon-shop',
-						detailUrl: ''
+						icon: 'icon text-gray cuIcon-repair',
+						detailUrl: '/pages/client/recommend/agentGoodsList/agentGoodsList',
+						id: '-1'
 					}
 				],
 				detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
@@ -117,13 +125,59 @@ export default {
 		},
 		methods:{
 			async listAactivityData(agentId) {
+				let token = uni.getStorageSync('token')
 				let params = {
 					agentId: agentId
 				}
-				let list = await Api.apiCall('post', Api.client.recommend.listAactivity, params);
-				if (list) {
-					console.log(list)
+				if (token) {
+				  uni.request({
+					url: Api.BASEURI + Api.client.recommend.listAactivity,
+					method: 'post',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded',
+					  'auth': token
+					},
+					data: params,
+					success: res => {
+						if (res) {
+							var data = res.data.result.result
+							console.log(data)
+							for (var tmp = 0; tmp<=data.length; tmp++) {
+								if (data[tmp].activityId != '-1') {
+									this.apply[tmp].name = data[tmp].activityBean.name
+									this.apply[tmp].id = data[tmp].activityId
+									this.apply[tmp].icon = 'icon text-blue cuIcon-discover'
+								} else {
+									if (tmp === 0) {
+										continue;
+									}
+									console.log(tmp)
+									this.apply[tmp].name = '敬请期待'
+									this.apply[tmp].id = data[tmp].activityId
+									this.apply[tmp].icon = 'icon text-gray cuIcon-repair'
+								}
+							}
+							// for (var tmp in data) {
+							// 	if (data[tmp].activityId != '-1') {
+							// 		this.apply[tmp].name = data[tmp].activityBean.name
+							// 		this.apply[tmp].id = data[tmp].activityId
+							// 		this.apply[tmp].icon = 'icon text-blue cuIcon-discover'
+							// 	} else {
+							// 		console.log(1)
+							// 		this.apply[tmp].name = '敬请期待'
+							// 		this.apply[tmp].icon = 'icon text-gray cuIcon-repair'
+							// 	}
+							// }
+						} else {
+							that.$api.msg('请求数据失败')
+						}
+					}
+				  });
 				}
+				// let list = await Api.apiCall('post', Api.client.recommend.listAactivity, params);
+				// if (list) {
+				// 	console.log(list)
+				// }
 			},
 			async getRecommendData () {
 				uni.showLoading({
@@ -138,7 +192,7 @@ export default {
 					this.shopInfo.detailAddress = data.result.detailAddress || '暂无地址'
 					this.getNewsList(data.result.agentId)
 					this.listAactivityData (data.result.agentId)
-					// this.agentId = data.result.agentId
+					this.agentId = data.result.agentId
 				}
 			},
 			async getNewsList (agentId) {
@@ -155,12 +209,14 @@ export default {
 				}
 				uni.hideLoading()
 			},
-			toDetailList (url) {
-				if(url) {
-					uni.navigateTo({
-						url: url+'?agentId='+this.agentId,
-					});
+			toDetailList (item) {
+				if (item.id === '-1') {
+					this.$api.msg('敬请期待')
+					return false;
 				}
+				uni.navigateTo({
+				  url: item.detailUrl+'?activityId='+item.id+'&agentId='+this.agentId
+				});
 			},
 			navToDetailPage (item) {
 				let id = item.goodsId,agentGoodsId = item.id
@@ -251,6 +307,8 @@ export default {
 			border-radius: 10upx;
 			width: 100%;
 			margin: 0 auto;
+      z-index: 999;
+      position: relative;
 			.apply-detail {
 				width: 25%;
 				font-size: 26upx;
@@ -300,6 +358,7 @@ export default {
 		background: #fff;
 		border-radius: 20upx;
 		padding-top: 80upx;
+		padding-bottom: 20upx;
 		.goods-item {
 			display: flex;
 			flex-direction: column;

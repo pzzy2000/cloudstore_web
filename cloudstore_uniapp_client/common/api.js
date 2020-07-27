@@ -34,7 +34,8 @@ export default {
 		recommend: {
 			newShopinfoByOrder: 'agent/goods/app/newShopinfoByOrder', //查询客户端最新买的商品的商店信息
 			list: 'agent/goods/app/list',
-			listAactivity: 'agent/goods/app/listAactivity'
+			listAactivity: 'agent/goods/app/listAactivity',
+			listbyagentid: 'agent/goods/app/listbyagentid'
 		},
 		goods:{
 			buy:"agent/goods/app/buyGoodsDetail",

@@ -12,7 +12,7 @@
 				<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
 					<view class="detail-title">
-						<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
+						<view class="clamp title">{{ goods.goodsPicesBean.goodsName }}</view>
 						<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
 					</view>
 					<view class="detail-price">
@@ -265,7 +265,6 @@
 <style lang="scss">
 	page,
 	.content {
-		background: #fff;
 	}
 
 	.content {
@@ -421,7 +420,8 @@
 	.goods-list {
 		display: flex;
 		flex-wrap: wrap;
-		margin: 40upx 30upx;
+		width: 94%;
+		margin: 0 auto;
 		padding-bottom: 40upx;
 		.goods-item {
 			display: flex;
@@ -429,11 +429,13 @@
 			flex-flow: nowrap;
 			width: 100%;
 			height: 200upx;
-			margin-bottom: 20upx;
+			margin-bottom: 10upx;
+			box-shadow: 0 0 4upx rgba(0, 0, 0, 0.1);
+			padding: 10upx;
+			background: #fff;
 		}
 		.image-wrapper {
 			width: 200upx;
-			height:200upx;
 			border-radius: 3upx;
 			overflow: hidden;
 			image {
@@ -448,9 +450,12 @@
 			flex-wrap: wrap;
 			width: 65%;
 			.detail-title {
-				font-size: 16px;
+				font-size: 16upx;
 				color: #000;
 				width: 100%;
+				.title {
+					font-size: 24upx;
+				}
 				.number {
 					color: #999;
 					font-size: 26upx;

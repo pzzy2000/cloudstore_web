@@ -47,8 +47,8 @@
 		},
 		data() {
 			return {
-				access: '15773281581',
-				password: '123456',
+				access: '',
+				password: '',
 				sysInfo: '',
 				logining: false,
 				wxloginCode: '', //获取code
@@ -268,6 +268,7 @@
 		z-index: 90;
 		background: #fff;
 		padding-bottom: 40upx;
+		margin-top: 150rpx;
 	}
 
 	.back-btn {

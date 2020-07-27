@@ -36,7 +36,7 @@
 				<input type="text" :value="vxPhone" class="input-height"/>
 				<view class="phone-code">
 					<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input" @input="editInput($event,'code')"/>
-					<view class="code-btn" v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</view>
+					<view class="cu-btn round bg-green code-btn" v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</view>
 					<view type="primary" class="code-btn" v-else>{{ auth_register_time }}秒</view>
 				</view>
 				<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height" @input="editInput($event,'pwd')"/>
@@ -64,7 +64,7 @@
 		},
 		data() {
 			return {
-				phone: '15773281581',
+				phone: '',
 				code: '',
 				password: '',
 				logining: false,
@@ -254,7 +254,21 @@
 					title: '微信注册中',
 					mask: true
 				});
-				this.wxInfo()
+				uni.getUserInfo({
+					provider: 'weixin',
+					success: function(infoRes) {
+						if (infoRes) {
+							that.vxUserInfo =  infoRes
+						}
+					},
+					fail:function(e) {
+						uni.showToast({
+							title: '微信授权用户信息失败，请用手机号码登录',
+							icon: 'none'
+						});
+					}
+				});
+				// this.wxInfo()
 				uni.login({
 					provider: 'weixin',
 					fail: function() {
@@ -296,19 +310,22 @@
 					},
 					fail:function(e) {
 						uni.showToast({
-							title: '微信授权用户失败'
+							title: '微信授权用户信息失败，请用手机号码登录',
+							icon: 'none'
 						});
 					}
 				});
 			},
 			getPhoneNumber (res) { //点击按钮获取用户的手机号码
-				if (res.detail.iv === '') {
-					uni.showToast({
-						title: '授权失败'
-					});
-				}else{
+				if (res.detail.errMsg === 'getPhoneNumber:ok') {
 					this.vxPhoneInfo = res.detail
 					this.getPhoneKey()
+				}else{
+					uni.showToast({
+						title: '授权手机号失败',
+						icon: 'none'
+					});
+					this.$refs.popup.close()
 				}
 			},
 			getPhoneKey () { //将手机加密数据传给后台，后台返回解密后的电话号码和key
@@ -356,7 +373,8 @@
 					},
 					fail: () => {
 						uni.showToast({
-							title: '解密微信手机号码失败'
+							title: '解密微信手机号码失败',
+							icon:'none'
 						});
 					}
 				});
@@ -455,6 +473,7 @@
 		z-index: 90;
 		background: #fff;
 		padding-bottom: 40upx;
+		margin-top: 150rpx;
 	}
 
 	.input-item-right {

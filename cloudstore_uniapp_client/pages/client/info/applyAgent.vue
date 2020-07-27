@@ -42,7 +42,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">证件号码：</view>
-				<input placeholder="请输入证件ID" name="input" :value="agentfrom.cardId" :disabled='isEdit' @input="editInput($event,'cardId')"></input>
+				<input placeholder="请输入证件号码" name="input" :value="agentfrom.cardId" :disabled='isEdit' @input="editInput($event,'cardId')"></input>
 			</view>
 			<view class="cu-form-group" @tap='seletctAddress' :disabled='isEdit'>
 				<view class="title">省市区：</view>
@@ -54,7 +54,7 @@
 			</view>
 			<view class="cu-bar bg-white margin-top">
 				<view class="action">
-					上传身份证正反面
+					请上传身份证正面和反面
 				</view>
 			</view>
 			<view class="cu-form-group" v-if="isUpload" style="padding-bottom: 20upx;">
@@ -98,11 +98,11 @@
 					shopName: '',
 					name: '',
 					phone: '',
-					agentType: '1',
+					agentType: 'agent',
 					cardType: 'IDCard',
 					cardId: '',
 					cardPhoto: [],
-					provinceName: '请选择省、市、区、街道、社区',
+					provinceName: '请选择省、市、区、区域、社区',
 					provinceId: '',
 					cityId: '',
 					areaId: '',
@@ -132,8 +132,7 @@
 				itemList: [],
 				receiveData: [],
 				isUpload: false,
-				//上传地址
-				serverUrl: Api.BASEURI +'sys/upload/entity/image/update'
+				serverUrl: Api.BASEURI +'sys/upload/entity/image/update' //上传地址
 			}
 		},
 		components:{
@@ -207,6 +206,14 @@
 											that.typePickerIndex = 1
 											that.agentfrom.agentType = data.result.agentType
 										}
+										for (let tmp in data.result.goodsPhotos) {
+											that.imageList.push(data.result.goodsPhotos[tmp].url)
+											that.imgListId.push(data.result.goodsPhotos[tmp].uid)
+										}
+										if(that.imgListId.length ||　that.imageList.length) {
+											that.isUpload = true //控制上传图片组件的显示与隐藏
+										}
+										//赋值省、市、区、区域、社区内容
 										that.agentfrom.cardType = data.result.cardType
 										that.agentfrom.address = data.result.detailAddress
 										that.agentfrom.cardId = data.result.cardNo
@@ -221,13 +228,6 @@
 										}catch(e){
 											that.$api.msg('地址信息出错')
 										}
-										for (let tmp in data.result.goodsPhotos) {
-											that.imageList.push(data.result.goodsPhotos[tmp].url)
-											that.imgListId.push(data.result.goodsPhotos[tmp].uid)
-										}
-										if(that.imgListId.length ||　that.imageList.length) {
-											that.isUpload = true
-										}
 										if (data.result.status === 0) {
 											that.checkText = '正在审核中,资料不能修改'
 											that.isCheck = true
@@ -240,6 +240,8 @@
 										} else if (data.result.status === 1){
 											that.agentTitle = '代理资料'
 											that.isEdit = true
+										} else {
+											that.isUpload = true
 										}
 									} else {
 										that.$api.msg(data.msg)
@@ -307,6 +309,7 @@
 				}
 			},
 			typePickerChange (e) { //选择代理类型
+			console.log(e)
 				this.typePickerIndex = e.detail.value
 				if (e.detail.value === 0) {
 					this.agentfrom.agentType = 'agent'
@@ -448,10 +451,10 @@
 					this.$api.msg('请输入详细地址')
 					return;
 				}
-				// if (this.imglistId.length === 0) {
-				// 	this.$api.msg('请选择图片')
-				// 	return;
-				// }
+				if (this.imgListId.length != 2) {
+					this.$api.msg('请上传身份证正面和反面')
+					return;
+				}
 				let params = {
 					shopName: this.agentfrom.shopName,
 					name: this.agentfrom.name,

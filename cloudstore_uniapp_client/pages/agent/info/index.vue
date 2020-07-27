@@ -31,7 +31,7 @@
 				</view>
 			</view>
 			<view class="vip-card-box">
-				<view class="b-btn" v-if='isLeader'>立即升级</view>
+				<view class="b-btn" v-if='isLeader' @click.stop="upgrade">立即升级</view>
 				<view class="tit">
 					<text class="yticon icon-iLinkapp-">{{userTypeName}}</text>
 				</view>
@@ -264,6 +264,16 @@
 						url: url
 					});
 				}
+			},
+			upgrade () {
+				uni.showModal({
+					title: '提示',
+					content: '请联系客服',
+					showCancel: false,
+					cancelText: '取消',
+					confirmText: '确定',
+					success: res => {},
+				});
 			},
 			/**
 			 *  会员卡下拉和回弹
