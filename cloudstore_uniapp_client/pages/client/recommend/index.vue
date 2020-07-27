@@ -141,33 +141,24 @@ export default {
 					success: res => {
 						if (res) {
 							var data = res.data.result.result
-							console.log(data)
-							for (var tmp = 0; tmp<=data.length; tmp++) {
-								if (data[tmp].activityId != '-1') {
-									this.apply[tmp].name = data[tmp].activityBean.name
-									this.apply[tmp].id = data[tmp].activityId
-									this.apply[tmp].icon = 'icon text-blue cuIcon-discover'
-								} else {
-									if (tmp === 0) {
-										continue;
+							try{
+								for (var tmp = 0; tmp<=data.length; tmp++) {
+									if (data[tmp].activityId != '-1') {
+										this.apply[tmp].name = data[tmp].activityBean.name
+										this.apply[tmp].id = data[tmp].activityId
+										this.apply[tmp].icon = 'icon text-blue cuIcon-discover'
+									} else {
+										if (tmp === 0) {
+											continue;
+										}
+										this.apply[tmp].name = '敬请期待'
+										this.apply[tmp].id = data[tmp].activityId
+										this.apply[tmp].icon = 'icon text-gray cuIcon-repair'
 									}
-									console.log(tmp)
-									this.apply[tmp].name = '敬请期待'
-									this.apply[tmp].id = data[tmp].activityId
-									this.apply[tmp].icon = 'icon text-gray cuIcon-repair'
 								}
+							}catch(e){
+								console.log()
 							}
-							// for (var tmp in data) {
-							// 	if (data[tmp].activityId != '-1') {
-							// 		this.apply[tmp].name = data[tmp].activityBean.name
-							// 		this.apply[tmp].id = data[tmp].activityId
-							// 		this.apply[tmp].icon = 'icon text-blue cuIcon-discover'
-							// 	} else {
-							// 		console.log(1)
-							// 		this.apply[tmp].name = '敬请期待'
-							// 		this.apply[tmp].icon = 'icon text-gray cuIcon-repair'
-							// 	}
-							// }
 						} else {
 							that.$api.msg('请求数据失败')
 						}
@@ -187,7 +178,6 @@ export default {
 				let parmas = {}
 				let data = await Api.apiCall('post',Api.client.recommend.newShopinfoByOrder,parmas)
 				if (data) {
-					console.log(data.result)
 					this.shopInfo.name = data.result.name || '暂无店铺'
 					this.shopInfo.detailAddress = data.result.detailAddress || '暂无地址'
 					this.getNewsList(data.result.agentId)

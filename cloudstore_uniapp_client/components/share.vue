@@ -25,7 +25,7 @@
 						class="share-item" 
 						open-type="share"
 					>
-						<image :src="item.icon" mode=""></image>
+						<image :src="item.icon" mode="" class="image"></image>
 						<text class="text">{{item.text}}</text>
 					</button>
 				</view>
@@ -200,7 +200,7 @@
 		height: 180upx;
 		border: none;
 		background-color: #fff;
-		image{
+		.image{
 			width: 80upx;
 			height: 80upx;
 			margin-bottom: 16upx;

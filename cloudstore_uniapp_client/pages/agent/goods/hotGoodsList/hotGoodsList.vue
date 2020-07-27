@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<nav-bar backState="1000">热门商品列表</nav-bar>
-		<view class="navbar">
+		<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">商品分类</view>
@@ -63,7 +63,7 @@
 		data() {
 			return {
 				activityId: null,
-				statusBarHeight: 1,
+				statusBarHeight: '',
 				cateMaskState: 0, //分类面板展开状态
 				headerPosition: 'fixed',
 				headerTop: '0px',
@@ -85,15 +85,12 @@
 			};
 		},
 		onLoad(options) {
+			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
 			uni.showLoading({
 				title: '正在加载',
 				mask: false
 			});
 			this.activityId = options.id;
-			// this.activityId = '7681384749618696192'
-			// #ifdef H5
-			//this.headerTop = document.getElementsByTagName('uni-page-head')[0].offsetHeight + 'px';
-			// #endif
 			this.keyword = options.keyword;
 			this.cateId = options.sid;
 			// this.loadGoodsTypeList();

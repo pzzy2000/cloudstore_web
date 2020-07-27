@@ -1,14 +1,12 @@
 <template>
-	
-		<view class="tabBar">
-		        <view v-for="(item,index) in tabbar" :key="item.pagePath" v-if="item.role == role "
-				 class="tabbar_item"  @click="navTo(item,index)">
-		            <image v-if="item.id==ids" :src="item.selectedIconPath" mode="" class="image"></image>
-		            <image v-else :src="item.iconPath" mode="" class="image"></image>
-		            <view class="text">{{item.text}}</view>
-		        </view>
+	<view class="tabBar">
+		<view v-for="(item,index) in tabbar" :key="item.pagePath" v-if="item.role == role "
+		 class="tabbar_item"  @click="navTo(item,index)">
+			<image v-if="item.id==ids" :src="item.selectedIconPath" mode="" class="image"></image>
+			<image v-else :src="item.iconPath" mode="" class="image"></image>
+			<view class="text">{{item.text}}</view>
 		</view>
-	
+	</view>
 </template>
 
 <script>
@@ -79,8 +77,8 @@
 
 					{
 						"pagePath": "/pages/agent/goods/hotsale/hotsale",
-						"iconPath": "/static/tab-cate.png",
-						"selectedIconPath": "/static/tab-cate-current.png",
+						"iconPath": "/static/tabbar/hot.png",
+						"selectedIconPath": "/static/tabbar/select-hot.png",
 						id:'armsp',
 						"role": "agent",
 						"text": "热门商品"
@@ -88,32 +86,32 @@
 
 					{
 						"pagePath": "/pages/agent/goods/category/category",
-						"iconPath": "/static/tab-cate.png",
-						"selectedIconPath": "/static/tab-cate-current.png",
+						"iconPath": "/static/tabbar/classify.png",
+						"selectedIconPath": "/static/tabbar/select-classify.png",
 						"role": "agent",
 						id:'aspfl',
 						"text": "商品分类"
 					},
 					{
 						"pagePath": "/pages/agent/home/index",
-						"iconPath": "/static/fujin.png",
-						"selectedIconPath": "/static/fujin_.png",
+						"iconPath": "/static/tabbar/myAgent.png",
+						"selectedIconPath": "/static/tabbar/select-myAgent.png",
 						"id":"awddl",
 						"role": "agent",
 						"text": "我的代理"
 					},
 					{
 						"pagePath": "/pages/agent/money/profit",
-						"iconPath": "/static/tab-cart.png",
-						"selectedIconPath": "/static/tab-cart-current.png",
+						"iconPath": "/static/tabbar/earnings.png",
+						"selectedIconPath": "/static/tabbar/select-earnings.png",
 						"id":"awdsy",
 						"role": "agent",
 						"text": "我的收益"
 					},
 					{
 						"pagePath": "/pages/agent/info/index",
-						"iconPath": "/static/tab-my.png",
-						"selectedIconPath": "/static/tab-my-current.png",
+						"iconPath": "/static/tabbar/personage.png",
+						"selectedIconPath": "/static/tabbar/select-personage.png",
 						"id":"adlxx",
 						"role": "agent",
 						"text": "代理信息"
@@ -187,7 +185,7 @@
  
     .tabBar {
         width: $isWidth;
-        height:90upx;
+        height:100upx;
         position: fixed;
         bottom: 1upx;
         left: 0;
@@ -208,7 +206,7 @@
  
         .tabbar_item {
             width: 25%;
-            font-size: 12px;
+            font-size: 22upx;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -221,10 +219,9 @@
                 color: $chooseTextColor;
             }
         }
- 
         .image {
-            width: 36upx;
-            height: 36upx;
+            width: 40upx;
+            height: 40upx;
             margin-left: 5upx;
         }
     }

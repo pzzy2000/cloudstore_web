@@ -44,7 +44,7 @@
 	export default {
 			data(){
 				return {
-					userType: '',
+					userInfo: '',
 					cuIconList: [{
 						cuIcon: 'recharge',
 						color: 'red',
@@ -84,7 +84,7 @@
 				this.getFinanceData()
 			},
 			onLoad () {
-				this.userType = uni.getStorageSync('userInfo').agent
+				this.userInfo = uni.getStorageSync('userInfo')
 				this.getFinanceData()
 				this.lisFinancetData()
 			},
@@ -100,17 +100,20 @@
 			},
 			methods:{
 				async getFinanceData () { //查询收益总数和未付款，已付款的总数
-					let parmas = {
-						userType: this.userType
-					}
-					let data = await Api.apiCall('post', Api.finance.get, parmas)
-					if (data) {
-						if (data.code === 0 && data.result != null) {
-							this.cuIconList[0].num =  data.result.profited
-							this.cuIconList[1].num =  data.result.profiting
-							this.cuIconList[2].num =  data.result.pointsed
-						}else{
-							this.$api.msg(data.msg)
+					if (this.userInfo) {
+						console.log(this.userInfo)
+						let parmas = {
+							userType: this.userInfo.agent
+						}
+						let data = await Api.apiCall('post', Api.finance.get, parmas)
+						if (data) {
+							if (data.code === 0 && data.result != null) {
+								this.cuIconList[0].num =  data.result.profited
+								this.cuIconList[1].num =  data.result.profiting
+								this.cuIconList[2].num =  data.result.pointsed
+							}else{
+								this.$api.msg(data.msg)
+							}
 						}
 					}
 				},
@@ -120,7 +123,7 @@
 						mask: false
 					});
 					let parmas = {
-						userType: this.userType,
+						userType: this.userInfo.agent,
 						status: status,
 						type: type,
 						pageNum: this.pageNum,

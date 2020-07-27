@@ -126,10 +126,7 @@
 			};
 		},
 		onLoad() {
-			this.getData()
-		},
-		onShow() {
-			this.getData()
+			this.getuserinfo()
 		},
 		// #ifndef MP
 		onNavigationBarButtonTap(e) {
@@ -181,12 +178,6 @@
 				that.$api.msg('修改成功');
 				that.userInfos[that.feild] = that.inputContent
 			},
-			getData(){
-					//this.getH5info()
-				//this.getH5info()
-					this.getuserinfo();
-				// this.getHistory();
-			},
 			// 获取微信用户信息
 			getuserinfo(){
 				let userInfo = uni.getStorageSync('userInfo');
@@ -196,13 +187,12 @@
 					if (!userInfo.wxPic) {
 						this.user.url = this.user.detailUrl
 					}
-				}
-				console.log(userInfo.agent)
-				if (userInfo.agent === 'agent') {
-					this.userTypeName = '代理商'
-					this.isLeader = true
-				}else {
-					this.userTypeName = '团长'
+					if (userInfo.agent === 'agent') {
+						this.userTypeName = '代理商'
+						this.isLeader = true
+					}else {
+						this.userTypeName = '团长'
+					}
 				}
 			},
 			// 获取h5用户信息
