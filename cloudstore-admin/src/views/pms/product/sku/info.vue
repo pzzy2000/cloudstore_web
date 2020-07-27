@@ -105,7 +105,7 @@
         </el-form-item>
         -->
 
-        <el-form-item label="商品规格参数介绍：">
+        <el-form-item label="商品详情：">
           <quill-editor ref="text" v-model="goodsku.mobileHtml" class="myQuillEditor" :options="quillOption" />
           <!--
           <tinymce :width="595" :height="300" v-model="goodsku.mobileHtml"></tinymce>

@@ -69,25 +69,8 @@
               @click="handleDeletethislevel(scope.$index, scope.row)"
               v-if="isview">删除
             </el-button>
-          <!-- <el-button
-              size="mini"
-              @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
-            </el-button> -->
           </template>
         </el-table-column>
-       <!-- <el-table-column label="操作" width="200" align="center">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleUpdate(scope.$index, scope.row)">编辑
-            </el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
-          </template>
-        </el-table-column> -->
       </el-table>
     </div>
     <div class="pagination-container">
@@ -140,17 +123,20 @@
           break;
       }
     },
-    watch: {
-      $route(route) {
-        this.resetParentId();
-        this.getList();
-        if (this.$route.query.level == undefined){
-          this.isshow = false;
-        }else{
-          this.isshow = true;
-        }
-      }
+    activated() {
+      this.getList();
     },
+    // watch: {
+    //   $route(route) {
+    //     this.resetParentId();
+    //     this.getList();
+    //     if (this.$route.query.level == undefined){
+    //       this.isshow = false;
+    //     }else{
+    //       this.isshow = true;
+    //     }
+    //   }
+    // },
     methods: {
       resetParentId(){
         this.listQuery.pageNum = 1;
@@ -272,7 +258,7 @@
         this.$router.push({path:'/pms/updateProductCate',query:{id:row.id}});
       },
       backPage() {
-        this.$router.go(-1)
+        this.$router.back();
       }
       // handleDelete(index, row) {
       //   this.$confirm('是否要删除该品牌', '提示', {

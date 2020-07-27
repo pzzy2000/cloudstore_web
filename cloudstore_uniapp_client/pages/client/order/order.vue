@@ -6,7 +6,7 @@
 				v-for="(item, index) in navList" :key="index" 
 				class="nav-item" 
 				:class="{current: tabCurrentIndex === index}"
-				@click="tabClick(index)"
+				@click="tabClick(item)"
 			>
 				{{item.text}}
 			</view>
@@ -24,38 +24,30 @@
 					<!-- 订单列表 -->
 					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
-							<text class="time">{{item.createTime}}</text>
+							<text class="time">订单号: {{item.id}}</text>
 							<template>
-								<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
-								<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
-								<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
-								<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
-								<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
-								<text class="state" v-else-if="item.orderStatus === 'peisoged'">已配送</text>
-								<text class="state" v-else-if="item.orderStatus === 'complete'">已完成</text>
-								<text class="state" v-else-if="item.orderStatus === 'returns'">退货</text>
-								<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
+								<text class="state" v-if="item.orderBean.orderStatus === 'wait'">待支付</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'pay'">支付待确认</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'payed'">已支付</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'close'">超时关闭</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'peisong'">待配送</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'peisoged'">已配送</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'complete'">已完成</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'returns'">退货</text>
+								<text class="state" v-else-if="item.orderBean.orderStatus === 'retud'">已退货</text>
 							</template>
 						</view>
-						<view class="goods-box-single" v-for="(item1, index) in  item.detailPicBean" :key="index" @click="toOrder(item)">
-							<image class="goods-img" :src="item1.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
+						<view class="goods-box-single" :key="index" @click="toOrder(item)">
+							<image class="goods-img" :src="item.detailPicBean[0].goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
-								<text class="title clamp">{{item1.goodsPicesBean.goodsName}}</text>
-								<text class="attr-box">{{item1.price}}  x {{item1.quantity}}</text>
-								<text class="price">{{item1.payPrice}}</text>
+								<text class="title clamp">{{item.detailPicBean[0].goodsPicesBean.goodsName}}</text>
+								<text class="attr-box">{{item.detailPicBean[0].activityBean.name}}</text>
+								<view class="price">
+									<text>总价: ￥{{item.payPrice}}</text>
+									<text>订单时间: {{item.createTime}}</text>
+								</view>
 							</view>
 						</view>
-						<view class="action-box b-t" v-if="item.orderStatus === 'wait'">
-							<!-- <button class="action-btn" @click="cancelOrder(item)">取消订单</button> -->
-							<button class="action-btn recom" @click="toBuy(item.detailPicBean)">立即支付</button>
-						</view>
-						<!-- <view class="" v-if="item.orderStatus === 'complete'">
-							<view class="price-box">
-								实付款
-								<text class="price">{{item.payPrice}}</text>
-								<button class="action-btn recom" @click="refundNotifyOrder(item.detailPicBean)">申请退款</button>
-							</view>
-						</view> -->
 					</view>
 				<!-- </scroll-view>
 			</swiper-item>
@@ -76,35 +68,41 @@
 		data() {
 			return {
 				tabCurrentIndex: 0,
+				orderStatus: '',
 				orderList: [],
-				pageNum: '1',
+				pageNum: 1,
 				navList: [{
 						state: 0,
 						text: '全部',
+						type: '',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 1,
 						text: '已支付',
+						type: 'payed',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 2,
 						text: '待配送',
+						type: 'peisong',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 3,
 						text: '已完成',
+						type: 'complete',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 4,
 						text: '其他',
+						type: 'more',
 						loadingType: 'more',
 						orderList: []
 					}
@@ -113,24 +111,28 @@
 			};
 		},
 		onLoad(options){
-			/**
-			 * 修复app端点击除全部订单外的按钮进入时不加载数据的问题
-			 * 替换onLoad下代码即可
-			 */
-			// #ifndef MP
-			//this.loadData()
-			// #endif
-			// #ifdef MP
-			// if(options.state == 0){
-			// 	this.loadData()
-			// }
-			// #endif
-			console.log(options)
-			this.tabCurrentIndex = Number(options.status)
+			if (options.status) {
+				this.tabCurrentIndex = Number(options.status)
+				switch (this.tabCurrentIndex) {
+					case 0:
+					this.orderStatus = ''
+					break;
+					case 1:
+					this.orderStatus = 'payed'
+					break;
+					case 2:
+					this.orderStatus = 'peisong'
+					break;
+					case 3:
+					this.orderStatus = 'complete'
+					break;
+				}
+			}
 			this.getOrderData(this.tabCurrentIndex)
 		},
 		onPullDownRefresh() { //下拉刷新
 			this.pageNum = 1
+			this.orderList = []
 			this.getOrderData(this.tabCurrentIndex);
 		},
 		onReachBottom() { //上拉加载
@@ -140,12 +142,13 @@
 		created() {
 		},
 		methods: {
-			async getOrderData (tabIndex) {
+			async getOrderData (tabIndex = 0) {
 				uni.showLoading({
 					title: '正在加载',
 					mask: false
 				});
 				let parmas = {
+					orderStatus: this.orderStatus,
 					pageNum: this.pageNum,
 					pageSize: 10
 				}
@@ -157,7 +160,9 @@
 					}else{
 						switch (tabIndex) {
 							case 0:
-							this.orderList = tmpData
+								for (let tmp in tmpData) {
+									this.orderList.push(tmpData[tmp])
+								}
 							break;
 							case 1:
 								for (let tmp in tmpData) {
@@ -196,10 +201,15 @@
 				// this.loadData('tabChange');
 			},
 			//顶部tab点击
-			tabClick(index){
+			tabClick(item){
+				if (item.state === 4) {
+					this.$api.msg('敬请期待')
+					return false;
+				}
+				this.orderStatus = item.type
 				this.pageNum = 1
 				this.orderList =[]
-				this.tabCurrentIndex = index;
+				this.tabCurrentIndex = item.state;
 				this.getOrderData(this.tabCurrentIndex)
 			},
 			//删除订单
@@ -218,7 +228,6 @@
 				});
 			},
 			toBuy (item) {
-				console.log(item)
 				uni.navigateTo({
 					url: '/pages/client/goods/buy?goodsId='+item[0].goodsId+'&agentGoodsId='+item[0].agentGoodsId+'&goodsSkuId='+item[0].goodsSkuId+'&orderType=buyOrder'+'&orderId='+item[0].orderId
 				});
@@ -353,16 +362,19 @@
 				.attr-box{
 					font-size: $font-sm + 2upx;
 					color: $font-color-light;
-					padding: 10upx 12upx;
+					padding: 10rpx 30rpx;
+					height: 45%;
 				}
 				.price{
-					font-size: $font-base + 2upx;
+					font-size: 24upx;
 					color: $font-color-dark;
-					&:before{
-						content: '￥';
-						font-size: $font-sm;
-						margin: 0 2upx 0 8upx;
-					}
+					display: flex;
+					justify-content: space-between;
+				// 	&:before{
+				// 		content: '￥';
+				// 		font-size: $font-sm;
+				// 		margin: 0 2upx 0 8upx;
+				// 	}
 				}
 			}
 		}

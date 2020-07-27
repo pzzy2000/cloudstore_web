@@ -74,10 +74,6 @@
 				<text class="cell-tip">￥{{totalPrice}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">优惠金额</text>
-				<text class="cell-tip red">无</text>
-			</view>
-			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">免运费</text>
 			</view>
@@ -189,17 +185,21 @@
 			}
 		},
 		onLoad(option) {
-			//这里的数据用来做测试
 			console.log(option)
 			var that = this;
 			this.goodsId = option.goodsId
 			this.agentGoodsId = option.agentGoodsId
 			this.goodsSkuId =option.goodsSkuId;
 			this.shareClientId = option.shareClientId
+			//测试数据
+			// this.agentGoodsId = "7726226918648844288"
+			// this.goodsId = "7709285196475928576"
+			// this.goodsSkuId = '7726751448173645824'
+			// this.shareClientId = '7727629497932976128'
+			//测试数据
 			if ( option.shareClientId == 'undefined') {
 				this.shareClientId = '-1'
 			}
-			console.log(this.shareClientId)
 			this.orderType = option.orderType
 			this.orderId = option.orderId
 			this.getGoodsData(this.goodsId ,this.agentGoodsId ,this.goodsSkuId)
@@ -231,6 +231,7 @@
 					this.goodsSku = data.result.goodsOneSku;
 					this.totalPrice =this.goodsSku.price; 
 					this.activity=data.result.activityId;
+					console.log(data.result)
 				}
 			},
 			radioChange: function(evt) { //选择支付方式
@@ -247,14 +248,14 @@
 			subtractNum() { //商品数量的简单减少
 				if (this.num >1) {
 					this.num = parseInt(this.num) - 1
-					this.totalPrice =  this.num * this.goodsSku.price
+					this.totalPrice = (this.num * Number(this.goodsSku.price * 100))/100
 				}
 			},
 			addNum() { //商品数量的简单增加
 				this.num = parseInt(this.num) + 1
-				this.totalPrice =  this.num * this.goodsSku.price
+				this.totalPrice =  (this.num * Number(this.goodsSku.price * 100))/100
 			},
-			buy(){
+			buy(index = 1){
 				if (!this.addressData.id) {
 					this.$api.msg('您还未选择收货地址')
 					return;
@@ -338,17 +339,20 @@
 					signType: vxBuyInfo.signType, //签名算法，暂支持 MD5。
 					paySign: vxBuyInfo.paySign, //签名，具体签名方案参见 微信小程序支付文档
 					success: function(res) {
-						console.log(res)
 						if (res.errMsg === 'requestPayment:ok') {
+							that.paySuccess(that.orderId)
 							uni.showModal({
 								title: '提示',
 								content: '支付成功',
 								showCancel: false,
 								cancelText: '取消',
 								confirmText: '确定',
-								success: res => {},
+								success: res => {
+									uni.navigateTo({
+										url: '/pages/client/order/order',
+									});
+								},
 							});
-							that.paySuccess(that.orderId)
 						}
 					},
 					fail: function(err) {

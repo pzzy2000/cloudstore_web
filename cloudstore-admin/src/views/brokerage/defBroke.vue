@@ -7,7 +7,7 @@
       <div style="margin: 20px 20px 0 20px">
         <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
           <el-table-column label="团长佣金" align="center">
-            <template slot-scope="scope">{{scope.row.leader}}</template>
+            <template slot-scope="scope">{{scope.row.leader | changeMsg}}</template>
           </el-table-column>
           <el-table-column label="代理佣金" align="center">
             <template slot-scope="scope">{{scope.row.agent}}</template>
@@ -43,6 +43,15 @@
     },
     created() {
       this.getList();
+    },
+    filters: {
+      changeMsg(data) {
+        try{
+          return data;
+        }catch (e) {
+          return "数据读取出错"
+        }
+      }
     },
     methods: {
       // delLogis() {

@@ -5,16 +5,34 @@
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
         <el-button style="float: right;margin-bottom: 10px;" @click="handleSearchList()" type="primary" size="small">
-          查询结果
+          查询
         </el-button>
         <el-button style="float: right;margin-right: 15px;margin-bottom: 10px;" @click="handleResetSearch()" size="small">
           重置
         </el-button>
       </div>
-      <div style="margin-top: 15px">
+      <div style="padding-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="供应商名字：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
+          <el-form-item label="供应商名称：">
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名称"></el-input>
+          </el-form-item>
+          <el-form-item label="供应商电话：">
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="供应商电话"></el-input>
+          </el-form-item>
+          <el-form-item label="所属账号：">
+            <el-input style="width: 214px" v-model="listQuery.accont" placeholder="所属账号"></el-input>
+          </el-form-item>
+          <el-form-item label="审核状态：">
+            <el-select v-model="listQuery.status" placeholder="请选择审核状态" clearable>
+              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否删除：">
+            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
+              <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -30,14 +48,14 @@
         <el-table-column label="供应商名称"  align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="供应商等级"  align="center">
-          <template slot-scope="scope">{{scope.row.sysSupplierRankId}}</template>
+        <el-table-column label="供应商电话"  align="center">
+          <template slot-scope="scope">{{scope.row.phone | changeMis}}</template>
         </el-table-column>
-        <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
+        <el-table-column label="所属账号"  align="center" :formatter="showAccess">
         </el-table-column>
         <el-table-column label="审核状态"  align="center" :formatter="showStatus">
         </el-table-column>
-        <el-table-column label="所属账号"  align="center" :formatter="showAccess">
+        <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
@@ -62,7 +80,7 @@
     -->
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listQuery.pageSize" :page-sizes="[5,10,15]" :current-page.sync="listQuery.pageNum" :total="total">
+        :page-size="listQuery.pageSize" :page-sizes="[10]" :current-page.sync="listQuery.pageNum" :total="total">
       </el-pagination>
     </div>
 
@@ -77,14 +95,13 @@
   } from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
-    pageSize: 5,
+    pageSize: 10,
 
   };
   export default {
     name: "productList",
     data() {
       return {
-
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,
@@ -117,11 +134,13 @@
         }, {
           value: 0,
           label: '未审核'
-        }]
+        }],
+        statusList: [{label: "待审核", value: '1'}, {label: "已通过", value: '3'}, {label: "已拒绝", value: '2'}],
+        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}]
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
     },
     watch: {
       selectProductCateValue: function(newValue) {
@@ -139,6 +158,13 @@
           return '审核通过';
         } else {
           return '未审核';
+        }
+      },
+      changeMis(data) {
+        if (data !== null) {
+          return data;
+        }else{
+          return "数据读取错误"
         }
       }
     },
@@ -159,7 +185,7 @@
         // 状态;0:正常;1:违规关闭;2:永久关闭
       },
 
- deleteStatus(row, column) {
+      deleteStatus(row, column) {
         let status = row.status;
         switch (status) {
           case 0:
@@ -172,22 +198,42 @@
             break;
         }
         // 状态;0:正常;1:违规关闭;2:永久关闭
-        },
-
-      getList() {
+      },
+      getList(idx) {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          if (idx == 0) {
+            if (response.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         });
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
       },
       handleUpdateUserInfo(index, row) {
-
         let pageNum = this.listQuery.pageNum;
         let pageSize = this.listQuery.pageSize;
         let userId = row.id;
@@ -205,11 +251,11 @@
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -232,6 +278,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.getList(2)
       },
       handleDelete(index, row) {
         this.$confirm('是否要进行删除操作?', '提示', {

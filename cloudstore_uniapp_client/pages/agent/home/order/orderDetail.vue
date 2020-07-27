@@ -33,9 +33,9 @@
 							<text class="price">￥{{totalPrice}}</text>
 						</view>
 						<view class="">
-							<text class="numberBtn">-</text>
-							<text class="number">{{num}}</text>
-							<text class="numberBtn">+</text>
+							<!-- <text class="numberBtn">-</text> -->
+							<text class="number">数量： {{num}}</text>
+							<!-- <text class="numberBtn">+</text> -->
 						</view>
 					</view>
 				</view>
@@ -43,7 +43,7 @@
 		</view>
 		
 		<!-- 优惠明细 -->
-		<view class="yt-list">
+		<!-- <view class="yt-list">
 			<view class="yt-list-cell b-b" @click="toggleMask('show')">
 				<view class="cell-icon">
 					券
@@ -61,7 +61,7 @@
 				<text class="cell-tit clamp">商家促销</text>
 				<text class="cell-tip disabled">暂无可用优惠</text>
 			</view>
-		</view>
+		</view> -->
 		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">
@@ -69,8 +69,8 @@
 				<text class="cell-tip">￥{{totalPrice}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">优惠金额</text>
-				<text class="cell-tip red">无</text>
+				<text class="cell-tit clamp">活动</text>
+				<text class="cell-tip red">{{goodsDetail.activityBean.name}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>

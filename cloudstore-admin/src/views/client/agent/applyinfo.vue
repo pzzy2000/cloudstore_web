@@ -20,6 +20,10 @@
             <el-input-dispatcher v-model="baseinfoForm.shopName" />
           </el-form-item>
           <br />
+          <el-form-item label="申请代理类型：" prop="agentType">
+            <el-input-dispatcher v-model="baseinfoForm.AT" />
+          </el-form-item>
+          <br />
           <el-form-item label="证件类型：" prop="cardType">
             <el-input-dispatcher v-model="baseinfoForm.cardType" />
           </el-form-item>
@@ -36,7 +40,7 @@
             <el-table :data="baseinfoForm.goodsPhotos">
               <el-table-column width="200" align="center">
                 <template slot-scope="scope">
-                  <el-image :src="scope.row.url"></el-image>
+                  <el-image :src="scope.row.url" @dblclick="preview(scope.row)"></el-image>
                 </template>
               </el-table-column>
             </el-table>
@@ -49,11 +53,13 @@
         </el-form>
       </div>
     </el-card>
+    <el-image-viewer v-if="showViewer" :on-close="closeViewer" :url-list="srcList"/>
   </div>
 </template>
 
 <script>
   import { getOneapply, verified } from '@/api/client'
+  import ElImageViewer from "element-ui/packages/image/src/image-viewer";
   export default {
     name: "agent-info",
     provide () {
@@ -61,13 +67,16 @@
         rwDispatcherProvider: this
       }
     },
+    components: { ElImageViewer },
     data() {
       return {
         baseinfoForm: {
           goodsPhotos: []
         },
         rwDispatcherState: 'read',
-        isshow: true
+        isshow: true,
+        showViewer: false,
+        srcList: []
       }
     },
     created() {
@@ -81,12 +90,6 @@
           if (res.result.result.status !== 0) {
             this.isshow = false;
           }
-          if (this.baseinfoForm.provinceBean == null){
-            this.baseinfoForm.address = ''
-          }else{
-            this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
-          }
-          console.log(this.baseinfoForm.address)
           switch (this.baseinfoForm.status) {
             case 0: this.baseinfoForm.msg = '待审核';
               break;
@@ -94,8 +97,37 @@
               break;
             case 2: this.baseinfoForm.msg = '已拒绝';
               break;
+            default: return this.baseinfoForm.msg = "数据读取错误";
+              break;
+          }
+          switch (this.baseinfoForm.agentType) {
+            case "leader": this.baseinfoForm.AT = "团长";
+              break;
+            case "supplier": this.baseinfoForm.AT = "供应商";
+              break;
+            case "agent": this.baseinfoForm.AT = "代理商";
+              break;
+            default: this.baseinfoForm.AT = "数据读取错误";
+              break;
+          }
+          try{
+            return this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
+          }catch (e) {
+            return this.baseinfoForm.address = '数据读取出错';
+          }finally {
+            if (this.baseinfoForm.address !== '数据读取出错'){
+              return this.baseinfoForm.detailAddress = this.baseinfoForm.address + this.baseinfoForm.detailAddress;
+            }
           }
         })
+      },
+      preview(row) {
+        console.log("+++++++++")
+        this.showViewer = true;
+        this.srcList[0] = row.url;
+      },
+      closeViewer() {
+        this.showViewer = false
       },
       refused() {
         verified({status: 2, id: this.$route.query.id}).then(res => {
@@ -106,7 +138,7 @@
               type: 'success',
               duration: 800
             });
-            this.$router.push('/sys/agent/list');
+            this.$router.go(-1);
           }
         })
       },

@@ -2,10 +2,11 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
-    <div style="display: inline-block; float: right; margin-right: 50px">{{userType}}&nbsp;{{userAccont}}&nbsp;{{userName}}</div>
     <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-<!--        <img class="user-avatar" :src="avatar">-->
+<!--      <div class="avatar-wrapper">-->
+<!--&lt;!&ndash;        <img class="user-avatar" :src="avatar">&ndash;&gt;-->
+<!--      </div>-->
+      <div style="display: inline-block; float: right; cursor: pointer; color: #1f2d3d">{{userType}}<span style="margin: 0 10px">/</span>{{userName}}
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
@@ -64,12 +65,13 @@ export default {
     },
     logout() {
       this.setCookie('loginToken', "", -1);
+      console.log("+++++++++")
       this.setCookie('username', "", -1);
       this.setCookie('password', "", -1);
-      location.reload() // 为了重新实例化vue-router对象 避免bug
+      location.reload()  //为了重新实例化vue-router对象 避免bug
     },
     setCookie(c_name,value,expire) {
-      var date=new Date()
+      let date=new Date()
       date.setSeconds(date.getSeconds()+expire)
       document.cookie=c_name+ "="+escape(value)+"; expires="+date.toGMTString()
     }

@@ -64,3 +64,10 @@ export function updateBrosku(params) {
     data: params
   })
 }
+
+export function fetchListWithChildren(params) {
+  return request({
+    url:'/goods/category/getGoodsCateByParId?parentId='+params,
+    method:'get',
+  })
+}

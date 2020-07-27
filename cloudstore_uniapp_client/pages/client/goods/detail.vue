@@ -91,8 +91,9 @@
 				<text>期待</text>
 			</view>
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toBuy">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave">立即分享</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec">立即购买</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" v-if="shareClientId" @click="shareSave" >立即分享</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -100,31 +101,36 @@
 			<!-- 遮罩层 -->
 			<view class="mask"></view>
 			<view class="layer attr-content" @click.stop="stopPrevent">
-				<view class="a-t">
-					<image :src="sku.imgUrl"></image>
-					<view class="right">
-						<text class="price">¥{{ sku.price }}</text>
-						<text class="stock">库存：{{ sku.stock }}件</text>
-						<view class="selected">
-							已选：
-							<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
+				<div class='sku-detail'>
+					<view class="a-t">
+						<image :src="sku.imgUrl"></image>
+						<view class="right">
+							<text class="price">¥{{ sku.price }}</text>
+							<text class="stock">库存：{{ sku.stock }}件</text>
+							<view class="selected">
+								已选：
+								<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
+							</view>
 						</view>
 					</view>
-				</view>
-				<view v-for="(item, index) in specList" :key="index" class="attr-list">
-					<text>{{ item.goodsPropertyParamName }}</text>
-					<view class="item-list">
-						<text
-							v-for="(childItem, childIndex) in specChildList"
-							v-if="childItem.pid === item.id"
-							:key="childIndex"
-							class="tit"
-							:class="{ selected: childItem.selected }"
-							@click="selectSpec(childIndex, childItem.pid)"
-						>
-							{{ childItem.name }}
-						</text>
+					<view v-for="(item, index) in specList" :key="index" class="attr-list">
+						<text>{{ item.goodsPropertyParamName }}</text>
+						<view class="item-list">
+							<text
+								v-for="(childItem, childIndex) in specChildList"
+								v-if="childItem.pid === item.id"
+								:key="childIndex"
+								class="tit"
+								:class="{ selected: childItem.selected }"
+								@click="selectSpec(childIndex, childItem.pid)"
+							>
+								{{ childItem.name }}
+							</text>
+						</view>
 					</view>
+				</div>
+				<view class="buyBtn" @click.stop="toBuy">
+					<button class="cu-btn bg-red lg">确定</button>
 				</view>
 			</view>
 		</view>
@@ -206,14 +212,8 @@ export default {
 		this.agentGoodsId = ops.agentGoodsId
 		this.userType = ops.userType
 		this.activeId = ops.activeId
-		if ( ops.shareClientId == undefined) {
-			this.shareClientId = '-1'
-		}else{
-			this.shareClientId = ops.shareClientId
-		}
-		console.log(ops)
-		console.log(this.shareClientId)
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
+		this.shareClientId = ops.shareClientId
 	},
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
@@ -235,8 +235,12 @@ export default {
 				//赋值默认商品价格，库存和图片
 				this.sku.price = this.skuList[0].price
 				this.sku.stock = this.skuList[0].stock
-				if (this.skuList[0].photos[0]) {
-					this.sku.imgUrl = this.skuList[0].photos[0].url
+				try{
+					if (this.skuList[0].photos[0]) {
+						this.sku.imgUrl = this.skuList[0].photos[0].url
+					}
+				}catch(e){
+					console.log('sku图片出错')
 				}
 				this.goodsSkuId = this.skuList[0].id
 				//遍历商品数据展示规格
@@ -355,13 +359,16 @@ export default {
 				}
 				specArray.join(',')
 				for (let data in this.skuList) {
-					
 					var skuValue =  this.skuList[data].skuValue.split(',').sort().toString()
 					if (specArray.sort().toString() === skuValue) {
+						this.goodsSkuId = this.skuList[data].id
 						this.sku.stock = this.skuList[data].stock
 						this.sku.price = this.skuList[data].price
-						this.sku.imgUrl = this.skuList[data].photos[0].url
-						this.goodsSkuId = this.skuList[data].id
+						try{
+							this.sku.imgUrl = this.skuList[data].photos[0].url
+						}catch(e){
+							console.log('sku图片出错')
+						}
 						break;
 					}
 				}
@@ -369,6 +376,17 @@ export default {
 		},
 		share() { //分享显示弹窗
 			this.$refs.share.toggleMask();
+		},
+		toApply () {
+			uni.showModal({
+				title: '申请团长',
+				content: '请联系客服',
+				showCancel: false,
+				cancelText: '取消',
+				confirmText: '确定',
+				success: res => {
+				},
+			});
 		},
 		async shareSave () { //分享调用接口
 			uni.showLoading({
@@ -662,7 +680,10 @@ page {
 
 /* 规格选择弹窗 */
 .attr-content {
-	padding: 10upx 30upx;
+	position: relative;
+	.sku-detail {
+	  padding: 0 40rpx 100rpx 40rpx;
+	}
 	.a-t {
 		display: flex;
 		image {
@@ -718,6 +739,14 @@ page {
 		.selected {
 			background: #fbebee;
 			color: $uni-color-primary;
+		}
+	}
+	.buyBtn {
+		width: 100%;
+		position: absolute;
+		bottom: 0;
+		.cu-btn {
+			width: 100%;
 		}
 	}
 }

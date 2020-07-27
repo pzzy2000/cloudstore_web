@@ -56,7 +56,7 @@
 			"style": { //我的收益
 				"navigationBarTitleText": "我的收益",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/client/cart/index",
@@ -112,15 +112,17 @@
 			"style": { //用户 首页
 				"navigationBarTitleText": "商品分类",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 		 { 
 			"path": "pages/agent/home/index",
 			"style": { //用户 首页
-				"navigationBarTitleText": "我的代理",
+				"navigationBarTitleText": "我的小店",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor":"#18b6ff",
+				"navigationBarTextStyle":"#ffffff"  //状态栏字体颜色
 			}
 		}, 
 		{
@@ -128,7 +130,7 @@
 			"style": { //用户 首页
 				"navigationBarTitleText": "我的收益",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		}, 
 		{
@@ -152,7 +154,7 @@
 			"style": { //代理商代理商品列表
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -205,6 +207,22 @@
         }
         ,{
             "path" : "pages/client/info/applyAgent",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+        }
+        ,{
+            "path" : "pages/client/recommend/agentGoodsList/agentGoodsList",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+        }
+        ,{
+            "path" : "pages/client/public/goodDetail",
             "style" : {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",

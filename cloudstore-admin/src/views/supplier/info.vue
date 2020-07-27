@@ -5,7 +5,7 @@
         <el-divider content-position="left"><i class="el-icon-search"></i> 供应商信息</el-divider>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="blicense" ref="blicense" :rules="rules" size="small" label-width="130px">
+        <el-form :inline="true" :model="blicense" ref="blicenseOne" :rules="rules" size="small" label-width="130px">
           <el-form-item label="供应商名字：" prop="supplierName">
             <el-input-dispatcher style="width: 580px" v-model="blicense.supplierName" placeholder="供应商名字"></el-input-dispatcher>
           </el-form-item>
@@ -26,7 +26,7 @@
     <el-card class="filter-container" shadow="never">
       <div style="margin-top: 15px">
         <el-divider content-position="left"><i class="el-icon-search"></i> 营业执照</el-divider>
-        <el-form :inline="true" :model="blicense" ref="blicense" :rules="rules" size="small" label-width="130px">
+        <el-form :inline="true" :model="blicense" ref="blicenseTwo" :rules="rules" size="small" label-width="130px">
           <el-form-item label="执照名称：" prop="licenseName">
             <el-input-dispatcher style="width: 214px" v-model="blicense.licenseName" placeholder="执照名称"></el-input-dispatcher>
           </el-form-item>
@@ -70,7 +70,7 @@
           <br/>
           <el-form-item label="证件照片：" prop="cardPhoto">
             <div v-if="rwDispatcherState =='read'">
-              <el-image v-for=" (item,index) in cardPhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;" v-model="blicense.cardPhoto">
+              <el-image v-for=" (item,index) in cardPhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;" v-model="blicense.cardPhoto" @dblclick="preview(item.url)">
                  <div slot="placeholder" class="image-slot">
                    加载中<span class="dot">...</span>
                  </div>
@@ -83,7 +83,7 @@
           <br />
           <el-form-item label="营业执照照片：" prop="licensePhoto">
           <div v-if="rwDispatcherState =='read'">
-            <el-image  v-for=" (item,index) in licensePhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;" v-model="blicense.licensePhoto">
+            <el-image  v-for=" (item,index) in licensePhotos" :src="item.url"  :key='index'  style="width: 150px; height: 150px;margin-right: 20px;" v-model="blicense.licensePhoto" @dblclick="preview(item.url)">
                <div slot="placeholder" class="image-slot">
                  加载中<span class="dot">...</span>
                </div>
@@ -103,28 +103,29 @@
             size="small" v-if="isshow">
             取消
           </el-button>
-          <el-button style="margin-bottom: 10px; margin-right: 20px;" :style="{ display: shownUpdateButton}"
-            @click="savebaseinfo('blicense')" type="primary" size="small" v-if="isshow">
+          <el-button style="margin-bottom: 10px" :style="{ display: shownUpdateButton}"
+            @click="savebaseinfo('blicenseOne', 'blicenseTwo')" type="primary" size="small" v-if="isshow">
             提交
           </el-button>
           <el-button @click="backPage" size="small">返回</el-button>
         </div>
       </div>
     </el-card>
+    <el-image-viewer v-if="showViewer" :on-close="closeViewer" :url-list="srcList"/>
   </div>
-
 </template>
 
 <script>
   import localmultiUpload from '@/components/Upload/localmultiUpload';
   import { searchSupplierDetail,saveSupplierInfo } from '@/api/supplier' ;
-
+  import ElImageViewer from "element-ui/packages/image/src/image-viewer";
   import{photoUrl} from '@/api/iunits';
 
   export default {
     name: "supplierBaseinfo",
     components: {
-      localmultiUpload
+      localmultiUpload,
+      ElImageViewer
     },
     provide() {
       return {
@@ -294,7 +295,9 @@
         shownUpdateButton: "none",
         shownUpdateSubelButton: "",
         supplierId: typeof(this.$route.query.supplierId) == 'undefined' ? null : this.$route.query.supplierId,
-        isshow: false
+        isshow: false,
+        showViewer: false,
+        srcList: []
       }
     },
     mounted() {
@@ -323,9 +326,14 @@
           this.shownUpdateSubelButton = ""
           this.rwDispatcherState = "read" //write  read
         }
-
       },
-
+      preview(src) {
+        this.showViewer = true;
+        this.srcList[0] = src;
+      },
+      closeViewer() {
+        this.showViewer = false
+      },
       async loadInfo() {
         await searchSupplierDetail({
           supplierId: this.supplierId
@@ -353,8 +361,7 @@
         });
       },
 
-      async savebaseinfo(formName) {
-        console.log(this.cardPhotos);
+      async savebaseinfo(formA, formB) {
         let  picId=[];
         for(let  i=0; i<this.cardPhotos.length ; i++){
           let  x = this.cardPhotos[i];
@@ -367,40 +374,87 @@
           licensePhotoId.push(this.licensePhotos[i].uid);
         }
         this.blicense.licensePhoto = licensePhotoId;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$confirm('是否提交数据', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-                saveSupplierInfo(this.baseinfo,this.blicense).then(response=>{
-                  this.cardPhotos =response.result.result.supplierMainInfo.cardPhotos;
-                  this.rwDispatcherState="read";
-                  this.$message({
-                    message: '修改成功',
-                    type: 'success',
-                    duration: 1000
-                  });
-                  this.shownUpdateButton = "none"
-                  this.shownUpdateSubelButton = ""
-                  this.rwDispatcherState = "read" //write  read
-                  // this.$router.go(0)
-                  this.$forceUpdate();
-                });
-            });
-          } else {
-            this.$message({
-              message: '验证失败',
-              type: 'error',
-              duration: 1000
-            });
+        // let formArr=['formA','formB'];//要校验的表单
+        // let resultArr=[];
+        // let _this = this;
+        // function checkForm(formName) { //封装验证表单的函数
+        //   let result = new Promise(function(resolve, reject) {
+        //     _this.$refs[formName].validate((valid) => {
+        //       if (valid) {
+        //         resolve();
+        //       } else {
+        //         reject();
+        //         console.log("++++++++++++++")
+        //         return false;
+        //       }
+        //     })
+        //   })
+        //   resultArr.push(result) //push 得到promise的结果
+        // }
+        // formArr.forEach(item => { //根据表单的ref校验
+        //   checkForm(item)
+        // })
+        let valids = false;
+        this.$refs[formA].validate((valid) => {
+          if (valid){
+            valids = true;
+          }else{
+            valids = false;
             return false;
           }
-        });
+        })
+        this.$refs[formB].validate((valid) => {
+          if (valid){
+            valids = true;
+          }else{
+            valids = false;
+            return false;
+          }
+        })
+        if (valids) {
+          this.$confirm('是否提交数据', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            saveSupplierInfo(this.baseinfo,this.blicense).then(response=>{
+              this.cardPhotos =response.result.result.supplierMainInfo.cardPhotos;
+              this.rwDispatcherState="read";
+              this.$message({
+                message: '修改成功',
+                type: 'success',
+                duration: 1000
+              });
+              this.shownUpdateButton = "none"
+              this.shownUpdateSubelButton = ""
+              this.rwDispatcherState = "read" //write  read
+              // this.$router.go(0)
+              this.$forceUpdate();
+            });
+          });
+        }else{
+          return false;
+        }
+        // Promise.all(resultArr).then(function() {
+        //
+        // }).catch(function() {
+        //   return;
+        // });
+        // this.$refs[formName].validate((valid) => {
+        //   if (valid) {
+        //
+        //   } else {
+        //     this.$message({
+        //       message: '验证失败',
+        //       type: 'error',
+        //       duration: 1000
+        //     });
+        //     return false;
+        //   }
+        // });
       },
       backPage() {
-        this.$router.go(-1);
+        this.$router.back();
       },
       handlePictureCardPreview(){
 

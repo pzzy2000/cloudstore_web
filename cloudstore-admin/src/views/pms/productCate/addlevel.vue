@@ -84,7 +84,7 @@
                   type: 'success',
                   duration: 800
                 });
-                this.$router.go(-1);
+                this.$router.back();
                 this.loadingbut = false;
                 this.subbtntext = '添加';
                 this.disabled = false;
@@ -102,7 +102,7 @@
         });
       },
       backLastpage() {
-        this.$router.go(-1);
+        this.$router.back();
       }
     }
   }

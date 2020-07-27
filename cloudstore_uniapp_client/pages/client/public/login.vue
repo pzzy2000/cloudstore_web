@@ -1,11 +1,10 @@
 <template>
 	<view class="container">
-		<view class="left-bottom-sign"></view>
-		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
+		<!-- <view class="left-bottom-sign"></view> -->
+		<!-- <view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view> -->
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign">{{ sysInfo.name }}LOGIN</view>
 			<view class="welcome">用户登录</view>
 			<view class="input-content">
 				<view class="input-item">
@@ -49,7 +48,7 @@
 		data() {
 			return {
 				access: '',
-				password: '123456',
+				password: '',
 				sysInfo: '',
 				logining: false,
 				wxloginCode: '', //获取code
@@ -179,7 +178,8 @@
 								name: res.data.result.result.name,
 								url: res.data.result.result.url,
 								userType: res.data.result.result.userType,
-								relationId: res.data.result.result.relationId
+								relationId: res.data.result.result.relationId,
+								wxPic: res.data.result.result.wxPic
 							}
 							uni.setStorageSync('userInfo', userInfo)
 							uni.setStorageSync('token', res.data.result.result.token)
@@ -268,6 +268,7 @@
 		z-index: 90;
 		background: #fff;
 		padding-bottom: 40upx;
+		margin-top: 150rpx;
 	}
 
 	.back-btn {
@@ -329,7 +330,7 @@
 	.welcome {
 		position: relative;
 		left: 50upx;
-		top: -90upx;
+		top: -40upx;
 		font-size: 46upx;
 		color: #555;
 		text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
@@ -416,9 +417,9 @@
 	}
 
 	.register-section {
-		position: absolute;
-		left: 0;
-		bottom: 100upx;
+		// position: absolute;
+		// left: 0;
+		// bottom: 100upx;
 		width: 100%;
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;

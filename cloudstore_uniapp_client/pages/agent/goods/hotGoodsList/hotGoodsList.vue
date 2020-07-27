@@ -12,7 +12,7 @@
 				<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
 					<view class="detail-title">
-						<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
+						<view class="clamp title">{{ goods.goodsPicesBean.goodsName }}</view>
 						<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
 					</view>
 					<view class="detail-price">
@@ -37,7 +37,7 @@
 		</view>
 		<uni-popup ref="popup" type="bottom">
 			<tui-cascade-selection
-				height="280px"
+				height="350px"
 				activeColor="#EB0909"
 				lineColor="#EB0909"
 				checkMarkColor="#EB0909"
@@ -219,17 +219,16 @@
 				this.categoryOneId = '';
 				this.categoryTwoId = '';
 				this.categoryThreeId = '';
-				this.filterIndex = 1;
 				this.pageNum = '1';
 				this.loadData();
 				this.toggleCateMask('hide');
 			},
 			tabClick(index) { //点击tab列表
 				if (index === 0) {
-					
+					this.filterIndex = 0
 				}
 				if (index === 1) {
-					
+					this.filterIndex = 1
 				}
 				if (index === 2) {
 					this.filterIndex = 2
@@ -250,6 +249,7 @@
 			},
 			navToDetailPage(item) { //去商品详情
 				//测试数据没有写id，用title代替
+				console.log(item)
 				let goodsId = item.goodsId;
 				let activitId = item.activityId;
 				let agentGoodsId = item.id;
@@ -265,7 +265,6 @@
 <style lang="scss">
 	page,
 	.content {
-		background: #fff;
 	}
 
 	.content {
@@ -369,7 +368,7 @@
 
 		.cate-content {
 			padding-top: 50rpx;
-			width: 630upx;
+			width: 45%;
 			height: 100%;
 			background: #fff;
 			float: right;
@@ -406,7 +405,7 @@
 		}
 
 		.two {
-			height: 80upx;
+			height: 120upx;
 			color: #303133;
 			font-size: 30upx;
 			background: #f8f8f8;
@@ -421,7 +420,8 @@
 	.goods-list {
 		display: flex;
 		flex-wrap: wrap;
-		margin: 40upx 30upx;
+		width: 94%;
+		margin: 0 auto;
 		padding-bottom: 40upx;
 		.goods-item {
 			display: flex;
@@ -429,11 +429,13 @@
 			flex-flow: nowrap;
 			width: 100%;
 			height: 200upx;
-			margin-bottom: 20upx;
+			margin-bottom: 10upx;
+			box-shadow: 0 0 4upx rgba(0, 0, 0, 0.1);
+			padding: 10upx;
+			background: #fff;
 		}
 		.image-wrapper {
 			width: 200upx;
-			height:200upx;
 			border-radius: 3upx;
 			overflow: hidden;
 			image {
@@ -448,9 +450,12 @@
 			flex-wrap: wrap;
 			width: 65%;
 			.detail-title {
-				font-size: 16px;
+				font-size: 16upx;
 				color: #000;
 				width: 100%;
+				.title {
+					font-size: 24upx;
+				}
 				.number {
 					color: #999;
 					font-size: 26upx;

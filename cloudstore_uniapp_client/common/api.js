@@ -25,18 +25,22 @@ export default {
 		reg: {
 			auth: 'sys/manager/platform/weixin/auth',  //传code
 			getPhone: 'sys/manager/platform/weixin/getPhone', // 传手机号加密信息
-			saveClientInfo: 'sys/manager/platform/weixin/saveClientInfo' //再传一系列信息
+			saveClientInfo: 'sys/manager/platform/weixin/saveClientInfo' ,//再传一系列信息
+			sendCode: '/sys/manager/platform/register/client/send' //获取手机验证码
 		},
 		info:{
 			searchInfo:"client/app/searchClientInfo" //查询当前登录信息
 		},
 		recommend: {
-			newShopinfoByOrder: 'agent/goods/app/newShopinfoByOrder',
-			list: 'agent/goods/app/list'
+			newShopinfoByOrder: 'agent/goods/app/newShopinfoByOrder', //查询客户端最新买的商品的商店信息
+			list: 'agent/goods/app/list',
+			listAactivity: 'agent/goods/app/listAactivity',
+			listbyagentid: 'agent/goods/app/listbyagentid'
 		},
 		goods:{
 			buy:"agent/goods/app/buyGoodsDetail",
-			detail:"agent/goods/app/searchGoodsDetail"
+			detail:"agent/goods/app/searchGoodsDetail", 
+			searchMyAgentGoods: 'agent/goods/app/searchMyAgentGoods'
 		},
 		address:{
 			list:'app/client/address/searchClientAddress',
@@ -110,10 +114,13 @@ export default {
 		},
 		order: {
 			getAgentOrder: 'order/app/getAgentOrder',
-			getClientOrder:　'order/app/getClientOrder'
+			getClientOrder:　'order/app/getClientOrder',
+			getAgentOrderCount: 'order/app/getAgentOrderCount' //我的小店的订单数量，代理商品
+		},
+		agentInfo: {
+			getAgentShop: 'agent/goods/app/getAgentShop'
 		}
 	},
-	
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
 		if (load) {
 			uni.showLoading({

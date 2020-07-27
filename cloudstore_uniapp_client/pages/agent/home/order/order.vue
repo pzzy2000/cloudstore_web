@@ -6,7 +6,7 @@
 				v-for="(item, index) in navList" :key="index" 
 				class="nav-item" 
 				:class="{current: tabCurrentIndex === index}"
-				@click="tabClick(index)"
+				@click="tabClick(item)"
 			>
 				{{item.text}}
 			</view>
@@ -23,7 +23,7 @@
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
 					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
-							<text class="time">{{item.orderId}}</text>
+							<text class="time">订单号: {{item.orderId}}</text>
 							<template>
 								<text class="state" v-if="item.orderBean.orderStatus === 'wait'">待支付</text>
 								<text class="state" v-else-if="item.orderBean.orderStatus === 'pay'">支付待确认</text>
@@ -40,8 +40,11 @@
 							<image class="goods-img" :src="item.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
 								<text class="title clamp">{{item.goodsPicesBean.goodsName}}</text>
-								<text class="attr-box">{{item.price}}  x {{item.quantity}}</text>
-								<text class="price">{{item.payPrice}}</text>
+								<text class="attr-box">{{item.activityBean.name}}</text>
+								<view class="price">
+									<text>总价: ￥{{item.payPrice}}</text>
+									<text>订单时间:{{item.orderBean.createTime}}</text>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -67,35 +70,41 @@
 		data() {
 			return {
 				tabCurrentIndex: 0,
+				orderStatus: '',
 				orderList: [],
 				pageNum: 1,
 				navList: [{
 						state: 0,
 						text: '全部',
+						type: '',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 1,
 						text: '已支付',
+						type: 'payed',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 2,
 						text: '待配送',
+						type: 'peisong',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 3,
 						text: '已完成',
+						type: 'complete',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 4,
 						text: '其他',
+						type: 'more',
 						loadingType: 'more',
 						orderList: []
 					}
@@ -120,6 +129,7 @@
 			this.getOrderData(0)
 		},
 		onPullDownRefresh() { //下拉刷新
+			this.orderList.length = 0
 			this.pageNum = 1
 			this.getOrderData(this.tabCurrentIndex);
 		},
@@ -134,6 +144,7 @@
 					mask: false
 				});
 				let parmas = {
+					orderStatus: this.orderStatus,
 					pageNum: this.pageNum,
 					pageSize: 10
 				}
@@ -145,7 +156,9 @@
 					}else{
 						switch (tabIndex) {
 							case 0:
-							this.orderList = tmpData
+								for (let tmp in tmpData) {
+									this.orderList.push(tmpData[tmp])
+								}
 							break;
 							case 1:
 								for (let tmp in tmpData) {
@@ -173,15 +186,21 @@
 							break;
 						}
 					}
+					console.log(this.orderList)
 					uni.stopPullDownRefresh();
 					uni.hideLoading()
 				}
 			},
 			//顶部tab点击
-			tabClick(index){
+			tabClick(item){
+				if (item.state === 4) {
+					this.$api.msg('敬请期待')
+					return false;
+				}
+				this.orderStatus = item.type
 				this.pageNum = 1
 				this.orderList =[]
-				this.tabCurrentIndex = index;
+				this.tabCurrentIndex = item.state;
 				this.getOrderData(this.tabCurrentIndex)
 			},
 			toOrder (item) {
@@ -319,16 +338,19 @@
 				.attr-box{
 					font-size: $font-sm + 2upx;
 					color: $font-color-light;
-					padding: 10upx 12upx;
+					padding: 10rpx 30rpx;
+					height: 45%;
 				}
 				.price{
-					font-size: $font-base + 2upx;
+					font-size: 24upx;
 					color: $font-color-dark;
-					&:before{
-						content: '￥';
-						font-size: $font-sm;
-						margin: 0 2upx 0 8upx;
-					}
+					display: flex;
+					justify-content: space-between;
+				// 	&:before{
+				// 		content: '￥';
+				// 		font-size: $font-sm;
+				// 		margin: 0 2upx 0 8upx;
+				// 	}
 				}
 			}
 		}

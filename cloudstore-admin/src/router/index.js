@@ -84,7 +84,7 @@ export const asyncRouterMap = [
 		       path: 'list',
 		       name: 'activity_list',
 		       component: () => import('@/views/activity/list'),
-		       meta: {title: '活动列表', icon: 'product-list'}
+		       meta: {title: '活动列表', icon: 'product-list', keepAlive: true}
 		     },{
 		       path: 'addact',
 		       name: 'add_activity',
@@ -115,13 +115,13 @@ export const asyncRouterMap = [
        path: 'list',
        name: 'supplier_list',
        component: () => import('@/views/supplier/list'),
-       meta: {title: '供应商列表', icon: 'product-list'}
+       meta: {title: '供应商列表', icon: 'product-list', keepAlive: true}
      },
      {
        path: 'edit',
        name: 'supplier_edit',
        component: () => import('@/views/supplier/info'),
-       meta: {title: '编辑供应商', icon: 'product-list'},
+       meta: {title: '创建店铺', icon: 'product-list'},
        // hidden: true
      },
      {
@@ -142,7 +142,7 @@ export const asyncRouterMap = [
          path: 'list',
          name: 'goods_list',
          component: () => import('@/views/pms/product/list'),
-         meta: {title: '商品列表', icon: 'product-list'}
+         meta: {title: '商品列表', icon: 'product-list', keepAlive: true}
        },
        {
         path: 'add',
@@ -180,7 +180,7 @@ export const asyncRouterMap = [
            path: 'category/list',
            name: 'category_list',
            component: () => import('@/views/pms/productCate/index'),
-           meta: {title: '商品分类', icon: 'product-list'}
+           meta: {title: '商品分类', icon: 'product-list', keepAlive: true}
          },
          // {
          //   path: 'category',
@@ -199,7 +199,7 @@ export const asyncRouterMap = [
          path: 'property/list',
          name: 'property_list',
          component: () => import('@/views/pms/productAttr/index'),
-         meta: {title: '商品规格参数', icon: 'product-list'}
+         meta: {title: '商品规格参数', icon: 'product-list', keepAlive: true}
        },{
          path: 'property/add',
          name: 'property_add',
@@ -216,7 +216,7 @@ export const asyncRouterMap = [
          path: 'property/specs/list',
          name: 'goods_specs_list',
          component: () => import('@/views/pms/productAttr/productAttrList'),
-         meta: {title: '规格列表'},
+         meta: {title: '规格列表', keepAlive: true},
          hidden: true
        }, {
          path: 'property/specs/add',
@@ -234,7 +234,7 @@ export const asyncRouterMap = [
          path: 'property/param/list',
          name: 'goods_param_list',
          component: () => import('@/views/pms/productAttr/productAttrList'),
-         meta: {title: '参数列表'},
+         meta: {title: '参数列表', keepAlive: true},
          hidden: true
        }, {
          path: 'property/param/add',
@@ -260,20 +260,20 @@ export const asyncRouterMap = [
         path: 'index',
         name: 'broke_rage',
         component: () => import('@/views/brokerage/index'),
-        meta: {title: '佣金活动列表', icon: 'product-list'}
+        meta: {title: '佣金活动列表', icon: 'product-list', keepAlive: true}
       },
       {
         path: 'brokegoods',
         name: 'broke_goods',
         component: () => import('@/views/brokerage/brokegoods'),
-        meta: {title: '佣金商品', icon: 'product-list'},
+        meta: {title: '佣金商品', icon: 'product-list', keepAlive: true},
         hidden: true
       },
       {
         path: 'brageinfo',
         name: 'brage_info',
         component: () => import('@/views/brokerage/brageInfo'),
-        meta: {title: '佣金sku', icon: 'product-list'},
+        meta: {title: '佣金sku', icon: 'product-list', keepAlive: true},
         hidden: true
       },
       {
@@ -286,7 +286,7 @@ export const asyncRouterMap = [
         path: 'withdrawbrage',
         name: 'withdraw_brage',
         component: () => import('@/views/brokerage/withdrawBrage'),
-        meta: {title: '客户佣金列表', icon: 'product-list'}
+        meta: {title: '客户佣金列表', icon: 'product-list', keepAlive: true}
       },
       {
         path: 'withdrawinfo',
@@ -306,7 +306,7 @@ export const asyncRouterMap = [
          path: 'list',
         name: 'agent_list',
         component: () => import('@/views/agent/list'),
-        meta: {title: '代理列表', icon: 'product-list'}
+        meta: {title: '代理列表', icon: 'product-list', keepAlive: true}
      },{
         path: 'info',
         name: 'agent_info',
@@ -539,7 +539,7 @@ export const asyncRouterMap = [
 ]
 
 export default new Router({
-  mode: 'history', //后端支持可开
+  // mode: 'history', //后端支持可开
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition

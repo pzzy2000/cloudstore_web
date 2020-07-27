@@ -21,7 +21,31 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="活动名称：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户名字"></el-input>
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="开始时间：">
+            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="创建时间：">
+            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="活动状态：">
+            <el-select v-model="listQuery.status" placeholder="请选择是否启用" clearable>
+              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否参加佣金：">
+            <el-select v-model="listQuery.addProfit" placeholder="请选择是否参加佣金" clearable>
+              <el-option v-for="item in brokerageList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否删除：">
+            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
+              <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -41,15 +65,27 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productTable"
-                :data="list"
-                style="width:100%"
-                @selection-change="handleSelectionChange"
-                v-loading="listLoading"
-                border>
+        :data="list"
+        style="width:100%"
+        @selection-change="handleSelectionChange"
+        v-loading="listLoading"
+        border>
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
         <el-table-column label="活动名称" align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
          </el-table-column>
+        <el-table-column label="开始时间" align="center">
+          <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="结束时间" align="center">
+          <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center">
+          <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="是否参加佣金" align="center">
+          <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
+        </el-table-column>
         <el-table-column label="是否显示在首页" align="center">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">
@@ -68,24 +104,12 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="活动状态" align="center">
-        </el-table-column>
-        <el-table-column label="开始时间" align="center">
-          <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
-        </el-table-column>
-        <el-table-column label="结束时间" align="center">
-          <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
-        </el-table-column>
-        <el-table-column label="创建时间" align="center">
-          <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
-        </el-table-column>
-        <el-table-column label="是否参加佣金" align="center">
-          <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
+        <el-table-column label="是否删除" align="center" :formatter="changeStatus">
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow">删除</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow" v-if="scope.row.isDelete == 1 ? false : true">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -122,15 +146,18 @@
       return {
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
-        list: null,
+        list: [],
         total: 0,
         listLoading: true,
         multipleSelection: [],
-        isshow: false
+        isshow: false,
+        statusList: [{label: "已开启", value: '1'}, {label: "未开启", value: '0'}],
+        brokerageList: [{label: "已参加", value: '1'}, {label: "未参加", value: '0'}],
+        delList: [{label: "已删除", value: '1'}, {label: "正常", value: '0'}]
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
       switch (localStorage.getItem('userType')){
         case 'platform': this.isshow = true;
           break;
@@ -146,6 +173,17 @@
       //     this.listQuery.productCategoryId = null;
       //   }
       // }
+      // isDelete() {
+      //   console.log(this.isDelete)
+      // }
+    },
+    // computed: {
+    //   isDelete() {
+    //     return this.list[0].isDelete;
+    //   }
+    // },
+    activated() {
+      this.getList(1);
     },
     filters: {
       changeMsg(data) {
@@ -162,18 +200,43 @@
       }
     },
     methods: {
-      getList() {
+      getList(idx) {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
           console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          if (idx == 0) {
+            if (response.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         });
       },
       handleSearchList() {
+        if (this.listQuery.isDelete == '') {
+          delete this.listQuery.isDelete;
+        }
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
       },
       changeSwitch(row){
         console.log(row);
@@ -191,45 +254,48 @@
                 message: '首页不显示了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }else{
               this.$message({
                 type: 'success',
                 message: '显示在首页了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           }else{
-            this.$message({
-              type: 'warning',
-              message: '操作不成功，请联系管理员！',
-              duration: 800
-            })
             setTimeout(function(){
-              row.status =0;
+              row.status = 0;
             },500);
-            this.getList();
+            this.getList(1);
           }
         })
+      },
+      changeStatus(row) {
+        switch (row.isDelete) {
+          case 0: return "正常";
+            break;
+          case 1: return "已删除";
+            break;
+          default: return "数据读取错误";
+            break;
+        }
       },
       handleSelectionChange(val){
         this.multipleSelection = val;
       },
-
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
-
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
-        this.getList();
+        this.getList(2);
       },
       addactivity() {
         this.$router.push({
@@ -257,7 +323,7 @@
                 type: 'success',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           })
         })
@@ -272,14 +338,14 @@
                 message: '活动没启用！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }else{
               this.$message({
                 type: 'success',
                 message: '活动启用了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           }else{
             // this.$message({
@@ -290,7 +356,7 @@
             setTimeout(function(){
               row.status =0;
             },500);
-            this.getList();
+            this.getList(1);
           }
         })
       },
@@ -309,14 +375,14 @@
                 message: '导航栏不显示了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }else{
               this.$message({
                 type: 'success',
                 message: '显示在导航栏了！',
                 duration: 800
               })
-              this.getList();
+              this.getList(1);
             }
           }else{
             // this.$message({
@@ -327,7 +393,7 @@
             setTimeout(function(){
               row.navigateIndex =0;
             },500);
-            this.getList();
+            this.getList(1);
           }
         })
       }

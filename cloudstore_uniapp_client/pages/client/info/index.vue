@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="user-section">
-			<image class="bg" src="/static/user-bg.jpg"></image>
+			<!-- <image class="bg" src="/static/user-bg.jpg"></image> -->
 			<view class="user-info-box">
 				<view class="member-top-c">
 					<template>
@@ -9,11 +9,9 @@
 							<image class="portrait" mode="aspectFill" :src="user.url" @click="toLogin">{{user.name}}</image>
 						</view>
 					</template>
-					
 				</view>
 			</view>
 			<view class="vip-card-box">
-				<image class="card-bg" src="/static/vip-card-bg.png" mode=""></image>
 				<view class="b-btn">普通等级</view>
 				<view class="tit">
 					<text class="yticon icon-iLinkapp-">普通会员</text>
@@ -57,201 +55,228 @@
 				</view>
 			</view>
 			<!-- 浏览历史 -->
-			<view class="history-section icon">
-				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="toapplyAgent('/pages/client/info/address')"></list-cell>
-				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="toapplyAgent"></list-cell>
-				<!-- <list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="toapplyAgent"></list-cell> -->
-				<list-cell icon="icon-pinglun-copy"  v-if="user.relationId > 0" iconColor="#54b4ef" title="我的代理" @eventClick="toAgent"></list-cell>
-				<list-cell icon="icon-pinglun-copy" v-else iconColor="#54b4ef" title="申请代理" @eventClick="toapplyAgent('/pages/client/info/applyAgent')"></list-cell>
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="敬请期待" border="" @eventClick="toapplyAgent"></list-cell>
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="系统退出" border="" @eventClick="navTo('/pages/client/public/login','exit')"></list-cell>
+			<view class="cu-list menu sm-border margin-top">
+				<view class="cu-item arrow" @click="toapplyAgent('/pages/client/info/address')">
+					<view class="content">
+						<text class="cuIcon-locationfill text-cyan"></text>
+						<text class="text-block">地址管理</text>
+					</view>
+				</view>
+				<view class="cu-item arrow" @click="toapplyAgent(false)">
+					<view class="content">
+						<text class="cuIcon-people text-pink"></text>
+						<text class="text-block">个人资料</text>
+					</view>
+				</view>
+				<view class="cu-item arrow"  @click="toAgent" v-if="user.relationId > 0">
+					<view class="content">
+						<text class="cuIcon-sponsor text-blue"></text>
+						<text class="text-block">我的代理</text>
+					</view>
+				</view>
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-else>
+					<view class="content">
+						<text class="cuIcon-sponsor text-blue"></text>
+						<text class="text-block">申请代理</text>
+					</view>
+				</view>
+				<view class="cu-item arrow">
+					<button class="cu-btn content" open-type="contact">
+						<text class="cuIcon-servicefill text-olive"></text>
+						<text class="text-block">联系客服</text>
+					</button>
+				</view>
+				<view class="cu-item arrow" @click="navTo('/pages/client/public/login','exit')">
+					<view class="content">
+						<text class="cuIcon-exit text-purple"></text>
+						<text class="text-block">退出</text>
+					</view>
+				</view>
 			</view>
 		</view>
 		<!-- <tabbar :role="'client'" :id="'cwd'"></tabbar> -->
 	</view>
 </template>
 <script>
-
-import Api from '@/common/api';
-import listCell from '@/components/mix-list-cell';
-// import neilModal from '@/components/neil-modal.vue';
-import { mapState,mapMutations } from 'vuex';
+	import Api from '@/common/api';
+	// import listCell from '@/components/mix-list-cell';
+	// import neilModal from '@/components/neil-modal.vue';
+	import { mapState,mapMutations } from 'vuex';
 	let startY = 0, moveY = 0, pageAtTop = true;
 	export default {
-	components: {
-     listCell
-	},
-	data() {
-		return {
-			// inputShow: false,
-			feild: undefined,
-			inputContent: '',
-			coverTransform: 'translateY(0px)',
-			coverTransition: '0s',
-			moving: false,
-			userDetailInfo: {
-				blance: 0,
-				integration: 0
-			},
-			user:{
-				relationId: '',
-				userType: '',
-				name: null || '获得用户信息错误',
-				url: '',
-				detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
-			}
-		};
-	},
-	onLoad() {
-		this.getData()
-	},
-	async onShow() {
-		this.getData()
-	},
-	// #ifndef MP
-	onNavigationBarButtonTap(e) {
-		const index = e.index;
-		if (index === 0) {
-			this.navTo('/pages/set/set');
-		} else if (index === 1) {
-			// #ifdef APP-PLUS
-			const pages = getCurrentPages();
-			const page = pages[pages.length - 1];
-			const currentWebview = page.$getAppWebview();
-			currentWebview.hideTitleNViewButtonRedDot({
-				index
-			});
-			// #endif
-			uni.navigateTo({
-				url: '../../pagesU/notice/notice'
-			});
-		}
-	},
-	// #endif
-
-	computed: {
-		...mapState(['hasLogin', 'userInfo']),
-	},
-	methods: {
-		...mapMutations(['logout']),
-		inputShowModal(feild) {
-			this.feild = feild;
-			this.inputShow = true;
-			this.inputContent = '';
+		components: {
 		},
-		cancel() {
-			this.inputShow = false;
-		},
-		
-		getData(){
-			this.getuserinfo();
-		},
-		// 获取微信用户信息
-		getuserinfo(){
-			let userInfo = uni.getStorageSync('userInfo');
-			if (userInfo) {
-				this.user.name = userInfo.name 
-				this.user.url = userInfo.url ;
-				this.user.relationId = userInfo.relationId
-				if (!userInfo.url) {
-					this.user.url = this.user.detailUrl
+		data() {
+			return {
+				// inputShow: false,
+				feild: undefined,
+				inputContent: '',
+				coverTransform: 'translateY(0px)',
+				coverTransition: '0s',
+				moving: false,
+				userDetailInfo: {
+					blance: 0,
+					integration: 0
+				},
+				user:{
+					relationId: '',
+					userType: '',
+					name: null || '获得用户信息错误',
+					url: '',
+					detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
 				}
-			}
+			};
 		},
-		
-		toNav(url){
-			uni.navigateTo({
-				url: url
-			});
+		onLoad() {
+			this.getData()
 		},
-		toUserInfo(){
-			uni.navigateTo({
-				url: '../../pagesU/user/profile'
-			});
+		async onShow() {
+			this.getData()
 		},
-		toAgent(){
-			uni.navigateTo({
-				url:"/pages/agent/home/index"
-			})
-		},
-		toapplyAgent(url){
-			if (url) {
-				uni.navigateTo({
-					url: url,
+		// #ifndef MP
+		onNavigationBarButtonTap(e) {
+			const index = e.index;
+			if (index === 0) {
+				this.navTo('/pages/set/set');
+			} else if (index === 1) {
+				// #ifdef APP-PLUS
+				const pages = getCurrentPages();
+				const page = pages[pages.length - 1];
+				const currentWebview = page.$getAppWebview();
+				currentWebview.hideTitleNViewButtonRedDot({
+					index
 				});
-			}else{
-				uni.showToast({
-					title: '敬请期待',
-					icon: 'none'
+				// #endif
+				uni.navigateTo({
+					url: '../../pagesU/notice/notice'
 				});
 			}
 		},
-		async toExit(){
-			let params ={logintype:'client'};
-			let data = await Api.apiCall('post', Api.client.login.logout, params, true, true);
-			if(data){
-			   	this.$api.msg("系统退出成功");
-				uni.navigateTo({
-					url:"/pages/client/public/login"
-				})
-			}
-		},
-		/**
-		 * 统一跳转接口,拦截未登录路由
-		 * navigator标签现在默认没有转场动画，所以用view
-		 */
-		navTo(url,type) {
-			if (type === 'exit') {
-				uni.clearStorage();
-				uni.navigateTo({
-					url: url
-				});
-			} else {
-				uni.navigateTo({
-					url: url
-				});
-			}
-		},
-		/**
-		 *  会员卡下拉和回弹
-		 *  1.关闭bounce避免ios端下拉冲突
-		 *  2.由于touchmove事件的缺陷（以前做小程序就遇到，比如20跳到40，h5反而好很多），下拉的时候会有掉帧的感觉
-		 *    transition设置0.1秒延迟，让css来过渡这段空窗期
-		 *  3.回弹效果可修改曲线值来调整效果，推荐一个好用的bezier生成工具 http://cubic-bezier.com/
-		 */
-		coverTouchstart(e) {
-			if (pageAtTop === false) {
-				return;
-			}
-			this.coverTransition = 'transform .1s linear';
-			startY = e.touches[0].clientY;
-		},
-		coverTouchmove(e) {
-			moveY = e.touches[0].clientY;
-			let moveDistance = moveY - startY;
-			if (moveDistance < 0) {
-				this.moving = false;
-				return;
-			}
-			this.moving = true;
-			if (moveDistance >= 80 && moveDistance < 100) {
-				moveDistance = 80;
-			}
+		// #endif
 
-			if (moveDistance > 0 && moveDistance <= 80) {
-				this.coverTransform = `translateY(${moveDistance}px)`;
-			}
+		computed: {
+			...mapState(['hasLogin', 'userInfo']),
 		},
-		coverTouchend() {
-			if (this.moving === false) {
-				return;
+		methods: {
+			...mapMutations(['logout']),
+			inputShowModal(feild) {
+				this.feild = feild;
+				this.inputShow = true;
+				this.inputContent = '';
+			},
+			cancel() {
+				this.inputShow = false;
+			},
+			
+			getData(){
+				this.getuserinfo();
+			},
+			// 获取微信用户信息
+			getuserinfo(){
+				let userInfo = uni.getStorageSync('userInfo');
+				if (userInfo) {
+					this.user.name = userInfo.name
+					this.user.url = userInfo.wxPic;
+					this.user.relationId = userInfo.relationId
+					if (!userInfo.wxPic) {
+						this.user.url = this.user.detailUrl
+					}
+				}
+			},
+			
+			toNav(url){
+				uni.navigateTo({
+					url: url
+				});
+			},
+			toUserInfo(){
+				uni.navigateTo({
+					url: '../../pagesU/user/profile'
+				});
+			},
+			toAgent(){
+				uni.navigateTo({
+					url:"/pages/agent/home/index"
+				})
+			},
+			toapplyAgent(url){
+				if (url) {
+					uni.navigateTo({
+						url: url,
+					});
+				}else{
+					uni.showToast({
+						title: '敬请期待',
+						icon: 'none'
+					});
+				}
+			},
+			async toExit(){
+				let params ={logintype:'client'};
+				let data = await Api.apiCall('post', Api.client.login.logout, params, true, true);
+				if(data){
+					this.$api.msg("系统退出成功");
+					uni.navigateTo({
+						url:"/pages/client/public/login"
+					})
+				}
+			},
+			/**
+			 * 统一跳转接口,拦截未登录路由
+			 * navigator标签现在默认没有转场动画，所以用view
+			 */
+			navTo(url,type) {
+				if (type === 'exit') {
+					uni.clearStorage();
+					uni.reLaunch({
+						url: url
+					});
+				} else {
+					uni.navigateTo({
+						url: url
+					});
+				}
+			},
+			/**
+			 *  会员卡下拉和回弹
+			 *  1.关闭bounce避免ios端下拉冲突
+			 *  2.由于touchmove事件的缺陷（以前做小程序就遇到，比如20跳到40，h5反而好很多），下拉的时候会有掉帧的感觉
+			 *    transition设置0.1秒延迟，让css来过渡这段空窗期
+			 *  3.回弹效果可修改曲线值来调整效果，推荐一个好用的bezier生成工具 http://cubic-bezier.com/
+			 */
+			coverTouchstart(e) {
+				if (pageAtTop === false) {
+					return;
+				}
+				this.coverTransition = 'transform .1s linear';
+				startY = e.touches[0].clientY;
+			},
+			coverTouchmove(e) {
+				moveY = e.touches[0].clientY;
+				let moveDistance = moveY - startY;
+				if (moveDistance < 0) {
+					this.moving = false;
+					return;
+				}
+				this.moving = true;
+				if (moveDistance >= 80 && moveDistance < 100) {
+					moveDistance = 80;
+				}
+
+				if (moveDistance > 0 && moveDistance <= 80) {
+					this.coverTransform = `translateY(${moveDistance}px)`;
+				}
+			},
+			coverTouchend() {
+				if (this.moving === false) {
+					return;
+				}
+				this.moving = false;
+				this.coverTransition = 'transform 0.3s cubic-bezier(.21,1.93,.53,.64)';
+				this.coverTransform = 'translateY(0px)';
 			}
-			this.moving = false;
-			this.coverTransition = 'transform 0.3s cubic-bezier(.21,1.93,.53,.64)';
-			this.coverTransform = 'translateY(0px)';
 		}
-	}
-};
+	};
 </script>
 <style lang="scss">
 @font-face {
@@ -295,6 +320,7 @@ page{
 	height: 520upx;
 	padding: 100upx 30upx 0;
 	position: relative;
+	background: #00a79d;
 	.bg {
 		position: absolute;
 		left: 0;
@@ -320,6 +346,7 @@ page{
 		height: 130upx;
 		border: 5upx solid #fff;
 		border-radius: 50%;
+		margin-right: 20rpx;
 	}
 	.username {
 		font-size: $font-lg + 6upx;
@@ -335,6 +362,9 @@ page{
 	border-radius: 25upx;
 	background: #ff7159;
 	font-size: 12px;
+}
+.cu-list.menu {
+	border-radius: 20upx;
 }
 .vip-card-box {
 	display: flex;

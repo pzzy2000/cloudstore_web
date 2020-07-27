@@ -39,17 +39,16 @@
             <span style="color: #ccc">格式要求：每张图片大小不超过1M</span>
           </el-form-item>
           <br />
-          <el-form-item label="退货规则：" prop="returnRuleId">
-            <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">
-
-            </el-select-dispatcher>
-          </el-form-item>
-          <br />
-          <el-form-item label="运费规则：" prop="freightRuleId">
-            <el-select-dispatcher v-model="baseinfo.freightRuleId" id="freightRuleId">
-            </el-select-dispatcher>
-          </el-form-item>
-          <br />
+<!--          <el-form-item label="退货规则：" prop="returnRuleId">-->
+<!--            <el-select-dispatcher v-model="baseinfo.returnRuleId" id="returnRuleId" placeholder="退货规则">-->
+<!--            </el-select-dispatcher>-->
+<!--          </el-form-item>-->
+<!--          <br />-->
+<!--          <el-form-item label="运费规则：" prop="freightRuleId">-->
+<!--            <el-select-dispatcher v-model="baseinfo.freightRuleId" id="freightRuleId">-->
+<!--            </el-select-dispatcher>-->
+<!--          </el-form-item>-->
+<!--          <br />-->
           <el-form-item label="商品分类：" prop="categoryOneId">
             <el-select-dispatcher v-model="baseinfo.categoryOneId" :options="category1" remote placeholder="一级分类"
               :loading="loading" v-on:change="seclectCategory($event, 1)">
@@ -240,10 +239,9 @@
       '$route'(to, from) {
         console.log('to=' + to)
         this.reload()
-      }
+      },
     },
     methods: {
-
       showinfoBut() {
         this.button.add = "none";
         this.button.reset = "none";
@@ -289,7 +287,6 @@
         this.searchRootCategory();
         this.selectRootDistrict();
       },
-
       searchRootCategory() {
         this.loading = true;
         fetchListWithChildren(0).then(response => {
@@ -321,6 +318,10 @@
               this.category.three = [];
               // this.baseinfo.categoryTwoId = '';
               // this.baseinfo.categoryThreeId = '';
+              if (this.baseinfo.categoryTwoId !== undefined) {
+                this.$set(this.baseinfo, 'categoryTwoId', '');
+                this.$set(this.baseinfo, 'categoryThreeId', '');
+              }
               fetchListWithChildren(event).then(response => {
                 let list = response.result.result;
                 this.category.two = list;
@@ -330,7 +331,7 @@
           case 2:
             {
               this.category.three = [];
-              // this.baseinfo.categoryThreeId = '';
+              this.$set(this.baseinfo, 'categoryThreeId', '');
               fetchListWithChildren(event).then(response => {
                 let list = response.result.result;
                 this.category.three = list;
@@ -348,6 +349,10 @@
               this.district.area = [];
               // this.baseinfo.cityId = '';
               // this.baseinfo.areaId = '';
+              if (this.baseinfo.cityId !== undefined) {
+                this.$set(this.baseinfo, 'cityId', '');
+                this.$set(this.baseinfo, 'areaId', '');
+              }
               fetchDistrictList({
                 codeType: 'city',
                 parentId: type
@@ -361,6 +366,7 @@
             {
               this.category.area = [];
               // this.baseinfo.areaId = '';
+              this.$set(this.baseinfo, 'areaId', '');
               fetchDistrictList({
                 codeType: 'district',
                 parentId: type
@@ -428,8 +434,7 @@
         });
       },
       cancelList() {
-        this.$router.go(-1)
-
+        this.$router.back()
       },
 
       updateProduct() {
@@ -459,9 +464,10 @@
         udpobj.unit = this.baseinfo.unit;
         udpobj.goodsName = this.baseinfo.goodsName;
         udpobj.supplierId = this.baseinfo.supplierId;
+        udpobj.goodsBrand = this.baseinfo.goodsBrand;
+        udpobj.goodsNumber = this.baseinfo.goodsNumber
 		    udpobj.id= this.goodsId;
         console.log(udpobj);
-        console.log(this.baseinfo);
         updateGood(udpobj).then(res => {
           if(res){
              let  reuslt  = res.result;
@@ -499,9 +505,9 @@
             goodsDetailPics.push(this.goodsDetailPics[i].uid);
           }
           this.baseinfo.goodsDetailPics = goodsDetailPics;
-          this.baseinfo.provinceId = 1;
-          this.baseinfo.cityId = 1;
-          this.baseinfo.areaId = 1;
+          // this.baseinfo.provinceId = 1;
+          // this.baseinfo.cityId = 1;
+          // this.baseinfo.areaId = 1;
           this.$refs['baseinfo'].validate((valid) => {
             if (valid) {
               createProduct(this.baseinfo).then(response => {

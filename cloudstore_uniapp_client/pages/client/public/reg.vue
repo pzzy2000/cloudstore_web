@@ -1,11 +1,8 @@
 <template>
 	<view class="container">
-		<view class="left-bottom-sign"></view>
-		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign">欢迎</view>
 			<view class="welcome">用户注册</view>
 			<view class="input-content">
 				<view class="input-item">
@@ -20,16 +17,19 @@
 					<text class="tit">验证码</text>
 					<view class="input-item-right">
 						<input type="number" maxlength="6" placeholder="请输入验证码" v-model="code" @confirm="toLogin" style="width: 70%;" />
-						<view class="codeText" v-if="coding == false" @click="getCode()">获取验证码</view>
+						<view class="codeText" v-if="coding == false" @click.stop="getCode">获取验证码</view>
 						<view class="authTime" v-else>{{ auth_time }}秒</view>
 					</view>
 				</view>
 			</view>
 			<button class="confirm-btn" @click="reguser" :disabled="logining">注册</button>
 			<view class="forget-section">
-				<text @click="getWxCode">微信注册</text>
+				<button class='vxUserInfo-btn' open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">
+					微信注册
+				</button>
+				<!-- <text @click="getWxCode">微信注册</text> -->
 			</view>
-			<view class="forget-section">已经有账号?<text @click="toLoginPwd">马上登录</text></view>
+			<view class="forget-section text-blue" @click="toLoginPwd">已经有账号?马上登录</view>
 		</view>
 		<uni-popup ref="popup" type="center">
 			<button type="primary" open-type='getPhoneNumber' @getphonenumber="getPhoneNumber">微信授权手机号码</button>
@@ -39,7 +39,8 @@
 				<input type="text" :value="vxPhone" class="input-height"/>
 				<view class="phone-code">
 					<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input" @input="editInput($event,'code')"/>
-					<button type="primary" class="code-btn">发送验证码</button>
+					<view class="cu-btn round bg-green code-btn" v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</view>
+					<view type="primary" class="code-btn" v-else>{{ auth_register_time }}秒</view>
 				</view>
 				<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height" @input="editInput($event,'pwd')"/>
 				<view class="regBox-btn">
@@ -71,7 +72,9 @@
 				password: '',
 				logining: false,
 				coding: false,
+				registerCoding: false,
 				auth_time: 180,
+				auth_register_time: 180,
 				codekey: '',
 				title: '注册',
 				//以下为微信注册
@@ -152,44 +155,124 @@
 					}
 				}
 			},
-			// 获取验证码
-			// async getCode() {
-			// 	var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
-			// 	if (!myreg.test(this.phone)) {
-			// 		uni.showToast({
-			// 			icon: 'none',
-			// 			title: '请输入正确的手机号码'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	//设置倒计时秒
-			// 	this.auth_time = 60;
-			// 	this.coding = true;
-			// 	var auth_timetimer = setInterval(() => {
-			// 		this.auth_time--;
-			// 		if (this.auth_time < 0) {
-			// 			this.coding = false;
-			// 			clearInterval(auth_timetimer);
-			// 		}
-			// 	}, 1000);
-			// 	//获取验证码
-			// 	let params = {
-			// 		phone: this.phone,
-			// 		codeType: 'reg'
-			// 	};
-			// 	let data = await Api.apiCall('post', Api.index.sendCodes, params);
-			// 	if (data) {
-			// 		this.codekey = data.key;
-			// 	}
-			// },
-			getWxCode () {
+			getCode() { // 号码获取验证码
+				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+				if (!myreg.test(this.phone)) {
+					uni.showToast({
+						icon: 'none',
+						title: '请输入正确的手机号码'
+					});
+					return false;
+				}
+				//设置倒计时秒
+				this.auth_time = 60;
+				this.coding = true;
+				var auth_timetimer = setInterval(() => {
+					this.auth_time--;
+					if (this.auth_time < 0) {
+						this.coding = false;
+						clearInterval(auth_timetimer);
+					}
+				}, 1000);
+				//获取验证码
+				let params = {
+					phone: this.phone,
+					// codeType: 'reg'
+				};
+				var that = this
+				uni.request({
+					url: Api.BASEURI + Api.client.reg.sendCode,
+					method: 'post',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: params,
+					success: res => {
+						if (res) {
+							var data = res.data.result
+							if (data.code === 0) {
+								that.codekey = data.result.key
+							} else {
+								that.$api.msg(data.msg)
+							}
+						} else {
+							that.$api.msg('发送验证码失败')
+						}
+					}
+				});
+			},
+			getRegisterCode () { // 微信号码获取验证码
+				var myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+				if (!myreg.test(this.vxPhone)) {
+					uni.showToast({
+						icon: 'none',
+						title: '请输入正确的手机号码'
+					});
+					return false;
+				}
+				//设置倒计时秒
+				this.auth_register_time = 60;
+				this.registerCoding = true;
+				var auth_timetimer = setInterval(() => {
+					this.auth_register_time--;
+					if (this.auth_register_time < 0) {
+						this.registerCoding = false;
+						clearInterval(auth_timetimer);
+					}
+				}, 1000);
+				//获取验证码
+				let params = {
+					phone: this.vxPhone,
+					// codeType: 'reg'
+				};
+				var that = this
+				uni.request({
+					url: Api.BASEURI + Api.client.reg.sendCode,
+					method: 'post',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					data: params,
+					success: res => {
+						if (res) {
+							console.log(res)
+							var data = res.data.result
+							if (data.code === 0) {
+								console.log(data.result.key)
+								that.vxPhoneKey = data.result.key
+								console.log(that.vxPhoneKey)
+							} else {
+								that.$api.msg(data.msg)
+							}
+						} else {
+							that.$api.msg('发送验证码失败')
+						}
+					}
+				});
+			},
+			getuserinfo () { //微信授权获取手机号
 				this.$refs.popup.open()
 				var that = this;
 				uni.showLoading({
 					title: '微信注册中',
 					mask: true
 				});
-				this.wxInfo()
+				uni.getUserInfo({
+					provider: 'weixin',
+					success: function(infoRes) {
+						console.log(infoRes)
+						if (infoRes) {
+							that.vxUserInfo =  infoRes
+						}
+					},
+					fail:function(e) {
+						uni.showToast({
+							title: '微信授权用户信息失败，请用手机号码登录',
+							icon: 'none'
+						});
+					}
+				});
+				// this.wxInfo()
 				uni.login({
 					provider: 'weixin',
 					fail: function() {
@@ -231,20 +314,22 @@
 					},
 					fail:function(e) {
 						uni.showToast({
-							title: '微信授权用户失败'
+							title: '微信授权用户信息失败，请用手机号码登录',
+							icon: 'none'
 						});
 					}
 				});
 			},
 			getPhoneNumber (res) { //点击按钮获取用户的手机号码
-				console.log(res)
-				if (res.detail.iv === '') {
-					uni.showToast({
-						title: '授权失败'
-					});
-				}else{
+				if (res.detail.errMsg === 'getPhoneNumber:ok') {
 					this.vxPhoneInfo = res.detail
 					this.getPhoneKey()
+				}else{
+					uni.showToast({
+						title: '授权手机号失败',
+						icon: 'none'
+					});
+					this.$refs.popup.close()
 				}
 			},
 			getPhoneKey () { //将手机加密数据传给后台，后台返回解密后的电话号码和key
@@ -292,7 +377,8 @@
 					},
 					fail: () => {
 						uni.showToast({
-							title: '解密微信手机号码失败'
+							title: '解密微信手机号码失败',
+							icon:'none'
 						});
 					}
 				});
@@ -312,7 +398,7 @@
 					'bean.openId': this.vxOpenId,
 					'bean.password': this.userPwd,
 					'bean.phone': this.vxPhone,
-					'bean.userInfo': this.vxUserInfo.rawData
+					'bean.userInfo': this.vxUserInfo.rawData,
 				}
 				uni.request({
 					url: Api.BASEURI + Api.client.reg.saveClientInfo,
@@ -391,6 +477,7 @@
 		z-index: 90;
 		background: #fff;
 		padding-bottom: 40upx;
+		margin-top: 150rpx;
 	}
 
 	.input-item-right {
@@ -478,7 +565,7 @@
 	.welcome {
 		position: relative;
 		left: 50upx;
-		top: -90upx;
+		top: -40upx;
 		font-size: 46upx;
 		color: #555;
 		text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
@@ -538,6 +625,15 @@
 		color: $font-color-spec;
 		text-align: center;
 		margin-top: 40upx;
+		.vxUserInfo-btn {
+			background: #fff;
+			border: none;
+			color: #fa436a;
+			font-size: 28rpx;
+			&:after {
+				border:none
+			}
+		}
 	}
 
 	.register-section {
@@ -587,15 +683,17 @@
 				width: 65%;
 			}
 			.code-btn {
-				width: 35%;
-				font-size: 25upx;
+				width: 30%;
+				font-size: 25rpx;
+				line-height: 70rpx;
+				height: 70rpx;
 			}
 		}
 		.regBox-btn {
 			display: flex;
 			justify-content: space-between;
 			button {
-				width: 50%;
+				width: 40%;
 			}
 		}
 	}

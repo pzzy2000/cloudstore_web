@@ -95,3 +95,10 @@ export function onoffAct(params) {
     data: switchForm(params)
   })
 }
+
+export function fetchListWithChildren(params) {
+  return request({
+    url:'/goods/category/getGoodsCateByParId?parentId='+params,
+    method:'get',
+  })
+}

@@ -27,15 +27,6 @@
         <el-table-column label="未结算积分" align="center">
           <template slot-scope="scope">{{scope.row.pointsing}}</template>
         </el-table-column>
-<!--        <el-table-column label="申请时间" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.payPrice}}</template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="操作" width="200px"  align="center">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-button size="mini" @click="receptRqs(scope.$index, scope.row)">审核通过</el-button>-->
-<!--            <el-button size="mini" @click="refuse(scope.row)" type="danger">拒绝</el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
     </div>
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
@@ -134,23 +125,17 @@
     },
     methods: {
       getList() {
-        defaultList.userId = this.$route.query.id;
-        getUserinfo(defaultList).then(res => {
+        this.pageList.userId = this.$route.query.id;
+        getUserinfo(this.pageList).then(res => {
           if (res.result.code == 0) {
             this.userList = res.result.result.records;
             // this.total = parseInt(res.result.result.total);
           }
         })
-        getBrokeinfo(defaultList).then(res => {
+        getBrokeinfo(this.pageList).then(res => {
           this.brokeList = res.result.result.records;
           this.total = parseInt(res.result.result.total);
         })
-      },
-      receptRqs(index, row) {
-        alert("通过了")
-      },
-      refuse(row) {
-        alert("拒绝了")
       },
       changeMsg(row) {
         switch (row.profitStauts) {
@@ -162,14 +147,17 @@
             break;
         }
       },
-      handleSizeChange() {
+      handleCurrentChange(val) {
+        this.pageList.pageNum = val;
         this.getList();
       },
-      handleCurrentChange() {
+      handleSizeChange(val) {
+        this.pageList.pageNum = 1;
+        this.pageList.pageSize = val;
         this.getList();
       },
       backPage() {
-        this.$router.go(-1);
+        this.$router.back();
       }
     }
   }

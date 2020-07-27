@@ -1,14 +1,14 @@
 <template>
 	<view class="container">
-		<nav-bar backState="1000">申请代理</nav-bar>
+		<nav-bar backState="1000">{{agentTitle}}</nav-bar>
 		<form>
 			<view class="cu-form-group text-red" v-if="isCheck">
 				<view class="title">审核状态：</view>
 				<input  name="input" :value="checkText" disabled="disabled"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">店铺姓名：</view>
-				<input placeholder="请输入店铺姓名" name="input" :value="agentfrom.shopName" :disabled='isEdit' @input="editInput($event,'shopName')"></input>
+				<view class="title">店铺名称：</view>
+				<input placeholder="请输入店铺名称" name="input" :value="agentfrom.shopName" :disabled='isEdit' @input="editInput($event,'shopName')"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">姓名：</view>
@@ -19,46 +19,53 @@
 				<input placeholder="请输入电话号码" name="input" :value="agentfrom.phone" :disabled='isEdit' @input="editInput($event,'phone')"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">证件类型</view>
-				<picker @change="typeChange" :value="index" :range="picker" :disabled='isEdit'>
-					<view class="picker">
-						{{index>-1?picker[index]:'请选择'}}
-					</view>
-				</picker>
+				<view class="title">代理类型</view>
+				<template>
+					<picker @change="typePickerChange" :value="typePickerIndex" :range="typePicker" :disabled='isEdit' v-if="!isEdit">
+						<view class="picker">
+							{{typePickerIndex>-1?typePicker[typePickerIndex]:'请选择'}}
+						</view>
+					</picker>
+					<input  name="input" :value="typePicker[typePickerIndex]" :disabled='isEdit' v-else>
+				</template>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">证件ID：</view>
-				<input placeholder="请输入证件ID" name="input" :value="agentfrom.cardId" :disabled='isEdit' @input="editInput($event,'cardId')"></input>
+				<view class="title">证件类型：</view>
+				<template>
+					<picker @change="typeChange" :value="index" :range="picker" :disabled='isEdit' v-if="!isEdit">
+						<view class="picker">
+							{{index>-1?picker[index]:'请选择'}}
+						</view>
+					</picker>
+					<input  name="input" :value="picker[index]" :disabled='isEdit' v-else>
+				</template>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">证件号码：</view>
+				<input placeholder="请输入证件号码" name="input" :value="agentfrom.cardId" :disabled='isEdit' @input="editInput($event,'cardId')"></input>
 			</view>
 			<view class="cu-form-group" @tap='seletctAddress' :disabled='isEdit'>
 				<view class="title">省市区：</view>
 				<view class="">{{agentfrom.provinceName}}</view>
 			</view>
-			<view class="cu-form-group align-start">
-				<view class="title">详细地址</view>
-				<textarea :value="agentfrom.address" placeholder="请输入详细地址" :disabled='isEdit' @input="editInput($event,'address')" style="color:#000"></textarea>
+			<view class="cu-form-group">
+				<view class="title">详细地址：</view>
+				<input :value="agentfrom.address" placeholder="请输入详细地址" :disabled='isEdit' @input="editInput($event,'address')" style="color:#000;"></input>
 			</view>
 			<view class="cu-bar bg-white margin-top">
 				<view class="action">
-					上传身份证正反面
+					请上传身份证正面和反面
 				</view>
 			</view>
-			<view class="cu-form-group">
-				<easy-upload
-				:dataList="imageList" :uploadUrl="upImgUrl" :types="category"
-				deleteUrl='' :uploadCount="2"
-				uploadIcon="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1049033917,3033202092&fm=26&gp=0.jpg"
-				@successImage="successImage" 
-				@successVideo="successvideo"
-				@delectIndex= 'delectIndex'
-				></easy-upload>
+			<view class="cu-form-group" v-if="isUpload" style="padding-bottom: 20upx;">
+				<tui-upload :serverUrl="serverUrl" @complete="uploadResult" @remove="uploadRemove" :value='imageList' :valueId= 'imgListId' :forbidDel='isEdit'></tui-upload>
 			</view>
-			<view class="padding flex flex-direction">
+			<view class="padding flex flex-direction" v-if="!isEdit">
 				<button class="cu-btn bg-red margin-tb-sm lg" @tap="applyAgent">上传</button>
 			</view>
 		</form>
 		<!-- <ehPicker @conceal="conceal" v-if="popup" @close="close" /> -->
-		<uni-popup ref="popup" type="bottom">
+		<uni-popup ref="popup" type="bottom" class="popup">
 			<tui-cascade-selection
 				height="280px"
 				activeColor="#EB0909"
@@ -77,23 +84,25 @@
 <script>
 	import navBar from '@/components/zhouWei-navBar';
 	import Api from '@/common/api.js'
-	import easyUpload from '@/components/easy-upload/easy-upload'
 	import ehPicker from '@/pages/tabbar/erha-picker.vue'; 
 	import tuiCascadeSelection from '@/components/tui-cascade-selection/tui-cascade-selection.vue'
 	import uniPopup from '@/components/uni-popup/uni-popup'
+	import tuiUpload from '@/components/tui-upload/tui-upload.vue'
 	export default {
 		data() {
 			return {
+				agentTitle: '申请代理',
 				popup:false,//控制省市区三级联动
 				agentfrom: {
 					id: '',
 					shopName: '',
 					name: '',
 					phone: '',
+					agentType: 'agent',
 					cardType: 'IDCard',
 					cardId: '',
 					cardPhoto: [],
-					provinceName: '请选择省、市、区、街道、社区',
+					provinceName: '请选择省、市、区、区域、社区',
 					provinceId: '',
 					cityId: '',
 					areaId: '',
@@ -111,26 +120,37 @@
 				},
 				picker:['身份证'],
 				index: 0,
-				imageList: [],
+				typePicker: ['代理', '团长'],
+				typePickerIndex: 0,
 				upImgUrl: Api.BASEURI +'sys/upload/entity/image/update',
 				category: 'image',
-				imglistId: [],
+				imgListId: [],
+				imageList: [],
 				checkText: '',
 				isCheck: false,
 				isEdit: false,
 				itemList: [],
-				receiveData: []
+				receiveData: [],
+				isUpload: false,
+				serverUrl: Api.BASEURI +'sys/upload/entity/image/update' //上传地址
 			}
 		},
 		components:{
-			navBar, easyUpload, ehPicker, tuiCascadeSelection, uniPopup
+			navBar, ehPicker, tuiCascadeSelection, uniPopup, tuiUpload
 		},
 		onLoad() {
 			this.getApplyAgentData()
 			this.getAddressData()
 		},
+		onPullDownRefresh() { //下拉刷新
+			this.getApplyAgentData()
+		},
+		onUnload() {
+			this.imageList = []
+			this.imgListId = []
+		},
 		methods: {
-			async getAddressData () {
+			async getAddressData () { //获取第一级地址数据
 				let params ={
 					pageNum:1,
 					pageSize:100,
@@ -152,32 +172,117 @@
 					}
 				}
 			},
-			async getApplyAgentData () {
-				uni.showLoading({
-					title: '正在加载中',
-					mask: false
-				});
-				let params = {}
-				let data = await Api.apiCall('post', Api.client.applyAgent.getClientAgent, params)
+			getApplyAgentData () { //获取代理商的数据
+				let token = uni.getStorageSync('token'), params = {}, that = this;
+				if (token) {
+					uni.request({
+						url: Api.BASEURI + Api.client.applyAgent.getClientAgent,
+						method: 'post',
+						header: {
+							'content-type': 'application/x-www-form-urlencoded',
+							'auth': token
+						},
+						data: params,
+						fail: function() {
+							uni.hideLoading();
+							uni.showToast({
+								title: '获取信息失败',
+								icon: 'none'
+							});
+						},
+						success: function(res) {
+							if (res) {
+								var data = res.data.result
+								if(data) {
+									if (data.code === 0 && data.result != null) {
+										that.agentfrom.id = data.result.id,
+										that.agentfrom.shopName = data.result.shopName
+										that.agentfrom.name = data.result.name
+										that.agentfrom.phone = data.result.phone
+										if (data.result.agentType === 'agent') {
+											that.typePickerIndex = 0
+											that.agentfrom.agentType = data.result.agentType
+										} else {
+											that.typePickerIndex = 1
+											that.agentfrom.agentType = data.result.agentType
+										}
+										for (let tmp in data.result.goodsPhotos) {
+											that.imageList.push(data.result.goodsPhotos[tmp].url)
+											that.imgListId.push(data.result.goodsPhotos[tmp].uid)
+										}
+										if(that.imgListId.length ||　that.imageList.length) {
+											that.isUpload = true //控制上传图片组件的显示与隐藏
+										}
+										//赋值省、市、区、区域、社区内容
+										that.agentfrom.cardType = data.result.cardType
+										that.agentfrom.address = data.result.detailAddress
+										that.agentfrom.cardId = data.result.cardNo
+										try{
+											that.agentfrom.provinceId = data.result.provinceId
+											that.agentfrom.cityId = data.result.cityId
+											that.agentfrom.areaId = data.result.areaId
+											that.agentfrom.townId = data.result.townId
+											that.agentfrom.villageId = data.result.villageId
+											that.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name +" / "+ data.result.villageBean.name
+											
+										}catch(e){
+											that.$api.msg('地址信息出错')
+										}
+										if (data.result.status === 0) {
+											that.checkText = '正在审核中,资料不能修改'
+											that.isCheck = true
+											that.isEdit = true
+										}else if(data.result.status === 2) {
+											that.isCheck = true
+											that.checkText = '审核不通过，请提交资料再次审核'
+											that.agentfrom.optType = 'update'
+											that.isEdit = false
+										} else if (data.result.status === 1){
+											that.agentTitle = '代理资料'
+											that.isEdit = true
+										} else {
+											that.isUpload = true
+										}
+									} else {
+										that.isUpload = true
+										that.$api.msg(data.msg)
+									} 
+								}
+								uni.hideLoading()
+								uni.stopPullDownRefresh()
+							}
+						},
+					})
+				}
+			},
+			assignmentInfo (res) { //将代理资料进行赋值
+				var data = res.data.result
 				if(data) {
-					uni.hideLoading()
 					if (data.code === 0 && data.result != null) {
 						this.agentfrom.id = data.result.id,
 						this.agentfrom.shopName = data.result.shopName
 						this.agentfrom.name = data.result.name
 						this.agentfrom.phone = data.result.phone
+						if (data.result.agentType === 'agent') {
+							this.typePickerIndex = 0
+							this.agentfrom.agentType = data.result.agentType
+						} else {
+							this.typePickerIndex = 1
+							this.agentfrom.agentType = data.result.agentType
+						}
 						this.agentfrom.cardType = data.result.cardType
 						this.agentfrom.address = data.result.detailAddress
 						this.agentfrom.cardId = data.result.cardNo
-						this.agentfrom.provinceId = data.result.provinceBean.id
-						this.agentfrom.cityId = data.result.cityBean.id
-						this.agentfrom.areaId = data.result.areaBean.id
+						this.agentfrom.provinceId = data.result.provinceId
+						this.agentfrom.cityId = data.result.cityId
+						this.agentfrom.areaId = data.result.areaId
+						this.agentfrom.townId = data.result.townId
+						this.agentfrom.villageId = data.result.villageId
 						this.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name +" / "+ data.result.villageBean.name
 						for (let tmp in data.result.goodsPhotos) {
 							this.imageList.push(data.result.goodsPhotos[tmp].url)
-							this.imglistId.push(data.result.goodsPhotos[tmp].uid)
+							this.imgListId.push(data.result.goodsPhotos[tmp].uid)
 						}
-						console.log(this.imglistId)
 						if (data.result.status === 0) {
 							this.checkText = '正在审核中,资料不能修改'
 							this.isCheck = true
@@ -187,19 +292,35 @@
 							this.checkText = '审核不通过，请提交资料再次审核'
 							this.agentfrom.optType = 'update'
 							this.isEdit = false
+						} else if (data.result.status === 1){
+							this.agentTitle = '代理资料'
+							this.isEdit = true
 						}
-					}
+					} else {
+						this.$api.msg(data.msg)
+					} 
 				}
+				uni.hideLoading()
+				uni.stopPullDownRefresh()
 			},
-			typeChange (e) {
+			typeChange (e) { //选择身份证
 				this.index = e.detail.value
 				if (e.detail.value === 1) {
 					this.agentfrom.cardType = 'IDCard'
 				}
 			},
+			typePickerChange (e) { //选择代理类型
+			console.log(e)
+				this.typePickerIndex = e.detail.value
+				if (e.detail.value === 0) {
+					this.agentfrom.agentType = 'agent'
+				} else {
+					this.agentfrom.agentType = 'leader'
+				}
+			},
 			complete(e) { //点击了地址的上一级分类
 			},
-			async addressChange (e) {
+			async addressChange (e) { //选择地址
 				console.log(e)
 				switch(e.layer) {
 					case 0:
@@ -266,17 +387,15 @@
 				}
 				this.popup = false;
 			},
-			successImage(e){
-				if (e) {
-					this.imglistId = e
+			uploadResult (e) { //页面上传成功后的回调
+				this.imgListId = e.imgListId
+			},
+			uploadRemove (e) { //删除图片的回调
+				let index = e.index
+				if (this.imgListId.length != 0) {
+					this.imageList.splice(index, 1)
+					this.imgListId.splice(index, 1)
 				}
-			},
-			successvideo(e){
-				console.log(e)
-			},
-			delectIndex (e) {
-				this.imglistId.splice(e,1)
-				this.imageList.splice(e,1)
 			},
 			editInput (e,data) { //修改input里面的值的时候
 				switch(data)
@@ -298,11 +417,13 @@
 						break;
 				}
 			},
-			seletctAddress () {
+			seletctAddress () { //打开选择地址的弹出框
+				if(this.isEdit) {
+					return false
+				}
 				this.$refs.popup.open()
-				// this.popup = !this.popup
 			},
-			async applyAgent () {
+			async applyAgent () { //提交代理资料
 				if (this.isEdit === true) {
 					this.$api.msg('资料正在审核，请勿重复提交')
 					return;
@@ -323,25 +444,26 @@
 					this.$api.msg('请输入证件号码')
 					return;
 				}
-				if (!this.agentfrom.areaId) {
-					this.$api.msg('请选择省市区')
+				if (!this.agentfrom.villageId) {
+					this.$api.msg('请选择省、市、区、街道、社区')
 					return;
 				}
 				if (!this.agentfrom.address) {
 					this.$api.msg('请输入详细地址')
 					return;
 				}
-				if (this.imglistId.length === 0) {
-					this.$api.msg('请选择图片')
+				if (this.imgListId.length != 2) {
+					this.$api.msg('请上传身份证正面和反面')
 					return;
 				}
 				let params = {
 					shopName: this.agentfrom.shopName,
 					name: this.agentfrom.name,
 					phone: this.agentfrom.phone,
+					agentType: this.agentfrom.agentType,
 					cardType: this.agentfrom.cardType,
 					cardNo: this.agentfrom.cardId,
-					cardPhoto: this.imglistId.toString(),
+					cardPhoto: this.imgListId,
 					provinceId: this.agentfrom.provinceId,
 					cityId: this.agentfrom.cityId,
 					areaId: this.agentfrom.areaId,
@@ -386,7 +508,7 @@
 
 <style scoped>
 	.container {
-		padding: 20rpx 0 50rpx 0;
+		padding-bottom: 50upx;
 	}
 	.tui-line-cell {
 		width: 100%;
@@ -410,5 +532,12 @@
 	}
 	.cu-form-group {
 		justify-content: flex-start;
+	}
+	.cu-form-group .title {
+		width: 27%;
+	}
+	.popup {
+		z-index: 999;
+		position: relative;
 	}
 </style>

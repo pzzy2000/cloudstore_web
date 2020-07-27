@@ -13,31 +13,33 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
-          </el-form-item>
-          <el-form-item label="商品货号：">
-            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号"></el-input>
-          </el-form-item>
-          <el-form-item label="商品分类：">
-            <el-cascader clearable v-model="selectProductCateValue" :options="productCateOptions">
-            </el-cascader>
+          <el-form-item label="商品名称：">
+            <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称" clearable></el-input>
           </el-form-item>
           <el-form-item label="商品品牌：">
-            <el-select v-model="listQuery.brandId" placeholder="请选择品牌" clearable>
-              <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value">
+            <el-input style="width: 203px" v-model="listQuery.goodsBrand" placeholder="商品品牌" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="商品货号：">
+            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="所属供应商：">
+            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="所属供应商" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="商品分类：">
+            <el-select v-model="listQuery.categoryOneId" remote placeholder="一级分类" :loading="loading" v-on:change="seclectCategory($event, 1)" clearable>
+              <el-option v-for="item in category.one" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="上架状态：">
-            <el-select v-model="listQuery.publishStatus" placeholder="全部" clearable>
-              <el-option v-for="item in publishStatusOptions" :key="item.value" :label="item.label" :value="item.value">
+          <el-form-item>
+            <el-select v-model="listQuery.categoryTwoId" remote v-on:change="seclectCategory($event, 2)" placeholder="二级分类" :loading="loading" clearable>
+              <el-option v-for="item in category.two" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="审核状态：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
-              <el-option v-for="item in verifyStatusOptions" :key="item.value" :label="item.label" :value="item.value">
+          <el-form-item>
+            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>
+              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -93,7 +95,7 @@
     </div>
     <div class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-                     :page-size="listQuery.pageSize" :page-sizes="[20]" :current-page.sync="listQuery.pageNum" :total="total">
+                     :page-size="listQuery.pageSize" :page-sizes="[10]" :current-page.sync="listQuery.pageNum" :total="total">
       </el-pagination>
     </div>
     <el-dialog title="编辑货品信息" :visible.sync="editSkuInfo.dialogVisible" width="40%">
@@ -138,7 +140,7 @@
 </template>
 <script>
   // import {fetchList, updateDeleteStatus, updateNewStatus, updateRecommendStatus, updatePublishStatus} from '@/api/product'
-  import {getGoodslist} from '@/api/brokerage';
+  import {getGoodslist, fetchListWithChildren} from '@/api/brokerage';
   // import {fetchList as fetchSkuStockList, update as updateSkuStockList} from '@/api/skuStock'
   // import {fetchList as fetchProductAttrList} from '@/api/productAttr'
   // import {fetchList as fetchBrandList} from '@/api/brand'
@@ -146,7 +148,7 @@
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
-    pageSize: 20,
+    pageSize: 10,
     publishStatus: null,
     verifyStatus: null,
     productSn: null,
@@ -165,6 +167,11 @@
           stockList: [],
           productAttr: [],
           keyword: null
+        },
+        category: {
+          one: [],
+          two: [],
+          three: []
         },
         operates: [{
           label: "商品上架",
@@ -202,7 +209,7 @@
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
-        total: null,
+        total: 0,
         listLoading: true,
         selectProductCateValue: null,
         multipleSelection: [],
@@ -225,7 +232,8 @@
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
+      this.searchRootCategory();
     },
     watch: {
       selectProductCateValue: function(newValue) {
@@ -293,21 +301,42 @@
           return null;
         }
       },
-      getList() {
+      getList(idx) {
         this.listLoading = true;
         let id = this.$route.query.id;
         this.listQuery.activityId = id;
         getGoodslist(this.listQuery).then(response => {
-          console.log(response)
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          if (idx == 0) {
+            if (res.result.result.records.length == 0) {
+              this.$message({
+                message: "暂无数据",
+                type: 'warning',
+                duration: 800
+              })
+            }else {
+              this.$message({
+                message: "查询成功",
+                type: 'success',
+                duration: 800
+              })
+            }
+          }
+          if (idx == 2) {
+            this.$message({
+              message: "重置成功",
+              type: 'success',
+              duration: 800
+            })
+          }
         });
       },
       getBrandList() {
         fetchBrandList({
           pageNum: 1,
-          pageSize: 100
+          pageSize: 10
         }).then(response => {
           this.brandOptions = [];
           let brandList = response.data.list;
@@ -393,7 +422,15 @@
       },
       handleSearchList() {
         this.listQuery.pageNum = 1;
-        this.getList();
+        this.getList(0);
+      },
+      searchRootCategory() {
+        this.loading = true;
+        fetchListWithChildren(0).then(response => {
+          this.loading = false;
+          let list = response.result.result;
+          this.category.one = list;
+        });
       },
       handleBatchOperate() {
         if (this.operateType == null) {
@@ -448,17 +485,17 @@
             default:
               break;
           }
-          this.getList();
+          this.getList(1);
         });
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(1);
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(1);
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -466,6 +503,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.getList(2);
       },
       updateDeleteStatus(deleteStatus, ids) {
         let params = new URLSearchParams();
@@ -478,11 +516,40 @@
             duration: 1000
           });
         });
-        this.getList();
+        this.getList(1);
       },
       backPage() {
-        this.$router.go(-1);
-      }
+        this.$router.back();
+      },
+      seclectCategory(event, item) {
+        switch (item) {
+          case 1:
+          { //一级分类
+            this.category.two = [];
+            this.category.three = [];
+            if (this.listQuery.categoryTwoId !== undefined) {
+              this.$set(this.listQuery, 'categoryTwoId', '');
+              this.$set(this.listQuery, 'categoryThreeId', '');
+            }
+            fetchListWithChildren(event).then(response => {
+              let list = response.result.result;
+              this.category.two = list;
+            });
+            break;
+          }
+          case 2:
+          {
+            this.category.three = [];
+            this.$set(this.listQuery, 'categoryThreeId', '');
+            fetchListWithChildren(event).then(response => {
+              let list = response.result.result;
+              this.category.three = list;
+            });
+            break;
+          }
+        }
+        this.$forceUpdate();
+      },
     }
   }
 </script>

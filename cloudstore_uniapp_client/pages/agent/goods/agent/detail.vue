@@ -91,7 +91,7 @@
 				<view class="con-list">
 					<text>
 						<text>
-							{{this.activity.name}}
+							{{activity.name}}
 						</text>
 					</text>
 				</view>
@@ -183,7 +183,9 @@
 				goodsPropertyValue:[],
 				goodsMobileHtml:'',
 				favorite: true,
-				activity:{},
+				activity:{
+					name: '' || '暂无' 
+				},
 				activityId: '',
 				agentGoodsId: '',
 				goodsName: '',
@@ -243,6 +245,7 @@
 				let data = await Api.apiCall('post', Api.agent.activity.searchInfo, params, false, false);
 				if (data) {
 					this.activity = data.result
+					console.log(this.activity)
 				}
 			}
 		},

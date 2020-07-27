@@ -81,8 +81,8 @@
         activity: {},
         listQuery: Object.assign({}, defaultListQuery),
         total: 0,
-        disabled: false,
-        activityId: ''
+        activityId: '',
+        disabled: false
       }
     },
     created() {
@@ -159,9 +159,8 @@
         this.getList(this.activityId);
       },
       changeSwitch(idx, row) {
-        this.disabled = true;
-        console.log(row);
-        let goods = row.activityBean;
+        let _this = this;
+        this.disabled = true
         if (idx == 0) {  //断开
           outAssogoods({
             ids: row.activityGoodsId
@@ -169,6 +168,12 @@
             if (res.result.code == 0) {
               msg('申请退出活动成功');
               this.disabled = false;
+            }else{
+              row.link = 1;
+              setTimeout(function () {
+                _this.disabled = false;
+                _this.getList(_this.activityId);
+              },500);
             }
           })
         } else { //关联
@@ -182,6 +187,12 @@
               console.log(res);
               msg('申请加入活动成功');
               this.disabled = false;
+            }else{
+              row.link = 0;
+              setTimeout(function(){
+                _this.disabled = false;
+                _this.getList(_this.activityId);
+              },500);
             }
           })
         }
