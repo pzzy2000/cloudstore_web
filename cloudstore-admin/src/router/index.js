@@ -516,22 +516,22 @@ export const asyncRouterMap = [
 	  path:'/allocation/order',
 	    component: Layout,
 	    redirect: '/allocation/order/list',
-	    name: 'order',
+	    name: 'allOrder',
 	    meta: {title: '配送管理', icon: 'product-list'},
 	    children: [
-	    	 { 
-	    	        path: 'list',
-	    	        name: 'ps_list',
-	    	        component: () => import('@/views/allocation/order/list'),
-	    	        meta: {title: '订单配送', icon: 'product-list'},
-	    	        hidden: false
-	    	      }, {
-	    	        path: 'detail',
-	    	        name: 'ps_detail',
-	    	        component: () => import('@/views/allocation/order/detail'),
-	    	        meta: {title: '配送详情', icon: 'product-list'},
-	    	        hidden: true
-	    	      }
+	    	 {
+            path: 'list',
+            name: 'ps_list',
+            component: () => import('@/views/allocation/order/list'),
+            meta: {title: '订单配送', icon: 'product-list', keepAlive: true},
+            hidden: false
+         }, {
+            path: 'detail',
+            name: 'ps_detail',
+            component: () => import('@/views/allocation/order/detail'),
+            meta: {title: '配送详情', icon: 'product-list'},
+            hidden: true
+	      }
 	    ]
 
   },

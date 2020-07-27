@@ -219,11 +219,11 @@
           goodsSubtitle: [{required: true, message: '请输入副标题', trigger: 'blur'}],
           salePrice: [
             {required: true, message: '请输入商品售价', trigger: 'blur'},
-            { pattern: /^[0-9]{0,5}$|^[0-9]{0,5}(\.[0-9]{1,2})?$/, message: '请输入正确格式' }
+            { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '整数不超过3位，小数点后2位' }
           ],
           martPrice: [
             {required: true, message: '请输入市场价', trigger: 'blur'},
-            { pattern: /^[0-9]{0,5}$|^[0-9]{0,5}(\.[0-9]{1,2})?$/, message: '请输入正确格式' }
+            { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '整数不超过3位，小数点后2位' }
           ]
         }
       }

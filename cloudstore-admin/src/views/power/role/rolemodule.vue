@@ -23,10 +23,10 @@
         <el-table-column label="模块url" align="center">
           <template slot-scope="scope">{{scope.row.url}}</template>
         </el-table-column>
-        <el-table-column prop="address" label="是否关联">
+        <el-table-column prop="address" label="是否关联" align="center">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#13ce66"
-              inactive-color="#ff4949" @change="changeSwitch($event, scope.row)" :disabled="disabled">
+            <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#409eff"
+              inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
             </el-switch>
           </template>
         </el-table-column>
