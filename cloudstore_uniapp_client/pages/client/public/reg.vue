@@ -24,7 +24,10 @@
 			</view>
 			<button class="confirm-btn" @click="reguser" :disabled="logining">注册</button>
 			<view class="forget-section">
-				<text @click="getWxCode">微信注册</text>
+				<button class='vxUserInfo-btn' open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">
+					微信注册
+				</button>
+				<!-- <text @click="getWxCode">微信注册</text> -->
 			</view>
 			<view class="forget-section text-blue" @click="toLoginPwd">已经有账号?马上登录</view>
 		</view>
@@ -247,7 +250,7 @@
 					}
 				});
 			},
-			getWxCode () {
+			getuserinfo () { //微信授权获取手机号
 				this.$refs.popup.open()
 				var that = this;
 				uni.showLoading({
@@ -257,6 +260,7 @@
 				uni.getUserInfo({
 					provider: 'weixin',
 					success: function(infoRes) {
+						console.log(infoRes)
 						if (infoRes) {
 							that.vxUserInfo =  infoRes
 						}
@@ -621,6 +625,15 @@
 		color: $font-color-spec;
 		text-align: center;
 		margin-top: 40upx;
+		.vxUserInfo-btn {
+			background: #fff;
+			border: none;
+			color: #fa436a;
+			font-size: 28rpx;
+			&:after {
+				border:none
+			}
+		}
 	}
 
 	.register-section {

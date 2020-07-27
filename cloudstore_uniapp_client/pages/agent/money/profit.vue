@@ -80,6 +80,9 @@
 			components:{
 				navBar
 			},
+			onShow () {
+				this.getFinanceData()
+			},
 			onLoad () {
 				this.userType = uni.getStorageSync('userInfo').agent
 				this.getFinanceData()

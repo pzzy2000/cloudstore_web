@@ -244,6 +244,7 @@
 											that.isUpload = true
 										}
 									} else {
+										that.isUpload = true
 										that.$api.msg(data.msg)
 									} 
 								}

@@ -128,7 +128,7 @@
 		onLoad() {
 			this.getData()
 		},
-		async onShow() {
+		onShow() {
 			this.getData()
 		},
 		// #ifndef MP
@@ -182,13 +182,9 @@
 				that.userInfos[that.feild] = that.inputContent
 			},
 			getData(){
-				// #ifdef H5
-					this.getH5info()
-				// #endif
+					//this.getH5info()
 				//this.getH5info()
-				// #ifdef MP-WEIXIN
 					this.getuserinfo();
-				// #endif
 				// this.getHistory();
 			},
 			// 获取微信用户信息
@@ -201,6 +197,7 @@
 						this.user.url = this.user.detailUrl
 					}
 				}
+				console.log(userInfo.agent)
 				if (userInfo.agent === 'agent') {
 					this.userTypeName = '代理商'
 					this.isLeader = true
