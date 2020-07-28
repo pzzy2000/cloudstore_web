@@ -235,6 +235,10 @@
       this.getList(1);
       this.searchRootCategory();
     },
+    activated() {
+      this.getList(1);
+      this.searchRootCategory();
+    },
     watch: {
       selectProductCateValue: function(newValue) {
         if (newValue != null && newValue.length == 2) {

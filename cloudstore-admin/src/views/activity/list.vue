@@ -109,7 +109,7 @@
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow" v-if="scope.row.isDelete == 1 ? false : true">删除</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow" v-if="scope.row.isDelete == 1 ? false : true && scope.row.status == 1 ? false : true">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -306,7 +306,7 @@
       associatedGood(row) {
         this.$router.push({
           path: "/sys/activity/assogoods",
-          query: {name: row.name, id: row.id}
+          query: {id: row.id, status: row.status}
         })
       },
       handeldelGoods(row) {
@@ -316,8 +316,13 @@
           type: 'warning'
         }).then(() => {
           delActivity({ids: row.id}).then(res => {
-            console.log(res);
             if (res.result.code == 0) {
+              if (this.total % this.listQuery.pageSize === 1) {    // 表格总数量 % 行数  余出的就是当前页有几个
+                const lastPage = (this.total + this.listQuery.pageSize - 1) / this.listQuery.pageSize  // （表格总数量 +行数 -1) / 行数
+                if (this.listQuery.pageNum === lastPage) { // 当前页 === （表格总数量 +行数 -1) / 行数
+                  this.listQuery.pageNum = this.listQuery.pageNum - 1 // 减去一页就是前一页
+                }
+              }
               this.$message({
                 message: '删除活动成功!',
                 type: 'success',

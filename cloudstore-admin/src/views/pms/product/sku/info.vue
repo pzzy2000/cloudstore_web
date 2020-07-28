@@ -32,52 +32,52 @@
 
             <div>
               <el-form :rules="rules" :model="goodsku" ref="format">
-              <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border>
-                <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center">
-                  <template slot-scope="scope">
-                    {{getProductSkuSp(scope.row,index,item)}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="销售价格" align="center">
-                  <template slot-scope="scope">
-                    <el-form-item :prop="'skuStockList.' + scope.$index + '.price'" :rules='rules.price'>
-                      <el-input v-model="scope.row.price"></el-input>
-                    </el-form-item>
-                  </template>
-                </el-table-column>
-                <el-table-column label="商品库存" align="center">
-                  <template slot-scope="scope">
-                    <el-form-item :prop="'skuStockList.' + scope.$index + '.stock'" :rules='rules.stock'>
-                      <el-input v-model="scope.row.stock"></el-input>
-                    </el-form-item>
-                  </template>
-                </el-table-column>
-                <el-table-column label="库存预警值" align="center">
-                  <template slot-scope="scope">
-                    <el-form-item :prop="'skuStockList.' + scope.$index + '.warnQuantity'" :rules='rules.warnQuantity'>
-                      <el-input v-model="scope.row.warnQuantity"></el-input>
-                    </el-form-item>
-                  </template>
-                </el-table-column>
-                <el-table-column label="SKU编号" align="center">
-                  <template slot-scope="scope">
-                    <el-form-item :prop="'skuStockList.' + scope.$index + '.skuCode'" :rules='rules.skuCode'>
-                      <el-input v-model="scope.row.skuCode" onkeyup="value=value.replace(/[\u4E00-\u9FA5]/g,'')"></el-input>
-                    </el-form-item>
-                  </template>
-                </el-table-column>
-                <el-table-column label="属性图片：" align="left" width="400">
-                  <template slot-scope="scope">
-                    <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
-                  </template>
-                </el-table-column>
-                <el-table-column fixed="right" label="操作" width="80" align="center">
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="handleRemoveProductSku(scope.$index, scope.row)">删除
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
+                <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border>
+                  <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center">
+                    <template slot-scope="scope">
+                      {{getProductSkuSp(scope.row,index,item)}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="销售价格" align="center">
+                    <template slot-scope="scope">
+                      <el-form-item :prop="'skuStockList.' + scope.$index + '.price'" :rules='rules.price'>
+                        <el-input v-model="scope.row.price"></el-input>
+                      </el-form-item>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="商品库存" align="center">
+                    <template slot-scope="scope">
+                      <el-form-item :prop="'skuStockList.' + scope.$index + '.stock'" :rules='rules.stock'>
+                        <el-input v-model="scope.row.stock"></el-input>
+                      </el-form-item>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="库存预警值" align="center">
+                    <template slot-scope="scope">
+                      <el-form-item :prop="'skuStockList.' + scope.$index + '.warnQuantity'" :rules='rules.warnQuantity'>
+                        <el-input v-model="scope.row.warnQuantity"></el-input>
+                      </el-form-item>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="SKU编号" align="center">
+                    <template slot-scope="scope">
+                      <el-form-item :prop="'skuStockList.' + scope.$index + '.skuCode'" :rules='rules.skuCode'>
+                        <el-input v-model="scope.row.skuCode" onkeyup="value=value.replace(/[\u4E00-\u9FA5]/g,'')"></el-input>
+                      </el-form-item>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="属性图片：" align="left" width="400">
+                    <template slot-scope="scope">
+                      <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
+                    </template>
+                  </el-table-column>
+                  <el-table-column fixed="right" label="操作" width="80" align="center">
+                    <template slot-scope="scope">
+                      <el-button type="text" @click="handleRemoveProductSku(scope.$index, scope.row)">删除
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
               </el-form>
               <div>
                 <el-button type="primary" style="margin-top: 20px" @click="handleRefreshProductSkuList">刷新列表

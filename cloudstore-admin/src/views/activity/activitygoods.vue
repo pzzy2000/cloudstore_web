@@ -69,7 +69,7 @@
         <el-table-column label="供应商店铺" align="center" fixed :formatter="goodsinfo" column-key="supplierShopBean">
         </el-table-column>
 
-        <el-table-column label="操作" align="center" width="80">
+        <el-table-column label="操作" align="center" width="80" v-if="status == 1 ? false : true">
           <template slot-scope="scope">
             <el-button type="danger" size="mini" @click="handeldel(scope.row)">删除</el-button>
           </template>
@@ -109,10 +109,12 @@
           two: [],
           three: []
         },
+        status: 0
       }
     },
     created() {
       this.listQuery.activityId = this.$route.query.id;
+      this.status = this.$route.query.status;
       this.getList(1);
       this.searchRootCategory();
     },
