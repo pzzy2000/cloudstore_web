@@ -492,7 +492,6 @@
 		z-index: 90;
 		background: #fff;
 		padding-bottom: 40upx;
-		margin-top: 150rpx;
 	}
 
 	.input-item-right {

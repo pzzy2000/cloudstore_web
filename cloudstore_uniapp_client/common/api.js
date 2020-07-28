@@ -9,7 +9,6 @@ export default {
 		simpleSearchList: 'esProduct/search/simple', //简单搜索
 		search: 'esProduct/search', //综合搜索、筛选、排序
 	},
-	
 	areas:{
 		province:'sys/dict/list',
 	},
@@ -26,7 +25,8 @@ export default {
 			auth: 'sys/manager/platform/weixin/auth',  //传code
 			getPhone: 'sys/manager/platform/weixin/getPhone', // 传手机号加密信息
 			saveClientInfo: 'sys/manager/platform/weixin/saveClientInfo' ,//再传一系列信息
-			sendCode: '/sys/manager/platform/register/client/send' //获取手机验证码
+			sendCode: 'sys/manager/platform/register/client/send',//获取手机验证码
+			updatePassword: 'sys/manager/platform/updatePassword'
 		},
 		info:{
 			searchInfo:"client/app/searchClientInfo" //查询当前登录信息
@@ -339,4 +339,46 @@ export default {
 		return res;
 
 	},
+	async ApiFalseToken (methods, endpoint, formData ,load) {
+		if (load) {
+			uni.showLoading({
+				title: '正在加载',
+				mask: false
+			});
+		}
+		let [error, res] = await uni.request({
+			url: (this.BASEURI + endpoint),
+			data: formData,
+			method: methods,
+			header: {
+				'content-type': 'application/x-www-form-urlencoded',
+			},
+		});
+		if (load) {
+			uni.hideLoading();
+		}
+		if (undefined == res || 'undefined' == res) {
+			console.log('index');
+			uni.showToast({
+				title: '系统请求错误',
+				icon: 'none'
+			});
+		} else {
+			let result = res.data.result;
+			if (result.code < 0) {
+				uni.showToast({
+					title: '[' + result.msg + ']',
+					icon: 'none'
+				});
+			} else
+			if (result.code > 0) {
+				uni.showToast({
+					title: '[' + result.msg + ']',
+					icon: 'none'
+				});
+			} else {
+				return result;
+			}
+		}
+	}
 }

@@ -27,7 +27,7 @@ export default {
 	margin: 20upx 0;
 	position: absolute;
 	left: 0;
-	bottom: 100upx;
+	bottom: 50upx;
 	width: 100%;
 	text-align: center;
 }

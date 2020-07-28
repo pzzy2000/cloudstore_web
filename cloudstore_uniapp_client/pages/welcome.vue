@@ -56,34 +56,39 @@
 					},
 					data: params,
 					success: res => {
-						var data = res.data.result
-						if (data.code<0) {
-							uni.showToast({
-								title: '[' + data.msg + ']',
-								icon: 'none'
-							});
-							let timer = setTimeout(() => {
-								clearTimeout(timer);
-								uni.navigateTo({
-									url: `/pages/client/public/login`
-								})
-							}, 2000);
-						} else {
-							let loginuser = data.result;
-							uni.setStorageSync('userInfo', loginuser)
-							uni.setStorageSync('token', loginuser.token)
-							clearTimeout(timeout)
-							if (this.goodsId) {
-								uni.navigateTo({
-									url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+						if (res) {
+							var data = res.data.result
+							if (data.code<0) {
+								uni.showToast({
+									title: '[' + data.msg + ']',
+									icon: 'none'
 								});
-							} 
-							else {
-								uni.switchTab({
-									url:'/pages/client/recommend/index'
-								})
+								let timer = setTimeout(() => {
+									clearTimeout(timer);
+									uni.navigateTo({
+										url: `/pages/client/public/login`
+									})
+								}, 2000);
+							} else {
+								let loginuser = data.result;
+								uni.setStorageSync('userInfo', loginuser)
+								uni.setStorageSync('token', loginuser.token)
+								clearTimeout(timeout)
+								if (this.goodsId) {
+									uni.navigateTo({
+										url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+									});
+								} 
+								else {
+									uni.switchTab({
+										url:'/pages/client/recommend/index'
+									})
+								}
 							}
 						}
+					},
+					fail: (e) => {
+						console.log(e)
 					}
 				});
 				

@@ -37,7 +37,7 @@
 		</view>
 		
 		<!-- 分类筛选组件 -->
-		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+45+'px'}]">
+		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+'rpx'}]">
 			<view class="cate-content">
 				<scroll-view scroll-y class="cate-list">
 					<view v-for="item in cateList" :key="item.id">
@@ -422,7 +422,6 @@
 	transition: 0.3s;
 
 	.cate-content {
-		padding-top: 50rpx;
 		width: 45%;
 		height: 100%;
 		background: #fff;

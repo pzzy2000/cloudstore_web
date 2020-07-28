@@ -237,6 +237,30 @@
 				"enablePullDownRefresh": false
 			}
         }
+        ,{
+            "path" : "pages/client/public/forgetPwd",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
+        ,{
+            "path" : "pages/client/info/editPwd",
+			"style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
+        ,{
+            "path" : "pages/client/info/showInfo",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
