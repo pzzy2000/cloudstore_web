@@ -135,7 +135,7 @@
           value: 0,
           label: '未审核'
         }],
-        statusList: [{label: "待审核", value: '1'}, {label: "已通过", value: '3'}, {label: "已拒绝", value: '2'}],
+        statusList: [{label: "待审核", value: '0'}, {label: "已通过", value: '1'}, {label: "违规关闭", value: '2'}],
         delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}]
       }
     },
@@ -178,13 +178,12 @@
           case 0:
             return '待审核';
           case 1:
-            return '正常';
+            return '已通过';
           case 2:
             return '违规关闭';
           default: return "数据读取错误";
             breal;
         }
-        // 状态;0:正常;1:违规关闭;2:永久关闭
       },
 
       deleteStatus(row, column) {

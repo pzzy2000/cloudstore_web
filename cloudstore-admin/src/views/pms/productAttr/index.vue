@@ -97,6 +97,9 @@
           break;
       }
     },
+    activated() {
+      this.getList();
+    },
     methods: {
       getList() {
         this.listLoading = true;
@@ -125,12 +128,20 @@
           type: 'warning'
         }).then(() => {
           deleteProductAttrCate({'ids':row.id}).then(response=>{
-            this.$message({
-              message: '删除成功',
-              type: 'success',
-              duration:1000
-            });
-            this.getList();
+            if (response.result.code == 0) {
+              if (this.total % this.listQuery.pageSize === 1) {    // 表格总数量 % 行数  余出的就是当前页有几个
+                const lastPage = (this.total + this.listQuery.pageSize - 1) / this.listQuery.pageSize  // （表格总数量 +行数 -1) / 行数
+                if (this.listQuery.pageNum === lastPage) { // 当前页 === （表格总数量 +行数 -1) / 行数
+                  this.listQuery.pageNum = this.listQuery.pageNum - 1 // 减去一页就是前一页
+                }
+              }
+              this.$message({
+                message: '删除成功',
+                type: 'success',
+                duration:1000
+              });
+              this.getList();
+            }
           });
         });
       },
