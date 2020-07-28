@@ -34,7 +34,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <remoteCom></remoteCom>
+<!--          <remoteCom></remoteCom>-->
         </el-form>
       </div>
     </el-card>

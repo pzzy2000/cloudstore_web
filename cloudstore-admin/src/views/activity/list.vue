@@ -88,19 +88,19 @@
         </el-table-column>
         <el-table-column label="是否显示在首页" align="center">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeSwitch(scope.row)">
+            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="changeSwitch(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
         <el-table-column label="是否启用" align="center">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="onoffAct(scope.row)">
+            <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="onoffAct(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
         <el-table-column label="是否显示在导航栏" align="center">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.navigateIndex" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="showInnavigate(scope.row)">
+            <el-switch v-model="scope.row.navigateIndex" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="showInnavigate(scope.row)">
             </el-switch>
           </template>
         </el-table-column>

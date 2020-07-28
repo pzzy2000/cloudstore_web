@@ -16,18 +16,37 @@
           style="float: right;margin-bottom: 10px;"
           @click="handleSearchList"
           type="primary"
-          size="small">
+          size="mini">
           查询
         </el-button>
         <el-button
           style="float: right;margin-right: 15px;margin-bottom: 10px;"
-          @click="handleResetSearch('searchList')"
-          size="small">
+          @click="handleResetSearch()"
+          size="mini">
           重置
         </el-button>
       </div>
       <div style="margin-top: 15px">
-
+        <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
+          <el-form-item label="代理商名字：">
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="代理商名字" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="代理商电话：">
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="代理商电话" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="配送时间：">
+            <el-date-picker v-model="listQuery.allocationTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择配送时间"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="配送单号：">
+            <el-input style="width: 214px" v-model="listQuery.allocationNo" placeholder="配送单号" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="配送状态：">
+            <el-select v-model="listQuery.status" placeholder="请选择配送状态" clearable>
+              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
       </div>
     </el-card>
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
@@ -38,17 +57,12 @@
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="代理商信息" align="center" fixed  prop="agentName" :formatter="showAllocInfo">
+        <el-table-column label="代理商名字" align="center" fixed  prop="agentName" :formatter="showAllocInfo">
         </el-table-column>
-
          <el-table-column label="代理商电话" align="center" fixed  prop="agentPhone" :formatter="showAllocInfo">
         </el-table-column>
-
         <el-table-column label="代理商地址" align="center" fixed  prop="agentaddress" :formatter="showAllocInfo">
         </el-table-column>
-
-
-
         <el-table-column label="配送时间" align="center">
           <template slot-scope="scope">{{scope.row.allocationTime | formatDate}}</template>
         </el-table-column>
@@ -56,9 +70,7 @@
            <template slot-scope="scope">{{scope.row.allocationNo}}</template>
         </el-table-column>
         <el-table-column label="配送状态" align="center" prop="allocStatus" :formatter="showAllocInfo">
-
         </el-table-column>
-
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="readOrder(scope.$index, scope.row)">配送详情</el-button>
@@ -73,9 +85,9 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
-        :page-size="pageList.pageSize"
+        :page-size="listQuery.pageSize"
         :page-sizes="[10]"
-        :current-page.sync="pageList.pageNum"
+        :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
     </div>
@@ -116,22 +128,21 @@
           activeIndex: '1',
           orderList: [],
           listLoading: false,
-          pageList: Object.assign({}, defaultList),
+          listQuery: Object.assign({}, defaultList),
           total: 1,
-
           dialogVisible: false,
           btnMsg: '',
-          type: ''
+          type: '',
+          statusList: [{label: "待配送", value: 'dps'}, {label: "已配送", value: 'yps'}, {label: "已送达", value: 'ysd'}],
         }
       },
       beforeCreate() {
         that = this;
       },
       created() {
-        this.getList();
+        this.getList(1);
       },
       filters: {
-
         // 时间格式自定义 只需把字符串里面的改成自己所需的格式
         formatDate(time) {
           let date = new Date(time);
@@ -141,56 +152,76 @@
       },
       methods: {
         showAllocInfo(row,r){
-         switch(r.property){
-           case 'agentName':{
-                    try{
-                      return  row.agentBean.name;
-                     }catch(e){
-                      return  '数据读取错误';
-                     }
-                     break;
-           }
+          switch(r.property){
+            case 'agentName':{
+              try{
+                return  row.agentBean.name;
+               }catch(e){
+                return  '数据读取错误';
+               }
+               break;
+            }
 
-           case 'agentPhone':{
+            case 'agentPhone':{
              try{
                    return  row.agentBean.phone;
              }catch(e){
               return  '数据读取错误';
              }
              break;
-           }
+            }
 
-          case 'agentaddress':{
+            case 'agentaddress':{
              try{
                    return  row.agentBean.cityBean.name+"/"+row.agentBean.detailAddress;
              }catch(e){
               return  '数据读取错误';
              }
              break;
-           }
-
-           case 'allocStatus':{
-                    try{
-                       let allocStatus  = row.status;
-                         switch(allocStatus){
-                              case 'dps': return  '待配送';
-                              case 'yps': return '已配送';
-                              case 'yps': return '已送达';
-                              default: return '状态错误';
-                         }
-                     }catch(e){
-                      return  '数据读取错误';
-                     }
-                     break;
+            }
+            case 'allocStatus':{
+              try{
+                 let allocStatus  = row.status;
+                   switch(allocStatus){
+                      case 'dps': return  '待配送';
+                      case 'yps': return '已配送';
+                      case 'ysd': return '已送达';
+                      default: return '状态错误';
+                   }
+               }catch(e){
+                return  '数据读取错误';
+               }
+               break;
            }
          }
         },
-
-        getList() {
-          fetchList(this.pageList).then(res => {
+        getList(idx) {
+          fetchList(this.listQuery).then(res => {
             if (res.result.code == 0) {
               this.orderList = res.result.result.records;
               this.total = parseInt(res.result.result.total);
+              if (idx == 0) {
+                if (res.result.result.records.length == 0) {
+                  this.$message({
+                    message: "暂无数据",
+                    type: 'warning',
+                    duration: 800
+                  })
+                }else {
+                  this.$message({
+                    message: "查询成功",
+                    type: 'success',
+                    duration: 800
+                  })
+                }
+              }
+              if (idx == 2) {
+                this.$message({
+                  message: "重置成功",
+                  type: 'success',
+                  duration: 800
+                })
+              }
             }
           })
         },
@@ -201,16 +232,18 @@
           console.log(key, keyPath);
         },
         handleSearchList() {
-          alert("搜索事件！")
+          this.listQuery.pageNum = 1;
+          this.getList(0);
         },
-        handleResetSearch(formName) {
-          this.$refs[formName].resetFields();
+        handleResetSearch() {
+          this.listQuery = Object.assign({}, defaultList);
+          this.getList(2)
         },
         handleSizeChange() {
-          this.getList();
+          this.getList(1);
         },
         handleCurrentChange() {
-          this.getList();
+          this.getList(1);
         },
         readOrder(index, row){
           this.$router.push({path: "/allocation/order/detail", query: {id: row.id}});

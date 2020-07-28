@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<nav-bar>商品分类</nav-bar>
-		<view class="navbar">
+		<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click.stop="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click.stop="tabClick(1)">销量排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click.stop="tabClick(2)">
@@ -74,7 +74,7 @@ export default {
 	data() {
 		return {
 			goodsName: '',
-			statusBarHeight:1,
+			statusBarHeight: '',
 			cateMaskState: 0, //分类面板展开状态
 			headerPosition: 'fixed',
 			headerTop: '0px',
@@ -100,8 +100,8 @@ export default {
 	},
 
 	onLoad(options) {
+		this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
 		this.goodsName = options.goodsName
-		console.log(this.goodsName)
 		this.loadActiviList();
 		this.loadgoodsType();
 		this.loadData();

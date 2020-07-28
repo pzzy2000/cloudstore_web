@@ -1,12 +1,7 @@
 <template>
 	<view class="content">
-		<nav-bar backState="1000" type='fixed'>代理商品列表</nav-bar>
-		<!-- #ifdef H5 -->
-		<view class="navbar">
-		<!-- #endif -->
-		<!-- #ifdef MP-WEIXIN -->
-		<view class="navbar">
-		<!-- #endif -->
+		<nav-bar backState="1000">代理商品列表</nav-bar>
+		<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">商品分类</view>
@@ -130,7 +125,7 @@
 		},
 		onLoad () {
 			this.userType = uni.getStorageSync('userInfo').agent
-			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
 			//获取代理商代理的商品列表
 			this.loadData('initialize')
 			this.loadgoodsType()
@@ -343,7 +338,7 @@
 .navbar {
 	position: absolute;
 	left: 0;
-	top: 150upx;
+	top: 160upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;

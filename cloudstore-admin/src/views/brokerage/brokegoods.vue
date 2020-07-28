@@ -55,13 +55,13 @@
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
                 border>
         <el-table-column label="商品名称" align="center" fixed="">
-          <template slot-scope="scope">{{scope.row.goodsBean.goodsName}}</template>
+          <template slot-scope="scope">{{scope.row.goodsBean.goodsName | changeMsg}}</template>
         </el-table-column>
         <el-table-column label="商品品牌" align="center">
-          <template slot-scope="scope">{{scope.row.goodsBrand}}</template>
+          <template slot-scope="scope">{{scope.row.goodsBean.goodsBrand | changeMsg}}</template>
         </el-table-column>
         <el-table-column label="商品货号" align="center">
-          <template slot-scope="scope">{{scope.row.goodsNumber}}</template>
+          <template slot-scope="scope">{{scope.row.goodsBean.goodsNumber | changeMsg}}</template>
         </el-table-column>
         <el-table-column label="商品规格类别" width="150" align="center" :formatter="propertyBean">
         </el-table-column>
@@ -251,6 +251,13 @@
           return '审核通过';
         } else {
           return '未审核';
+        }
+      },
+      changeMsg(data) {
+        if (data == null){
+          return "数据读取出错"
+        }else{
+          return data;
         }
       }
     },

@@ -36,13 +36,28 @@
 		</uni-popup>
 		<popup-layer ref="popupRef" :direction="'top'" v-model="boolShow">
 			<view class="regBox" >
-				<input type="text" :value="vxPhone" class="input-height"/>
+				<view class="cu-form-group">
+					<view class="title">手机号码</view>
+					<input placeholder="自动获取手机号" name="input" :value="vxPhone"></input>
+				</view>
+				<view class="cu-form-group">
+					<view class="title">验证码</view>
+					<input placeholder="请输入手机验证码" name="input" :value="phoneCode" @input="editInput($event,'code')"></input>
+					<button class='cu-btn bg-green shadow' v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</button>
+					<button class='cu-btn bg-green shadow' v-else>{{ auth_register_time }}秒</button>
+				</view>
+				<view class="cu-form-group pwd">
+					<view class="title">密码</view>
+					<input placeholder="请输入登录密码" name="input" :value="userPwd" @input="editInput($event,'pwd')"></input>
+				</view>
+				
+				<!-- <input type="text" :value="vxPhone" class="input-height"/>
 				<view class="phone-code">
-					<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input" @input="editInput($event,'code')"/>
-					<view class="cu-btn round bg-green code-btn" v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</view>
+					手机号：<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input" @input="editInput($event,'code')"/>
+					验证码：<view class="cu-btn round bg-green code-btn" v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</view>
 					<view type="primary" class="code-btn" v-else>{{ auth_register_time }}秒</view>
 				</view>
-				<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height" @input="editInput($event,'pwd')"/>
+				密码：<input type="password" :value="userPwd" placeholder="请输入登录密码" class="input-height pwd" @input="editInput($event,'pwd')"/> -->
 				<view class="regBox-btn">
 					<button type="primary" @tap="registerBtn">注册</button>
 					<button type="primary" @tap="close">关闭</button>
@@ -661,7 +676,7 @@
 		border-radius: 5px;
 	}
 	.regBox {
-		width: 85%;
+		width: 100%;
 		padding: 30upx 0;
 		margin: 0 auto;
 		.input-height {
@@ -670,8 +685,8 @@
 			margin-bottom: 20upx;
 		}
 		.uni-input-wrapper {
-			height: 80rpx;
-			line-height: 80rpx;
+			height: 80upx;
+			line-height: 80upx;
 		}
 		.phone-code {
 			display: flex;
@@ -684,10 +699,13 @@
 			}
 			.code-btn {
 				width: 30%;
-				font-size: 25rpx;
-				line-height: 70rpx;
-				height: 70rpx;
+				font-size: 25upx;
+				line-height: 70upx;
+				height: 70upx;
 			}
+		}
+		.pwd {
+			margin-bottom: 60upx;
 		}
 		.regBox-btn {
 			display: flex;

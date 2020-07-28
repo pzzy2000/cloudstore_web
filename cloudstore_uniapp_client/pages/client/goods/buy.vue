@@ -349,7 +349,7 @@
 								confirmText: '确定',
 								success: res => {
 									uni.navigateTo({
-										url: '/pages/client/order/order',
+										url: '/pages/client/goods/buySuccess',
 									});
 								},
 							});
