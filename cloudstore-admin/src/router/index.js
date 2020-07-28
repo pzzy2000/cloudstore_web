@@ -34,7 +34,7 @@ export  function back(){
  **/
 export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index'), hidden: true},
-  {path: '/managelogin', component: () => import('@/views/login/manageLoging'), hidden: true},
+  {path: '/manage/login', component: () => import('@/views/login/manageLoging'), hidden: true},
   {path: '/sign', component: () => import('@/views/sign/index'), hidden: true},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
   {
@@ -519,7 +519,7 @@ export const asyncRouterMap = [
 	    name: 'order',
 	    meta: {title: '配送管理', icon: 'product-list'},
 	    children: [
-	    	 { 
+	    	 {
 	    	        path: 'list',
 	    	        name: 'ps_list',
 	    	        component: () => import('@/views/allocation/order/list'),

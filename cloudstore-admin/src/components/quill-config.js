@@ -11,11 +11,11 @@ import {
   var token = getToken(); // 要保证取到
   // alert(token);
 const uploadConfig = {
-    action:  'http://106.52.184.24:18888/platform/sys/upload/entity/oss/ali/update?targetType=3',  // 必填参数 图片上传地址
+    action:  './platform/sys/upload/entity/oss/ali/update?targetType=3',  // 必填参数 图片上传地址
     methods: 'POST',  // 必填参数 图片上传方式
     token: token,  // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
     name: 'file',  // 必填参数 文件的参数名
-    size: 500,  // 可选参数   图片大小，单位为Kb, 1M = 1024Kb
+    size: 10240,  // 可选参数   图片大小，单位为Kb, 1M = 1024Kb
     accept: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon'  // 可选 可上传的图片格式
 };
 
