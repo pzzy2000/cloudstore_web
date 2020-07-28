@@ -26,15 +26,15 @@
 						<view class="i-top b-b">
 							<text class="time">订单号: {{item.id}}</text>
 							<template>
-								<text class="state" v-if="item.orderBean.orderStatus === 'wait'">待支付</text>
-								<text class="state" v-else-if="item.orderBean.orderStatus === 'pay'">支付待确认</text>
-								<text class="state" v-else-if="item.orderBean.orderStatus === 'payed'">已支付</text>
-								<text class="state" v-else-if="item.orderBean.orderStatus === 'close'">超时关闭</text>
-								<text class="state" v-else-if="item.orderBean.orderStatus === 'peisong'">待配送</text>
-								<text class="state" v-else-if="item.orderBean.orderStatus === 'peisoged'">已配送</text>
-								<text class="state" v-else-if="item.orderBean.orderStatus === 'complete'">已完成</text>
-								<text class="state" v-else-if="item.orderBean.orderStatus === 'returns'">退货</text>
-								<text class="state" v-else-if="item.orderBean.orderStatus === 'retud'">已退货</text>
+								<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
+								<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
+								<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
+								<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
+								<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
+								<text class="state" v-else-if="item.orderStatus === 'peisoged'">已配送</text>
+								<text class="state" v-else-if="item.orderStatus === 'complete'">已完成</text>
+								<text class="state" v-else-if="item.orderStatus === 'returns'">退货</text>
+								<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
 							</template>
 						</view>
 						<view class="goods-box-single" :key="index" @click="toOrder(item)">
@@ -193,7 +193,6 @@
 					uni.stopPullDownRefresh();
 					uni.hideLoading()
 				}
-				console.log(this.orderList)
 			},
 			//swiper 切换
 			changeTab(e){

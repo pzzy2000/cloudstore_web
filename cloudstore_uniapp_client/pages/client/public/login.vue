@@ -177,6 +177,7 @@
 							var userInfo = {
 								name: res.data.result.result.name,
 								url: res.data.result.result.url,
+								agent: res.data.result.result.agent,
 								userType: res.data.result.result.userType,
 								relationId: res.data.result.result.relationId,
 								wxPic: res.data.result.result.wxPic

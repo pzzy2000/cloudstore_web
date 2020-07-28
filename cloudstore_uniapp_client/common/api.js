@@ -121,6 +121,9 @@ export default {
 			getAgentShop: 'agent/goods/app/getAgentShop'
 		}
 	},
+	statusBarHeight () {
+		return  uni.getSystemInfoSync().statusBarHeight
+	},
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
 		if (load) {
 			uni.showLoading({

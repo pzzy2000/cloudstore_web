@@ -1,17 +1,11 @@
 <template>
 	<view class="content">
-		<nav-bar backState="1000" type='fixed'>代理商品列表</nav-bar>
-		<view class="navbar">
+		<nav-bar backState="1000">代理商品列表</nav-bar>
+		<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
+		<!-- <view class="navbar"> -->
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">销量排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">商品分类</view>
-			<!-- <view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">
-				<text>价格</text>
-				<view class="p-box">
-					<text :class="{ active: priceOrder === 1 && filterIndex === 2 }" class="yticon icon-shang"></text>
-					<text :class="{ active: priceOrder === 2 && filterIndex === 2 }" class="yticon icon-shang xia"></text>
-				</view>
-			</view> -->
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 		</view>
 		<!-- 显示商品的列表 -->
@@ -124,11 +118,10 @@
 			this.loadData()
 		},
 		onLoad (option) {
-			console.log(option)
+			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
 			this.agentId = option.agentId
 			this.activityId = option.activityId
 			this.userType = uni.getStorageSync('userInfo').agent
-			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 			//获取代理商代理的商品列表
 			this.loadData()
 			this.loadgoodsType()
@@ -342,9 +335,8 @@
 	padding-top: 96upx;
 }
 .navbar {
-	position: absolute;
+	position: fixed;
 	left: 0;
-	top: 150upx;
 	display: flex;
 	width: 100%;
 	height: 80upx;

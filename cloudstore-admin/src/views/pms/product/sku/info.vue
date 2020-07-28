@@ -24,7 +24,7 @@
                   <el-button class="littleMarginLeft" @click="handleAddProductAttrValue(productAttr.id,productAttr.name)">增加</el-button>
                 </p>
                 <el-checkbox-group v-model="goodsku.guigeSelectValue[productAttr.id]">
-                  <el-checkbox v-for="item in goodsku.guigeValue[productAttr.id]" :label="item" :key="item" @change="checkboxChang">
+                  <el-checkbox v-for="item in goodsku.guigeValue[productAttr.id]" :label="item" :key="item" @change="checked=>checkboxChang(checked,item,goodsku.guigeSelectValue[productAttr.id])">
                   </el-checkbox>
                 </el-checkbox-group>
               </div>
@@ -81,6 +81,8 @@
               </el-form>
               <div>
                 <el-button type="primary" style="margin-top: 20px" @click="handleRefreshProductSkuList">刷新列表
+                </el-button>
+                <el-button type="primary" style="margin-top: 20px" @click="handleUpdateProductSkuList">更新列表
                 </el-button>
               </div>
 
@@ -239,7 +241,18 @@
       // this.getproductAttributeCategory();
     },
     methods: {
-      updateGoodsProperties() {
+
+      updateGoodsProperties(){
+         this.$confirm('是否更新此商品的整个信息?', '提示', {
+           confirmButtonText: '确定',
+           cancelButtonText: '取消',
+           type: 'warning'
+         }).then(() => {
+           this. updateGoodsProperties1();
+         });
+      },
+
+      updateGoodsProperties1() {
         if (this.goodsku.mobileHtml !== null && this.goodsku.mobileHtml !== '') {
           let good_sku = this.goodsku;
           let data = {};
@@ -313,9 +326,29 @@
                       }
                     }
                   }
+
+                   goodsku_.skuStockList = tr.goodsSku;
+                    goodsku_.mobileHtml =goods.mobileHtml;
                   //TABLE
-                  goodsku_.skuStockList = tr.goodsSku;
-                  goodsku_.mobileHtml =goods.mobileHtml;
+                   let selectValue = goodsku_.guigeSelectValue;
+
+                  for(let ii in goodsku_.skuStockList){
+                       let gsku = goodsku_.skuStockList[ii];
+                       var reg = new RegExp( "'" , "g" )
+                       let xx =gsku.sgk.replace(reg,'\"');
+                       // let sgk  = JSON.parse("\"" + gsku.sgk + "\"");
+                        let sgk  = JSON.parse(xx);
+                       for(let key in sgk){
+                           let value  = sgk[key];
+                           for(let key1 in selectValue){
+                                 if(key1=== key){
+                                    if(!selectValue[key1].includes(value))
+                                                    selectValue[key1].push(value);
+                                 }
+                           }
+
+                       }
+                  }
                 }
               });
             });
@@ -384,13 +417,67 @@
         }
 
       },
-      checkboxChang() {
+      checkboxChang(x,b,c) {
+        // a+b;
         this.$forceUpdate();
       },
 
       handleRefreshProductSkuList() {
-        this.refreshProductSkuList();
+        this.$confirm('此商品的整个SKU内容将会被重置,是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.refreshProductSkuList();
+        });
 
+
+      },
+
+      handleUpdateProductSkuList(){
+          let selectValue = this.goodsku.guigeSelectValue;
+          let keys = Object.keys(selectValue);
+          let array4 = [];
+          for (let index in keys) {
+            let keyValues = selectValue[keys[index]];
+            if (keyValues.length === 0) continue;
+            let x = [];
+            for (let i = 0; i < keyValues.length; i++) {
+              x.push("'" + keys[index] + "':'" + keyValues[i] + "'");
+            }
+            array4.push(x);
+          }
+          var result = array4.reduce((last, current) => {
+            const array = [];
+            last.forEach(par1 => {
+              current.forEach(par2 => {
+                array.push(par1 + "," + par2);
+              });
+            });
+            return array;
+          });
+          let newSkuStockList=[];
+          for (let ix in result) {
+            let xx = "\"{" + result[ix] + "}\"";
+            newSkuStockList.push({
+              sgk: JSON.parse(xx)
+            })
+          }
+           let  isadd=false;
+          for(let  i in newSkuStockList){
+                   isadd=true;
+                  let   newsku = newSkuStockList[i];
+                 for(let  j in this.goodsku.skuStockList){
+                      if(newsku.sgk ===this.goodsku.skuStockList[j].sgk){
+                          isadd=false;
+                      }
+                 }
+
+               if(isadd==true){
+                 this.goodsku.skuStockList.push(newsku);
+               }
+          }
+          //a+b;
       },
 
       handleRemoveProductSku(index, row) {

@@ -229,30 +229,38 @@
 				"enablePullDownRefresh": false
 			}
         }
+        ,{
+            "path" : "pages/client/goods/buySuccess",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "丫咪购",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#f8f8f8"
 	},
 	"tabBar": {
-		"color": "#C0C4CC",
-		"selectedColor": "#fa436a",
+		"color": "#999",
+		"selectedColor": "#36c0ff",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [
 			//client
 			{
 				"pagePath": "pages/client/recommend/index",
-				"iconPath": "static/tab-home.png",
-				"selectedIconPath": "static/tab-home-current.png",
+				"iconPath": "static/tabbar/classify.png",
+				"selectedIconPath": "static/tabbar/select-classify.png",
 				"text": "推荐"
 			},
 			{
 				"pagePath": "pages/client/earnings/index",
-				"iconPath": "static/tab-home.png",
-				"selectedIconPath": "static/tab-home-current.png",
+				"iconPath": "static/tabbar/earnings.png",
+				"selectedIconPath": "static/tabbar/select-earnings.png",
 				"text": "收益"
 			},
 			// {
@@ -263,8 +271,8 @@
 			// },
 			{
 				"pagePath": "pages/client/info/index",
-				"iconPath": "static/tab-home.png",
-				"selectedIconPath": "static/tab-home-current.png",
+				"iconPath": "static/tabbar/myAgent.png",
+				"selectedIconPath": "static/tabbar/select-myAgent.png",
 				"text": "我的"
 			}
  
