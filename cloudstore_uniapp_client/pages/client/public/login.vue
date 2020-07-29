@@ -24,7 +24,11 @@
 				</button>
 			</view>
 			<!-- #endif -->
-			<view class="forget-section" @click="toForget">忘记密码?</view>
+			<view class="forget-section">
+				<navigator url="/pages/client/public/forgetPwd">
+					忘记密码?
+				</navigator>
+			</view>
 		</view>
 		<view class="register-section">
 			还没有账号?<text @click="toRegist">马上注册</text>
@@ -430,5 +434,9 @@
 			color: $font-color-spec;
 			margin-left: 10upx;
 		}
+	}
+	.navigator-hover {
+		background: none;
+		opacity: 1;
 	}
 </style>

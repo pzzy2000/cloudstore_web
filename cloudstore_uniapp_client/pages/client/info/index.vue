@@ -62,7 +62,7 @@
 						<text class="text-block">地址管理</text>
 					</view>
 				</view>
-				<view class="cu-item arrow" @click="toapplyAgent(false)">
+				<view class="cu-item arrow" @click="toapplyAgent('/pages/client/info/showInfo')">
 					<view class="content">
 						<text class="cuIcon-people text-pink"></text>
 						<text class="text-block">个人资料</text>
@@ -85,6 +85,12 @@
 						<text class="cuIcon-servicefill text-olive"></text>
 						<text class="text-block">联系客服</text>
 					</button>
+				</view>
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/editPwd')">
+					<view class="content">
+						<text class="cuIcon-lock text-blue"></text>
+						<text class="text-block">修改密码</text>
+					</view>
 				</view>
 				<view class="cu-item arrow" @click="navTo('/pages/client/public/login','exit')">
 					<view class="content">

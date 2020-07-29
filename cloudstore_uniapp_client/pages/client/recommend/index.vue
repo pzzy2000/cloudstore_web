@@ -35,7 +35,6 @@
 								<text class="text-gray" v-else>{{goods.activeBean.name}}</text>
 							</view>
 							<view class="price-box">
-								<!-- <view class="clamp subhead">供应商:{{goods.supplierShopBean.shopName}}</view> -->
 								<view class="price">
 									 <text class="priceSale">￥{{ goods.goodsPicesBean.salePrice }}</text>
 									 <text class="pricemart">￥{{ goods.goodsPicesBean.martPrice}}</text>
@@ -64,6 +63,9 @@ export default {
 				name:'',
 				url:'',
 				newsList: '',
+				demo : [
+					
+				],
 				apply: [
 					{
 						name: '代理商品列表',
@@ -129,46 +131,24 @@ export default {
 				let params = {
 					agentId: agentId
 				}
-				if (token) {
-				  uni.request({
-					url: Api.BASEURI + Api.client.recommend.listAactivity,
-					method: 'post',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded',
-					  'auth': token
-					},
-					data: params,
-					success: res => {
-						if (res) {
-							var data = res.data.result.result
-							try{
-								for (var tmp = 0; tmp<=data.length; tmp++) {
-									if (data[tmp].activityId != '-1') {
-										this.apply[tmp].name = data[tmp].activityBean.name
-										this.apply[tmp].id = data[tmp].activityId
-										this.apply[tmp].icon = 'icon text-blue cuIcon-discover'
-									} else {
-										if (tmp === 0) {
-											continue;
-										}
-										this.apply[tmp].name = '敬请期待'
-										this.apply[tmp].id = data[tmp].activityId
-										this.apply[tmp].icon = 'icon text-gray cuIcon-repair'
-									}
-								}
-							}catch(e){
-								console.log()
+				let data = await Api.apiCall('post', Api.client.recommend.listAactivity, params, true, false)
+				if (data) {
+					if (data.code === 0) {
+						for (var tmp in data.result) {
+							this.demo.push({
+								'name': data.result[tmp].activityBean.name,
+								'id': data.result[tmp].activityId,
+								'detailUrl': '/pages/client/recommend/agentGoodsList/agentGoodsList',
+								'icon': 'icon text-blue cuIcon-discover',
+							})
+							for (var tmpData in this.demo) {
+								this.apply.splice(Number(tmpData)+1,1,this.demo[tmpData])
 							}
-						} else {
-							that.$api.msg('请求数据失败')
 						}
+					} else {
+						this.$api.msg(data.msg)
 					}
-				  });
 				}
-				// let list = await Api.apiCall('post', Api.client.recommend.listAactivity, params);
-				// if (list) {
-				// 	console.log(list)
-				// }
 			},
 			async getRecommendData () {
 				uni.showLoading({
