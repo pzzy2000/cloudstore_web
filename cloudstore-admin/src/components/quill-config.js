@@ -76,11 +76,10 @@ const handlers = {
                         self.quill.insertEmbed(length, 'image', result.result.url);
                         self.quill.setSelection(length + 1)
                         }else{
-                           msg('上传图片失败['+result.msg+']');
+                           msg('上传失败，图片不能超过1M');
                         }
-
                     }else{
-                          msg('上传图片失败');
+                          msg('上传失败，图片不能超过1M');// 7/29  17：08  走的这个
                     }
                     fileInput.value = ''
                 };
@@ -91,7 +90,7 @@ const handlers = {
                 };
                 // 当发生网络异常的时候会触发，如果上传数据的过程还未结束
                 xhr.upload.onerror = function (e) {
-                  msg("图片上传失败");
+                  msg("上传失败，图片不能超过1M");
                 };
                 // 上传数据完成（成功或者失败）时会触发
                 xhr.upload.onloadend = function (e) {

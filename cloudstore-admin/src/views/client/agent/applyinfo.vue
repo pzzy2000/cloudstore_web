@@ -46,7 +46,7 @@
             </el-table>
           </el-form-item>
           <div style="text-align: center">
-            <el-button type="primary" style="margin-right: 20px" size="small" @click="submitApply" v-show="isshow">审核通过</el-button>
+            <el-button type="primary" style="margin-right: 20px" size="small" @click="submitApply" v-show="isshow" :loading="loading">审核通过</el-button>
             <el-button style="margin-right: 20px" size="small" @click="refused" v-show="isshow">拒绝</el-button>
             <el-button size="small" @click="backpage" type="primary">返回</el-button>
           </div>
@@ -76,7 +76,8 @@
         rwDispatcherState: 'read',
         isshow: true,
         showViewer: false,
-        srcList: []
+        srcList: [],
+        loading: false
       }
     },
     created() {
@@ -122,7 +123,6 @@
         })
       },
       preview(row) {
-        console.log("+++++++++")
         this.showViewer = true;
         this.srcList[0] = row.url;
       },
@@ -143,6 +143,7 @@
         })
       },
       submitApply() {
+        this.loading = true;
         verified({status: 1, id: this.$route.query.id}).then(res => {
           console.log(res);
           if (res.result.code == 0) {
@@ -151,6 +152,7 @@
               type: 'success',
               duration: 800
             });
+            this.loading = false;
             this.$router.go(-1);
           }
         })
