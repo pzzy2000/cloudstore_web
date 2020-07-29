@@ -63,13 +63,13 @@
               </el-option>
             </el-select-dispatcher>
           </el-form-item>
-          <el-form-item prop="categoryThreeId">
-            <el-select-dispatcher v-model="baseinfo.categoryThreeId" :options="category1" remote v-on:change="seclectCategory($event, 3)"
-              placeholder="三级分类" :loading="loading">
-              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select-dispatcher>
-          </el-form-item>
+<!--          <el-form-item prop="categoryThreeId">-->
+<!--            <el-select-dispatcher v-model="baseinfo.categoryThreeId" :options="category1" remote v-on:change="seclectCategory($event, 3)"-->
+<!--              placeholder="三级分类" :loading="loading">-->
+<!--              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">-->
+<!--              </el-option>-->
+<!--            </el-select-dispatcher>-->
+<!--          </el-form-item>-->
           <br />
           <el-form-item label="地区：" prop="provinceId">
             <el-select-dispatcher v-model="baseinfo.provinceId" :options="category1" remote placeholder="省" :loading="loading"
@@ -182,7 +182,7 @@
           // goodsPics:[],
           categoryOneId: '',
           categoryTwoId: '',
-          categoryThreeId: '',
+          // categoryThreeId: '',
           goodsPics: [],
           goodsDetailPics: []
         },
@@ -212,7 +212,6 @@
           goodsDetailPics: [{ required: true, message: '不能为空', trigger: 'change' }],
           categoryOneId: [{required: true, message: '请输入一级分类', trigger: ['blur', 'change']}],
           categoryTwoId: [{required: true, message: '请输入二级分类', trigger: ['blur', 'change']}],
-          categoryThreeId: [{required: true, message: '请输入三级分类', trigger: ['blur', 'change']}],
           provinceId: [{required: true, message: '请输入省', trigger: 'change'}],
           cityId: [{required: true, message: '请输入市', trigger: 'change'}],
           areaId: [{required: true, message: '请输入区/县', trigger: 'change'}],
@@ -320,7 +319,7 @@
               // this.baseinfo.categoryThreeId = '';
               if (this.baseinfo.categoryTwoId !== undefined) {
                 this.$set(this.baseinfo, 'categoryTwoId', '');
-                this.$set(this.baseinfo, 'categoryThreeId', '');
+                // this.$set(this.baseinfo, 'categoryThreeId', '');
               }
               fetchListWithChildren(event).then(response => {
                 let list = response.result.result;
@@ -328,16 +327,15 @@
               });
               break;
             }
-          case 2:
-            {
-              this.category.three = [];
-              this.$set(this.baseinfo, 'categoryThreeId', '');
-              fetchListWithChildren(event).then(response => {
-                let list = response.result.result;
-                this.category.three = list;
-              });
-              break;
-            }
+          // case 2:
+          //   {
+          //     this.category.three = [];
+          //     fetchListWithChildren(event).then(response => {
+          //       let list = response.result.result;
+          //       this.category.three = list;
+          //     });
+          //     break;
+          //   }
         }
         this.$forceUpdate();
       },
@@ -454,7 +452,7 @@
         udpobj.optType = "update";
         udpobj.areaId = this.baseinfo.areaId;
         udpobj.categoryOneId = this.baseinfo.categoryOneId;
-        udpobj.categoryThreeId = this.baseinfo.categoryThreeId;
+        // udpobj.categoryThreeId = this.baseinfo.categoryThreeId;
         udpobj.categoryTwoId = this.baseinfo.categoryTwoId;
         udpobj.cityId = this.baseinfo.cityId;
         udpobj.provinceId = this.baseinfo.provinceId;

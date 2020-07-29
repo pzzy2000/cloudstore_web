@@ -49,11 +49,15 @@
       return {
         activityForm: {
           activityName: '',
-          radio: 6
+          startTime: '',
+          endTime: ''
         },
         rwDispatcherState: 'write',
         rules: {
-          activityName: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+          activityName: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { min: 2, max: 4, message: "长度在2到4个字之间", trigger: "blur" }
+          ],
           startTime: [{ required: true, message: '开始时间必填哦', trigger: 'blur' }],
           endTime: [{ required: true, message: '结束时间必填哦', trigger: 'blur' }],
         },
@@ -103,6 +107,8 @@
           addProfit: changeCheck,
           optType: "save"
         }
+        console.log(obj);
+        return;
         addActivity(obj).then(res => {
           if (res.result.code == 0) {
             msg("添加活动成功");
@@ -122,10 +128,10 @@
         const self = this
         return {
           disabledDate(time){
-            if (self.activityForm.endTime) {  //如果结束时间不为空，则小于结束时间
-              return new Date(self.activityForm.endTime).getTime() > time.getTime()
+            if (self.activityForm.endTime !== '') {  //如果结束时间不为空，则小于结束时间
+              return new Date(self.activityForm.endTime).getTime() < time.getTime()
             } else {
-              return time.getTime() <= Date.now() - 8.64e7//开始时间不选时，结束时间最大值小于等于当天
+              return time.getTime() <= Date.now() - 8.64e7
             }
           }
         }
@@ -134,10 +140,10 @@
         const  self = this
         return {
           disabledDate(time) {
-            if (self.activityForm.startTime) {  //如果开始时间不为空，则结束时间大于开始时间
+            if (self.activityForm.startTime !== '') {  //如果开始时间不为空，则结束时间大于开始时间
               return new Date(self.activityForm.startTime).getTime() > time.getTime()
             } else {
-              return time.getTime() <= Date.now() - 8.64e7//开始时间不选时，结束时间最大值小于等于当天
+              return time.getTime() <= Date.now() - 8.64e7
             }
           }
         }

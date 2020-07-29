@@ -14,11 +14,12 @@
       <div style="padding-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="供应商名称：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名称"></el-input>
+            <remoteCom url="/manage/search/supplier/search"></remoteCom>
+<!--            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名称"></el-input>-->
           </el-form-item>
-          <el-form-item label="供应商电话：">
-            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="供应商电话"></el-input>
-          </el-form-item>
+<!--          <el-form-item label="供应商电话：">-->
+<!--            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="供应商电话"></el-input>-->
+<!--          </el-form-item>-->
           <el-form-item label="所属账号：">
             <el-input style="width: 214px" v-model="listQuery.accont" placeholder="所属账号"></el-input>
           </el-form-item>
@@ -34,7 +35,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-<!--          <remoteCom></remoteCom>-->
         </el-form>
       </div>
     </el-card>

@@ -7,7 +7,10 @@
     reserve-keyword
     placeholder="请输入关键词"
     :remote-method="remoteMethod"
-    :loading="loading">
+    :loading="loading"
+    popper-class="selectstyle"
+    ref="select"
+    @focus="resetOpt">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -21,57 +24,48 @@
   import {fetchList} from '@/api/remote'
   export default {
     name: 'index',
+    props: ['url'],
     data() {
       return {
         options: [],
         value: [],
         list: [],
-        loading: false,
-        // states: ["Alabama", "Alaska", "Arizona",
-        //   "Arkansas", "California", "Colorado",
-        //   "Connecticut", "Delaware", "Florida",
-        //   "Georgia", "Hawaii", "Idaho", "Illinois",
-        //   "Indiana", "Iowa", "Kansas", "Kentucky",
-        //   "Louisiana", "Maine", "Maryland",
-        //   "Massachusetts", "Michigan", "Minnesota",
-        //   "Mississippi", "Missouri", "Montana",
-        //   "Nebraska", "Nevada", "New Hampshire",
-        //   "New Jersey", "New Mexico", "New York",
-        //   "North Carolina", "North Dakota", "Ohio",
-        //   "Oklahoma", "Oregon", "Pennsylvania",
-        //   "Rhode Island", "South Carolina",
-        //   "South Dakota", "Tennessee", "Texas",
-        //   "Utah", "Vermont", "Virginia",
-        //   "Washington", "West Virginia", "Wisconsin",
-        //   "Wyoming"]
+        loading: false
       }
     },
-    // mounted() {
-    //   this.list = this.states.map(item => {
-    //     return { value: `${item}`, label: `${item}` };
-    //   });
-    // },
     methods: {
       remoteMethod(query) {
+        console.log(query);
         if (query !== '') {
           this.loading = true;
           setTimeout(() => {
             this.loading = false;
-            // this.options = this.list.filter(item => {
-            //   return item.label.toLowerCase()
-            //     .indexOf(query.toLowerCase()) > -1;
-            // });
-            fetchList(url, params).then(res => {
+            fetchList(this.url, {key: query}).then(res => {
               console.log(res);
+              let data = res.result.result;
+              this.options = data.map(item => {
+                return { value: `${item.id}`, label: `供应商名称：${item.name} / 供应商电话：${item.phone}` };
+              });
             })
           }, 200);
         } else {
           this.options = [];
         }
+      },
+      resetOpt() {
+        this.$refs.select.$refs.input.blur = () => {
+          console.log(this.value);
+          if (this.value.length == 0) {
+            this.options = [];
+          }
+        };
       }
     }
   }
 </script>
 <style scoped>
-
+  .el-select >>> .el-input__inner{
+    width: 420px;
+    height: 32px;
+  }
 </style>

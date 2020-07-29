@@ -48,14 +48,14 @@
                   <el-table-column label="商品库存" align="center">
                     <template slot-scope="scope">
                       <el-form-item :prop="'skuStockList.' + scope.$index + '.stock'" :rules='rules.stock'>
-                        <el-input v-model="scope.row.stock"></el-input>
+                        <el-input v-model="scope.row.stock" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
                       </el-form-item>
                     </template>
                   </el-table-column>
                   <el-table-column label="库存预警值" align="center">
                     <template slot-scope="scope">
                       <el-form-item :prop="'skuStockList.' + scope.$index + '.warnQuantity'" :rules='rules.warnQuantity'>
-                        <el-input v-model="scope.row.warnQuantity"></el-input>
+                        <el-input v-model="scope.row.warnQuantity" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
                       </el-form-item>
                     </template>
                   </el-table-column>
@@ -120,7 +120,7 @@
     -->
     <div style="width: 100%;text-align:center">
  <br /> <br /> <br /> <br />
-    <el-button style="margin-bottom: 10px;" @click="updateGoodsProperties" size="small">
+    <el-button style="margin-bottom: 10px;" @click="updateGoodsProperties('format')" size="small">
       更 新
     </el-button>
       <el-button size="small" @click="backPage">返 回</el-button>
@@ -216,15 +216,13 @@
             //     return _.toNumber(value)
             //   }
             // },
-            { pattern: /^[0-9]{0,5}$|^[0-9]{0,5}(\.[0-9]{1,2})?$/, message: '请输入正确格式' }
+            { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '请输入正确格式' }
           ],
           stock: [
-            { required:true, message:"商品库存必填", trigger:"blur" },
-            { pattern: /^(([^0][0-9]+|0)$)|^(([1-9]+)$)/, message: '请输入正确格式' }
+            { required:true, message:"商品库存必填", trigger:"blur" }
           ],
           warnQuantity: [
-            { required:true, message:"商品库存预警必填", trigger:"blur" },
-            { pattern: /^(([^0][0-9]+|0)$)|^(([1-9]+)$)/, message: '请输入正确格式' }
+            { required:true, message:"商品库存预警必填", trigger:"blur" }
           ],
           skuCode: [
             { required:true, message:"sku编号必填", trigger:"blur" }
@@ -241,14 +239,24 @@
       // this.getproductAttributeCategory();
     },
     methods: {
-
-      updateGoodsProperties(){
+      updateGoodsProperties(formName){
          this.$confirm('是否更新此商品的整个信息?', '提示', {
            confirmButtonText: '确定',
            cancelButtonText: '取消',
            type: 'warning'
          }).then(() => {
-           this. updateGoodsProperties1();
+            this.$refs[formName].validate((valid) => {
+              if (valid) {
+                this.updateGoodsProperties1();
+              } else {
+                this.$message({
+                  message: "验证不通过！",
+                  type: 'error',
+                  duration: 800
+                })
+                return false;
+              }
+            })
          });
       },
 

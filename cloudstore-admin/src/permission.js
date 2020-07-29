@@ -22,7 +22,6 @@ router.beforeEach((to, from, next) => {
       console.log(store.getters.roles.length)
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
-
           let result = res.result;
           let code = result.code;
           let loginuser = result.result.loginUser;
