@@ -67,12 +67,11 @@
         <el-table-column label="下单时间" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
         </el-table-column>
-        <el-table-column label="用户账号/名称" align="center" width="400">
-          <template slot-scope="scope">
-<!--            {{scope.row.clientBean | showClient}}-->
-            账号：{{scope.row.clientBean.access}}&nbsp;&nbsp;&nbsp;&nbsp;
-            名称：{{scope.row.clientBean.name}}
-          </template>
+        <el-table-column label="用户账号" align="center" :formatter="showMsg">
+<!--          <template slot-scope="scope">{{scope.row.clientBean.access}}</template>-->
+        </el-table-column>
+        <el-table-column label="用户名称" align="center" :formatter="showMsg">
+<!--          <template slot-scope="scope">{{scope.row.clientBean.name}}</template>-->
         </el-table-column>
         <el-table-column label="订单金额" align="center">
           <template slot-scope="scope">￥{{scope.row.payPrice}}</template>
@@ -107,24 +106,6 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog title="物流信息" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
-      <div style="height: 200px;">
-        <el-steps direction="vertical" :active="1">
-          <el-step title="步骤 1">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-          <el-step title="步骤 2">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-          <el-step title="步骤 3">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-        </el-steps>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" size="mini">关闭</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -262,6 +243,14 @@
               }
             }
           })
+        },
+        showMsg(row, column) {
+          console.log(column)
+          try{
+            return row.clientBean.access
+          }catch (e) {
+            return "数据读取出错"
+          }
         },
         showDanger() {
           this.isshow = false;

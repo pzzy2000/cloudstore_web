@@ -82,7 +82,6 @@
         rwDispatcherState: 'read',
          specslabel:'规格',
         goodsku: {
-
           goods: {},
           //goodsPics: [],
           skuStockList: [], //table 显示的  规格头
@@ -114,17 +113,21 @@
     },
     methods: {
       updateGoodsProperties(formName) {
+        console.log(this.goodsku.skuStockList);
         let onoff = true;
         let arr = []
         for (let i=0; i<this.goodsku.skuStockList.length; i++) {
-          if (this.goodsku.skuStockList[i].warnMsg !== '') {
+          if (this.goodsku.skuStockList[i].warnMsg !== '' && this.goodsku.skuStockList[i].warnMsg !== undefined) {
             arr.push(i);
           }
         }
+        console.log(arr)
         if (arr.length !== 0){
           onoff = false;
+          arr = []
         }else{
           onoff = true;
+          arr = []
         }
         this.$refs[formName].validate((valid) => {
           if (valid && onoff) {
@@ -187,7 +190,6 @@
 
       },
       warnMsg(index, row) {
-        console.log(row)
         let num;
         // this.goodsku.skuStockList[index].warnMsg == "不能超过30哦";
         if (this.goodsku.skuStockList[index].leader == '') {
@@ -199,7 +201,6 @@
         }else {
           num = this.goodsku.skuStockList[index].leader + this.goodsku.skuStockList[index].agent + this.goodsku.skuStockList[index].client;
         }
-        console.log(num)
         if (num > 30){
           this.$set(this.goodsku.skuStockList[index], 'warnMsg', '佣金总和不能超过30哦!');
         }else{
