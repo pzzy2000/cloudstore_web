@@ -52,12 +52,12 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item>
-            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>
-              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
+<!--          <el-form-item>-->
+<!--            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>-->
+<!--              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
         </el-form>
       </div>
     </el-card>

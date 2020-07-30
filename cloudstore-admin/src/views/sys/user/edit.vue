@@ -139,7 +139,7 @@
       // this.userinfo.name ='111';
       // this.rwDispatcherState="read"//write  read
       // this.visibleUpdate="none";
-      // this.getList();
+      this.getList();
       this.optType = this.$route.query.type;
       this.rwDispatcherState = this.$route.query.rds;
       switch (this.$route.query.type) {
