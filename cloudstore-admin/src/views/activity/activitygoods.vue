@@ -28,12 +28,12 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="categoryThreeId">
-            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>
-              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
+<!--          <el-form-item prop="categoryThreeId">-->
+<!--            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>-->
+<!--              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
           <el-form-item label="供应商：">
             <el-input style="width: 214px" v-model="listQuery.supplierBean" placeholder="供应商" clearable></el-input>
           </el-form-item>
@@ -178,7 +178,12 @@
           case 'category':
             {
               try {
-                return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
+                if (goods.categoryThreeBean !== null) {
+                  return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
+                } else {
+                  return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name;
+                }
+                // return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
               } catch (e) {
                 return '数据读取错误';
               }

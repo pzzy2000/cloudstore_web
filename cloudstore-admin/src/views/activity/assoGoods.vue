@@ -98,7 +98,12 @@
           }
           case 'category': {
             try {
-              return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
+              if (goods.categoryThreeBean !== null) {
+                return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
+              } else {
+                return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name;
+              }
+              // return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
             } catch (e) {
               return '数据读取错误';
             }

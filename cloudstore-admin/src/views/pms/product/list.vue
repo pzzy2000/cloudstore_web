@@ -72,7 +72,6 @@
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
         border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-
         <!-- <el-table-column label="商品图片" width="120" align="center">
           <template slot-scope="scope"><img style="height: 80px" :src="scope.row.pic"></template>
         </el-table-column> -->
@@ -352,7 +351,11 @@
       },
       goodsCategory(row, column) {
         try {
-          return row.categoryOneBean.name + "/" + row.categoryTwoBean.name + "/" + row.categoryThreeBean.name;
+          if (row.categoryThreeBean !== null) {
+            return row.categoryOneBean.name + "/" + row.categoryTwoBean.name + "/" + row.categoryThreeBean.name;
+          } else {
+            return row.categoryOneBean.name + "/" + row.categoryTwoBean.name;
+          }
         } catch (e) {
           return '数据读取错误';
         }

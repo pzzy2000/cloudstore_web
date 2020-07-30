@@ -108,7 +108,6 @@
           optType: "save"
         }
         console.log(obj);
-        return;
         addActivity(obj).then(res => {
           if (res.result.code == 0) {
             msg("添加活动成功");
