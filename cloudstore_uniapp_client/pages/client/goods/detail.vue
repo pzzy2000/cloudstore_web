@@ -78,7 +78,7 @@
 
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/client/recommend/index" open-type='switchTab' class="p-b-btn">
+			<navigator url="/pages/agent/goods/hotsale/hotsale" open-type='switchTab' class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
@@ -92,8 +92,8 @@
 			</view>
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" v-if="shareClientId" @click="shareSave" >立即分享</button>
+				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave" >立即分享</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -165,7 +165,6 @@ export default {
 			},
 			detailData: [],
 			goods: '',
-			activity:{},
 			shareList: [
 				{
 				  icon: "/static/temp/share_wechat.png",
@@ -181,6 +180,7 @@ export default {
 			goodsSkuId: '',  //具体商品的skuId
 			agentGoodsId: '', //此商品的代理商品Id
 			activeId: '', //此商品的活动id
+			activity:{},
 			shareId: '',
 			shareClientId: '',
 			goodsHtml: '',
@@ -199,7 +199,7 @@ export default {
 					shareClientId: this.shareClientId || '-1',
 					userType: 'Client'
 				},
-				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client'+'&activityId='+this.activeId,
 			}
 		}
 		return shareObj
@@ -208,12 +208,17 @@ export default {
 		
 	},
 	onLoad(ops) {
+		console.log(ops)
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId
-		this.userType = ops.userType
-		this.activeId = ops.activeId
+		// this.userType = ops.userType
+		this.activeId = ops.activityId
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
-		this.shareClientId = ops.shareClientId
+		if ( ops.shareClientId == undefined) {
+			this.shareClientId = '-1'
+		}else{
+			this.shareClientId = ops.shareClientId
+		}
 	},
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
@@ -221,6 +226,22 @@ export default {
 				this.loadMobileHtml()
 			}catch(e){
 				this.$api.msg('获取商品图文信息失败')
+			}
+			
+			try{
+				if(this.activeId){
+					if(this.activeId<=0)return;
+					let params = {
+						activityId:this.activeId
+					};
+					let data = await Api.apiCall('post', Api.agent.activity.searchInfo, params, false, false);
+					if (data) {
+						this.activity = data.result
+						console.log(this.activity)
+					}
+				}
+			}catch(e){
+				this.$api.msg('获取活动信息失败')
 			}
 			let params = {
 				goodsId: goodsId ,
@@ -232,6 +253,7 @@ export default {
 				this.activity = data.result.activityBean;
 				this.goodsName = data.result.goodsPicesBean.goodsName
 				this.skuList = data.result.goodsSku
+				console.log(this.skuList)
 				//赋值默认商品价格，库存和图片
 				this.sku.price = this.skuList[0].price
 				this.sku.stock = this.skuList[0].stock
@@ -302,7 +324,7 @@ export default {
 		async joinAgent () { //将商品加入代理
 			let params = {
 				goodsId: this.goodsId,
-				activeId: 1
+				activeId: this.activeId || -1
 			}
 			let data = await Api.apiCall('post', Api.agent.goods.save, params);
 			if (data) {
@@ -361,6 +383,7 @@ export default {
 				for (let data in this.skuList) {
 					var skuValue =  this.skuList[data].skuValue.split(',').sort().toString()
 					if (specArray.sort().toString() === skuValue) {
+						console.log(this.skuList[data])
 						this.goodsSkuId = this.skuList[data].id
 						this.sku.stock = this.skuList[data].stock
 						this.sku.price = this.skuList[data].price
@@ -389,27 +412,43 @@ export default {
 			});
 		},
 		async shareSave () { //分享调用接口
-			uni.showLoading({
-				title: '正在加载',
-				mask: false
-			});
-			let params = {
-				'agentGoodsId': this.agentGoodsId,
-				'shareId': this.shareClientId || '-1',
-				'type': this.userType
-			} 
-			let data = await Api.apiCall('post', Api.agent.share.save, params);
-			if (data) {
-				uni.hideLoading() 
-				if (data.code === 0) {
-					this.shareClientId = data.result.id
-					if (this.shareClientId) {
-						this.share()
+			var goodsInfo = {
+				activityId: this.activeId,
+				agentGoodsId: this.agentGoodsId,
+				goodsId: this.goodsId,
+				goodsSkuId: this.goodsSkuId,
+				shareId: this.shareId,
+				price: this.sku.price,
+				shareClientId: this.shareClientId
+			}
+			uni.setStorageSync('goodsInfo',goodsInfo)
+			if (Api.isToken()) {
+				var agentId = uni.getStorageSync('agentId')
+				uni.showLoading({
+					title: '正在加载',
+					mask: false
+				});
+				let params = {
+					// 'agentGoodsId': this.agentGoodsId,
+					'agentId': agentId || -1,
+					'goodsId': this.goodsId,
+					'activityId': this.activeId,
+					'shareId': this.shareClientId || '-1',
+					'type': ''
+				} 
+				let data = await Api.apiCall('post', Api.agent.share.save, params);
+				if (data) {
+					uni.hideLoading() 
+					if (data.code === 0) {
+						this.shareClientId = data.result.id
+						if (this.shareClientId) {
+							this.share()
+						}
+					}else{
+						uni.showToast({
+							title: data.msg
+						});
 					}
-				}else{
-					uni.showToast({
-						title: data.msg
-					});
 				}
 			}
 		},
@@ -419,6 +458,11 @@ export default {
 			});
 		},
  		toBuy(item) { //点击立即购买
+			console.log(this.sku)
+			if (this.sku.stock <= 0) {
+				this.$api.msg('库存不足')
+				return false;
+			}
 			var buyInfo = {
 				activityId: this.activeId,
 				agentGoodsId: this.agentGoodsId,
@@ -428,11 +472,27 @@ export default {
 				price: this.sku.price,
 				shareClientId: this.shareClientId
 			}
-			uni.setStorageSync('buyInfo',buyInfo)
-			//先判断库存
-			uni.navigateTo({
-				url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId
-			});
+			uni.setStorageSync('goodsInfo',buyInfo)
+			if (Api.isToken()) { //先判断有没有登录
+				uni.navigateTo({
+					url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&activityId='+ buyInfo.activityId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId
+				});
+			} 
+			// if (token) {
+				//先判断库存
+				// uni.navigateTo({
+				// 	url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId
+				// });
+			// } else {
+			// 	uni.showToast({
+			// 		title: '请先登录',
+			// 		icon: 'none'
+			// 	});
+			// 	var timeer = setim
+			// 	uni.navigateTo({
+			// 		url: '/pages/client/public/login'
+			// 	})
+			// }
 		},
 		stopPrevent() {}
 	}

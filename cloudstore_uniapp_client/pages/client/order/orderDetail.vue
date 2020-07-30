@@ -27,7 +27,7 @@
 				<image :src="goodsDetail.goodsPhotos[0].url"></image>
 				<view class="right">
 					<text class="title clamp">{{goodsDetail.goodsName}}</text>
-					<text class="spec">{{goodsDetail.goodsSubtitle}}</text>
+					<text class="spec">{{skuInfo.skuKey}}/{{skuInfo.skuValue}}</text>
 					<view class="price-box">
 						<view class="">
 							<text class="price">￥{{totalPrice}}</text>
@@ -70,7 +70,7 @@
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">活动</text>
-				<text class="cell-tip red">{{goodsDetail.activityBean.name}}</text>
+				<text class="cell-tip red">{{activity}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
@@ -113,7 +113,9 @@
 		data() {
 			return {
 				goodsId: '',
+				activity: '',
 				goodsDetail: '',
+				skuInfo: '',
 				price: '',
 				num: '1',
 				totalPrice: '',
@@ -171,14 +173,14 @@
 			this.searchClientAddress()
 		},
 		onShow () {
-		  const addressData = uni.getStorageSync('addressInfo');
-		  if (addressData) {
-			this.addressData.id = addressData.id
-			this.addressData.name = addressData.name
-			this.addressData.address = addressData.provinceBean.name + addressData.cityBean.name + addressData.areaBean.name
-			this.addressData.phone = addressData.phone
-			this.addressData.area = addressData.detailAddress
-		  }
+		 //  const addressData = uni.getStorageSync('addressInfo');
+		 //  if (addressData) {
+			// this.addressData.id = addressData.id
+			// this.addressData.name = addressData.name
+			// this.addressData.address = addressData.provinceBean.name + addressData.cityBean.name + addressData.areaBean.name
+			// this.addressData.phone = addressData.phone
+			// this.addressData.area = addressData.detailAddress
+		 //  }
 		},
 		components: {
 			navBar
@@ -190,7 +192,9 @@
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params);
 				if (data) {
-					console.log(data.result)
+					console.log(data.result.records[0])
+					this.activity = data.result.records[0].activityBean.name
+					this.skuInfo = data.result.records[0].goodsSkuBean
 					this.goodsDetail = data.result.records[0].goodsPicesBean
 					this.agentDetail = data.result.records[0].agentShopBean
 					this.num = data.result.records[0].quantity
@@ -203,7 +207,7 @@
 				} 
 				let data = await Api.apiCall('post', Api.agent.address.searchClientAddress, params)
 				if (data) {
-					let tmpData = data.result.records[0]
+					let tmpData = data.result
 					this.addressData.id = tmpData.id
 					this.addressData.name = tmpData.name
 					this.addressData.address = tmpData.provinceBean.name + tmpData.cityBean.name + tmpData.areaBean.name

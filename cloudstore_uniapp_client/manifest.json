@@ -15,12 +15,12 @@
             "delay" : 0
         },
         "modules" : {
-            "OAuth" : {},
             "Payment" : {},
             "Share" : {},
             "Contacts" : {},
             "Maps" : {},
-            "iBeacon" : {}
+            "iBeacon" : {},
+            "OAuth" : {}
         },
         /* 模块配置 */
         "distribute" : {
@@ -48,6 +48,7 @@
                     "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+                    "<uses-permission android:name=\"android.permission.USE_FINGERPRINT\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
@@ -81,13 +82,25 @@
                         "appkey_android" : "fa88e222ebc2296342a7eb4f61ab1b17"
                     }
                 },
-                "ad" : {}
+                "ad" : {},
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx8bcbfdecfc3080d1",
+                        "UniversalLinks" : ""
+                    }
+                }
             },
             "icons" : {
                 "ios" : {
                     "iphone" : {
                         "app@2x" : ""
                     }
+                },
+                "android" : {
+                    "hdpi" : "C:/Users/Administrator/Desktop/logo.png",
+                    "xhdpi" : "C:/Users/Administrator/Desktop/logo.png",
+                    "xxhdpi" : "C:/Users/Administrator/Desktop/logo.png",
+                    "xxxhdpi" : "C:/Users/Administrator/Desktop/logo.png"
                 }
             }
         }
@@ -104,7 +117,11 @@
             "es6" : true,
             "postcss" : true
         },
-        "permission" : {}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "用户获取您最近的商家"
+            }
+        }
     },
     "h5" : {
         "title" : "甜园商城",

@@ -52,6 +52,11 @@
 				<view class="title">详细地址：</view>
 				<input :value="agentfrom.address" placeholder="请输入详细地址" :disabled='isEdit' @input="editInput($event,'address')" style="color:#000;"></input>
 			</view>
+			
+			<view class="cu-form-group" @click="selectMap">
+				<view class="title">选择地址：</view>
+				<input :value="agentfrom.mapText" placeholder="请选择地址" disabled='true' style="color:#000;"></input>
+			</view>
 			<view class="cu-bar bg-white margin-top">
 				<view class="action">
 					请上传身份证正面和反面
@@ -109,6 +114,9 @@
 					townId: '',
 					villageId: '',
 					address: '',
+					mapText: '',
+					longitude: '',
+					latitude: '',
 					optType: 'save'
 				},
 				addressName: {
@@ -320,6 +328,20 @@
 			},
 			complete(e) { //点击了地址的上一级分类
 			},
+			selectMap () { //调用地图选择地址
+				var that = this;
+				uni.chooseLocation({
+				    success: function (res) {
+						that.agentfrom.mapText = res.name
+						that.agentfrom.longitude = res.longitude
+						that.agentfrom.latitude = res.latitude
+				        console.log('位置名称：' + res.name);
+				        console.log('详细地址：' + res.address);
+				        console.log('纬度：' + res.latitude);
+				        console.log('经度：' + res.longitude);
+				    }
+				});
+			},
 			async addressChange (e) { //选择地址
 				console.log(e)
 				switch(e.layer) {
@@ -452,6 +474,10 @@
 					this.$api.msg('请输入详细地址')
 					return;
 				}
+				if (!this.agentfrom.longitude) {
+					this.$api.msg('请使用地图选择地址')
+					return;
+				}
 				if (this.imgListId.length != 2) {
 					this.$api.msg('请上传身份证正面和反面')
 					return;
@@ -470,6 +496,8 @@
 					townId: this.agentfrom.townId,
 					villageId: this.agentfrom.villageId,
 					detailAddress: this.agentfrom.address,
+					longitude: this.agentfrom.longitude,
+					latitude: this.agentfrom.latitude,
 					optType: this.agentfrom.optType
 				}
 				if (this.agentfrom.optType === 'update') {

@@ -8,40 +8,56 @@
 	} from 'vuex';
 	export default {
 		methods: {
-			...mapMutations(['login'])  ,
-			async sysInfoMethod() {
-				this.$db.set('sysInfo', {name:'sss'})
-			},
 			
 		},
 		created() {
 			
 		},
 		onReady() {
-			    console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-				// uni.getSystemInfo({
-				// 	success: function(res) { // res - 各种参数
-				// 		let info = uni.createSelectorQuery().select(".类名");
-				// 		info.boundingClientRect(function(data) { //data - 各种参数
-				// 			console.log(data.width)  // 获取元素宽度
-				// 		}).exec()
-				//     }
-				// });
 		},
 		onLaunch: function() {
-			uni.showTabBar({});
-			// let userInfo = uni.getStorageSync('userInfo') || '';
-   //          let token = uni.getStorageSync('token') || '';
-			// if(token){
-			// 	//更新登陆状态
-			// 	uni.getStorage({
-			// 		key: 'userInfo',
-			// 		success: (res) => {
-			// 			this.login(res.data);
-			// 		}
-			// 	});
-			// }
-			this.sysInfoMethod();
+			//#ifdef APP-PLUS 
+				plus.runtime.getProperty(plus.runtime.appid,(wgtinfo)=>{
+					// var server = ""; //检查更新地址
+					var req = { //升级检测数据
+					    // "appid": plus.runtime.appid,
+					    // "version": wgtinfo.version
+					};
+					console.log('onLaunch2')
+					uni.request({
+					    url: Api.APPBASEURI+ 'apk.json',
+					    data: '',
+						method: 'GET',
+					    success: (res) => {
+							console.log(res.data)
+							var version = res.data.version
+							console.log(version)
+							if (wgtinfo.version != version) {
+								uni.showModal({ //提醒用户更新
+									title: "更新提示",
+									content: '您的软件需要升级',  
+									success: (res) => {
+										if (res.confirm) {
+											plus.runtime.openURL('http://106.52.184.24:18888/yamigou.apk');  
+										}  
+									}  
+								})  
+							}
+					        // if (res.statusCode == 200 && res.data.status === 1) {  
+					        //     uni.showModal({ //提醒用户更新  
+					        //         title: "更新提示",  
+					        //         content: res.data.note,  
+					        //         success: (res) => {  
+					        //             if (res.confirm) {  
+					        //                 plus.runtime.openURL(res.data.url);  
+					        //             }  
+					        //         }  
+					        //     })  
+					        // }  
+					    }  
+					})  
+				})
+			    //#endif  
 		},
 		onShow: function() {
 			// uni.hideTabBar({});

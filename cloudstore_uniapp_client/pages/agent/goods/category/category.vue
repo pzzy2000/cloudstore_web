@@ -29,7 +29,7 @@
 							 <text class="priceSale">￥{{ goods.salePrice }}</text>
 							 <text class="pricemart">￥{{ goods.martPrice}}</text>
 						</view>
-						<button class="price-btn">去代理</button>
+						<button class="price-btn">立即购买</button>
 					</view>
 				</view>	
 			</view>
@@ -58,7 +58,7 @@
 				@change="typeChange"
 			></tui-cascade-selection>
 		</uni-popup>
-		<tabbar :role="'agent'" :ids="'aspfl'"></tabbar>
+		<!-- <tabbar :role="'agent'" :ids="'aspfl'"></tabbar> -->
 	</view>
 </template>
 
@@ -285,7 +285,7 @@ export default {
 			console.log(item)
 			let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
 			uni.navigateTo({
-				url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}`
+				url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}`
 			});
 		},
 		stopPrevent() {}

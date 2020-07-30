@@ -2,6 +2,7 @@ import store from '../store/index';
 export default {
 	// BASEURI: 'http://120.24.156.254:18888/platform/',
 	BASEURI: 'http://106.52.184.24:18888/platform/',
+	APPBASEURI: 'http://106.52.184.24:18888/',
 	//BASEURI: 'http://192.168.0.27:8088/',
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	source: 1, //1 weixinApplet 2 h5Source 3 pcSource 4 android 5ios
@@ -38,30 +39,30 @@ export default {
 			listbyagentid: 'agent/goods/app/listbyagentid'
 		},
 		goods:{
-			buy:"agent/goods/app/buyGoodsDetail",
+			buy:"app/private/agent/goods/buyGoodsDetail",
 			detail:"agent/goods/app/searchGoodsDetail", 
 			searchMyAgentGoods: 'agent/goods/app/searchMyAgentGoods'
 		},
 		address:{
-			list:'app/client/address/searchClientAddress',
-			save:'app/client/address/saveAddress',
-			detail:'app/client/address/searchDetailAddress',
-			deleteAddress: 'app/client/address/deleteAddress',
-			getClientAddressById: 'app/client/address/getClientAddressById'
+			list:'app/private/client/address/searchClientAddress',
+			save:'app/private/client/address/saveAddress',
+			detail:'app/private/client/address/searchDetailAddress',
+			deleteAddress: 'app/private/client/address/deleteAddress',
+			getClientAddressById: 'app/private/client/address/getClientAddressById'
 		},
 		buy: {
-			createOrder:'order/app/createOrder',
+			createOrder:'app/private/order/createOrder',
 			prePay: 'app/pay/prePay',
 			paySuccess: 'app/pay/paySuccess'
 		},
 		order: {
-			getClientOrder: 'order/app/getClientOrder',
-			getClientOrderDetail : 'order/app/getClientOrderDetail',
+			getClientOrder: 'app/private/order/getClientOrder',
+			getClientOrderDetail : 'app/private/order/getClientOrderDetail',
 			refundOrder: 'app/pay/refundOrder'
 		},
 		applyAgent: {
-			getClientAgent: 'agent/apply/app/getClientAgent',
-			save: 'agent/apply/app/save'
+			getClientAgent: 'app/private/agent/getClientAgent',
+			save: 'app/private/agent/save'
 		}
 	},
 	agent:{
@@ -69,11 +70,12 @@ export default {
 			search: 'sys/dict/search' //字典下拉查询
 		},
 		activity:{
-			searchActivityNavList:'activity/app/showNavlist',
-			searchActivityShowList:'activity/app/indexShowlist',
-			searchIndexActivitygoodsList:'activity/app/indexShowActivityGoodList',
-			searchInfo:'activity/app/get',
-			listAll:'activity/app/alllist'
+			searchActivityNavList:'app/public/activity/showNavlist ',
+			searchActivityShowList:'app/public/activity/indexShowlist',
+			searchIndexActivitygoodsList:'app/public/activity/indexShowActivityGoodList',
+			searchInfo:'app/public/activity/get',
+			listAll:'app/public/activity/alllist',
+			getAgentDistance: 'app/public/agent/getAgentDistance'
 		},
 		user: {
 			userinfo:"/agent/get",//获取用户信息
@@ -85,17 +87,17 @@ export default {
 			dateList: 'agent/goods/app/dateList', //获取今日上新的商品
 		},
 		goods: { //商品接口
-		   list: 'goods/app/list' ,//获取商品列表
-		   detail: 'goods/app/searchGoodsDetail',
-		   agentGoodsDetail:'/agent/goods/app/searchGoodsDetail',//查询代理商品的明细
+		   list: 'app/public/goods/list' ,//获取商品列表
+		   detail: 'app/public/goods/searchGoodsDetail',
+		   agentGoodsDetail:'app/public/goods/searchGoodsDetail',//查询代理商品的明细
 		   save:'agent/goods/app/save' ,//代理商将商品加入代理
-		   loadHtml:'goods/app/loadMobileHtml', //获取商品详情的图文详情
+		   loadHtml:'app/public/goods/loadMobileHtml', //获取商品详情的图文详情
 		},
 		share: {
-			save: 'share/app/apply'
+			save: 'app/public/share/apply'
 		},
 		category: {
-			list: 'app/goods/category/list',
+			list: 'app/public/goods/category/list',
 			getchildId: 'goods/category/get'
 		},
 		home: {
@@ -103,12 +105,12 @@ export default {
 			activityGoodList: 'activity/app/indexShowActivityGoodList' //活动名称下对应的商品
 		},
 		hot: {
-			hotList: 'activity/app/listActivityGoods',
-			alllist: 'activity/app/alllist'
+			hotList: 'app/public/activity/listActivityGoods',
+			alllist: 'app/public/activity/alllist'
 		},
 		address: {
 			saveAddress: 'app/client/address/saveAddress',
-			searchClientAddress : 'app/client/address/searchClientAddress',
+			searchClientAddress : 'app/private/client/address/searchDetailAddress',
 			deleteAddress: 'app/client/address/deleteAddress',
 			updateAddressStatus: 'app/client/address/updateAddressStatus'
 		},
@@ -226,15 +228,15 @@ export default {
 		}
 
 		let token = uni.getStorageSync('token') || null;
-		if (token == null && (endpoint != this.client.login.reg && endpoint != this.client.login.login)) {
-			uni.showToast({
-				title: '请先登录',
-				icon: 'none'
-			});
-			uni.navigateTo({
-				url: `/pages/client/public/login`
-			})
-		}
+		// if (token == null && (endpoint != this.client.login.reg && endpoint != this.client.login.login)) {
+		// 	uni.showToast({
+		// 		title: '请先登录',
+		// 		icon: 'none'
+		// 	});
+		// 	uni.navigateTo({
+		// 		url: `/pages/client/public/login`
+		// 	})
+		// }
 		let formData = {}
 		if (isSwitch) {
 			for (let key in data) {
@@ -366,10 +368,11 @@ export default {
 		} else {
 			let result = res.data.result;
 			if (result.code < 0) {
-				uni.showToast({
-					title: '[' + result.msg + ']',
-					icon: 'none'
-				});
+				// uni.showToast({
+				// 	title: '[' + result.msg + ']',
+				// 	icon: 'none'
+				// });
+				return result;
 			} else
 			if (result.code > 0) {
 				uni.showToast({
@@ -380,5 +383,35 @@ export default {
 				return result;
 			}
 		}
+	},
+	isToken () {
+		var token = uni.getStorageSync('token')
+		if (token) {
+			return true;
+		} else {
+			uni.showToast({
+				title: '请先登录',
+				duration: 1500,
+				icon: 'none'
+			});
+			let timer = setTimeout(() => {
+					clearTimeout(timer);
+					uni.navigateTo({
+						url: `/pages/client/public/login`
+					})
+			}, 2000);
+		}
+		// if (token) {
+		// 	uni.navigateTo({
+		// 		url: url,
+		// 	});
+		// } else {
+		// 	let timer = setTimeout(() => {
+		// 			clearTimeout(timer);
+		// 			uni.navigateTo({
+		// 				url: `/pages/client/public/login`
+		// 			})
+		// 	}, 2000);
+		// }
 	}
 }

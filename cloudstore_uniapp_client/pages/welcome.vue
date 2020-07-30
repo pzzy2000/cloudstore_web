@@ -35,81 +35,52 @@
 			},2000)
 		},
 		onLoad(ops) {
+			this.getLocation()
 			this.token = uni.getStorageSync('token')
+			this.activityId = uni.getStorageSync('goodsInfo').activityId
 			this.goodsId = ops.goodsId
 			this.agentGoodsId = ops.agentGoodsId
 			this.shareClientId = ops.shareClientId
 			uni.setStorageSync('goodsInfo', ops)
 		},
 		methods: {
+			getLocation () {
+				uni.getLocation({
+				    type: 'wgs84',
+				    success: function (res) {
+						if (res) {
+							console.log(res)
+							var longLat = {
+								longitude: res.longitude,
+								latitude: res.latitude,
+							}
+							uni.setStorageSync('longLat', longLat)
+						}
+				    },
+					fail: function (res) {
+						console.log(res)
+					}
+				});
+			},
 			async getAgentInfo(timeout) {
 				this.logining = false;
 				let params = {};
 				var that = this;
 				
-				uni.request({
-					url: Api.BASEURI + Api.client.info.searchInfo,
-					method: 'post',
-					header: {
-						'content-type': 'application/x-www-form-urlencoded',
-						'auth': this.token
-					},
-					data: params,
-					success: res => {
-						if (res) {
-							var data = res.data.result
-							if (data.code<0) {
-								uni.showToast({
-									title: '[' + data.msg + ']',
-									icon: 'none'
-								});
-								let timer = setTimeout(() => {
-									clearTimeout(timer);
-									uni.navigateTo({
-										url: `/pages/client/public/login`
-									})
-								}, 2000);
-							} else {
-								let loginuser = data.result;
-								uni.setStorageSync('userInfo', loginuser)
-								uni.setStorageSync('token', loginuser.token)
-								clearTimeout(timeout)
-								if (this.goodsId) {
-									uni.navigateTo({
-										url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
-									});
-								} 
-								else {
-									uni.switchTab({
-										url:'/pages/client/recommend/index'
-									})
-								}
-							}
-						}
-					},
-					fail: (e) => {
-						console.log(e)
-					}
-				});
+				let data = await Api.ApiFalseToken('post', Api.client.info.searchInfo, params);
 				
-				// let data = await Api.apiCall('post', Api.client.info.searchInfo, params, true, false);
-				// if (data) {
-				// 	console.log(data)
-				// 	let loginuser = data.result;
-				// 	uni.setStorageSync('userInfo', loginuser)
-				// 	uni.setStorageSync('token', loginuser.token)
-				// 	clearTimeout(timeout)
-				// 	if (this.goodsId) {
-				// 		uni.navigateTo({
-				// 			url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
-				// 		});
-				// 	} 
-				// 	else {
-				// 		uni.switchTab({
-				// 			url:'/pages/client/recommend/index'
-				// 		})
-				// 	}
-				// } 
+				if (data) {
+					if (this.goodsId) {
+						uni.navigateTo({
+							url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client'+'&activityId='+this.activityId,
+						});
+					} 
+					else {
+						uni.switchTab({
+							url:'/pages/agent/goods/hotsale/hotsale'
+						})
+					}
+				}
 			}
 		}
 	};

@@ -18,11 +18,11 @@
 			</view>
 			<button class="confirm-btn" @click.stop="toLogin" :disabled="logining">登录</button>
 			<!-- #ifdef MP-WEIXIN -->
-			<view class="vx-btn">
-				<button open-type="getUserInfo" @getuserinfo='getWxInfo'>
-					<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
-				</button>
-			</view>
+				<view class="vx-btn">
+					<button open-type="getUserInfo" @getuserinfo='getWxInfo'  withCredentials="true">
+						<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
+					</button>
+				</view>
 			<!-- #endif -->
 			<view class="forget-section">
 				<navigator url="/pages/client/public/forgetPwd">
@@ -59,6 +59,7 @@
 				loginInfo: '',
 				goodsInfo: '',
 				goodsId: "",
+				activityId: '',
 				agentGoodsId: "",
 				shareClientId: "",
 				userType: 'Client'
@@ -68,6 +69,7 @@
 			// this.sysInfo = this.$db.get('sysInfo');
 			this.goodsInfo =  uni.getStorageSync('goodsInfo')
 			this.goodsId = this.goodsInfo.goodsId
+			this.activityId = this.goodsInfo.activityId
 			this.agentGoodsId = this.goodsInfo.agentGoodsId
 			this.shareClientId = this.goodsInfo.shareClientId
 		},
@@ -82,6 +84,7 @@
 				});
 			},
 			getWxInfo() { //获取code登录并且判断是否已经绑定手机号码
+				console.log('进入了方法')
 				var that = this
 				uni.showLoading({
 					title: '微信登录中',
@@ -97,10 +100,12 @@
 						});
 					},
 					success: function(loginRes) {
+						console.log(loginRes)
 						uni.getUserInfo({
 							provider: 'weixin',
 							success: function(infoRes) {
 								if (infoRes) {
+									console.log(infoRes)
 									uni.setStorageSync('vxInfo', infoRes.rawData)
 								}
 							}
@@ -228,8 +233,11 @@
 								url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
 							});
 						} else {
+							// uni.switchTab({
+							// 	url: '/pages/client/recommend/index'
+							// });
 							uni.switchTab({
-								url: '/pages/client/recommend/index'
+								url: '/pages/agent/goods/hotsale/hotsale'
 							});
 						}
 					} else {
@@ -240,11 +248,14 @@
 			toPages () {
 				if (this.goodsId) {
 					uni.navigateTo({
-						url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+						url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client'+'&activityId='+this.activityId,
 					});
 				} else {
+					// uni.switchTab({
+					// 	url: '/pages/client/recommend/index'
+					// });
 					uni.switchTab({
-						url: '/pages/client/recommend/index'
+						url: '/pages/agent/goods/hotsale/hotsale'
 					});
 				}
 			},

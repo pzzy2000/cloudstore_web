@@ -276,10 +276,16 @@
 		"list": [
 			//client
 			{
-				"pagePath": "pages/client/recommend/index",
+				"pagePath": "pages/agent/goods/hotsale/hotsale",
 				"iconPath": "static/tabbar/classify.png",
 				"selectedIconPath": "static/tabbar/select-classify.png",
 				"text": "推荐"
+			},
+			{
+				"pagePath": "pages/agent/goods/category/category",
+				"iconPath": "static/tabbar/classify.png",
+				"selectedIconPath": "static/tabbar/select-classify.png",
+				"text": "商品分类"
 			},
 			{
 				"pagePath": "pages/client/earnings/index",

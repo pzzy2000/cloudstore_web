@@ -73,7 +73,6 @@
 				this.optType = 'update'
 				this.getAddressDetail(option.id)
 				this.addressId = option.id
-				console.log(option)
 			}
 		},
 		methods: {
@@ -82,7 +81,6 @@
 			},
 			conceal(param) { 
 				// 获取到传过来的 省 市 区 县数据
-				console.log(param);
 				this.addressData.areas = param;
 				try{
 					this.addressData.addressName = param.province.name+" / "+param.city.name+" / "+param.area.name
@@ -133,7 +131,6 @@
 			    this.addressData.areas.city.id = addressinfo.result.cityBean.id
 			    this.addressData.areas.area.id = addressinfo.result.areaBean.id
 			    this.addressData.status = addressinfo.result.status
-				console.log(this.addressData)
 			  }
 			},
 			detailChange (e) { //点击是否默认按钮
@@ -152,11 +149,9 @@
 				}
 				let addressinfo = await Api.apiCall('post',Api.agent.address.updateAddressStatus,params)
 				if (addressinfo) {
-					console.log(addressinfo)
 				}
 			},
 			async saveaddress(data){ //保存地址
-	 			console.log(data)
 				let params ={
 					name:data.name,
 					phone:data.phone,
@@ -172,13 +167,6 @@
 				}
 	 			let result = await Api.apiCall('post', Api.client.address.save, params, true);
 				if(result){
-					//this.$api.prePage()获取上一页实例，可直接调用上页所有数据和方法，在App.vue定义
-					// this.$api.prePage().refreshList(data, this.manageType);
-					// this.$api.msg(`地址${this.manageType=='edit' ? '修改': '添加'}成功`);
-					// setTimeout(()=>{
-					// 	uni.navigateBack()
-					// }, 800)
-					console.log(result.code)
 					if (result.code === 0) {
 						uni.showModal({
 							title: '提示',

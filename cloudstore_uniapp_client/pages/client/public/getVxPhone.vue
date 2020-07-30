@@ -132,7 +132,7 @@
 										icon:'none'
 									});
 									uni.switchTab({
-										url: '/pages/client/recommend/index'
+										url: '/pages/agent/goods/hotsale/hotsale'
 									});
 								} else {
 									uni.showToast({

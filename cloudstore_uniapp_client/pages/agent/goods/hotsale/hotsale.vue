@@ -3,8 +3,20 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<nav-bar>丫咪购</nav-bar>
+		
 		<view class="MP-search">
-			<view class="cu-bar search" style="width: 100%;">
+			<view class="cu-list menu">
+				<view class="cu-item">
+					<view class="content">
+						<text class="cuIcon-locationfill text-red"></text>
+						<text class="text-white">店铺名：{{agentShopInfo.name}}</text>
+					</view>
+					<view class="action clamp">
+						<text class="text-white text-sm">地址：{{agentShopInfo.address}}</text>
+					</view>
+				</view>
+			</view>
+			<!-- <view class="cu-bar search" style="width: 100%;">
 				<view class="search-form round">
 					<text class="cuIcon-search"></text>
 					<input :adjust-position="false" type="text" placeholder="搜索商品" confirm-type="search" @input="inputName"></input>
@@ -12,8 +24,7 @@
 				<view class="action">
 					<button class="cu-btn bg-green shadow-blur round" @click="search">搜索</button>
 				</view>
-			</view>
-			<!-- <input class="MP-search-input" type="text"  placeholder="输入关键字搜索" :value="searchName" @click="search"/> -->
+			</view> -->
 		</view>
 		<!-- #endif -->
 
@@ -80,7 +91,7 @@
 									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
 									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 								</view>
-								<button type="primary" class="price-btn">立即代理</button>
+								<button type="primary" class="price-btn">立即购买</button>
 							</view>
 						</view>
 					</view>
@@ -90,7 +101,7 @@
              <!-- 
 			<mallplusCopyright></mallplusCopyright>
 			-->
-			<tabbar :role="'agent'" :ids="'armsp'"></tabbar>
+			<!-- <tabbar :role="'agent'" :ids="'armsp'"></tabbar> -->
 		</view>
 	</view>
 </template>
@@ -117,6 +128,11 @@
 		},
 		data() {
 			return {
+				agentShopInfo: {
+					name: '',
+					address: ''
+				},
+				longLat: '',
 				searchName: '',
 				loadingType: 'more', //加载更多状态
 				activity: {
@@ -196,16 +212,28 @@
 			},
 		},
 		methods: {
-			getCode() {},
-			/**
-			 *
-			 * 加载首页数据
-			 */
 			async loadData() {
+				this.getAgentShop()
 				this.searchActivityNavList();
 				this.searchActivityShowList();
 			},
-
+			async getAgentShop () {
+				this.longLat = uni.getStorageSync('longLat')
+				if (this.longLat) {
+					let params = {
+						 latitude: this.longLat.latitude,
+						 longitude: this.longLat.longitude,
+					}
+					let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params);
+					if (data) {
+						// agentShopInfo
+						var tmpData = data.result.agentBean
+						this.agentShopInfo.name = tmpData.name
+						this.agentShopInfo.address = tmpData.detailAddress
+						uni.setStorageSync('agentId',data.result.agentId )
+					}
+				}
+			},
 			async searchActivityNavList() {
 				let params = {
 					// pageNum: 1,
@@ -303,12 +331,14 @@
 			//详情页
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
-				console.log(item)
 				let goodsId = item.goodsId;
 				let activitId = item.activityId;
 				let agentGoodsId= item.id;
+				// uni.navigateTo({
+				// 	url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
+				// });
 				uni.navigateTo({
-					url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
+					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
 				});
 			},
 			async acceptCoupon(item) {
@@ -386,6 +416,12 @@
 		position: fixed;
 		width: 100%;
 		z-index: 999;
+		.cu-list {
+			width: 100%;
+			.cu-item {
+				background: #00A79D;
+			}
+		}
 	}
 	page {
 		background: $page-color-base;

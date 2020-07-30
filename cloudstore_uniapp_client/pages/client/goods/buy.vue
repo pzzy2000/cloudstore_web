@@ -126,6 +126,8 @@
 			return {
 				orderType: '',
 				goodsId: '',
+				agentId: '',
+				activityId: '',
 				goodsDetail: {},
 				agentShop:{},
 				goodsSku:{},
@@ -188,28 +190,23 @@
 			console.log(option)
 			var that = this;
 			this.goodsId = option.goodsId
-			this.agentGoodsId = option.agentGoodsId
+			this.agentId = uni.getStorageSync('agentId')
+			this.activityId = option.activityId
 			this.goodsSkuId =option.goodsSkuId;
 			this.shareClientId = option.shareClientId
-			//测试数据
-			// this.agentGoodsId = "7726226918648844288"
-			// this.goodsId = "7709285196475928576"
-			// this.goodsSkuId = '7726751448173645824'
-			// this.shareClientId = '7727629497932976128'
-			//测试数据
 			if ( option.shareClientId == 'undefined') {
 				this.shareClientId = '-1'
 			}
 			this.orderType = option.orderType
 			this.orderId = option.orderId
-			this.getGoodsData(this.goodsId ,this.agentGoodsId ,this.goodsSkuId)
+			this.getGoodsData(this.goodsId ,this.agentId ,this.goodsSkuId,this.activityId)
 			this.searchDetailAddress()
 		},
 		components: {
 			navBar
 		},
 		methods: {
-			async searchDetailAddress(){
+			async searchDetailAddress(){ //查询地址信息
 				let params = {
 				};
 				let data = await Api.apiCall('post', Api.client.address.detail, params, false, false);
@@ -218,11 +215,12 @@
 					    this.setAddress(data.result)
 					}
 			},
-			async getGoodsData (goodsId,agentGoodsId,goodsSkuId) { //加载商品数据
-				let params = { 
+			async getGoodsData (goodsId,agentId,goodsSkuId,activityId) { //加载商品数据
+				let params = {
 					goodsId: goodsId ,
-					agentGoodsId:agentGoodsId,
-					goodsSkuId:goodsSkuId
+					agentGoodsId: agentId,
+					goodsSkuId: goodsSkuId,
+					activityId: activityId
 				};
 				let data = await Api.apiCall('post', Api.client.goods.buy, params, true, false);
 				if (data) {
@@ -230,8 +228,7 @@
 					this.agentShop = data.result.agentShopBean;
 					this.goodsSku = data.result.goodsOneSku;
 					this.totalPrice =this.goodsSku.price; 
-					this.activity=data.result.activityId;
-					console.log(data.result)
+					this.activity=data.result.activityBean;
 				}
 			},
 			radioChange: function(evt) { //选择支付方式
@@ -274,8 +271,8 @@
 							    success: function (res) {
 									that.buyType = res.provider;
 									let params = {
-										'activityId': that.activity,
-										'agentGoodsId': that.agentGoodsId,
+										'activityId': that.activityId,
+										'agentGoodsId': that.agentId,
 										'clientAddressId': that.addressData.id,
 										'goodsId': that.goodsId,
 										'goodsSkuId': that.goodsSkuId,
