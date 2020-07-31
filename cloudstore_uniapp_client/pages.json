@@ -288,6 +288,12 @@
 				"text": "商品分类"
 			},
 			{
+				"pagePath": "pages/client/cart/index",
+				"iconPath": "static/tabbar/cart.png",
+				"selectedIconPath": "static/tabbar/cart.png",
+				"text": "购物车"
+			},
+			{
 				"pagePath": "pages/client/earnings/index",
 				"iconPath": "static/tabbar/earnings.png",
 				"selectedIconPath": "static/tabbar/select-earnings.png",

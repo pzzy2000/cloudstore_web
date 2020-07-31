@@ -6,7 +6,7 @@
 				<view class="member-top-c">
 					<template>
 						<view class="" style="display: flex;align-items: center;" >
-							<image class="portrait" mode="aspectFill" :src="user.url" @click="toLogin">{{user.name}}</image>
+							<image class="portrait" mode="aspectFill" :src="user.url" @click="toapplyAgent('/pages/client/public/login')">{{user.name}}</image>
 						</view>
 					</template>
 				</view>
@@ -127,7 +127,7 @@
 				user:{
 					relationId: '',
 					userType: '',
-					name: null || '获得用户信息错误',
+					name: null || '未登录',
 					url: '',
 					detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
 				}
@@ -139,41 +139,9 @@
 		async onShow() {
 			this.getData()
 		},
-		// #ifndef MP
-		onNavigationBarButtonTap(e) {
-			const index = e.index;
-			if (index === 0) {
-				this.navTo('/pages/set/set');
-			} else if (index === 1) {
-				// #ifdef APP-PLUS
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];
-				const currentWebview = page.$getAppWebview();
-				currentWebview.hideTitleNViewButtonRedDot({
-					index
-				});
-				// #endif
-				uni.navigateTo({
-					url: '../../pagesU/notice/notice'
-				});
-			}
-		},
-		// #endif
-
 		computed: {
-			...mapState(['hasLogin', 'userInfo']),
 		},
 		methods: {
-			...mapMutations(['logout']),
-			inputShowModal(feild) {
-				this.feild = feild;
-				this.inputShow = true;
-				this.inputContent = '';
-			},
-			cancel() {
-				this.inputShow = false;
-			},
-			
 			getData(){
 				this.getuserinfo();
 			},
@@ -193,11 +161,6 @@
 			toNav(url){
 				uni.navigateTo({
 					url: url
-				});
-			},
-			toUserInfo(){
-				uni.navigateTo({
-					url: '../../pagesU/user/profile'
 				});
 			},
 			toAgent(){

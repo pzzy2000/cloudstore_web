@@ -82,16 +82,16 @@
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
-			<view class="p-b-btn" @click="toFavorite(goods)">
+			<view class="p-b-btn" @click="toggleSpec('cart')">
 				<text class="yticon icon-gouwuche"></text>
-				<text>期待</text>
+				<text>加入购物车</text>
 			</view>
 			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-shoucang"></text>
 				<text>期待</text>
 			</view>
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec">立即购买</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec('buy')">立即购买</button>
 				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave" >立即分享</button>
 			</view>
@@ -129,7 +129,7 @@
 						</view>
 					</view>
 				</div>
-				<view class="buyBtn" @click.stop="toBuy">
+				<view class="buyBtn" @click.stop="toBuy(buy)">
 					<button class="cu-btn bg-red lg">确定</button>
 				</view>
 			</view>
@@ -175,18 +175,20 @@ export default {
 			desc: ``,
 			swiperImgList: [],
 			skuList: [],
+			agentId: '',
 			goodsId:'',
 			goodsName: '',
 			goodsSkuId: '',  //具体商品的skuId
-			agentGoodsId: '', //此商品的代理商品Id
-			activeId: '', //此商品的活动id
+			agentGoodsId: '', //活动商品id
+			activityId: '', //此商品的活动id
 			activity:{},
 			shareId: '',
 			shareClientId: '',
 			goodsHtml: '',
 			specList: [],
 			specChildList: [],
-			userType: 'Client'
+			userType: 'Client',
+			selectType: ''
 		};
 	},
 	onShareAppMessage(res) {
@@ -194,25 +196,28 @@ export default {
 			var shareObj = {
 				title: this.goodsName,
 				params: {
+					agentId: this.agentId,
 					goodsId: this.goodsId,
+					activityId: this.activityId,
 					agentGoodsId: this.agentGoodsId,
 					shareClientId: this.shareClientId || '-1',
 					userType: 'Client'
 				},
-				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client'+'&activityId='+this.activeId,
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 			}
 		}
 		return shareObj
 	},
 	onShow() {
-		
+		  
 	},
 	onLoad(ops) {
 		console.log(ops)
 		this.goodsId = ops.goodsId;
-		this.agentGoodsId = ops.agentGoodsId
+		this.agentGoodsId = ops.agentGoodsId //活动商品id
 		// this.userType = ops.userType
-		this.activeId = ops.activityId
+		this.agentId = ops.agentId
+		this.activityId = ops.activityId
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 		if ( ops.shareClientId == undefined) {
 			this.shareClientId = '-1'
@@ -229,15 +234,14 @@ export default {
 			}
 			
 			try{
-				if(this.activeId){
-					if(this.activeId<=0)return;
+				if(this.activityId){
+					if(this.activityId<=0)return;
 					let params = {
-						activityId:this.activeId
+						activityId:this.activityId
 					};
 					let data = await Api.apiCall('post', Api.agent.activity.searchInfo, params, false, false);
 					if (data) {
 						this.activity = data.result
-						console.log(this.activity)
 					}
 				}
 			}catch(e){
@@ -253,7 +257,6 @@ export default {
 				this.activity = data.result.activityBean;
 				this.goodsName = data.result.goodsPicesBean.goodsName
 				this.skuList = data.result.goodsSku
-				console.log(this.skuList)
 				//赋值默认商品价格，库存和图片
 				this.sku.price = this.skuList[0].price
 				this.sku.stock = this.skuList[0].stock
@@ -324,7 +327,7 @@ export default {
 		async joinAgent () { //将商品加入代理
 			let params = {
 				goodsId: this.goodsId,
-				activeId: this.activeId || -1
+				activeId: this.activityId || -1
 			}
 			let data = await Api.apiCall('post', Api.agent.goods.save, params);
 			if (data) {
@@ -348,7 +351,8 @@ export default {
 				this.goodsHtml = data.result.mobileHtml
 			}
 		},
-		toggleSpec() { //规格弹窗开关
+		toggleSpec(type) { //规格弹窗开关
+			this.selectType = type
 			if (this.specClass === 'show') {
 				this.specClass = 'hide';
 				setTimeout(() => {
@@ -383,7 +387,6 @@ export default {
 				for (let data in this.skuList) {
 					var skuValue =  this.skuList[data].skuValue.split(',').sort().toString()
 					if (specArray.sort().toString() === skuValue) {
-						console.log(this.skuList[data])
 						this.goodsSkuId = this.skuList[data].id
 						this.sku.stock = this.skuList[data].stock
 						this.sku.price = this.skuList[data].price
@@ -413,7 +416,8 @@ export default {
 		},
 		async shareSave () { //分享调用接口
 			var goodsInfo = {
-				activityId: this.activeId,
+				agentId: this.agentId,
+				activityId: this.activityId,
 				agentGoodsId: this.agentGoodsId,
 				goodsId: this.goodsId,
 				goodsSkuId: this.goodsSkuId,
@@ -423,16 +427,15 @@ export default {
 			}
 			uni.setStorageSync('goodsInfo',goodsInfo)
 			if (Api.isToken()) {
-				var agentId = uni.getStorageSync('agentId')
 				uni.showLoading({
 					title: '正在加载',
 					mask: false
 				});
 				let params = {
 					// 'agentGoodsId': this.agentGoodsId,
-					'agentId': agentId || -1,
+					'agentId': this.agentId,
 					'goodsId': this.goodsId,
-					'activityId': this.activeId,
+					'activityId': this.activityId,
 					'shareId': this.shareClientId || '-1',
 					'type': ''
 				} 
@@ -457,42 +460,49 @@ export default {
 				 url: '/pages/agent/home/index'
 			});
 		},
- 		toBuy(item) { //点击立即购买
-			console.log(this.sku)
+ 		toBuy() { //点击立即购买
 			if (this.sku.stock <= 0) {
 				this.$api.msg('库存不足')
 				return false;
 			}
-			var buyInfo = {
-				activityId: this.activeId,
-				agentGoodsId: this.agentGoodsId,
+			if (this.selectType === 'buy') {
+				var buyInfo = {
+					agentId: this.agentId,
+					activityId: this.activityId,
+					agentGoodsId: this.agentGoodsId,
+					goodsId: this.goodsId,
+					goodsSkuId: this.goodsSkuId,
+					shareId: this.shareId,
+					price: this.sku.price,
+					shareClientId: this.shareClientId
+				}
+				uni.setStorageSync('goodsInfo',buyInfo)
+				if (Api.isToken()) { //先判断有没有登录
+					uni.navigateTo({
+						url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&activityId='+ buyInfo.activityId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId+'&agentId='+buyInfo.agentId
+					});
+				}
+			} else if (this.selectType === 'cart'){
+				this.addShopCar()
+			}
+		},
+		async addShopCar () {
+			let params = {
+				agentId: this.agentId,
 				goodsId: this.goodsId,
 				goodsSkuId: this.goodsSkuId,
-				shareId: this.shareId,
-				price: this.sku.price,
-				shareClientId: this.shareClientId
+				activityId: this.activityId || '-1',
+				shareId: this.shareClientId || '-1',
 			}
-			uni.setStorageSync('goodsInfo',buyInfo)
-			if (Api.isToken()) { //先判断有没有登录
-				uni.navigateTo({
-					url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&activityId='+ buyInfo.activityId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId
-				});
-			} 
-			// if (token) {
-				//先判断库存
-				// uni.navigateTo({
-				// 	url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId
-				// });
-			// } else {
-			// 	uni.showToast({
-			// 		title: '请先登录',
-			// 		icon: 'none'
-			// 	});
-			// 	var timeer = setim
-			// 	uni.navigateTo({
-			// 		url: '/pages/client/public/login'
-			// 	})
-			// }
+			let data = await Api.apiCall('post', Api.client.cart.addShopCar, params);
+			if (data) {
+				if (data.code === 0) {
+					this.$api.msg('加入购物车成功')
+					this.toggleSpec()
+				} else {
+					this.$api.msg(data.msg)
+				}
+			}
 		},
 		stopPrevent() {}
 	}
@@ -903,13 +913,14 @@ page {
 /* 底部操作菜单 */
 .page-bottom {
 	position: fixed;
-	left: 30upx;
+	left: 50%;
+	margin-left: -49%;
 	bottom: 30upx;
 	z-index: 95;
 	display: flex;
-	justify-content: center;
+	justify-content: space-around;
 	align-items: center;
-	width: 690upx;
+	width:98%;
 	height: 100upx;
 	background: rgba(255, 255, 255, 0.9);
 	box-shadow: 0 0 20upx 0 rgba(0, 0, 0, 0.5);
@@ -922,7 +933,7 @@ page {
 		justify-content: center;
 		font-size: $font-sm;
 		color: $font-color-base;
-		width: 96upx;
+		width: 120upx;
 		height: 80upx;
 		.yticon {
 			font-size: 40upx;
@@ -949,7 +960,6 @@ page {
 		box-shadow: 0 20upx 40upx -16upx #fa436a;
 		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
 		background: linear-gradient(to right, #ffac30, #fa436a, #f56c6c);
-		margin-left: 20upx;
 		position: relative;
 		&:after {
 			content: '';

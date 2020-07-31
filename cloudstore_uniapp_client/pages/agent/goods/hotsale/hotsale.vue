@@ -9,7 +9,7 @@
 				<view class="cu-item">
 					<view class="content">
 						<text class="cuIcon-locationfill text-red"></text>
-						<text class="text-white">店铺名：{{agentShopInfo.name}}</text>
+						<text class="text-white">附近店铺：{{agentShopInfo.name}}</text>
 					</view>
 					<view class="action clamp">
 						<text class="text-white text-sm">地址：{{agentShopInfo.address}}</text>
@@ -128,6 +128,7 @@
 		},
 		data() {
 			return {
+				agentId: '',
 				agentShopInfo: {
 					name: '',
 					address: ''
@@ -213,26 +214,47 @@
 		},
 		methods: {
 			async loadData() {
-				this.getAgentShop()
+				this.getLocation()
 				this.searchActivityNavList();
 				this.searchActivityShowList();
 			},
-			async getAgentShop () {
-				this.longLat = uni.getStorageSync('longLat')
-				if (this.longLat) {
+			async getAgentShop (res) {
+				if (res) {
 					let params = {
-						 latitude: this.longLat.latitude,
-						 longitude: this.longLat.longitude,
+						 latitude: res.latitude,
+						 longitude: res.longitude,
 					}
 					let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params);
 					if (data) {
-						// agentShopInfo
 						var tmpData = data.result.agentBean
+						console.log(tmpData)
 						this.agentShopInfo.name = tmpData.name
 						this.agentShopInfo.address = tmpData.detailAddress
-						uni.setStorageSync('agentId',data.result.agentId )
+						this.agentId = data.result.agentId
+						uni.setStorageSync('agentId', this.agentId)
 					}
 				}
+			},
+			getLocation () {
+				var that = this
+				uni.getLocation({
+				    type: 'wgs84',
+				    success: function (res) {
+						if (res) {
+							that.getAgentShop(res)
+							// console.log(res)
+							// var longLat = {
+							// 	longitude: res.longitude,
+							// 	latitude: res.latitude,
+							// }
+							// uni.setStorageSync('longLat', longLat)
+						}
+						// this.longLat = uni.getStorageSync('longLat')
+				    },
+					fail: function (res) {
+						console.log('获取地址错误：'+res)
+					}
+				});
 			},
 			async searchActivityNavList() {
 				let params = {
@@ -338,7 +360,7 @@
 				// 	url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
 				// });
 				uni.navigateTo({
-					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
+					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}&agentId=${this.agentId}`
 				});
 			},
 			async acceptCoupon(item) {

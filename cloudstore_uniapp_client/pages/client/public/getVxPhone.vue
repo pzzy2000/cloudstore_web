@@ -16,15 +16,28 @@
 				vxCode: '',
 				vxOpenid: '',
 				vxPhoneData: '',
-				loginCode: ''
+				loginCode: '',
+				goodsInfo: '',
+				agentId: '',
+				goodsId: '',
+				activityId: '',
+				agentGoodsId: '',
+				shareClientId: '',
 			}
 		},
 		components:{
 			navBar
 		},
 		onLoad (option) {
-			// this.getVxLoginCode()
 			this.vxCode = option.openId
+			this.goodsInfo =  uni.getStorageSync('goodsInfo')
+			if (this.goodsInfo) {
+				this.agentId = this.goodsInfo.agentId
+				this.goodsId = this.goodsInfo.goodsId
+				this.activityId = this.goodsInfo.activityId
+				this.agentGoodsId = this.goodsInfo.agentGoodsId
+				this.shareClientId = this.goodsInfo.shareClientId
+			}
 		},
 		methods: {
 			getPhoneNumber (res) {
@@ -131,9 +144,15 @@
 									    duration: 2000,
 										icon:'none'
 									});
-									uni.switchTab({
-										url: '/pages/agent/goods/hotsale/hotsale'
-									});
+									if (this.goodsId) {
+										uni.navigateTo({
+											url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
+										});
+									} else {
+										uni.switchTab({
+											url: '/pages/agent/goods/hotsale/hotsale'
+										});
+									}
 								} else {
 									uni.showToast({
 									    title: res.data.result.msg,

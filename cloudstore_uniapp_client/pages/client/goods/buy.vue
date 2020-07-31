@@ -19,7 +19,7 @@
 			<image class="a-bg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAu4AAAAFCAYAAAAaAWmiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Rjk3RjkzMjM2NzMxMTFFOUI4RkU4OEZGMDcxQzgzOEYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Rjk3RjkzMjQ2NzMxMTFFOUI4RkU4OEZGMDcxQzgzOEYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGOTdGOTMyMTY3MzExMUU5QjhGRTg4RkYwNzFDODM4RiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpGOTdGOTMyMjY3MzExMUU5QjhGRTg4RkYwNzFDODM4RiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PrEOZlQAAAiuSURBVHjazJp7bFvV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"></image>
 		</navigator>
 		
-		<view class="goods-section">
+		<view class="goods-section" v-if="goodsDetail.length > 0">
 			<view class="g-header b-b">
 				<text class="name">店铺:</text>
 				<text class="name">{{agentShop.name}}</text>
@@ -38,6 +38,41 @@
 							<text class="numberBtn" @click="subtractNum">-</text>
 							<text class="number">{{num}}</text>
 							<text class="numberBtn" @click="addNum">+</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		
+		<view class="goods-section" v-if="cartList.length > 0">
+			<view class="g-header b-b">
+				<text class="name">店铺:</text>
+				<text class="name">{{agentShop.name}}</text>
+			</view>
+			<!-- 商品列表 -->
+			<view class="g-item" v-for="(item,index) in cartList" :key='index'>
+				<image :src="item.image.url"></image>
+				<view class="right">
+					<text class="title clamp">{{item.title}}</text>
+					<text class="spec">商品规格: {{item.attr_val}} </text>
+					<view class="price-box">
+						<view class="">
+							<text class="price">￥{{item.price}}</text>
+						</view>
+						<view class="">
+							<uni-number-box
+								class="step"
+								:min="1" 
+								:max="item.stock"
+								:value="item.number>item.stock?item.stock:item.number"
+								:isMax="item.number>=item.stock?true:false"
+								:isMin="item.number===1"
+								:index="index"
+								@eventChange="numberChange1"
+							></uni-number-box>
+							<!-- <text class="numberBtn" @click="minusCartNumber(index)">-</text>
+							<text class="number">{{cartNum}}</text>
+							<text class="numberBtn" @click="addCartNumber(index)">+</text> -->
 						</view>
 					</view>
 				</view>
@@ -84,11 +119,21 @@
 		</view>
 		
 		<!-- 底部 -->
-		<view class="footer">
+		<view class="footer" v-if="goodsDetail.length > 0">
 			<view class="price-content">
 				<text>实付款</text>
 				<text class="price-tip">￥</text>
 				<text class="price">{{totalPrice}}</text>
+			</view>
+			<text class="submit" @click="buy">支付</text>
+		</view>
+		
+		<!-- 底部 -->
+		<view class="footer" v-if="cartList.length > 0">
+			<view class="price-content">
+				<text>实付款</text>
+				<text class="price-tip">￥</text>
+				<text class="price">{{cartTotal}}</text>
 			</view>
 			<text class="submit" @click="buy">支付</text>
 		</view>
@@ -121,6 +166,7 @@
 <script>
 	import navBar from '@/components/zhouWei-navBar';
     import Api from '@/common/api.js';
+	import uniNumberBox from '@/components/uni-number-box.vue'
 	export default {
 		data() {
 			return {
@@ -168,13 +214,18 @@
 					}
 				],
 				addressData: {
+					id: '',
 					name: '',
 					mobile: '',
 					addressName: '',
 					address: '',
 					area: '',
 					default: false,
-				}
+				},
+				//以下为购物车内容
+				cartList: [],
+				cartNum: 1,
+				cartTotal: ''
 			}
 		},
 		filters:{
@@ -187,23 +238,27 @@
 			}
 		},
 		onLoad(option) {
-			console.log(option)
 			var that = this;
-			this.goodsId = option.goodsId
-			this.agentId = uni.getStorageSync('agentId')
-			this.activityId = option.activityId
-			this.goodsSkuId =option.goodsSkuId;
-			this.shareClientId = option.shareClientId
-			if ( option.shareClientId == 'undefined') {
-				this.shareClientId = '-1'
-			}
-			this.orderType = option.orderType
-			this.orderId = option.orderId
-			this.getGoodsData(this.goodsId ,this.agentId ,this.goodsSkuId,this.activityId)
 			this.searchDetailAddress()
+			if (option.cartId) {
+				this.searchCart(option.cartId)
+				this.agentId = uni.getStorageSync('agentId')
+			} else {
+				this.goodsId = option.goodsId
+				this.agentId = option.agentId
+				this.activityId = option.activityId
+				this.goodsSkuId =option.goodsSkuId;
+				this.shareClientId = option.shareClientId
+				if ( option.shareClientId == 'undefined') {
+					this.shareClientId = '-1'
+				}
+				this.orderType = option.orderType
+				this.orderId = option.orderId
+				this.getGoodsData(this.goodsId ,this.agentId ,this.goodsSkuId,this.activityId)
+			}
 		},
 		components: {
-			navBar
+			navBar, uniNumberBox
 		},
 		methods: {
 			async searchDetailAddress(){ //查询地址信息
@@ -212,6 +267,7 @@
 				let data = await Api.apiCall('post', Api.client.address.detail, params, false, false);
 				if (data) {
 					if(data.result!=null)
+					console.log(data.result)
 					    this.setAddress(data.result)
 					}
 			},
@@ -239,9 +295,6 @@
 					}
 				}
 			},
-			// computNumber (price) {
-			// 	return Number(this.price) * 100
-			// },
 			subtractNum() { //商品数量的简单减少
 				if (this.num >1) {
 					this.num = parseInt(this.num) - 1
@@ -270,17 +323,39 @@
 							    service: 'payment',
 							    success: function (res) {
 									that.buyType = res.provider;
-									let params = {
-										'activityId': that.activityId,
-										'agentGoodsId': that.agentId,
-										'clientAddressId': that.addressData.id,
-										'goodsId': that.goodsId,
-										'goodsSkuId': that.goodsSkuId,
-										'number': that.num,
-										'payPrice': that.totalPrice,
-										'price': that.goodsSku.price,
-										'shareId': that.shareClientId,
-										'payType': 'weixin'
+									
+									if (that.cartList) {
+										var param = []
+										for (let tmp in that.cartList) {
+											param.push({
+												activityId: that.cartList[tmp].activityId,
+												agentGoodsId: that.agentId,
+												clientAddressId: that.addressData.id,
+												clientId: that.cartList[tmp].clientId,
+												goodsId: that.cartList[tmp].goodsId,
+												goodsSkuId: that.cartList[tmp].goodsSkuId,
+												number: that.cartList[tmp].number,
+												payPrice: (Number(that.cartList[tmp].number) * (Number(that.cartList[tmp].price) * 100))/100,
+												payType: 'weixin',
+												price: that.cartList[tmp].price,
+												shareId: that.cartList[tmp].shareId,
+											})
+										}
+										var params =  JSON.stringify(param)
+										console.log(params)
+									} else {
+										var params = {
+											'activityId': that.activityId,
+											'agentGoodsId': that.agentId,
+											'clientAddressId': that.addressData.id,
+											'goodsId': that.goodsId,
+											'goodsSkuId': that.goodsSkuId,
+											'number': that.num,
+											'payPrice': that.totalPrice,
+											'price': that.goodsSku.price,
+											'shareId': that.shareClientId,
+											'payType': 'weixin'
+										}
 									}
 									if (that.orderType === 'buyOrder') {
 										let params = {
@@ -294,7 +369,7 @@
 										});
 										uni.hideLoading()
 									}else{
-										Api.apiCallbackCall("POST", Api.client.buy.createOrder, params, true, true, function(data){
+										Api.apiCallbackCall("POST", Api.client.buy.createOrder, params, true, false, function(data){
 											if (data) {
 												let re =data.result;
 												let params = {
@@ -393,9 +468,61 @@
 			setAddress(data){
 				this.addressData = data;
 				console.log(data)
-			}
-			
-			
+			},
+			//以下为购物车内容
+			async searchCart (ids) {
+				let params = {
+					idss: ids
+				}
+				var data = await Api.apiCall('post', Api.client.cart.listShopCar, params, true)
+				if (data) {
+					var tmpData = data.result
+					console.log(tmpData)
+					for (let tmp in tmpData) {
+						this.cartList.push({
+							activityId: tmpData[tmp].activityId,
+							clientId: tmpData[tmp].clientId,
+							goodsId: tmpData[tmp].goodsId,
+							goodsSkuId: tmpData[tmp].goodsSkuId,
+							shareId: tmpData[tmp].shareId,
+							id: tmpData[tmp].id,
+							number: 1,
+							payPrice: tmpData[tmp].goodsSkuBean.price,
+							image: tmpData[tmp].goodsSkuBean.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
+							title: tmpData[tmp].goodsPicesBean.goodsName,
+							attr_val: tmpData[tmp].goodsSkuBean.skuValue,
+							price: tmpData[tmp].goodsSkuBean.price,
+							stock: tmpData[tmp].goodsSkuBean.stock,
+						})
+					}
+					this.calcTotal()
+					console.log(this.cartList)
+				}
+			},
+			// addCartNumber (index) {
+			// 	var number = this.cartList[index].number
+			// 	var num = this.cartList[index].number ++
+			// 	console.log(num)
+			// 	// this.$set(this.cartList[index], number, num);
+			// 	Vue.set(this.cartList[index], 'number', num)
+			// 	this.calcTotal()
+			// },
+			// minusCartNumber (index) {
+			// 	this.cartList[index].number --
+			// 	this.calcTotal()
+			// },
+			numberChange1(data){
+				this.cartList[data.index].number = data.number;
+				this.calcTotal();
+			},
+			calcTotal(){ //计算价格
+				let list = this.cartList;
+				let cartTotal = 0;
+				list.forEach(item=>{
+					cartTotal += item.price * item.number;
+				})
+				this.cartTotal = Number(cartTotal.toFixed(2));
+			},
 		}
 	}
 </script>

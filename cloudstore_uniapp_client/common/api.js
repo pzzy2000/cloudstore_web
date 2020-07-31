@@ -63,6 +63,12 @@ export default {
 		applyAgent: {
 			getClientAgent: 'app/private/agent/getClientAgent',
 			save: 'app/private/agent/save'
+		},
+		cart: {
+			addShopCar: 'app/private/shopCar/addShopCar',//新增购物车商品
+			deleteShopCar: 'app/private/shopCar/deleteShopCar',//删除购物车商品
+			myShopCar: 'app/private/shopCar/myShopCar', //我的购物车列表
+			listShopCar: 'app/private/shopCar/listShopCar' //购物车结算列表
 		}
 	},
 	agent:{
@@ -94,7 +100,7 @@ export default {
 		   loadHtml:'app/public/goods/loadMobileHtml', //获取商品详情的图文详情
 		},
 		share: {
-			save: 'app/public/share/apply'
+			save: 'app/private/share/apply'
 		},
 		category: {
 			list: 'app/public/goods/category/list',
@@ -166,7 +172,7 @@ export default {
 			data: formData,
 			method: method,
 			header: {
-				'content-type': 'application/x-www-form-urlencoded',
+				'content-type':isSwitch ==true ? 'application/x-www-form-urlencoded' :'application/json',
 				auth: token
 			},
 			success: function(res) {
@@ -260,7 +266,7 @@ export default {
 			data: formData,
 			method: method,
 			header: {
-				'content-type': 'application/x-www-form-urlencoded',
+				'content-type':isSwitch ==true ? 'application/x-www-form-urlencoded' :'application/json',
 				auth: token
 			},
 		});
@@ -276,7 +282,6 @@ export default {
 		// }
 
 		if (undefined == res || 'undefined' == res) {
-			console.log('index');
 			uni.showToast({
 				title: '系统请求错误',
 				icon: 'none'

@@ -21,7 +21,9 @@
 		},
 		data() {
 			return {
+				agentId: '',
 				goodsId: "",
+				activityId: '',
 				agentGoodsId: "",
 				shareClientId: "",
 				userType: 'Client',
@@ -35,33 +37,16 @@
 			},2000)
 		},
 		onLoad(ops) {
-			this.getLocation()
+			// this.getLocation()
 			this.token = uni.getStorageSync('token')
-			this.activityId = uni.getStorageSync('goodsInfo').activityId
+			this.agentId = ops.agentId
+			this.activityId = ops.activityId
 			this.goodsId = ops.goodsId
 			this.agentGoodsId = ops.agentGoodsId
 			this.shareClientId = ops.shareClientId
 			uni.setStorageSync('goodsInfo', ops)
 		},
 		methods: {
-			getLocation () {
-				uni.getLocation({
-				    type: 'wgs84',
-				    success: function (res) {
-						if (res) {
-							console.log(res)
-							var longLat = {
-								longitude: res.longitude,
-								latitude: res.latitude,
-							}
-							uni.setStorageSync('longLat', longLat)
-						}
-				    },
-					fail: function (res) {
-						console.log(res)
-					}
-				});
-			},
 			async getAgentInfo(timeout) {
 				this.logining = false;
 				let params = {};
@@ -72,7 +57,7 @@
 				if (data) {
 					if (this.goodsId) {
 						uni.navigateTo({
-							url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client'+'&activityId='+this.activityId,
+							url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 						});
 					} 
 					else {

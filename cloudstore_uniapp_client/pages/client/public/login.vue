@@ -58,6 +58,7 @@
 				wxloginCode: '', //获取code
 				loginInfo: '',
 				goodsInfo: '',
+				agentId: '',
 				goodsId: "",
 				activityId: '',
 				agentGoodsId: "",
@@ -68,6 +69,7 @@
 		onLoad() {
 			// this.sysInfo = this.$db.get('sysInfo');
 			this.goodsInfo =  uni.getStorageSync('goodsInfo')
+			this.agentId = this.goodsInfo.agentId
 			this.goodsId = this.goodsInfo.goodsId
 			this.activityId = this.goodsInfo.activityId
 			this.agentGoodsId = this.goodsInfo.agentGoodsId
@@ -142,24 +144,6 @@
 						uni.hideLoading();
 						if (res.data.result.code === 100006) {
 							var data = res.data.result
-							// uni.showModal({
-							// 	title: '提示',
-							// 	content: '您的微信号暂未注册，请前往注册',
-							// 	showCancel: false,
-							// 	cancelText: '取消',
-							// 	confirmText: '确定',
-							// 	success: res => {
-							// 		if (res.confirm) {
-							// 			uni.navigateTo({
-							// 				url: '/pages/client/public/reg'
-							// 			});
-							// 		} else if (res.cancel) {
-							// 			uni.navigateTo({
-							// 				url: '/pages/client/public/reg'
-							// 			});
-							// 		}
-							// 	}
-							// });
 							uni.showModal({
 								title: '提示',
 								content: '您的微信暂未绑定手机号，请前往绑定。若没有使用手机号注册过请前往注册。',
@@ -193,7 +177,7 @@
 							}
 							uni.setStorageSync('userInfo', userInfo)
 							uni.setStorageSync('token', res.data.result.result.token)
-							that.toPages()
+							that.toPages() //判断跳到首页还是商品详情页
 						} else {
 							uni.showToast({
 								title: res.data.result.msg,
@@ -230,12 +214,9 @@
 						uni.setStorageSync('token', data.result.token);
 						if (this.goodsId) {
 							uni.navigateTo({
-								url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client',
+								url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 							});
 						} else {
-							// uni.switchTab({
-							// 	url: '/pages/client/recommend/index'
-							// });
 							uni.switchTab({
 								url: '/pages/agent/goods/hotsale/hotsale'
 							});
@@ -248,12 +229,9 @@
 			toPages () {
 				if (this.goodsId) {
 					uni.navigateTo({
-						url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&userType=Client'+'&activityId='+this.activityId,
+						url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 					});
 				} else {
-					// uni.switchTab({
-					// 	url: '/pages/client/recommend/index'
-					// });
 					uni.switchTab({
 						url: '/pages/agent/goods/hotsale/hotsale'
 					});
