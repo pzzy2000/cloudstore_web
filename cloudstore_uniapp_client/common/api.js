@@ -51,6 +51,7 @@ export default {
 			getClientAddressById: 'app/private/client/address/getClientAddressById'
 		},
 		buy: {
+			getAgentDistanceType: 'app/public/agent/getAgentDistanceType',
 			createOrder:'app/private/order/createOrder',
 			prePay: 'app/pay/prePay',
 			paySuccess: 'app/pay/paySuccess'
@@ -266,7 +267,7 @@ export default {
 			data: formData,
 			method: method,
 			header: {
-				'content-type':isSwitch ==true ? 'application/x-www-form-urlencoded' :'application/json',
+				'content-type': 'application/x-www-form-urlencoded',
 				auth: token
 			},
 		});

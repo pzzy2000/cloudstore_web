@@ -22,7 +22,7 @@
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
 					
 					<!-- 订单列表 -->
-					<view v-for="(item,index) in orderList" :key="index" class="order-item">
+					<view v-for="(item,index) in orderList" :key="index" class="order-item" @click="toOrder(item)">
 						<view class="i-top b-b">
 							<text class="time">订单号: {{item.id}}</text>
 							<template>
@@ -37,16 +37,20 @@
 								<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
 							</template>
 						</view>
-						<view class="goods-box-single" :key="index" @click="toOrder(item)">
-							<image class="goods-img" :src="item.detailPicBean[0].goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
+						<view class="goods-box-single" v-for="(order, index1) in item.detailPicBean" :key="index1">
+							<image class="goods-img" :src="order.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
-								<text class="title clamp">{{item.detailPicBean[0].goodsPicesBean.goodsName}}</text>
-								<text class="attr-box">{{item.detailPicBean[0].activityBean.name}}</text>
+								<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
+								<text class="attr-box">{{order.activityBean.name}}</text>
 								<view class="price">
-									<text>总价: ￥{{item.payPrice}}</text>
-									<text>订单时间: {{item.createTime}}</text>
+									<text>价格: ￥{{order.payPrice}}</text>
+									<!-- <text>订单时间: {{order.createTime}}</text> -->
 								</view>
 							</view>
+						</view>
+						<view class="i-top b-b">
+							<text class="time">总价: ￥{{item.payPrice}}</text>
+							<text>订单时间: {{item.createTime}}</text>
 						</view>
 					</view>
 				<!-- </scroll-view>
@@ -155,6 +159,7 @@
 				let data = await Api.apiCall('post',Api.client.order.getClientOrder,parmas)
 				if (data) {
 					const tmpData = data.result.records
+					console.log(tmpData)
 					if(tmpData.length === 0) {
 						this.$api.msg('暂无更多数据了')
 					}else{

@@ -170,6 +170,7 @@
 							var userInfo = {
 								name: res.data.result.result.name,
 								url: res.data.result.result.url,
+								phone: res.data.result.result.phone,
 								agent: res.data.result.result.agent,
 								userType: res.data.result.result.userType,
 								relationId: res.data.result.result.relationId,
