@@ -9,6 +9,14 @@ export function fetchAgentList(params) {
   })
 }
 
+export function fetchKdList(params) {
+  return request({
+    url:'/order/allocation/kd/list',
+    method:'POST',
+    data:switchForm(params)
+  })
+}
+
 export function fetchDetailList(params) {
   return request({
     url:'/order/allocation/detail/list',

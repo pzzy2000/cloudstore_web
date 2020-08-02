@@ -534,12 +534,19 @@ export const asyncRouterMap = [
              hidden: false
           },
          {
-            path: 'detail',
-            name: 'ps_detail',
+            path: 'agent/detail',
+            name: 'ps_agent_detail',
             component: () => import('@/views/allocation/order/detail'),
             meta: {title: '配送详情', icon: 'product-list'},
             hidden: true
-	      }
+	      },
+		  {
+		     path: 'allocation/order/detail',
+		     name: 'ps_order_detail',
+		     component: () => import('@/views/allocation/order/allocation/order/detail'),
+		     meta: {title: '配送详情', icon: 'product-list'},
+		     hidden: true
+		   }
 	    ]
 
   },

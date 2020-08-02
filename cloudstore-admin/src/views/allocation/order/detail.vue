@@ -44,6 +44,10 @@
         </el-table-column>
         <el-table-column label="收件人地址" align="center" prop="clientAddress" :formatter="showAllocDetail" width="300">
         </el-table-column>
+        <el-table-column label="订单时间" align="center" prop="createTime" :formatter="showAllocDetail" width="180">
+        </el-table-column>
+        <el-table-column label="支付时间" align="center" prop="payTime" :formatter="showAllocDetail" width="180">
+        </el-table-column>
         <el-table-column label="订单状态" align="center" prop="orderStatus" :formatter="showAllocDetail">
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
@@ -162,15 +166,35 @@
             break;
           }
 
+          case 'createTime': {
+            try {
+              return row.orderBean.createTime;
+            } catch (e) {
+              return '数据读取错误';
+            }
+            break;
+          }
+
+          case 'payTime': {
+            try {
+              return formatDate(new Date(row.orderBean.payTime), 'yyyy-MM-dd hh:mm:ss');
+            } catch (e) {
+              return '数据读取错误';
+            }
+            break;
+          }
+
           case 'orderStatus': {
             try {
               let status = row.orderBean.orderStatus;
-              switch (status) {
-                case 'payed':
-                  return '已支付';
-                default :
-                  return '没支付';
-              }
+             switch (status) {
+               case 'payed':
+                 return '已支付';
+               case 'peisong':
+                 return '待配送';
+               default :
+                 return '数据读取错误';
+             }
 
             } catch (e) {
               return '数据读取错误';
@@ -187,6 +211,9 @@
             this.total = parseInt(res.result.result.total);
           }
         })
+      },
+      readOrder(index, row){
+        this.$router.push({name: "ps_order_detail", query: {id: row.orderId}});
       },
       backPage() {
         this.$router.back();
