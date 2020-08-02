@@ -38,15 +38,6 @@
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
-        <el-table-column type="selection" width="60px" align="center" fixed></el-table-column>
-        <el-table-column label="商品名称" align="center" fixed prop="goodsName" :formatter="showAllocDetail">
-        </el-table-column>
-        <el-table-column label="商品SKU" align="center" prop="skuCode" :formatter="showAllocDetail">
-        </el-table-column>
-        <el-table-column label="商品规格" align="center" prop="goodsModule" :formatter="showAllocDetail">
-        </el-table-column>
-        <el-table-column label="商品数量" align="center" prop="goodCount" :formatter="showAllocDetail">
-        </el-table-column>
         <el-table-column label="收件人姓名" align="center" prop="clientName" :formatter="showAllocDetail">
         </el-table-column>
         <el-table-column label="收件人电话" align="center" prop="clientPhone" :formatter="showAllocDetail">
@@ -55,6 +46,12 @@
         </el-table-column>
         <el-table-column label="订单状态" align="center" prop="orderStatus" :formatter="showAllocDetail">
         </el-table-column>
+        <el-table-column label="操作" width="200px"  align="center">
+                  <template slot-scope="scope">
+                    <el-button size="mini" @click="readOrder(scope.$index, scope.row)">订单详情</el-button>
+        <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
+                  </template>
+                </el-table-column>
       </el-table>
     </div>
     <div class="pagination-container" style="margin-right: 20px">

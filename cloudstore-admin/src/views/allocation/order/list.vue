@@ -113,12 +113,12 @@
 </template>
 
 <script>
-    import {fetchList} from '@/api/allocation'
+    import { fetchAgentList  as fetchList} from '@/api/allocation'
     import { formatDate } from '@/assets/common/data.js'
     const defaultList = {
       pageNum: 1,
       pageSize: 10,
-      optType:'search'
+      optType:'search',
     };
     let that;
     export default {
