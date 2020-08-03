@@ -415,16 +415,16 @@
               codeType: 'city',
               parentId: goodsinfo.provinceId
             }).then(response => {
-                 this.district.city = response.result.result.records;
-                 fetchDistrictList({
-                   codeType: 'district',
-                   parentId: goodsinfo.cityId
-                 }).then(response1 => {
-                   this.district.area = response1.result.result.records;
-                   this.baseinfo = goodsinfo;
-                   this.goodsPics = this.baseinfo.goodsPhotos;
-                   this.goodsDetailPics = this.baseinfo.goodsDetailPhotos;
-                 });
+               this.district.city = response.result.result.records;
+               fetchDistrictList({
+                 codeType: 'district',
+                 parentId: goodsinfo.cityId
+               }).then(response1 => {
+                 this.district.area = response1.result.result.records;
+                 this.baseinfo = goodsinfo;
+                 this.goodsPics = this.baseinfo.goodsPhotos;
+                 this.goodsDetailPics = this.baseinfo.goodsDetailPhotos;
+               });
             });
           }
         });

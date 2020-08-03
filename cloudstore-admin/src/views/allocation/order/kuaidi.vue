@@ -12,7 +12,6 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
-       
         <el-button
           style="float: right;margin-bottom: 10px;"
           @click="handleSearchList"
@@ -28,6 +27,27 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
+        <el-form :inline="true" :model="pageList" size="small" label-width="130px" ref="searchList">
+          <el-form-item label="订单编号：" prop="name">
+            <el-input style="width: 214px" v-model="pageList.number" placeholder="订单编号" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="下单时间：" prop="code">
+            <el-date-picker v-model="pageList.createTime" type="date" placeholder="选择日期" :picker-options="pickerOptions" clearable>
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="用户账号：" prop="count">
+            <el-input style="width: 214px" v-model="pageList.access" placeholder="用户账号" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="用户名称：" prop="count">
+            <el-input style="width: 214px" v-model="pageList.name" placeholder="用户名称" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="订单状态：" prop="orderstatus">
+            <el-select v-model="pageList.orderStatus" placeholder="请选择" clearable>
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
       </div>
     </el-card>
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
@@ -43,11 +63,11 @@
         </el-table-column>
         <el-table-column label="收件人地址" align="center" prop="clientAddress" :formatter="showAllocDetail" width="300">
         </el-table-column>
-        <el-table-column label="订单时间" align="center" prop="createTime" :formatter="showAllocDetail" width="180">
+        <el-table-column label="订单时间" align="center" prop="createTime" :formatter="showAllocDetail">
         </el-table-column>
-        <el-table-column label="支付时间" align="center" prop="payTime" :formatter="showAllocDetail" width="180">
+        <el-table-column label="支付时间" align="center" prop="payTime" :formatter="showAllocDetail">
         </el-table-column>
-        <el-table-column label="订单状态" align="center" prop="orderStatus" :formatter="showAllocDetail">
+        <el-table-column label="订单状态" align="center" prop="orderStatus" :formatter="showAllocDetail" width="150">
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
                   <template slot-scope="scope">
@@ -90,7 +110,23 @@
         total: 1,
         dialogVisible: false,
         btnMsg: '',
-        type: ''
+        type: '',
+        options: [
+          {label: "待支付", value: "wait"},
+          {label: "支付待确认", value: "pay"},
+          {label: "已支付", value: "payed"},
+          {label: "待配送", value: "peisong"},
+          {label: "已配送", value: "peisoged"},
+          {label: "已完成", value: "complete"},
+          {label: "超时关闭", value: "close"},
+          {label: "退货", value: "returns"},
+          {label: "已退货", value: "retud"},
+        ],
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          }
+        },
       }
     },
     created() {
@@ -131,7 +167,6 @@
             }
             break;
           }
-
           case 'goodCount': {
             try {
               return row.orderDetailBean.quantity;
@@ -158,13 +193,12 @@
           }
           case 'clientAddress': {
             try {
-              return row.orderBean.clientAddressBean.detailAddress;
+              return row.orderBean.clientAddressBean.provinceBean.name + ' ' + row.orderBean.clientAddressBean.cityBean.name + ' ' + row.orderBean.clientAddressBean.areaBean.name + ' ' + row.orderBean.clientAddressBean.detailAddress;
             } catch (e) {
               return '数据读取错误';
             }
             break;
           }
-
           case 'createTime': {
             try {
               return row.orderBean.createTime;
@@ -173,7 +207,6 @@
             }
             break;
           }
-
           case 'payTime': {
             try {
               return formatDate(new Date(row.orderBean.payTime), 'yyyy-MM-dd hh:mm:ss');
@@ -182,8 +215,6 @@
             }
             break;
           }
-
-
           case 'orderStatus': {
             try {
               let status = row.orderBean.orderStatus;
@@ -213,7 +244,7 @@
         })
       },
       readOrder(index, row){
-        this.$router.push({name: "ps_order_detail", query: {id: row.orderId}});
+        this.$router.push({path: "/allocation/order/allocation/order/detail", query: {id: row.orderId}});
       },
       backPage() {
         this.$router.back();

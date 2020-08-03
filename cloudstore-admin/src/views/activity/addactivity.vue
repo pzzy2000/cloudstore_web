@@ -11,6 +11,9 @@
         <el-form-item label="结束时间：" prop="endTime">
           <el-date-picker v-model="activityForm.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="endDatePicker" type="date" placeholder="请选择活动结束时间"></el-date-picker>
         </el-form-item>
+        <el-form-item label="活动图片：" prop="picture">
+          <SingleUpload v-model="picture"></SingleUpload>
+        </el-form-item>
         <!--<el-form-item label="上架/下架：" prop="endTime">-->
           <!--<el-radio-group v-model="activityForm.radio">-->
             <!--<el-radio :label="3">上架</el-radio>-->
@@ -32,12 +35,9 @@
 </template>
 
 <script>
-  import {
-    addActivity
-  } from '@/api/activity';
-  import {
-    msg
-  } from '@/api/iunits'
+  import {addActivity} from '@/api/activity';
+  import {msg} from '@/api/iunits'
+  import SingleUpload from '@/components/Upload/singleUpload';
   export default {
     name: "addactivity",
     provide() {
@@ -45,12 +45,16 @@
         rwDispatcherProvider: this
       }
     },
+    components: {
+      SingleUpload
+    },
     data() {
       return {
         activityForm: {
           activityName: '',
           startTime: '',
-          endTime: ''
+          endTime: '',
+          picture: []
         },
         rwDispatcherState: 'write',
         rules: {
@@ -60,10 +64,12 @@
           ],
           startTime: [{ required: true, message: '开始时间必填哦', trigger: 'blur' }],
           endTime: [{ required: true, message: '结束时间必填哦', trigger: 'blur' }],
+          picture: [{ required: true, message: '必须上传图片', trigger: 'blur' }]
         },
         checked: true,
         startDatePicker: this.beginDate(),
-        endDatePicker: this.processDate()
+        endDatePicker: this.processDate(),
+        picture: []
       }
     },
     methods: {
@@ -71,6 +77,12 @@
         this.$router.back();
       },
       subActname(formName) {
+        console.log(this.picture);
+        let pic = []
+        for (let i=0; i< this.picture.length; i++){
+          pic.push(this.picture[i].url);
+        }
+        this.activityForm.picture = pic;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if(this.checked){
@@ -104,10 +116,10 @@
           name: this.activityForm.activityName,
           startTime: this.activityForm.startTime,
           endTime: this.activityForm.endTime,
+          picture: this.activityForm.picture,
           addProfit: changeCheck,
           optType: "save"
         }
-        console.log(obj);
         addActivity(obj).then(res => {
           if (res.result.code == 0) {
             msg("添加活动成功");

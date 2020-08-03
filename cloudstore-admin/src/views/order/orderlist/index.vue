@@ -245,7 +245,6 @@
           })
         },
         showMsg(row, column) {
-          console.log(column)
           try{
             return row.clientBean.access
           }catch (e) {
