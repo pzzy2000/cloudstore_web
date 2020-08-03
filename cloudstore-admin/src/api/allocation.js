@@ -24,3 +24,10 @@ export function fetchDetailList(params) {
     data:switchForm(params)
   })
 }
+export function peisong(params) {
+  return request({
+    url: '/order/delivery/agent',
+    method: 'POST',
+    params: params
+  })
+}

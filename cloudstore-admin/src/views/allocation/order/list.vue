@@ -75,6 +75,7 @@
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="readOrder(scope.$index, scope.row)">配送详情</el-button>
+            <el-button size="mini" :disabled="scope.row.status == 'yps' ? true : false" @click="peisong(scope.$index, scope.row)">一键配送</el-button>
 <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
           </template>
         </el-table-column>
@@ -114,7 +115,7 @@
 </template>
 
 <script>
-    import { fetchAgentList  as fetchList} from '@/api/allocation'
+    import { fetchAgentList  as fetchList, peisong} from '@/api/allocation'
     import { formatDate } from '@/assets/common/data.js'
     const defaultList = {
       pageNum: 1,
@@ -152,6 +153,18 @@
 
       },
       methods: {
+        peisong(index, row) {
+          peisong({allocationId: row.id}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: '配送成功',
+                type: 'success',
+                duration: 800
+              })
+              this.getList(1);
+            }
+          })
+        },
         showAllocInfo(row,r){
           switch(r.property){
             case 'agentName':{

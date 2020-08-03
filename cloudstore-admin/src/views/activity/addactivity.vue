@@ -3,7 +3,7 @@
     <el-card class="filter-container" shadow="never">
       <el-form :model="activityForm" label-width="120px" size="small" ref="activityForm" :rules="rules">
         <el-form-item label="活动名称：" prop="activityName">
-          <el-input-dispatcher v-model="activityForm.activityName" placeholder="请输入活动名称" style="width: 350px" />
+          <el-input-dispatcher v-model="activityForm.name" placeholder="请输入活动名称" style="width: 350px" />
         </el-form-item>
         <el-form-item label="开始时间：" prop="startTime" >
           <el-date-picker v-model="activityForm.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="startDatePicker" type="date" placeholder="请选择活动开始时间"></el-date-picker>
@@ -35,9 +35,10 @@
 </template>
 
 <script>
-  import {addActivity} from '@/api/activity';
+  import {addActivity, getoneAct} from '@/api/activity';
   import {msg} from '@/api/iunits'
   import SingleUpload from '@/components/Upload/singleUpload';
+  import { formatDate } from '@/assets/common/data.js'
   export default {
     name: "addactivity",
     provide() {
@@ -51,14 +52,15 @@
     data() {
       return {
         activityForm: {
-          activityName: '',
+          name: '',
           startTime: '',
           endTime: '',
           picture: []
         },
+        optType: 'save',
         rwDispatcherState: 'write',
         rules: {
-          activityName: [
+          name: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
             { min: 2, max: 4, message: "长度在2到4个字之间", trigger: "blur" }
           ],
@@ -72,7 +74,32 @@
         picture: []
       }
     },
+    created() {
+      console.log(this.$route.query.id)
+      if (this.$route.query.id !== undefined) {
+        this.getOneact();
+        this.optType = 'update';
+      }
+    },
     methods: {
+      getOneact() {
+        getoneAct({id: this.$route.query.id}).then(res => {
+          console.log(res);
+          this.activityForm = res.result.result;
+          this.activityForm.startTime = new Date(this.activityForm.startTime);
+          this.activityForm.endTime = new Date(this.activityForm.endTime);
+          if (this.activityForm.addProfit == 1) {
+            this.checked = true;
+          }else {
+            this.checked = false;
+          }
+          let obj = {};
+          obj.uid = res.result.result.picture;
+          obj.url = res.result.result.picturePice;
+          this.picture.push(obj);
+          console.log(this.activityForm);
+        })
+      },
       toback() {
         this.$router.back();
       },
@@ -80,7 +107,7 @@
         console.log(this.picture);
         let pic = []
         for (let i=0; i< this.picture.length; i++){
-          pic.push(this.picture[i].url);
+          pic.push(this.picture[i].uid);
         }
         this.activityForm.picture = pic;
         this.$refs[formName].validate((valid) => {
@@ -112,20 +139,33 @@
         }else {
           changeCheck = '0'
         }
+        this.activityForm.startTime = formatDate(new Date(this.activityForm.startTime), 'yyyy-MM-dd');
+        this.activityForm.endTime = formatDate(new Date(this.activityForm.endTime), 'yyyy-MM-dd');
         let obj = {
-          name: this.activityForm.activityName,
+          name: this.activityForm.name,
           startTime: this.activityForm.startTime,
           endTime: this.activityForm.endTime,
           picture: this.activityForm.picture,
           addProfit: changeCheck,
-          optType: "save"
+          optType: this.optType
         }
-        addActivity(obj).then(res => {
-          if (res.result.code == 0) {
-            msg("添加活动成功");
-            this.$router.back();
-          }
-        })
+        if (this.$route.query.id !== undefined) {
+          obj.id = this.$route.query.id
+          addActivity(obj).then(res => {
+            if (res.result.code == 0) {
+              msg("修改活动成功");
+              this.$router.back();
+            }
+          })
+        } else {
+          addActivity(obj).then(res => {
+            if (res.result.code == 0) {
+              msg("添加活动成功");
+              this.$router.back();
+            }
+          })
+        }
+
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();

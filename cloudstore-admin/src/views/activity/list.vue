@@ -71,16 +71,19 @@
         v-loading="listLoading"
         border>
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
+        <el-table-column label="活动图片" align="center" fixed>
+          <template slot-scope="scope"><el-image :src="scope.row.picturePice" style="width: 35px; height: 35px"></el-image></template>
+        </el-table-column>
         <el-table-column label="活动名称" align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
-         </el-table-column>
-        <el-table-column label="开始时间" align="center">
+        </el-table-column>
+        <el-table-column label="开始时间" align="center" width="160">
           <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
         </el-table-column>
-        <el-table-column label="结束时间" align="center">
+        <el-table-column label="结束时间" align="center" width="160">
           <template slot-scope="scope">{{scope.row.endTime | formatDate}}</template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center">
+        <el-table-column label="创建时间" align="center" width="160">
           <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
         </el-table-column>
         <el-table-column label="是否参加佣金" align="center">
@@ -98,7 +101,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="是否显示在导航栏" align="center">
+        <el-table-column label="是否显示在导航栏" align="center" width="150">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.navigateIndex" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="showInnavigate(scope.row)">
             </el-switch>
@@ -106,10 +109,11 @@
         </el-table-column>
         <el-table-column label="是否删除" align="center" :formatter="changeStatus">
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="操作" width="270" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow" v-if="scope.row.isDelete == 1 ? false : true && scope.row.status == 1 ? false : true">删除</el-button>
+            <el-button size="mini" @click="updateAct(scope.row)">修改活动</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -401,6 +405,9 @@
             this.getList(1);
           }
         })
+      },
+      updateAct(row) {
+        this.$router.push({path: "/sys/activity/addact", query: {id: row.id}})
       }
     }
   }
