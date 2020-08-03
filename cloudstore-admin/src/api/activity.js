@@ -102,3 +102,11 @@ export function fetchListWithChildren(params) {
     method:'get',
   })
 }
+
+export function getoneAct(params) {
+  return request({
+    url: '/activity/get',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
