@@ -197,7 +197,15 @@
 				this.searchActivityShowList();
 			},
 			async getAgentShop (res) {
-				var agentId = uni.getStorageSync('agentId') ? uni.getStorageSync('agentId') : '-1'
+				let agentId =-1;
+				let userInfo =  uni.getStorageSync('userInfo') ; 
+				if(userInfo!=null && userInfo.agent!=null){
+					agentId = userInfo.relationId;
+				}else{
+					agentId  = uni.getStorageSync('agentId');
+					agentId = (agentId!="undefined" && agentId !=null && agentId!='') ? agentId : '-1'
+				}
+				
 				if (res) {
 					let params = {
 						 latitude: res.latitude || '-1',
@@ -211,10 +219,11 @@
 						this.agentShopInfo.address = tmpData.detailAddress
 						this.agentId = data.result.agentId
 						uni.setStorageSync('agentId', this.agentId)
+					}else{
 					}
 				}
 			},
-			getLocation () {
+			async getLocation () {
 				var that = this
 				uni.getLocation({
 				    type: 'wgs84',
@@ -227,6 +236,7 @@
 							// 	latitude: res.latitude,
 							// }
 							// uni.setStorageSync('longLat', longLat)
+						}else{
 						}
 						// this.longLat = uni.getStorageSync('longLat')
 				    },
@@ -357,9 +367,10 @@
 			},
 			navToCategory(item) {
 				let activitId = item.id;
+				let  agentId = this.agentId;
 				if (item.status) {
 					uni.navigateTo({
-						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?id='+activitId
+						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?agentId='+agentId+'&id='+activitId
 					});
 				} else {
 					this.$api.msg('敬请期待')
