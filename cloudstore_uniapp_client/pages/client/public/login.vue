@@ -86,7 +86,6 @@
 				});
 			},
 			getWxInfo() { //获取code登录并且判断是否已经绑定手机号码
-				console.log('进入了方法')
 				var that = this
 				uni.showLoading({
 					title: '微信登录中',
@@ -102,12 +101,10 @@
 						});
 					},
 					success: function(loginRes) {
-						console.log(loginRes)
 						uni.getUserInfo({
 							provider: 'weixin',
 							success: function(infoRes) {
 								if (infoRes) {
-									console.log(infoRes)
 									uni.setStorageSync('vxInfo', infoRes.rawData)
 								}
 							}

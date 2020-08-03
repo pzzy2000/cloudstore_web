@@ -11,7 +11,7 @@
 				<text>{{item.name}}:{{item.num}}</text>
 			</view>
 		</view>
-		<p style='text-align: center;line-height: 100upx;' v-if='financetDataList.length === 0'>暂无订单数据</p>
+		<p style='text-align: center;line-height: 100upx;' v-if='financetDataList.length === 0'>暂无收益数据</p>
 		<view class="goods-list">
 			<view v-for="(item, index) in financetDataList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
 				<view class="image-wrapper"><image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill"></image></view>

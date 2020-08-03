@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<nav-bar>商品收藏</nav-bar>
+		<nav-bar>购物车</nav-bar>
 		<!-- 空白页 -->
 		<view v-if="cartList.length === 0" class="empty">
 			<!-- <image src="/static/emptyCart.jpg" mode="aspectFit"></image> -->
@@ -14,45 +14,42 @@
 			</view>
 		</view>
 		<view v-else>
-			<view class="cart-list">
-				<block v-for="(item, index) in cartList" :key="item.id">
-					<view
-						class="cart-item" 
-						:class="{'b-b': index!==cartList.length-1}"
-					>
-						<view class="image-wrapper">
-							<image :src="item.image.url" 
-								:class="[item.loaded]"
-								mode="aspectFill" 
-								lazy-load 
-								@load="onImageLoad('cartList', index)" 
-								@error="onImageError('cartList', index)"
-							></image>
-							<view 
-								class="yticon icon-xuanzhong2 checkbox"
-								:class="{checked: item.checked}"
-								@click="check('item', index)"
-							></view>
-						</view>
-						<view class="item-right">
-							<text class="clamp title">{{item.title}}</text>
-							<text class="attr">{{item.attr_val}}</text>
-							<text class="price">¥{{item.price}}</text>
-							
-							<!-- <uni-number-box 
-								class="number"
-								:min="1" 
-								:max="item.stock"
-								:value="item.number>item.stock?item.stock:item.number"
-								:isMax="item.number>=item.stock?true:false"
-								:isMin="item.number===1"
-								:index="index"
-								@eventChange="numberChange"
-							></uni-number-box> -->
-						</view>
-						<text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text>
-					</view>
-				</block>
+			<view class="tui-list-item">
+				<view class="cart-list">
+					<block v-for="(item, index) in cartList" :key="item.id">
+						<tui-swipe-action :actions="actions" @click="deleteCartItem(index)">
+							<template v-slot:content>
+								<view class="cart-item" :class="{'b-b': index!==cartList.length-1}">
+									<view class="image-wrapper">
+										<image :src="item.image[0].url" 
+											:class="[item.loaded]"
+											mode="aspectFill" 
+											lazy-load 
+											@load="onImageLoad('cartList', index)" 
+											@error="onImageError('cartList', index)"></image>
+										<view class="yticon icon-xuanzhong2 checkbox" :class="{checked: item.checked}" @click="check('item', index)"></view>
+									</view>
+									<view class="item-right">
+										<text class="clamp title">{{item.title}}</text>
+										<text class="attr">{{item.attr_val}}</text>
+										<text class="price">¥{{item.price}}</text>
+										<uni-number-box 
+											class="number"
+											:min="1" 
+											:max="item.stock"
+											:value="item.number>item.stock?item.stock:item.number"
+											:isMax="item.number>=item.stock?true:false"
+											:isMin="item.number===1"
+											:index="index"
+											@eventChange="numberChange"
+										></uni-number-box>
+									</view>
+									<!-- <text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text> -->
+								</view>
+							</template>
+						</tui-swipe-action>
+					</block>
+				</view>
 			</view>
 			<view class="action-section">
 				<view class="checkbox">
@@ -66,7 +63,7 @@
 					</view>
 				</view>
 				<view class="total-box">
-					<text class="price">¥{{total}}</text>
+					<text class="price">总价：¥{{total}}</text>
 				</view>
 				<button type="primary" class="no-border confirm-btn" @click="createOrder">去结算</button>
 			</view>
@@ -78,9 +75,10 @@
 	import Api from '@/common/api';
 	import navBar from '@/components/zhouWei-navBar';
 	import uniNumberBox from '@/components/uni-number-box.vue'
+	import tuiSwipeAction from '@/components/tui-swipe-action/tui-swipe-action.vue'
 	export default {
 		components: {
-			uniNumberBox, navBar
+			uniNumberBox, navBar, tuiSwipeAction
 		},
 		data() {
 			return {
@@ -88,6 +86,15 @@
 				allChecked: false, //全选状态  true|false
 				empty: false, //空白页现实  true|false
 				cartList: [],
+				actions: [
+					{
+						name: '删除',
+						color: '#fff',
+						fontsize: 30, //单位rpx
+						width: 70, //单位px
+						background: '#FD3B31'
+					}
+				]
 			};
 		},
 		onShow(){
@@ -114,20 +121,26 @@
 				let data = await Api.apiCall('post', Api.client.cart.myShopCar, params)
 				if (data) {
 					var tmpData = data.result.records
-					console.log(tmpData)
-					for (let tmp in tmpData) {
-						this.cartList.push({
-							id: tmpData[tmp].id,
-							checked: false,
-							number: 1,
-							image: tmpData[tmp].goodsSkuBean.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
-							title: tmpData[tmp].goodsPicesBean.goodsName,
-							attr_val: tmpData[tmp].goodsSkuBean.skuValue,
-							price: tmpData[tmp].goodsSkuBean.price,
-							stock: tmpData[tmp].goodsSkuBean.stock,
-						})
+					if (tmpData.length != 0) {
+						for (let tmp in tmpData) {
+							try{
+								this.cartList.push({
+									id: tmpData[tmp].id,
+									checked: false,
+									number: 1,
+									image: tmpData[tmp].goodsSkuBean.photos || tmpData[tmp].goodsPicesBean.goodsDetailPhotos,
+									title: tmpData[tmp].goodsPicesBean.goodsName,
+									attr_val: tmpData[tmp].goodsSkuBean.skuValue,
+									price: tmpData[tmp].goodsSkuBean.price,
+									stock: tmpData[tmp].goodsSkuBean.stock,
+								})
+							}catch(e){
+								console.log(e)
+								continue;
+							}
+						}
+						this.calcTotal();  //计算总价
 					}
-					this.calcTotal();  //计算总价
 				}
 			},
 			//监听image加载完成
@@ -253,7 +266,13 @@
 				// if (data) {
 				// 	console.log()
 				// }
-			}
+			},
+			handlerButton(e) {
+				let index = e.index;
+				let item = e.item;
+				let menuTxt = ['删除', '修改', '收藏'][index];
+				this.tui.toast('您点击了【' + menuTxt + '】按钮');
+			},
 		}
 	}
 </script>
@@ -294,7 +313,7 @@
 	.cart-item{
 		display:flex;
 		position:relative;
-		padding:30upx 40upx;
+		padding:30upx 40upx 30upx 80upx;
 		.image-wrapper{
 			width: 150upx;
 			height: 150upx;
@@ -306,8 +325,8 @@
 		}
 		.checkbox{
 			position:absolute;
-			left:-16upx;
-			top: -16upx;
+			left:-60upx;
+			top: 50upx;
 			z-index: 8;
 			font-size: 44upx;
 			line-height: 1;
@@ -430,5 +449,8 @@
 	}
 	.number { 
 		font-size: 20uxp;
+		position: absolute;
+		bottom: 0;
+		right: 0;
 	}
 </style>

@@ -20,7 +20,10 @@
 							<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
 							<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 						</view>
-						<button type="primary" class="price-btn">立即代理</button>
+						<view class="flex justify-around">
+							<button type="primary" class="price-btn">购买</button>
+							<button type="primary" class="price-btn" @click.stop='shareSave(goods)'>分享</button>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -48,6 +51,7 @@
 				@change="typeChange"
 			></tui-cascade-selection>
 		</uni-popup>
+    <share ref="share" :contentHeight="580" :shareList="shareList"></share>
 	</view>
 </template>
 
@@ -56,13 +60,20 @@
 	import navBar from '@/components/zhouWei-navBar';
 	import tuiCascadeSelection from '@/components/tui-cascade-selection/tui-cascade-selection.vue'
 	import uniPopup from '@/components/uni-popup/uni-popup'
+  import share from '@/components/share';
 	export default {
 		components: {
-			navBar, tuiCascadeSelection, uniPopup
+			navBar, tuiCascadeSelection, uniPopup, share
 		},
 		data() {
 			return {
+				goodsId: '',
+				agentId: '',
+				goodsName: '',
 				activityId: null,
+				agentGoodsId: '',
+				shareClientId: '',
+				imageUrl: '',
 				statusBarHeight: '',
 				cateMaskState: 0, //分类面板展开状态
 				headerPosition: 'fixed',
@@ -81,8 +92,13 @@
 				receiveData: [],
 				categoryOneId: '',
 				categoryTwoId: '',
-				categoryThreeId: ''
-			};
+				categoryThreeId: '',
+				shareList: [{
+					icon: "/static/temp/share_wechat.png",
+					text: "微信好友",
+					type: 1
+				}],
+			}
 		},
 		onLoad(options) {
 			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
@@ -90,6 +106,7 @@
 				title: '正在加载',
 				mask: false
 			});
+			this.agentId = options.agentId
 			this.activityId = options.id;
 			this.keyword = options.keyword;
 			this.cateId = options.sid;
@@ -112,6 +129,24 @@
 		onReachBottom() { //加载更多
 			this.pageNum = this.pageNum + 1;
 			this.loadData('next');
+		},
+		onShareAppMessage(res) {
+			if (res.from === 'button') {// 来自页面内分享按钮
+				var shareObj = {
+					title: this.goodsName,
+					imageUrl: this.imageUrl,
+					params: {
+						agentId: this.agentId,
+						goodsId: this.goodsId,
+						activityId: this.activityId,
+						agentGoodsId: this.agentGoodsId,
+						shareClientId: this.shareClientId || '-1',
+						userType: 'Client'
+					},
+					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
+				}
+			}
+			return shareObj
 		},
 		methods: {
 			async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
@@ -223,9 +258,13 @@
 			tabClick(index) { //点击tab列表
 				if (index === 0) {
 					this.filterIndex = 0
+					this.pageNum = 1;
+					this.loadData();
 				}
 				if (index === 1) {
 					this.filterIndex = 1
+					this.pageNum = 1;
+					this.loadData();
 				}
 				if (index === 2) {
 					this.filterIndex = 2
@@ -246,15 +285,54 @@
 			},
 			navToDetailPage(item) { //去商品详情
 				//测试数据没有写id，用title代替
-				console.log(item)
 				let goodsId = item.goodsId;
 				let activitId = item.activityId;
 				let agentGoodsId = item.id;
 				uni.navigateTo({
-					url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
+					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}&agentId=${this.agentId}`
 				});
 			},
-			stopPrevent() {}
+			async shareSave (info) { //分享调用接口
+				  this.goodsId = info.goodsId
+				  this.activityId = info.activityId
+				  this.agentGoodsId = info.id
+				  this.goodsName = info.goodsPicesBean.goodsName
+				  this.imageUrl = info.goodsPicesBean.goodsPhotos[0].url || info.goodsPicesBean.goodsDetailPhotos[0].url
+					if (Api.isToken()) {
+						uni.showLoading({
+							title: '正在加载',
+							mask: false
+						});
+					let params = {
+						// 'agentGoodsId': this.agentGoodsId,
+						'agentId': this.agentId,
+						'goodsId': info.goodsId,
+						'activityId': info.activityId,
+						'shareId': this.shareClientId || '-1',
+						'type': ''
+					} 
+					let data = await Api.apiCall('post', Api.agent.share.save, params);
+					if (data) {
+						uni.hideLoading() 
+						if (data.code === 0) {
+							this.shareClientId = data.result.id
+							if (this.shareClientId) {
+								this.share()
+							}
+						}else{
+							uni.showToast({
+								title: data.msg
+							});
+						}
+					}
+				}
+			},
+			share() { //分享显示弹窗
+				this.$refs.share.toggleMask();
+			},
+			stopPrevent() {
+				
+			}
 		}
 	};
 </script>

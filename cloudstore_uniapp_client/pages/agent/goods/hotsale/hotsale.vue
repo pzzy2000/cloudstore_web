@@ -77,7 +77,6 @@
 						<text class='more'>更多></text>
 					</view>
 				</view>
-				
 				<view class="goods-list">
 					<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
 						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
@@ -91,44 +90,38 @@
 									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
 									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 								</view>
-								<button type="primary" class="price-btn">立即购买</button>
+								<view class="flex justify-around">
+									<button type="primary" class="price-btn">购买</button>
+									<button type="primary" class="price-btn" @click.stop='shareSave(goods)'>分享</button>
+								</view>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-			<!-- 新品上市 -->
-             <!-- 
-			<mallplusCopyright></mallplusCopyright>
-			-->
-			<!-- <tabbar :role="'agent'" :ids="'armsp'"></tabbar> -->
+			<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 		</view>
 	</view>
 </template>
 
 <script>
-	import mallplusCopyright from '@/components/mall-copyright/mallplusCopyright.vue';
 	import Api from '@/common/api';
-	import coupon from '@/components/coolc-coupon/coolc-coupon';
-
-	import {
-		formatDate
-	} from '@/common/date';
-	import {
-		mapState
-	} from 'vuex';
 	import navBar from '@/components/zhouWei-navBar';
-	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import share from '@/components/share';
 	export default {
 		components: {
-			coupon,
-			mallplusCopyright,
-			uniLoadMore,
-			navBar
+			navBar,
+			share
 		},
 		data() {
 			return {
 				agentId: '',
+				goodsId: '',
+				goodsName: '',
+				activityId: null,
+				agentGoodsId: '',
+				shareClientId: '',
+				imageUrl: '',
 				agentShopInfo: {
 					name: '',
 					address: ''
@@ -153,7 +146,12 @@
 					},
 				],
 				swiperCurrent: '',
-				swiperLength: '3'
+				swiperLength: '3',
+				shareList: [{
+					icon: "/static/temp/share_wechat.png",
+					text: "微信好友",
+					type: 1
+				}]
 			};
 		},
 
@@ -175,45 +173,23 @@
 		onShow() {
 			this.getLocation()
 		},
-		filters: {
-			formatCreateTime(time) {
-				let date = new Date(time);
-				return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
-			},
-			formatNull(value) {
-				if (value === undefined || value === null || value === '') {
-					return '暂无';
-				} else {
-					return value;
+		onShareAppMessage(res) {
+			if (res.from === 'button') {// 来自页面内分享按钮
+				var shareObj = {
+					title: this.goodsName,
+					imageUrl: this.imageUrl,
+					params: {
+						agentId: this.agentId,
+						goodsId: this.goodsId,
+						activityId: this.activityId,
+						agentGoodsId: this.agentGoodsId,
+						shareClientId: this.shareClientId || '-1',
+						userType: 'Client'
+					},
+					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 				}
-			},
-			formatLongText(value) {
-				if (value === undefined || value === null || value === '') {
-					return '暂无';
-				} else if (value.length > 4) {
-					return value.substr(0, 4) + '...';
-				} else {
-					return value;
-				}
-			},
-			formataddress(value){
-				try {
-				  return value.provinceBean.name + " " + value.cityBean.name + " " + value.areaBean.name;
-				} catch (e) {
-				  return '数据读取错误';
-				}
-			},
-			formatPayType(value) {
-				if (value === 2) {
-					return '支付宝';
-				} else if (value === 1) {
-					return '微信小程序';
-				} else if (value === 3) {
-					return '余额支付';
-				} else if (value === 5) {
-					return '积分兑换';
-				}
-			},
+			}
+			return shareObj
 		},
 		methods: {
 			async loadData() {
@@ -224,9 +200,9 @@
 				var agentId = uni.getStorageSync('agentId') ? uni.getStorageSync('agentId') : '-1'
 				if (res) {
 					let params = {
-						 latitude: res.latitude,
-						 longitude: res.longitude,
-						 agentId: agentId
+						 latitude: res.latitude || '-1',
+						 longitude: res.longitude || '-1',
+						 agentId: agentId || '-1'
 					}
 					let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params);
 					if (data) {
@@ -396,7 +372,45 @@
 				uni.navigateTo({
 					url: "/pages/agent/goods/category/category?goodsName=" + this.searchName
 				});
-			}
+			},
+			async shareSave (info) { //分享调用接口
+				  this.goodsId = info.goodsId
+				  this.activityId = info.activityId
+				  this.agentGoodsId = info.id
+				  this.goodsName = info.goodsPicesBean.goodsName
+				  this.imageUrl = info.goodsPicesBean.goodsPhotos[0].url || info.goodsPicesBean.goodsDetailPhotos[0].url
+					if (Api.isToken()) {
+						uni.showLoading({
+							title: '正在加载',
+							mask: false
+						});
+					let params = {
+						// 'agentGoodsId': this.agentGoodsId,
+						'agentId': this.agentId,
+						'goodsId': info.goodsId,
+						'activityId': info.activityId,
+						'shareId': this.shareClientId || '-1',
+						'type': ''
+					} 
+					let data = await Api.apiCall('post', Api.agent.share.save, params);
+					if (data) {
+						uni.hideLoading() 
+						if (data.code === 0) {
+							this.shareClientId = data.result.id
+							if (this.shareClientId) {
+								this.share()
+							}
+						}else{
+							uni.showToast({
+								title: data.msg
+							});
+						}
+					}
+				}
+			},
+			share() { //分享显示弹窗
+				this.$refs.share.toggleMask();
+			},
 		},
 
 		// 标题栏input搜索框点击
@@ -430,7 +444,6 @@
 <style lang="scss" scoped>
 	.container {
 		background: #f1f1f1;
-		padding-bottom: 100upx;
 	}
 	.MP-search {
 		background: #00A79D;
