@@ -291,7 +291,7 @@
 				"pagePath": "pages/client/cart/index",
 				"iconPath": "static/tabbar/cart.png",
 				"selectedIconPath": "static/tabbar/cart.png",
-				"text": "收藏商品"
+				"text": "购物车"
 			},
 			{
 				"pagePath": "pages/client/earnings/index",

@@ -1,32 +1,28 @@
 <template>
 	<view>
 		<nav-bar backState="1000">个人资料</nav-bar>
-		<view class="cu-card dynamic">
-			<view class="cu-item shadow">
-				<view class="cu-list menu-avatar">
-					<view class="cu-item">
-						<view class="cu-avatar lg round">
-							<image :src="imgUrl" mode="" class="img-avatar"></image>
-						</view>
-						<view class="content flex-sub">
-							<view>用户名:{{name}}</view>
-							<view class="text-gray text-sm flex justify-between">
-								手机号:{{phone}}
+		<view class="cu-card dynamic" v-if="isLoading">
+				<view class="cu-item shadow">
+						<view class="cu-list menu-avatar">
+							<view class="cu-item">
+								<view class="cu-avatar lg round">
+									<image :src="imgUrl" mode="" class="img-avatar"></image>
+								</view>
+								<view class="content flex-sub">
+									<view class="tui-skeleton-rect">用户名:{{name}}</view>
+									<view class="text-gray text-sm flex justify-between">
+										手机号:{{phone}}
+									</view>
+								</view>
 							</view>
 						</view>
-					</view>
-				</view>
-				<view class="text-content">
-					用户类型： {{type}}
-				</view>
-				<!-- <view class="grid flex-sub padding-xm padding-tb-sm col-1">
-					<view class="grid flex-sub padding-lr col-1">
-						<view class="bg-img only-img" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg);">
+						<view class="text-content">
+							<text class="tui-skeleton-rect">
+								用户类型： {{type}}
+							</text>
 						</view>
-					</view>
-				</view> -->
+				</view>
 			</view>
-		</view>
 		</view>
 	</view>
 </template>
@@ -34,9 +30,12 @@
 <script>
 	import navBar from '@/components/zhouWei-navBar';
 	import Api from '@/common/api.js'
+	import tuiSkeleton from '@/components/tui-skeleton/tui-skeleton.vue'
 	export default {
 		data() {
 			return {
+				isLoading: false,
+				skeletonShow: true,
 				name: '',
 				phone: '',
 				type: '',
@@ -45,13 +44,17 @@
 			}
 		},
 		components: {
-			navBar
+			navBar, tuiSkeleton
 		},
 		onLoad () {
-			this.getClientInfo()
+			var that = this
+			var timer = setTimeout(function(){
+				that.getClientInfo(timer)
+			}, 1000)
 		},
 		methods: {
-			async getClientInfo () {
+			async getClientInfo (timer) {
+				clearInterval(timer)
 				let params = {}
 				let data = await Api.apiCall('post', Api.client.info.searchInfo, params, true)
 				if (data) {
@@ -71,6 +74,7 @@
 					} else {
 						this.$api.msg(data.msg)
 					}
+					this.isLoading = true
 				}
 			}
 		}

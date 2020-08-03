@@ -113,7 +113,7 @@
 					parentId:0,
 					dirctType:'areas',
 				};
-				let list = await Api.apiCall('post', Api.areas.province, params);
+				let list = await Api.apiCall('post', Api.areas.province, params, true);
 				if (list) {
 					if (list.code === 0 && list.result.total != 0) {
 						for (let tmp in list.result.records) {
@@ -227,7 +227,7 @@
 			  let params = {
 			    id: id
 			  }
-			  let addressinfo = await Api.apiCall('post',Api.client.address.getClientAddressById,params) 
+			  let addressinfo = await Api.apiCall('post',Api.client.address.getClientAddressById,params, true) 
 			  if (addressinfo) {
 				  console.log(addressinfo.result)
 				this.addressData.id = addressinfo.result.id

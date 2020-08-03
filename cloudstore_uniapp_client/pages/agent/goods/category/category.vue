@@ -13,7 +13,7 @@
 			</view>
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 		</view>
-		<view class="goods-list">
+		<view class="goods-list" v-if='isGoodsList'>
 			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
 				<view class="image-wrapper"><image :src="goods.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
@@ -29,7 +29,10 @@
 							 <text class="priceSale">￥{{ goods.salePrice }}</text>
 							 <text class="pricemart">￥{{ goods.martPrice}}</text>
 						</view>
-						<button class="price-btn">立即购买</button>
+						<view class="flex justify-around">
+							<button class="price-btn">购买</button>
+							<button class="price-btn" @click.stop='shareSave(goods)'>分享</button>
+						</view>
 					</view>
 				</view>	
 			</view>
@@ -58,241 +61,312 @@
 				@change="typeChange"
 			></tui-cascade-selection>
 		</uni-popup>
+		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 		<!-- <tabbar :role="'agent'" :ids="'aspfl'"></tabbar> -->
 	</view>
 </template>
 
 <script>
-import Api from '@/common/api';
-import navBar from '@/components/zhouWei-navBar';
+	import Api from '@/common/api';
+	import navBar from '@/components/zhouWei-navBar';
 	import tuiCascadeSelection from '@/components/tui-cascade-selection/tui-cascade-selection.vue'
 	import uniPopup from '@/components/uni-popup/uni-popup'
-export default {
-	components: {
-		navBar, tuiCascadeSelection, uniPopup
-	},
-	data() {
-		return {
-			agentId: '',
-			goodsName: '',
-			statusBarHeight: '',
-			cateMaskState: 0, //分类面板展开状态
-			headerPosition: 'fixed',
-			headerTop: '0px',
-			keyword: '',
-			loadingType: 'more', //加载更多状态
-			filterIndex: 0,
-			pageNum: 1,
-			priceOrder: 0, //1 价格从低到高 2价格从高到低
-			goodsList: {
-				activityBean: {
-					name: '不参与活动'
+	import share from '@/components/share';
+	export default {
+		components: {
+			navBar, tuiCascadeSelection, uniPopup, share
+		},
+		data() {
+			return {
+				agentId: '',
+				goodsName: '',
+				goodsId: '',
+				activityId: '',
+				agentGoodsId: '',
+				shareClientId: '',
+				imageUrl: '',
+				statusBarHeight: '',
+				cateMaskState: 0, //分类面板展开状态
+				headerPosition: 'fixed',
+				headerTop: '0px',
+				keyword: '',
+				loadingType: 'more', //加载更多状态
+				filterIndex: 0,
+				pageNum: 1,
+				priceOrder: 0, //1 价格从低到高 2价格从高到低
+				goodsList: {
+					activityBean: {
+						name: '不参与活动'
+					},
+				},
+				isGoodsList: false,
+				cateList:[],
+				cateId:null,
+				itemList: [],
+				receiveData: [],
+				categoryOneId: '',
+				categoryTwoId: '',
+				categoryThreeId: '',
+				shareList: [{
+					icon: "/static/temp/share_wechat.png",
+					text: "微信好友",
+					type: 1
+				}]
+			};
+		},
+		onLoad(options) {
+			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
+			this.goodsName = options.goodsName
+			this.loadActiviList();
+			this.loadgoodsType();
+			this.loadData();
+			this.agentId = uni.getStorageSync('agentId')
+		},
+		onPageScroll(e) {
+			//兼容iOS端下拉时顶部漂移
+			if (e.scrollTop >= 0) {
+				this.headerPosition = 'fixed';
+			} else {
+				this.headerPosition = 'absolute';
+			}
+		},
+		//下拉刷新
+		onPullDownRefresh() {
+			this.pageNum = 1;
+			this.loadData('initialize');
+		},
+		//加载更多
+		onReachBottom() {
+			this.pageNum = this.pageNum + 1;
+			this.goodsName = ''
+			this.loadData('next');
+		},
+		onShareAppMessage(res) {
+			if (res.from === 'button') {// 来自页面内分享按钮
+				var shareObj = {
+					title: this.goodsName,
+					imageUrl: this.imageUrl,
+					params: {
+						agentId: this.agentId,
+						goodsId: this.goodsId,
+						activityId: this.activityId,
+						agentGoodsId: this.agentGoodsId,
+						shareClientId: this.shareClientId || '-1',
+						userType: 'Client'
+					},
+					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
+				}
+			}
+			return shareObj
+		},
+		methods: {
+			async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
+				uni.showLoading({
+					title: '正在加载',
+					mask: false
+				});
+				if (type === 'initialize') {
+					this.goodsName = ''
+					this.activityId = ''
+					this.categoryOneId = ''
+					this.categoryTwoId = ''
+					this.categoryThreeId = ''
+					this.receiveData = []
+					this.pageNum = 1;
+				}
+				var params = {
+					goodsName: this.goodsName || '',
+					activityId: this.activityId,
+					pageNum: this.pageNum,
+					pageSize: '10',
+					categoryOneId: this.categoryOneId,
+					categoryTwoId: this.categoryTwoId,
+					categoryThreeId: this.categoryThreeId,
+				};
+				let list = await Api.apiCall('post', Api.agent.goods.list, params);
+				if (list) {
+					
+					let goodsList = list.result.records;
+					this.isGoodsList = true
+					if (type === 'next') {
+						if (goodsList.length === 0) {
+							uni.hideLoading()
+							this.$api.msg('没有更多了')
+						}
+						this.goodsList = this.goodsList.concat(goodsList);
+						uni.hideLoading()
+					}else{
+						this.goodsList = goodsList;
+						uni.hideLoading()
+					}
+					uni.stopPullDownRefresh()
 				}
 			},
-			cateList:[],
-			cateId:null,
-			itemList: [],
-			receiveData: [],
-			categoryOneId: '',
-			categoryTwoId: '',
-			categoryThreeId: '',
-			activityId: ''
-		};
-	},
-
-	onLoad(options) {
-		this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
-		this.goodsName = options.goodsName
-		this.loadActiviList();
-		this.loadgoodsType();
-		this.loadData();
-		this.agentId = uni.getStorageSync('agentId')
-	},
-	onPageScroll(e) {
-		//兼容iOS端下拉时顶部漂移
-		if (e.scrollTop >= 0) {
-			this.headerPosition = 'fixed';
-		} else {
-			this.headerPosition = 'absolute';
-		}
-	},
-	//下拉刷新
-	onPullDownRefresh() {
-		this.pageNum = 1;
-		this.loadData('initialize');
-	},
-	//加载更多
-	onReachBottom() {
-		this.pageNum = this.pageNum + 1;
-		this.goodsName = ''
-		this.loadData('next');
-	},
-	methods: {
-		async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
-			uni.showLoading({
-				title: '正在加载',
-				mask: false
-			});
-			if (type === 'initialize') {
-				this.goodsName = ''
-				this.activityId = ''
-				this.categoryOneId = ''
-				this.categoryTwoId = ''
-				this.categoryThreeId = ''
-				this.receiveData = []
-				this.pageNum = 1;
-			}
-			var params = {
-				goodsName: this.goodsName || '',
-				activityId: this.activityId,
-				pageNum: this.pageNum,
-				pageSize: '10',
-				categoryOneId: this.categoryOneId,
-				categoryTwoId: this.categoryTwoId,
-				categoryThreeId: this.categoryThreeId,
-			};
-			let list = await Api.apiCall('post', Api.agent.goods.list, params);
-			if (list) {
-				let goodsList = list.result.records;
-				if (type === 'next') {
-					if (goodsList.length === 0) {
-						uni.hideLoading()
-						this.$api.msg('没有更多了')
-					}
-					this.goodsList = this.goodsList.concat(goodsList);
-				}else{
-					this.goodsList = goodsList;
-					uni.hideLoading()
-				}
-				uni.stopPullDownRefresh()
-			}
-		},
-		async loadgoodsType () { //初始化加载商品一级分类
-			let params = {
-				pageNum: '1',
-				parentId: 0
-			};
-			let list = await Api.apiCall('post', Api.agent.category.list, params);
-			if (list) {
-				for (let tmp in list.result.records) {
-					this.itemList.push({
-						text: list.result.records[tmp].name,
-						value: list.result.records[tmp].id
-					})
-				}
-			}
-		},
-		async loadActiviList () { //获取活动分类
-			let params = {
-				pageNum: 1,
-				pageSize: 20
-			};
-			let list = await Api.apiCall('post', Api.agent.hot.alllist, params);
-			if (list) {
-				this.cateList = list.result.records
-			}
-		},
-		selectActivity (item) { //点击活动后加载数据
-			this.activityId = item.id;
-			this.goodsName = ''
-			this.categoryOneId = '';
-			this.categoryTwoId = '';
-			this.categoryThreeId = '';
-			this.pageNum = '1';
-			this.loadData();
-			this.toggleCateMask('hide');
-		},
-		toggleCateMask (type) {
-			let timer = type === 'show' ? 10 : 300;
-			let state = type === 'show' ? 1 : 0;
-			this.cateMaskState = 2;
-			setTimeout(() => {
-				this.cateMaskState = state;
-			}, timer);
-		},
-		tabClick(index) { //点击tab列表
-			if (index === 0) {
-				this.filterIndex = 0
-				this.pageNum = 1;
-				this.loadData();
-			}
-			if (index === 1) {
-				this.filterIndex = 1
-				this.pageNum = 1;
-				this.loadData();
-			}
-			if (index === 2) {
-				this.filterIndex = 2
-				this.$refs.popup.open()
-			}
-			uni.pageScrollTo({
-				duration: 300,
-				scrollTop: 0
-			});
-		},
-		async typeChange(e) { //选择商品类型
-			this.pageNum = 1
-			this.receiveData = []
-			switch (e.layer) {
-				case 0:
-				this.categoryOneId = e.value
-				this.categoryTwoId = ''
-				this.categoryThreeId = ''
-				break;
-				case 1:
-				this.categoryTwoId = e.value
-				this.categoryThreeId = ''
-				break;
-				case 2:
-				this.categoryThreeId = e.value
-				break;
-			}
-			let params = {
-				pageNum: '1',
-				parentId: e.value
-			};
-			let list = await Api.apiCall('post', Api.agent.category.list, params);
-			if (list) {
-				if (list.code === 0 && list.result.total != 0) {
+			async loadgoodsType () { //初始化加载商品一级分类
+				let params = {
+					pageNum: '1',
+					parentId: 0
+				};
+				let list = await Api.apiCall('post', Api.agent.category.list, params);
+				if (list) {
 					for (let tmp in list.result.records) {
-						this.receiveData.push({
+						this.itemList.push({
 							text: list.result.records[tmp].name,
 							value: list.result.records[tmp].id
 						})
 					}
-				}else {
-					this.$refs.popup.close()
-					this.receiveData = []
 				}
-			}
-			this.loadData()
-		},
-		complete(e) { //点击了商品分类的上一级分类
-		},
-		//查询分类的具体数据
-		async searchtype () {
-			let params = {
-				pageNum: '1',
-				pageSize: '10',
-				categoryOneId: this.typeId
-			};
-			let list = await Api.apiCall('post', Api.agent.goods.list, params);
-			if (list) {				
-				this.goodsList = list.result.records
-				uni.hideLoading();
-			}
-		},
-		navToDetailPage(item) {
-			//测试数据没有写id，用title代替
-			console.log(item)
-			let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
-			uni.navigateTo({
-				url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}&agentId=${this.agentId}`
-			});
-		},
-		stopPrevent() {}
-	}
-};
+			},
+			async loadActiviList () { //获取活动分类
+				let params = {
+					pageNum: 1,
+					pageSize: 20
+				};
+				let list = await Api.apiCall('post', Api.agent.hot.alllist, params);
+				if (list) {
+					this.cateList = list.result.records
+				}
+			},
+			selectActivity (item) { //点击活动后加载数据
+				this.activityId = item.id;
+				this.goodsName = ''
+				this.categoryOneId = '';
+				this.categoryTwoId = '';
+				this.categoryThreeId = '';
+				this.pageNum = '1';
+				this.loadData();
+				this.toggleCateMask('hide');
+			},
+			toggleCateMask (type) {
+				let timer = type === 'show' ? 10 : 300;
+				let state = type === 'show' ? 1 : 0;
+				this.cateMaskState = 2;
+				setTimeout(() => {
+					this.cateMaskState = state;
+				}, timer);
+			},
+			tabClick(index) { //点击tab列表
+				if (index === 0) {
+					this.filterIndex = 0
+					this.pageNum = 1;
+					this.loadData();
+				}
+				if (index === 1) {
+					this.filterIndex = 1
+					this.pageNum = 1;
+					this.loadData();
+				}
+				if (index === 2) {
+					this.filterIndex = 2
+					this.$refs.popup.open()
+				}
+				uni.pageScrollTo({
+					duration: 300,
+					scrollTop: 0
+				});
+			},
+			async typeChange(e) { //选择商品类型
+				this.pageNum = 1
+				this.receiveData = []
+				switch (e.layer) {
+					case 0:
+					this.categoryOneId = e.value
+					this.categoryTwoId = ''
+					this.categoryThreeId = ''
+					break;
+					case 1:
+					this.categoryTwoId = e.value
+					this.categoryThreeId = ''
+					break;
+					case 2:
+					this.categoryThreeId = e.value
+					break;
+				}
+				let params = {
+					pageNum: '1',
+					parentId: e.value
+				};
+				let list = await Api.apiCall('post', Api.agent.category.list, params);
+				if (list) {
+					if (list.code === 0 && list.result.total != 0) {
+						for (let tmp in list.result.records) {
+							this.receiveData.push({
+								text: list.result.records[tmp].name,
+								value: list.result.records[tmp].id
+							})
+						}
+					}else {
+						this.$refs.popup.close()
+						this.receiveData = []
+					}
+				}
+				this.loadData()
+			},
+			complete(e) { //点击了商品分类的上一级分类
+			},
+			//查询分类的具体数据
+			async searchtype () {
+				let params = {
+					pageNum: '1',
+					pageSize: '10',
+					categoryOneId: this.typeId
+				};
+				let list = await Api.apiCall('post', Api.agent.goods.list, params);
+				if (list) {				
+					this.goodsList = list.result.records
+					uni.hideLoading();
+				}
+			},
+			navToDetailPage(item) {
+				//测试数据没有写id，用title代替
+				console.log(item)
+				let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
+				uni.navigateTo({
+					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}&agentId=${this.agentId}`
+				});
+			},
+			stopPrevent() {},
+			async shareSave (info) { //分享调用接口
+				console.log(info)
+				this.goodsId = info.id
+				this.activityId = info.activityId
+				this.agentGoodsId = info.activityGoodsId
+				this.goodsName = info.goodsName
+				this.imageUrl = info.goodsPhotos[0].url || info.goodsDetailPhotos[0].url
+				if (Api.isToken()) {
+						uni.showLoading({
+							title: '正在加载',
+							mask: false
+						});
+					let params = {
+						// 'agentGoodsId': this.agentGoodsId,
+						'agentId': this.agentId,
+						'goodsId': info.id,
+						'activityId': info.activityId,
+						'shareId': this.shareClientId || '-1',
+						'type': ''
+					} 
+					let data = await Api.apiCall('post', Api.agent.share.save, params);
+					if (data) {
+						uni.hideLoading() 
+						if (data.code === 0) {
+							this.shareClientId = data.result.id
+							if (this.shareClientId) {
+								this.share()
+							}
+						}else{
+							uni.showToast({
+								title: data.msg
+							});
+						}
+					}
+				}
+			},
+			share() { //分享显示弹窗
+				this.$refs.share.toggleMask();
+			},
+		}
+	};
 </script>
 
 <style lang="scss">
@@ -509,11 +583,11 @@ page,
 			.price-btn {
 				padding: 0;
 				margin: 0;
-				font-size: 24upx;
-				padding: 0 20upx;
-				height: 50upx;
-				line-height: 50upx;
-				border-radius: 40upx;
+				font-size: 30rpx;
+				padding: 0 20rpx;
+				height: 60rpx;
+				line-height: 60rpx;
+				border-radius: 10rpx;
 				color: #fff;
 				background: #ff4f50;
 			}

@@ -7,23 +7,25 @@
 		mapMutations
 	} from 'vuex';
 	export default {
-		methods: {
-			
-		},
+		// data: {
+		// 	return () {
+		// 		statusBarHeight: ''
+		// 	}
+		// },
 		created() {
 			
 		},
 		onReady() {
 		},
 		onLaunch: function() {
-			//#ifdef APP-PLUS 
+			// this.statusBarHeight = Number(Api.statusBarHeight())
+			//#ifdef APP-PLUS
 				plus.runtime.getProperty(plus.runtime.appid,(wgtinfo)=>{
 					// var server = ""; //检查更新地址
 					var req = { //升级检测数据
 					    // "appid": plus.runtime.appid,
 					    // "version": wgtinfo.version
 					};
-					console.log('onLaunch2')
 					uni.request({
 					    url: Api.APPBASEURI+ 'apk.json',
 					    data: '',
@@ -43,21 +45,10 @@
 									}  
 								})  
 							}
-					        // if (res.statusCode == 200 && res.data.status === 1) {  
-					        //     uni.showModal({ //提醒用户更新  
-					        //         title: "更新提示",  
-					        //         content: res.data.note,  
-					        //         success: (res) => {  
-					        //             if (res.confirm) {  
-					        //                 plus.runtime.openURL(res.data.url);  
-					        //             }  
-					        //         }  
-					        //     })  
-					        // }  
 					    }  
 					})  
 				})
-			    //#endif  
+			//#endif  
 		},
 		onShow: function() {
 			// uni.hideTabBar({});

@@ -12,10 +12,8 @@
 				</view>
 			</view>
 			<view class="vip-card-box">
-				<view class="b-btn">普通等级</view>
 				<view class="tit">
-					<text class="yticon icon-iLinkapp-">普通会员</text>
-					
+					<text class="yticon icon-iLinkapp-">{{user.userType }}</text>
 				</view>
 				<text class="e-m"></text>
 				<text class="e-b"></text>
@@ -40,23 +38,23 @@
 					<text class="yticon icon-shouye"></text>
 					<text>全部订单</text>
 				</view>
-				<view class="order-item" @click="navTo('/pages/client/order/order?status=1')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-daifukuan"></text>
-					<text>已支付</text>
+					<text>提现</text>
 				</view>
-				<view class="order-item" @click="navTo('/pages/client/order/order?status=2')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-yishouhuo"></text>
-					<text>待配送</text>
+					<text>敬请期待</text>
 				</view>
 
-				<view class="order-item" @click="navTo('/pages/client/order/order?status=3')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>已完成</text>
+					<text>敬请期待</text>
 				</view>
 			</view>
 			<!-- 浏览历史 -->
 			<view class="cu-list menu sm-border margin-top">
-				<view class="cu-item arrow" @click="toapplyAgent('/pages/client/info/address')">
+				<view class="cu-item arrow" @click="toapplyAgent('/pages/client/info/address')" v-if="user.userType">
 					<view class="content">
 						<text class="cuIcon-locationfill text-cyan"></text>
 						<text class="text-block">地址管理</text>
@@ -86,16 +84,22 @@
 						<text class="text-block">联系客服</text>
 					</button>
 				</view>
-				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/editPwd')">
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/editPwd')" v-if="user.userType">
 					<view class="content">
 						<text class="cuIcon-lock text-blue"></text>
 						<text class="text-block">修改密码</text>
 					</view>
 				</view>
-				<view class="cu-item arrow" @click="navTo('/pages/client/public/login','exit')">
+				<view class="cu-item arrow" @click="navTo('/pages/agent/goods/hotsale/hotsale','exit')" v-if="user.userType">
 					<view class="content">
 						<text class="cuIcon-exit text-purple"></text>
 						<text class="text-block">退出</text>
+					</view>
+				</view>
+				<view class="cu-item arrow" @click="navTo('/pages/client/public/login',)" v-else>
+					<view class="content">
+						<text class="cuIcon-exit text-purple"></text>
+						<text class="text-block">登录</text>
 					</view>
 				</view>
 			</view>
@@ -155,9 +159,22 @@
 					if (!userInfo.wxPic) {
 						this.user.url = this.user.detailUrl
 					}
+					this.isUserType(userInfo.agent)
 				}
 			},
-			
+			isUserType (type) {
+				switch (type) {
+					case 'Client':
+						this.user.userType = '普通会员'
+					break;
+					case 'agent':
+						this.user.userType = '代理'
+					break;
+					case 'leader':
+						this.user.userType = '团长'
+					break;
+				}
+			},
 			toNav(url){
 				uni.navigateTo({
 					url: url
@@ -200,6 +217,8 @@
 					uni.reLaunch({
 						url: url
 					});
+				} else if (type === false) {
+					this.$api.msg('敬请期待')
 				} else {
 					uni.navigateTo({
 						url: url

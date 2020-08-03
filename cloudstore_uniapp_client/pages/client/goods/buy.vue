@@ -11,7 +11,6 @@
 						<text class="name">{{addressData.name}}</text>
 						<text class="mobile">{{addressData.phone}}</text>
 					</view>
-					
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
@@ -222,7 +221,9 @@
 				},
 				picker: [],
 				pickerIndex: 0,
+				pickerList: [],
 				transportAgentId: '',
+				transportType: '',
 				//以下为购物车内容
 				cartList: [],
 				cartNum: 1,
@@ -266,7 +267,8 @@
 		},
 		methods: {
 			PickerChange (e) {
-				console.log(e)
+				this.pickerIndex = e.detail.value
+				this.transportType = this.pickerList[e.detail.value].code
 			},
 			async getAgentDistanceType () {
 				let params = {
@@ -274,7 +276,6 @@
 				}
 				let data = await Api.apiCall('post', Api.client.buy.getAgentDistanceType, params, false, false);
 				if (data) {
-					console.log(data)
 					this.transportAgentId = data.result.agentId
 					if (this.transportAgentId === '-1') {
 						uni.showModal({
@@ -286,11 +287,17 @@
 							success: res => {},
 						});
 					}
+					this.picker.length = 0
+					this.pickerList.length = 0
 					var tmpData = data.result.type
 					for(let tmp in tmpData) {
 						this.picker.push(tmpData[tmp].name)
+						this.pickerList.push({
+						   name: tmpData[tmp].name,
+						   code: tmpData[tmp].code
+						})
 					}
-					console.log(this.picker)
+					this.transportType = this.pickerList[0].code
 				}
 			},
 			async searchDetailAddress(){ //查询地址信息
@@ -298,8 +305,7 @@
 				};
 				let data = await Api.apiCall('post', Api.client.address.detail, params, false, false);
 				if (data) {
-					if(data.result!=null)
-						console.log(data.result)
+					if(data.result)
 					    this.setAddress(data.result)
 					}
 			},
@@ -372,20 +378,22 @@
 							    service: 'payment',
 							    success: function (res) {
 									that.buyType = res.provider;
-									var params = []
+									var params = {
+										transportAgentId: that.transportAgentId,
+										transportType: that.transportType,
+										clientAddressId: that.addressData.id,
+										payType: 'weixin',
+										detail: []
+									}
 									for (let tmp in that.buyGoodsList) {
-										params.push({
+										params.detail.push({
 											activityId: that.buyGoodsList[tmp].activityId,
 											agentGoodsId: that.agentId,
-											// transportAgentId: that.transportAgentId
-											// transportType: '
-											clientAddressId: that.addressData.id,
 											clientId: that.buyGoodsList[tmp].clientId,
 											goodsId: that.buyGoodsList[tmp].goodsId,
 											goodsSkuId: that.buyGoodsList[tmp].goodsSkuId,
 											number: that.buyGoodsList[tmp].number,
 											payPrice: (Number(that.buyGoodsList[tmp].number) * (Number(that.buyGoodsList[tmp].price) * 100))/100,
-											payType: 'weixin',
 											price: that.buyGoodsList[tmp].price,
 											shareId: that.buyGoodsList[tmp].shareId,
 										})

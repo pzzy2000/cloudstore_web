@@ -36,7 +36,7 @@
 				source: 0,
 				addressList: [
 				],
-				isDelete: true
+				isDelete: true,
 			}
 		},
 		components:{

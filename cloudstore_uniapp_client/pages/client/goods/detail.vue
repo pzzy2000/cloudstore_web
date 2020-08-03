@@ -83,8 +83,8 @@
 				<text>首页</text>
 			</navigator>
 			<view class="p-b-btn" @click="toggleSpec('cart')">
-				<text class="yticon icon-shoucang "></text>
-				<text>收藏</text>
+				<text class="yticon icon-gouwuche "></text>
+				<text>购物车</text>
 			</view>
 			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-gouwuche"></text>
@@ -229,12 +229,6 @@ export default {
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
 			try{
-				this.loadMobileHtml()
-			}catch(e){
-				this.$api.msg('获取商品图文信息失败')
-			}
-			
-			try{
 				if(this.activityId){
 					if(this.activityId<=0)return;
 					let params = {
@@ -248,6 +242,12 @@ export default {
 			}catch(e){
 				this.$api.msg('获取活动信息失败')
 			}
+			try{
+				this.loadMobileHtml()
+			}catch(e){
+				this.$api.msg('获取商品图文信息失败')
+			}
+		
 			let params = {
 				goodsId: goodsId ,
 				agentGoodsId: agentGoodsId,
@@ -500,7 +500,7 @@ export default {
 			let data = await Api.apiCall('post', Api.client.cart.addShopCar, params);
 			if (data) {
 				if (data.code === 0) {
-					this.$api.msg('加入购物车成功')
+					this.$api.msg('加入收藏成功')
 					this.toggleSpec()
 				} else {
 					this.$api.msg(data.msg)
