@@ -29,7 +29,6 @@
                 </el-checkbox-group>
               </div>
             </div>
-
             <div>
               <el-form :rules="rules" :model="goodsku" ref="format">
                 <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border>
@@ -85,10 +84,8 @@
                 <el-button type="primary" style="margin-top: 20px" @click="handleUpdateProductSkuList">更新列表
                 </el-button>
               </div>
-
             </div>
           </el-card>
-
         </el-form-item>
         <el-form-item label="商品参数：">
           <el-card shadow="never" class="cardBg">
