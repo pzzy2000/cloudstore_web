@@ -11,9 +11,13 @@
 		</view>
 		<view class="row b-b">
 			<text class="tit">地址</text>
-			<text @click="chooseLocation" class="input">
+			<text @click="seletctAddress" class="input">
 				{{addressData.addressName}}
 			</text>
+		</view>
+		<view class="cu-form-group" @click="selectMap">
+			<view class="title">选择社区：</view>
+			<input :value="addressData.mapText" placeholder="请选择社区" disabled='true' style="color:#000;"></input>
 		</view>
 		<view class="row b-b"> 
 			<text class="tit">详细地址</text>
@@ -25,40 +29,65 @@
 			<switch :checked="addressData.status" color="#fa436a" @change="detailChange" />
 		</view>
 		<button class="add-btn" @click="confirm">提交</button>
-		<ehPicker @conceal="conceal" v-if="popup" @close="close" />
+		<uni-popup ref="popup" type="bottom" class="popup">
+			<tui-cascade-selection
+				height="280px"
+				activeColor="#EB0909"
+				lineColor="#EB0909"
+				checkMarkColor="#EB0909"
+				:itemList="itemList"
+				request
+				@complete="complete"
+				:receiveData="receiveData"
+				@change="addressChange"
+			></tui-cascade-selection>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
-	import ehPicker from '@/pages/tabbar/erha-picker.vue'; 
 	import Api from '@/common/api';
 	import navBar from '@/components/zhouWei-navBar';
+	import tuiCascadeSelection from '@/components/tui-cascade-selection/tui-cascade-selection.vue'
+	import uniPopup from '@/components/uni-popup/uni-popup'
 	export default {
 		components: {
-		 ehPicker, navBar
+		 navBar, tuiCascadeSelection, uniPopup
 		},
 		data() {
 			return {
 				popup:false,
 				title: '',
+				itemList: [],
+				receiveData: [],
 				addressData: {
 					id: '',
 					name: '',
 					phone: '',
-					addressName: '选择省/市/区县',
+					addressName: '选择省/市/区/区域',
 					address: '',
 					areas:{
 						province: {
-							id: ''
+							id: '',
+							name: ''
 						},
 						city: {
-							id: ''
+							id: '',
+							name: ''
 						},
 						area: {
-							id: ''
+							id: '',
+							name: ''
+						},
+						town: {
+							id: '',
+							name: ''
 						}
 					},
+					mapText: '',
 					area: '',
+					longitude: '',
+					latitude: '',
 					default: false,
 					status: '',
 				},
@@ -67,6 +96,7 @@
 			}
 		},
 		onLoad(option){
+			this.getAddressData()
 			if(option.type==='edit'){
 				this.title = '编辑收货地址'
 				this.isDetail = true
@@ -76,18 +106,95 @@
 			}
 		},
 		methods: {
+			async getAddressData () { //获取第一级地址数据
+				let params ={
+					pageNum:1,
+					pageSize:100,
+					parentId:0,
+					dirctType:'areas',
+				};
+				let list = await Api.apiCall('post', Api.areas.province, params);
+				if (list) {
+					if (list.code === 0 && list.result.total != 0) {
+						for (let tmp in list.result.records) {
+							this.itemList.push({
+								text: list.result.records[tmp].name,
+								value: list.result.records[tmp].id
+							})
+						}
+					}else {
+						this.$refs.popup.close()
+						this.itemList = []
+					}
+				}
+			},
 			close(){
 				this.popup = false;
 			},
-			conceal(param) { 
-				// 获取到传过来的 省 市 区 县数据
-				this.addressData.areas = param;
-				try{
-					this.addressData.addressName = param.province.name+" / "+param.city.name+" / "+param.area.name
-				}catch(e){
-					this.addressData.addressName ="地址选择错误"
+			seletctAddress () { //打开选择地址的弹出框
+				this.$refs.popup.open()
+			},
+			async addressChange (e) { //选择地址
+				switch(e.layer) {
+					case 0:
+					this.addressData.areas.province.name = e.text;
+					this.addressData.areas.province.id = e.value;
+					break;
+					case 1:
+					this.addressData.areas.city.name = e.text;
+					this.addressData.areas.city.id = e.value;
+					break;
+					case 2:
+					this.addressData.areas.area.name = e.text;
+					this.addressData.areas.area.id = e.value;
+					break;
+					case 3:
+					this.addressData.areas.town.name = e.text;
+					this.addressData.areas.town.id = e.value;
+					break;
 				}
-				this.popup = false;
+				this.addressData.addressName = this.addressData.areas.province.name + '/' + this.addressData.areas.city.name + '/' + this.addressData.areas.area.name + '/' + this.addressData.areas.town.name
+				this.receiveData.length = 0
+				let params = {
+					pageNum:1,
+					pageSize:50,
+					parentId:e.value,
+					dirctType:'areas',
+				};
+				if (e.layer === 3 ) {
+					this.$refs.popup.close()
+					uni.hideLoading()
+					return false;
+				} else {
+					let list = await Api.apiCall('post', Api.areas.province, params);
+					if (list) {
+						if (list.code === 0 && list.result.total != 0) {
+							for (let tmp in list.result.records) {
+								this.receiveData.push({
+									text: list.result.records[tmp].name,
+									value: list.result.records[tmp].id
+								})
+							}
+						}else {
+							this.$refs.popup.close()
+							this.receiveData = []
+						}
+						uni.hideLoading()
+					}
+				}
+			},
+			complete () {
+				
+			},
+			selectMap () { //调用地图选择地址
+				var that = this;
+				uni.chooseLocation({
+				    success: function (res) {
+						that.addressData.mapText = res.name
+						that.addressData.longitude = res.longitude
+						that.addressData.latitude = res.latitude
+				    }
+				});
 			},
 			switchChange(e){
 				this.addressData.default = e.detail;
@@ -122,14 +229,17 @@
 			  }
 			  let addressinfo = await Api.apiCall('post',Api.client.address.getClientAddressById,params) 
 			  if (addressinfo) {
+				  console.log(addressinfo.result)
 				this.addressData.id = addressinfo.result.id
 			    this.addressData.name = addressinfo.result.name,
 			    this.addressData.phone = addressinfo.result.phone
 			    this.addressData.area = addressinfo.result.detailAddress
-				this.addressData.addressName = addressinfo.result.provinceBean.name +'/'+ addressinfo.result.cityBean.name +'/'+ addressinfo.result.areaBean.name
+				this.addressData.addressName = addressinfo.result.provinceBean.name +'/'+ addressinfo.result.cityBean.name +'/'+ addressinfo.result.areaBean.name +'/'+ addressinfo.result.townBean.name
 			    this.addressData.areas.province.id = addressinfo.result.provinceBean.id
 			    this.addressData.areas.city.id = addressinfo.result.cityBean.id
 			    this.addressData.areas.area.id = addressinfo.result.areaBean.id
+				this.addressData.areas.town.id = addressinfo.result.townBean.id
+				this.addressData.mapText = addressinfo.result.community
 			    this.addressData.status = addressinfo.result.status
 			  }
 			},
@@ -158,7 +268,11 @@
 					provinceId:data.areas.province.id,
 					cityId:data.areas.city.id,
 					areaId:data.areas.area.id,
+					townId: data.areas.town.id,
 					detailAddress:data.area,
+					community: data.mapText,
+					longitude: data.longitude,
+					latitude: data.latitude,
 					optType: this.optType
 				};
 				if (this.optType === 'update') {

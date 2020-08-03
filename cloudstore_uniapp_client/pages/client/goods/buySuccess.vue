@@ -34,7 +34,7 @@
 			toPages(page) {
 				if (page === 'index') {
 					uni.switchTab({
-						url: "/pages/client/recommend/index"
+						url: "/pages/agent/goods/hotsale/hotsale"
 					})
 				} else if (page === 'order'){
 					uni.navigateTo({

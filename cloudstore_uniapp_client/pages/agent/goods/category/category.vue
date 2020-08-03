@@ -73,6 +73,7 @@ export default {
 	},
 	data() {
 		return {
+			agentId: '',
 			goodsName: '',
 			statusBarHeight: '',
 			cateMaskState: 0, //分类面板展开状态
@@ -105,6 +106,7 @@ export default {
 		this.loadActiviList();
 		this.loadgoodsType();
 		this.loadData();
+		this.agentId = uni.getStorageSync('agentId')
 	},
 	onPageScroll(e) {
 		//兼容iOS端下拉时顶部漂移
@@ -285,7 +287,7 @@ export default {
 			console.log(item)
 			let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
 			uni.navigateTo({
-				url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}`
+				url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}&agentId=${this.agentId}`
 			});
 		},
 		stopPrevent() {}

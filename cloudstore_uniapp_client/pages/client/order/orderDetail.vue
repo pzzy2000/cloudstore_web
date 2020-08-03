@@ -19,23 +19,19 @@
 		
 		<view class="goods-section">
 			<view class="g-header b-b">
-				<image class="logo" :src="goodsDetail.goodsPhotos[0].url"></image>
-				<text class="name">{{agentDetail.name}}</text>
+				<text class="name">{{agentShopName}}</text>
 			</view>
-			<!-- 商品列表 -->
-			<view class="g-item">
-				<image :src="goodsDetail.goodsPhotos[0].url"></image>
+			<view class="g-item" v-for="(item, index) in goodsDetail" :key='index'>
+				<image :src="item.goodsSkuBean.photos[0].url || item.goodsPicesBean.goodsDetailPhotos[0].url"></image>
 				<view class="right">
-					<text class="title clamp">{{goodsDetail.goodsName}}</text>
-					<text class="spec">{{skuInfo.skuKey}}/{{skuInfo.skuValue}}</text>
+					<text class="title clamp">{{item.goodsPicesBean.goodsName}}</text>
+					<text class="spec">{{item.goodsSkuBean.skuValue}}</text>
 					<view class="price-box">
 						<view class="">
-							<text class="price">￥{{totalPrice}}</text>
+							<text class="price">￥{{item.payPrice}}</text>
 						</view>
 						<view class="">
-							<!-- <text class="numberBtn">-</text> -->
-							<text class="number">数量： {{num}}</text>
-							<!-- <text class="numberBtn">+</text> -->
+							<text class="number">数量： {{item.quantity}}</text>
 						</view>
 					</view>
 				</view>
@@ -68,10 +64,10 @@
 				<text class="cell-tit clamp">商品金额</text>
 				<text class="cell-tip">￥{{totalPrice}}</text>
 			</view>
-			<view class="yt-list-cell b-b">
+			<!-- <view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">活动</text>
 				<text class="cell-tip red">{{activity}}</text>
-			</view>
+			</view> -->
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">免运费</text>
@@ -159,7 +155,7 @@
 					area: '',
 					default: false,
 				},
-				agentDetail:''
+				agentShopName:''
 			}
 		},
 		onLoad(option) {
@@ -192,12 +188,9 @@
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params);
 				if (data) {
-					console.log(data.result.records[0])
-					this.activity = data.result.records[0].activityBean.name
-					this.skuInfo = data.result.records[0].goodsSkuBean
-					this.goodsDetail = data.result.records[0].goodsPicesBean
-					this.agentDetail = data.result.records[0].agentShopBean
-					this.num = data.result.records[0].quantity
+					this.goodsDetail = data.result.records
+					this.agentShopName = data.result.records[0].agentShopBean.name
+					console.log(this.goodsDetail)
 				}
 			},
 			async searchClientAddress () { //查询收货地址

@@ -83,11 +83,11 @@
 				<text>首页</text>
 			</navigator>
 			<view class="p-b-btn" @click="toggleSpec('cart')">
-				<text class="yticon icon-gouwuche"></text>
-				<text>加入购物车</text>
+				<text class="yticon icon-shoucang "></text>
+				<text>收藏</text>
 			</view>
 			<view class="p-b-btn" @click="toFavorite(goods)">
-				<text class="yticon icon-shoucang"></text>
+				<text class="yticon icon-gouwuche"></text>
 				<text>期待</text>
 			</view>
 			<view class="action-btn-group">
@@ -217,6 +217,7 @@ export default {
 		this.agentGoodsId = ops.agentGoodsId //活动商品id
 		// this.userType = ops.userType
 		this.agentId = ops.agentId
+		uni.setStorageSync('agentId', this.agentId)
 		this.activityId = ops.activityId
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 		if ( ops.shareClientId == undefined) {
@@ -484,6 +485,8 @@ export default {
 				}
 			} else if (this.selectType === 'cart'){
 				this.addShopCar()
+			} else {
+				this.toggleSpec()
 			}
 		},
 		async addShopCar () {

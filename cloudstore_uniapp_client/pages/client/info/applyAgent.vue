@@ -48,14 +48,13 @@
 				<view class="title">省市区：</view>
 				<view class="">{{agentfrom.provinceName}}</view>
 			</view>
+			<view class="cu-form-group" @click="selectMap">
+				<view class="title">选择社区：</view>
+				<input :value="agentfrom.mapText" placeholder="请选择社区" disabled='true' style="color:#000;"></input>
+			</view>
 			<view class="cu-form-group">
 				<view class="title">详细地址：</view>
 				<input :value="agentfrom.address" placeholder="请输入详细地址" :disabled='isEdit' @input="editInput($event,'address')" style="color:#000;"></input>
-			</view>
-			
-			<view class="cu-form-group" @click="selectMap">
-				<view class="title">选择地址：</view>
-				<input :value="agentfrom.mapText" placeholder="请选择地址" disabled='true' style="color:#000;"></input>
 			</view>
 			<view class="cu-bar bg-white margin-top">
 				<view class="action">
@@ -100,20 +99,20 @@
 				popup:false,//控制省市区三级联动
 				agentfrom: {
 					id: '',
-					shopName: '',
-					name: '',
-					phone: '',
+					shopName: '测试的店铺',
+					name: '测试人员',
+					phone: '15773281583',
 					agentType: 'agent',
 					cardType: 'IDCard',
-					cardId: '',
+					cardId: '431102199808178999',
 					cardPhoto: [],
-					provinceName: '请选择省、市、区、区域、社区',
+					provinceName: '请选择省、市、区、区域',
 					provinceId: '',
 					cityId: '',
 					areaId: '',
 					townId: '',
 					villageId: '',
-					address: '',
+					address: '华丰智谷119',
 					mapText: '',
 					longitude: '',
 					latitude: '',
@@ -207,6 +206,7 @@
 										that.agentfrom.shopName = data.result.shopName
 										that.agentfrom.name = data.result.name
 										that.agentfrom.phone = data.result.phone
+										that.agentfrom.mapText = data.result.community
 										if (data.result.agentType === 'agent') {
 											that.typePickerIndex = 0
 											that.agentfrom.agentType = data.result.agentType
@@ -230,8 +230,8 @@
 											that.agentfrom.cityId = data.result.cityId
 											that.agentfrom.areaId = data.result.areaId
 											that.agentfrom.townId = data.result.townId
-											that.agentfrom.villageId = data.result.villageId
-											that.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name +" / "+ data.result.villageBean.name
+											// that.agentfrom.villageId = data.result.villageId
+											that.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name
 											
 										}catch(e){
 											that.$api.msg('地址信息出错')
@@ -318,7 +318,7 @@
 				}
 			},
 			typePickerChange (e) { //选择代理类型
-			console.log(e)
+				console.log(e)
 				this.typePickerIndex = e.detail.value
 				if (e.detail.value === 0) {
 					this.agentfrom.agentType = 'agent'
@@ -366,34 +366,39 @@
 					this.agentfrom.villageId = e.value;
 					break;
 				}
-				this.agentfrom.provinceName = this.addressName.province + '/' +this.addressName.city + '/' +this.addressName.area + '/' +this.addressName.town + '/' +this.addressName.village
+				this.agentfrom.provinceName = this.addressName.province + '/' +this.addressName.city + '/' +this.addressName.area + '/' +this.addressName.town
 				uni.showLoading({
 					title: '正在加载',
 					mask: false
 				});
 				this.receiveData.length = 0
-				let params ={
+				let params = {
 					pageNum:1,
 					pageSize:50,
 					parentId:e.value,
 					dirctType:'areas',
 				};
-				let list = await Api.apiCall('post', Api.areas.province, params);
-				if (list) {
-					if (list.code === 0 && list.result.total != 0) {
-						for (let tmp in list.result.records) {
-							this.receiveData.push({
-								text: list.result.records[tmp].name,
-								value: list.result.records[tmp].id
-							})
-						}
-					}else {
-						this.$refs.popup.close()
-						this.receiveData = []
-					}
+				if (e.layer === 3) {
+					this.$refs.popup.close()
 					uni.hideLoading()
+					return false;
+				} else {
+					let list = await Api.apiCall('post', Api.areas.province, params);
+					if (list) {
+						if (list.code === 0 && list.result.total != 0) {
+							for (let tmp in list.result.records) {
+								this.receiveData.push({
+									text: list.result.records[tmp].name,
+									value: list.result.records[tmp].id
+								})
+							}
+						}else {
+							this.$refs.popup.close()
+							this.receiveData = []
+						}
+						uni.hideLoading()
+					}
 				}
-				console.log(this.agentfrom)
 			},
 			close(){
 				this.popup = false;
@@ -466,7 +471,7 @@
 					this.$api.msg('请输入证件号码')
 					return;
 				}
-				if (!this.agentfrom.villageId) {
+				if (!this.agentfrom.townId) {
 					this.$api.msg('请选择省、市、区、街道、社区')
 					return;
 				}
@@ -494,8 +499,9 @@
 					cityId: this.agentfrom.cityId,
 					areaId: this.agentfrom.areaId,
 					townId: this.agentfrom.townId,
-					villageId: this.agentfrom.villageId,
+					villageId: '-1',
 					detailAddress: this.agentfrom.address,
+					community: this.agentfrom.mapText,
 					longitude: this.agentfrom.longitude,
 					latitude: this.agentfrom.latitude,
 					optType: this.agentfrom.optType

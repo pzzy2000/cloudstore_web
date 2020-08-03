@@ -57,18 +57,19 @@
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="代理商名字" align="center" fixed  prop="agentName" :formatter="showAllocInfo">
+        <el-table-column label="代理商名字" align="center" width="200" fixed  prop="agentName" :formatter="showAllocInfo">
         </el-table-column>
-         <el-table-column label="代理商电话" align="center" fixed  prop="agentPhone" :formatter="showAllocInfo">
+         <el-table-column label="代理商电话" align="center" width="200"  prop="agentPhone" :formatter="showAllocInfo">
         </el-table-column>
-        <el-table-column label="代理商地址" align="center" fixed  prop="agentaddress" :formatter="showAllocInfo">
+        <el-table-column label="代理商地址" width="400" align="center"   prop="agentaddress" :formatter="showAllocInfo">
         </el-table-column>
-        <el-table-column label="配送时间" align="center">
-          <template slot-scope="scope">{{scope.row.allocationTime | formatDate}}</template>
-        </el-table-column>
-        <el-table-column label="配送单号" align="center" width="400">
+        <el-table-column label="配送单号" align="center" width="200">
            <template slot-scope="scope">{{scope.row.allocationNo}}</template>
         </el-table-column>
+        <el-table-column label="配送时间" width="200" align="center">
+          <template slot-scope="scope">{{scope.row.allocationTime | formatDate}}</template>
+        </el-table-column>
+
         <el-table-column label="配送状态" align="center" prop="allocStatus" :formatter="showAllocInfo">
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
@@ -113,12 +114,12 @@
 </template>
 
 <script>
-    import {fetchList} from '@/api/allocation'
+    import { fetchAgentList  as fetchList} from '@/api/allocation'
     import { formatDate } from '@/assets/common/data.js'
     const defaultList = {
       pageNum: 1,
       pageSize: 10,
-      optType:'search'
+      optType:'search',
     };
     let that;
     export default {
@@ -246,7 +247,7 @@
           this.getList(1);
         },
         readOrder(index, row){
-          this.$router.push({path: "/allocation/order/detail", query: {id: row.id}});
+          this.$router.push({path: "/allocation/order/agent/detail", query: {id: row.id}});
         },
         handleClose(done) {
           this.$confirm('确认关闭？')

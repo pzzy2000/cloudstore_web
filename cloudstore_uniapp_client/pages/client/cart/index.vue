@@ -1,20 +1,19 @@
 <template>
 	<view class="container">
-		<nav-bar>商品分类</nav-bar>
+		<nav-bar>商品收藏</nav-bar>
 		<!-- 空白页 -->
-		<!-- <view v-if="!hasLogin || empty===true" class="empty">
-			<image src="/static/emptyCart.jpg" mode="aspectFit"></image>
-			<view v-if="hasLogin" class="empty-tips">
+		<view v-if="cartList.length === 0" class="empty">
+			<!-- <image src="/static/emptyCart.jpg" mode="aspectFit"></image> -->
+			<!-- <view v-if="hasLogin" class="empty-tips">
 				空空如也
 				<navigator class="navigator" v-if="hasLogin" url="../index/index" open-type="switchTab">随便逛逛></navigator>
-			</view>
-			<view v-else class="empty-tips">
+			</view> -->
+			<view class="empty-tips">
 				空空如也
-				<view class="navigator" @click="navToLogin">去登陆></view>
+				<navigator class="navigator"  url="/pages/agent/goods/hotsale/hotsale" open-type="switchTab">随便逛逛></navigator>
 			</view>
-		</view> -->
-		<view>
-			<!-- 列表 -->
+		</view>
+		<view v-else>
 			<view class="cart-list">
 				<block v-for="(item, index) in cartList" :key="item.id">
 					<view
@@ -40,7 +39,7 @@
 							<text class="attr">{{item.attr_val}}</text>
 							<text class="price">¥{{item.price}}</text>
 							
-							<uni-number-box 
+							<!-- <uni-number-box 
 								class="number"
 								:min="1" 
 								:max="item.stock"
@@ -49,13 +48,12 @@
 								:isMin="item.number===1"
 								:index="index"
 								@eventChange="numberChange"
-							></uni-number-box>
+							></uni-number-box> -->
 						</view>
 						<text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text>
 					</view>
 				</block>
 			</view>
-			<!-- 底部菜单栏 -->
 			<view class="action-section">
 				<view class="checkbox">
 					<image 
@@ -116,10 +114,11 @@
 				let data = await Api.apiCall('post', Api.client.cart.myShopCar, params)
 				if (data) {
 					var tmpData = data.result.records
+					console.log(tmpData)
 					for (let tmp in tmpData) {
 						this.cartList.push({
 							id: tmpData[tmp].id,
-							checked: true,
+							checked: false,
 							number: 1,
 							image: tmpData[tmp].goodsSkuBean.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
 							title: tmpData[tmp].goodsPicesBean.goodsName,
@@ -128,7 +127,6 @@
 							stock: tmpData[tmp].goodsSkuBean.stock,
 						})
 					}
-					console.log(this.cartList)
 					this.calcTotal();  //计算总价
 				}
 			},
@@ -213,6 +211,7 @@
 						this.$api.msg(data.msg)
 					}
 				}
+				this.calcTotal();  //计算总价
 			},
 			//计算总价
 			calcTotal(){
@@ -297,8 +296,8 @@
 		position:relative;
 		padding:30upx 40upx;
 		.image-wrapper{
-			width: 230upx;
-			height: 230upx;
+			width: 150upx;
+			height: 150upx;
 			flex-shrink: 0;
 			position:relative;
 			image{

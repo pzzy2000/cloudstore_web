@@ -1,9 +1,17 @@
 import request from '@/utils/request'
 import {switchForm} from '@/api/iunits'
 
-export function fetchList(params) {
+export function fetchAgentList(params) {
   return request({
-    url:'/order/allocation/list',
+    url:'/order/allocation/agent/list',
+    method:'POST',
+    data:switchForm(params)
+  })
+}
+
+export function fetchKdList(params) {
+  return request({
+    url:'/order/allocation/kd/list',
     method:'POST',
     data:switchForm(params)
   })

@@ -172,6 +172,9 @@
 		onLoad(ops) {
 			this.loadData();
 		},
+		onShow() {
+			this.getLocation()
+		},
 		filters: {
 			formatCreateTime(time) {
 				let date = new Date(time);
@@ -214,20 +217,20 @@
 		},
 		methods: {
 			async loadData() {
-				this.getLocation()
 				this.searchActivityNavList();
 				this.searchActivityShowList();
 			},
 			async getAgentShop (res) {
+				var agentId = uni.getStorageSync('agentId') ? uni.getStorageSync('agentId') : '-1'
 				if (res) {
 					let params = {
 						 latitude: res.latitude,
 						 longitude: res.longitude,
+						 agentId: agentId
 					}
 					let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params);
 					if (data) {
 						var tmpData = data.result.agentBean
-						console.log(tmpData)
 						this.agentShopInfo.name = tmpData.name
 						this.agentShopInfo.address = tmpData.detailAddress
 						this.agentId = data.result.agentId

@@ -12,8 +12,7 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
-        <el-button size="small" style="float: right;margin-left: 15px;margin-bottom: 10px;" @click="backPage">返回
-        </el-button>
+       
         <el-button
           style="float: right;margin-bottom: 10px;"
           @click="handleSearchList"
@@ -73,7 +72,7 @@
   </div>
 </template>
 <script>
-  import {fetchDetailList as fetchList} from '@/api/allocation'
+  import {fetchKdList as fetchList} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
   const defaultList = {
     pageNum: 1,
@@ -184,17 +183,18 @@
             break;
           }
 
+
           case 'orderStatus': {
             try {
               let status = row.orderBean.orderStatus;
-             switch (status) {
-               case 'payed':
-                 return '已支付';
-               case 'peisong':
-                 return '待配送';
-               default :
-                 return '数据读取错误';
-             }
+              switch (status) {
+                case 'payed':
+                  return '已支付';
+                case 'peisong':
+                  return '待配送';
+                default :
+                  return '数据读取错误';
+              }
 
             } catch (e) {
               return '数据读取错误';

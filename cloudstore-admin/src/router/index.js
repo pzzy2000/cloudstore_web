@@ -515,23 +515,38 @@ export const asyncRouterMap = [
   },{
 	  path:'/allocation/order',
 	    component: Layout,
-	    redirect: '/allocation/order/list',
+	    redirect: '/allocation/order/agent/list',
 	    name: 'allOrder',
 	    meta: {title: '配送管理', icon: 'product-list'},
 	    children: [
 	    	 {
-            path: 'list',
-            name: 'ps_list',
+            path: 'agent/list',
+            name: 'ps_agent_list',
             component: () => import('@/views/allocation/order/list'),
-            meta: {title: '订单配送', icon: 'product-list', keepAlive: true},
+            meta: {title: '代理', icon: 'product-list', keepAlive: true},
             hidden: false
-         }, {
-            path: 'detail',
-            name: 'ps_detail',
+         },
+         {
+             path: 'kuaidi/list',
+             name: 'ps_kd_list',
+             component: () => import('@/views/allocation/order/kuaidi'),
+             meta: {title: '快递', icon: 'product-list', keepAlive: true},
+             hidden: false
+          },
+         {
+            path: 'agent/detail',
+            name: 'ps_agent_detail',
             component: () => import('@/views/allocation/order/detail'),
             meta: {title: '配送详情', icon: 'product-list'},
             hidden: true
-	      }
+	      },
+		  {
+		     path: 'allocation/order/detail',
+		     name: 'ps_order_detail',
+		     component: () => import('@/views/allocation/order/allocation/order/detail'),
+		     meta: {title: '配送详情', icon: 'product-list'},
+		     hidden: true
+		   }
 	    ]
 
   },
