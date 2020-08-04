@@ -6,7 +6,7 @@
 				<view class="member-top-c">
 					<template>
 						<view class="" style="display: flex;align-items: center;" >
-							<image class="portrait" mode="aspectFill" :src="user.url" @click="toapplyAgent('/pages/client/public/login')">{{user.name}}</image>
+							<image class="portrait" mode="aspectFill" :src="user.url">{{user.name}}</image>
 						</view>
 					</template>
 				</view>
@@ -131,10 +131,10 @@
 				user:{
 					relationId: '',
 					userType: '',
-					agentType: '',
-					name: null || '未登录',
-					url: '',
-					detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
+					agentType: '游客',
+					name: null || '游客',
+					url: '/static/log.png',
+					detailUrl: '/static/log.png'
 				}
 			};
 		},

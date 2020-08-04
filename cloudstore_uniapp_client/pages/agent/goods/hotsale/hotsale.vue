@@ -56,13 +56,13 @@
 			<view class="activity-main">
 				<view class="cate-section">
 					<view class="cate-item" v-for="(item,index) in activity.nav.one" :key="item.id" @click="navToCategory(item)">
-						<image :src="'/static/agent/nav'+ Number(index+1) +'.png'"></image>
+						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
 						<text class="clamp">{{item.name}}</text>
 					</view>
 				</view>
 				<view class="cate-section">
 					<view class="cate-item" v-for="(item,index) in activity.nav.two" :key="item.id" @click="navToCategory(item)">
-						<image :src="'/static/agent/nav'+ Number(index+5) +'.png'"></image>
+						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
 						<text class="clamp">{{item.name}}</text>
 					</view>
 				</view>

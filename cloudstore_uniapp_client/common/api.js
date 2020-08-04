@@ -30,7 +30,7 @@ export default {
 			updatePassword: 'sys/manager/platform/updatePassword'
 		},
 		info:{
-			searchInfo:"client/app/searchClientInfo" //查询当前登录信息
+			searchInfo:"app/private/client/searchClientInfo" //查询当前登录信息
 		},
 		recommend: {
 			newShopinfoByOrder: 'agent/goods/app/newShopinfoByOrder', //查询客户端最新买的商品的商店信息
