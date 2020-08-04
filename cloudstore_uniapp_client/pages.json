@@ -261,6 +261,14 @@
 				"enablePullDownRefresh": false
 			}
         }
+        ,{
+            "path" : "pages/client/order/afterSale",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -22,7 +22,7 @@
 					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
 					
 					<!-- 订单列表 -->
-					<view v-for="(item,index) in orderList" :key="index" class="order-item" @click="toOrder(item)">
+					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
 							<text class="time">订单号: {{item.id}}</text>
 							<template>
@@ -37,7 +37,7 @@
 								<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
 							</template>
 						</view>
-						<view class="goods-box-single" v-for="(order, index1) in item.detailPicBean" :key="index1">
+						<view class="goods-box-single" v-for="(order, index1) in item.detailPicBean" :key="index1" @click="toOrder(item)">
 							<image class="goods-img" :src="order.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 							<view class="right">
 								<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
@@ -52,6 +52,31 @@
 							<text class="time">总价: ￥{{item.payPrice}}</text>
 							<text>订单时间: {{item.createTime}}</text>
 						</view>
+						<template>
+								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
+									<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
+								</view>
+								<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'wait'">
+									<button class="cu-btn round">立即支付</button>
+									<button class="cu-btn round">取消订单</button>
+								</view>
+								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'payed'">
+									<button class="cu-btn round">再次购买</button>
+									<button class="cu-btn round">删除订单</button>
+								</view>
+								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisong'">
+									<button class="cu-btn round">联系卖家</button>
+									<button class="cu-btn round">查看物流</button>
+								</view>
+								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'close'">
+									<button class="cu-btn round">删除订单</button>
+									<button class="cu-btn round">售后咨询</button>
+								</view>
+								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'complete'">
+									<button class="cu-btn round">前去评价</button>
+									<button class="cu-btn round">再次购买</button>
+								</view> -->
+						</template>
 					</view>
 				<!-- </scroll-view>
 			</swiper-item>
@@ -98,15 +123,15 @@
 					},
 					{
 						state: 3,
-						text: '已完成',
-						type: 'complete',
+						text: '已配送',
+						type: 'peisoged',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
 						state: 4,
-						text: '其他',
-						type: 'more',
+						text: '已完成',
+						type: 'complete',
 						loadingType: 'more',
 						orderList: []
 					}
@@ -128,6 +153,9 @@
 					this.orderStatus = 'peisong'
 					break;
 					case 3:
+					this.orderStatus = 'peisoged'
+					break;
+					case 4:
 					this.orderStatus = 'complete'
 					break;
 				}
@@ -159,7 +187,6 @@
 				let data = await Api.apiCall('post',Api.client.order.getClientOrder,parmas)
 				if (data) {
 					const tmpData = data.result.records
-					console.log(tmpData)
 					if(tmpData.length === 0) {
 						this.$api.msg('暂无更多数据了')
 					}else{
@@ -185,13 +212,17 @@
 							break;
 							case 3:
 								for (let tmp in tmpData) {
-									if (tmpData[tmp].orderStatus === 'complete') {
+									if (tmpData[tmp].orderStatus === 'peisoged') {
 										this.orderList.push(tmpData[tmp])
 									}
 								}
 							break;
 							case 4:
-								this.$api.msg('敬请期待')
+								for (let tmp in tmpData) {
+									if (tmpData[tmp].orderStatus === 'complete') {
+										this.orderList.push(tmpData[tmp])
+									}
+								}
 							break;
 						}
 					}
@@ -206,10 +237,6 @@
 			},
 			//顶部tab点击
 			tabClick(item){
-				if (item.state === 4) {
-					this.$api.msg('敬请期待')
-					return false;
-				}
 				this.orderStatus = item.type
 				this.pageNum = 1
 				this.orderList =[]
@@ -236,6 +263,12 @@
 					url: '/pages/client/goods/buy?goodsId='+item[0].goodsId+'&agentGoodsId='+item[0].agentGoodsId+'&goodsSkuId='+item[0].goodsSkuId+'&orderType=buyOrder'+'&orderId='+item[0].orderId
 				});
 			},
+			toAfterSale (url,order) {
+				console.log(order)
+				uni.navigateTo({
+					url: url,
+				});
+			}
 		},
 	}
 </script>

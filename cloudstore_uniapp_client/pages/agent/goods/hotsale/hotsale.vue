@@ -212,6 +212,11 @@
 						 longitude: res.longitude || '-1',
 						 agentId: agentId || '-1'
 					}
+					// let params = {
+					// 	 latitude:  '-1',
+					// 	 longitude:  '-1',
+					// 	 agentId:  '-1'
+					// }
 					let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params);
 					if (data) {
 						var tmpData = data.result.agentBean

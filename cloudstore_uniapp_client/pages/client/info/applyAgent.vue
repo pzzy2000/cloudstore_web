@@ -99,12 +99,12 @@
 				popup:false,//控制省市区三级联动
 				agentfrom: {
 					id: '',
-					shopName: '测试的店铺',
-					name: '测试人员',
-					phone: '15773281583',
+					shopName: '',
+					name: '',
+					phone: '',
 					agentType: 'agent',
 					cardType: 'IDCard',
-					cardId: '431102199808178999',
+					cardId: '',
 					cardPhoto: [],
 					provinceName: '请选择省、市、区、区域',
 					provinceId: '',
@@ -112,7 +112,7 @@
 					areaId: '',
 					townId: '',
 					villageId: '',
-					address: '华丰智谷119',
+					address: '',
 					mapText: '',
 					longitude: '',
 					latitude: '',
@@ -200,6 +200,7 @@
 						success: function(res) {
 							if (res) {
 								var data = res.data.result
+								console.log(data)
 								if(data) {
 									if (data.code === 0 && data.result != null) {
 										that.agentfrom.id = data.result.id,
@@ -472,7 +473,7 @@
 					return;
 				}
 				if (!this.agentfrom.townId) {
-					this.$api.msg('请选择省、市、区、街道、社区')
+					this.$api.msg('请选择完省、市、区、街道、社区')
 					return;
 				}
 				if (!this.agentfrom.address) {
@@ -480,7 +481,7 @@
 					return;
 				}
 				if (!this.agentfrom.longitude) {
-					this.$api.msg('请使用地图选择地址')
+					this.$api.msg('请使用地图选择社区')
 					return;
 				}
 				if (this.imgListId.length != 2) {
