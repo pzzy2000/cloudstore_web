@@ -41,7 +41,7 @@
 				<view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view>
 				<swiper class="carousel" circular @change="swiperChange">
 					<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPageL(item.url)">
-						<image :src="item.pic" />
+						<image :src="item.piceUrl" />
 					</swiper-item>
 				</swiper>
 				<!-- 自定义swiper指示器 -->
@@ -195,6 +195,7 @@
 		},
 		methods: {
 			async loadData() {
+				this.getBanner();
 				this.searchActivityNavList();
 				this.searchActivityShowList();
 			},
@@ -281,22 +282,22 @@
 			 */
 			async getBanner() {
 				let params = {
-					storeId: 0
+					// storeId: 0
 				};
-				switch (uni.getSystemInfoSync().platform) {
-					case 'android':
-						params.type = 2;
-						break;
-					case 'ios':
-						params.type = 3;
-						break;
-					default:
-						params.type = 5;
-						break;
-				}
-				let data = await Api.apiCall('get', Api.index.bannerList, params);
+				// switch (uni.getSystemInfoSync().platform) {
+				// 	case 'android':
+				// 		params.type = 2;
+				// 		break;
+				// 	case 'ios':
+				// 		params.type = 3;
+				// 		break;
+				// 	default:
+				// 		params.type = 5;
+				// 		break;
+				// }
+				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params);
 				if (data) {
-					this.carouselList = data || [];
+					this.carouselList = data.result || [];
 					this.swiperLength = this.carouselList.length;
 					this.titleNViewBackground = 'rgb(203, 87, 60)';
 				}
@@ -304,15 +305,15 @@
 			/**
 			 * 获取轮播图
 			 */
-			async getCouponList() {
-				let params = {
-					pageSize: 3
-				};
-				let data = await Api.apiCall('get', Api.index.selectNotRecive, params);
-				if (data) {
-					this.couponList = data || [];
-				}
-			},
+			// async getCouponList() {
+			// 	let params = {
+			// 		pageSize: 3
+			// 	};
+			// 	let data = await Api.apiCall('get', Api.index.selectNotRecive, params);
+			// 	if (data) {
+			// 		this.couponList = data || [];
+			// 	}
+			// },
 
 			dateFormat(time) {
 				if (time == null || time === '') {

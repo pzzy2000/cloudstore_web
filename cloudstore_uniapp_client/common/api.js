@@ -14,8 +14,8 @@ export default {
 		province:'sys/dict/list',
 	},
 	finance: {
-		get: 'app/finance/get',
-		list: 'app/finance/list'
+		get: 'app/private/finance/get',
+		list: 'app/private/finance/list'
 	},
 	client:{
 		login:{
@@ -114,7 +114,8 @@ export default {
 		},
 		hot: {
 			hotList: 'app/public/activity/listActivityGoods',
-			alllist: 'app/public/activity/alllist'
+			alllist: 'app/public/activity/alllist',
+			topPiceList:'app/public/sys/hotsale/pice/list'
 		},
 		address: {
 			saveAddress: 'app/client/address/saveAddress',
