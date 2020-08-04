@@ -6,14 +6,14 @@
 				<view class="member-top-c">
 					<template>
 						<view class="" style="display: flex;align-items: center;" >
-							<image class="portrait" mode="aspectFill" :src="user.url" @click="toapplyAgent('/pages/client/public/login')">{{user.name}}</image>
+							<image class="portrait" mode="aspectFill" :src="user.url">{{user.name}}</image>
 						</view>
 					</template>
 				</view>
 			</view>
 			<view class="vip-card-box">
 				<view class="tit">
-					<text class="yticon icon-iLinkapp-">{{user.userType }}</text>
+					<text class="yticon icon-iLinkapp-">{{user.agentType }}</text>
 				</view>
 				<text class="e-m"></text>
 				<text class="e-b"></text>
@@ -44,12 +44,12 @@
 				</view>
 				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-yishouhuo"></text>
-					<text>敬请期待</text>
+					<text>售后</text>
 				</view>
 
 				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>敬请期待</text>
+					<text>我的代理</text>
 				</view>
 			</view>
 			<!-- 浏览历史 -->
@@ -66,10 +66,10 @@
 						<text class="text-block">个人资料</text>
 					</view>
 				</view>
-				<view class="cu-item arrow"  @click="toAgent" v-if="user.relationId > 0">
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.relationId > 0">
 					<view class="content">
 						<text class="cuIcon-sponsor text-blue"></text>
-						<text class="text-block">我的代理</text>
+						<text class="text-block">代理资料</text>
 					</view>
 				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-else>
@@ -131,9 +131,10 @@
 				user:{
 					relationId: '',
 					userType: '',
-					name: null || '未登录',
-					url: '',
-					detailUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1593358672989&di=a7c323de2bac0269ead9e7ab0531ba13&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F9662a766b2e14418b22ed6e8185913c3e7562ab455df-j8mU0R_fw658'
+					agentType: '游客',
+					name: null || '游客',
+					url: '/static/log.png',
+					detailUrl: '/static/log.png'
 				}
 			};
 		},
@@ -159,19 +160,20 @@
 					if (!userInfo.wxPic) {
 						this.user.url = this.user.detailUrl
 					}
+					this.user.userType = userInfo.userType
 					this.isUserType(userInfo.agent)
 				}
 			},
 			isUserType (type) {
 				switch (type) {
-					case 'Client':
-						this.user.userType = '普通会员'
+					case null:
+						this.user.agentType = '普通会员'
 					break;
 					case 'agent':
-						this.user.userType = '代理'
+						this.user.agentType = '代理'
 					break;
 					case 'leader':
-						this.user.userType = '团长'
+						this.user.agentType = '团长'
 					break;
 				}
 			},
@@ -308,7 +310,7 @@ page{
 	height: 520upx;
 	padding: 100upx 30upx 0;
 	position: relative;
-	background: #00a79d;
+	background: #5c8df1;
 	.bg {
 		position: absolute;
 		left: 0;

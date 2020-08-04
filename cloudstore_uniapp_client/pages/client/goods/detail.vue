@@ -217,7 +217,7 @@ export default {
 		this.agentGoodsId = ops.agentGoodsId //活动商品id
 		// this.userType = ops.userType
 		this.agentId = ops.agentId
-		uni.setStorageSync('agentId', this.agentId)
+		// uni.setStorageSync('agentId', this.agentId)
 		this.activityId = ops.activityId
 		this.getGoodsDetail(this.goodsId,this.agentGoodsId);
 		if ( ops.shareClientId == undefined) {
@@ -477,6 +477,7 @@ export default {
 					price: this.sku.price,
 					shareClientId: this.shareClientId
 				}
+				console.log("buy",buyInfo);
 				uni.setStorageSync('goodsInfo',buyInfo)
 				if (Api.isToken()) { //先判断有没有登录
 					uni.navigateTo({

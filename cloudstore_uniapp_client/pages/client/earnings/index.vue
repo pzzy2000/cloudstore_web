@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<nav-bar bgColor='#00a79d' fontColor='#fff'>我的收益</nav-bar>
+		<nav-bar>我的收益</nav-bar>
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view class="cu-item" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
 				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
@@ -11,7 +11,7 @@
 				<text>{{item.name}}:{{item.num}}</text>
 			</view>
 		</view>
-		<p style='text-align: center;line-height: 100upx;' v-if='financetDataList.length === 0'>暂无收益数据</p>
+		<p style='text-align: center;line-height: 100upx;' v-if='financetDataList.length === 0'>暂无{{tabText}}数据</p>
 		<view class="goods-list">
 			<view v-for="(item, index) in financetDataList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
 				<view class="image-wrapper"><image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
@@ -20,7 +20,11 @@
 					<view class="sub-title clamp">订单时间: {{item.orderBean.createTime}}</view>
 					<view class="price-box">
 						<view class="price">
-							<text class="priceSale">收益: ￥{{item.profit}}</text>
+							收益:
+							<text v-if="type==2&&status==2" class="priceSale">{{item.points}}积分</text>
+							<text class="priceSale" v-else>
+								￥{{item.profit}}
+							</text>
 							 <!-- <text class="priceSale">{{item.orderId}}</text> -->
 							 <text class="line">/</text>
 							 <text class="text-gray">总价:{{item.orderDetailsPic.payPrice}}</text>
@@ -44,7 +48,7 @@
 						badge: 0,
 						name: '已收益',
 						num: '计算中',
-						value: 2
+						value: 0
 					}, {
 						cuIcon: 'refund',
 						color: 'orange',
@@ -58,11 +62,12 @@
 						badge: 0,
 						name: '积分',
 						num: '计算中',
-						value: 3
+						value: 2
 					}],
 					gridCol: 3,
 					gridBorder: false,
 					tabEarning: 2,
+					tabText: '已收益',
 					pageNum: 1,
 					status: 2,
 					type: 1,
@@ -75,7 +80,7 @@
 			},
 			onLoad () {
 				this.getFinanceData()
-				this.lisFinancetData()
+				this.lisFinancetData(2,1)
 			},
 			onPullDownRefresh() { //下拉刷新
 				this.pageNum = 1;
@@ -136,18 +141,21 @@
 					this.financetDataList = []
 					this.tabEarning = index
 					this.pageNum = 1
-					if (index === 2) {
+					if (index === 0) {
 						this.lisFinancetData(2, 1)
 						this.status = 2;
 						this.type = 1;
+						this.tabText = '已收益'
 					} else if (index === 1) {
 						this.lisFinancetData(1, 1)
 						this.status = 1;
 						this.type = 1;
-					} else if (index === 3) {
+						this.tabText = '待收益'
+					} else if (index === 2) {
 						this.lisFinancetData(2, 2)
 						this.status = 2;
 						this.type = 2;
+						this.tabText = '积分'
 					}
 					// if (index === 1 || index === 2) {
 					// 	this.financetDataList = []

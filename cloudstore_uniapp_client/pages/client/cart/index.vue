@@ -128,7 +128,7 @@
 									id: tmpData[tmp].id,
 									checked: false,
 									number: 1,
-									image: tmpData[tmp].goodsSkuBean.photos || tmpData[tmp].goodsPicesBean.goodsDetailPhotos,
+									image: (tmpData[tmp].goodsSkuBean.photos!=null && tmpData[tmp].goodsSkuBean.photos.length>0) ? tmpData[tmp].goodsSkuBean.photos: tmpData[tmp].goodsPicesBean.goodsPhotos,
 									title: tmpData[tmp].goodsPicesBean.goodsName,
 									attr_val: tmpData[tmp].goodsSkuBean.skuValue,
 									price: tmpData[tmp].goodsSkuBean.price,
