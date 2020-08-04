@@ -328,6 +328,7 @@
 		padding:0 30upx;
 		background: #fff;
 		margin-top: 16upx;
+		box-shadow: 0 0 4upx rgba(0, 0, 0, 0.1);
 		.i-top{
 			display: flex;
 			align-items: center;

@@ -183,9 +183,9 @@
 		display: flex;
 		flex-wrap: wrap;
 		margin: 0 auto;
-		background: #fff;
 		width: 94%;
 		.goods-item {
+			background: #fff;
 			display: flex;
 			flex-direction: column;
 			flex-flow: nowrap;

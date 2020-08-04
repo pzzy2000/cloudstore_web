@@ -165,6 +165,7 @@
 								icon: 'none'
 							});
 							var userInfo = {
+								id: res.data.result.result.id,
 								name: res.data.result.result.name,
 								url: res.data.result.result.url,
 								phone: res.data.result.result.phone,

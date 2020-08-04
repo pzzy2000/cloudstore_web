@@ -17,37 +17,39 @@
 			<view class="tui-list-item">
 				<view class="cart-list">
 					<block v-for="(item, index) in cartList" :key="item.id">
-						<tui-swipe-action :actions="actions" @click="deleteCartItem(index)">
-							<template v-slot:content>
-								<view class="cart-item" :class="{'b-b': index!==cartList.length-1}">
-									<view class="image-wrapper">
-										<image :src="item.image[0].url" 
-											:class="[item.loaded]"
-											mode="aspectFill" 
-											lazy-load 
-											@load="onImageLoad('cartList', index)" 
-											@error="onImageError('cartList', index)"></image>
-										<view class="yticon icon-xuanzhong2 checkbox" :class="{checked: item.checked}" @click="check('item', index)"></view>
+						<view class="cartList-item">
+							<tui-swipe-action :actions="actions" @click="deleteCartItem(index)">
+								<template v-slot:content>
+									<view class="cart-item" :class="{'b-b': index!==cartList.length-1}">
+										<view class="image-wrapper">
+											<image :src="item.image[0].url" 
+												:class="[item.loaded]"
+												mode="aspectFill" 
+												lazy-load 
+												@load="onImageLoad('cartList', index)" 
+												@error="onImageError('cartList', index)"></image>
+											<view class="yticon icon-xuanzhong2 checkbox" :class="{checked: item.checked}" @click="check('item', index)"></view>
+										</view>
+										<view class="item-right">
+											<text class="clamp title">{{item.title}}</text>
+											<text class="attr">{{item.attr_val}}</text>
+											<text class="price">¥{{item.price}}</text>
+											<uni-number-box 
+												class="number"
+												:min="1" 
+												:max="item.stock"
+												:value="item.number>item.stock?item.stock:item.number"
+												:isMax="item.number>=item.stock?true:false"
+												:isMin="item.number===1"
+												:index="index"
+												@eventChange="numberChange"
+											></uni-number-box>
+										</view>
+										<!-- <text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text> -->
 									</view>
-									<view class="item-right">
-										<text class="clamp title">{{item.title}}</text>
-										<text class="attr">{{item.attr_val}}</text>
-										<text class="price">¥{{item.price}}</text>
-										<uni-number-box 
-											class="number"
-											:min="1" 
-											:max="item.stock"
-											:value="item.number>item.stock?item.stock:item.number"
-											:isMax="item.number>=item.stock?true:false"
-											:isMin="item.number===1"
-											:index="index"
-											@eventChange="numberChange"
-										></uni-number-box>
-									</view>
-									<!-- <text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text> -->
-								</view>
-							</template>
-						</tui-swipe-action>
+								</template>
+							</tui-swipe-action>
+						</view>
 					</block>
 				</view>
 			</view>
@@ -310,6 +312,10 @@
 		}
 	}
 	/* 购物车列表项 */
+	.cartList-item {
+		margin-bottom: 10upx;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1)
+	}
 	.cart-item{
 		display:flex;
 		position:relative;

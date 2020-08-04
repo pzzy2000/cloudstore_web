@@ -91,7 +91,7 @@
 									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 								</view>
 								<view class="flex justify-around">
-									<button type="primary" class="price-btn">购买</button>
+									<button type="primary" class="price-btn buy">购买</button>
 									<button type="primary" class="price-btn" @click.stop='shareSave(goods)'>分享</button>
 								</view>
 							</view>
@@ -808,12 +808,15 @@
 			.price-btn {
 				padding: 0;
 				margin: 0;
-				font-size: 30upx;
+				font-size: 22upx;
 				padding: 0 20upx;
-				height: 60upx;
-				line-height: 60upx;
+				height: 50upx;
+				line-height: 50upx;
 				color: #fff;
 				background: #ff4f50;
+			}
+			.buy {
+				margin-right: 10upx;
 			}
 		}
 	}

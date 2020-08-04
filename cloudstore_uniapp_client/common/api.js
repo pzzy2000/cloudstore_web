@@ -27,7 +27,8 @@ export default {
 			getPhone: 'sys/manager/platform/weixin/getPhone', // 传手机号加密信息
 			saveClientInfo: 'sys/manager/platform/weixin/saveClientInfo' ,//再传一系列信息
 			sendCode: 'sys/manager/platform/register/client/send',//获取手机验证码
-			updatePassword: 'sys/manager/platform/updatePassword'
+			updatePassword: 'sys/manager/platform/updatePassword', //忘记密码
+			editPassword: 'app/private/sys/manager/user/updatePassword' //修改密码
 		},
 		info:{
 			searchInfo:"app/private/client/searchClientInfo" //查询当前登录信息

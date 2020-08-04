@@ -501,7 +501,7 @@ export default {
 			let data = await Api.apiCall('post', Api.client.cart.addShopCar, params);
 			if (data) {
 				if (data.code === 0) {
-					this.$api.msg('加入收藏成功')
+					this.$api.msg('加入购物车成功')
 					this.toggleSpec()
 				} else {
 					this.$api.msg(data.msg)
@@ -1099,10 +1099,9 @@ page {
   }
  }
  .ricetext {
-  width: 90%;
-  margin:5px auto 20px;
+  width: 100%;
   text-align: justify;
-  font-size: 17px;
+  font-size: 17upx;
  }
 }
 </style>

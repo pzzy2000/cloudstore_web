@@ -30,7 +30,7 @@
 							 <text class="pricemart">￥{{ goods.martPrice}}</text>
 						</view>
 						<view class="flex justify-around">
-							<button class="price-btn">购买</button>
+							<button class="price-btn buy">购买</button>
 							<button class="price-btn" @click.stop='shareSave(goods)'>分享</button>
 						</view>
 					</view>
@@ -512,13 +512,13 @@ page,
 	flex-wrap: wrap;
 	width: 94%;
 	margin: 0 auto;
-	background: #fff;
 	.goods-item {
 		display: flex;
 		flex-direction: column;
 		flex-flow: nowrap;
 		width: 100%;
 		padding: 20rpx 30rpx;
+		background: #fff;
 		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 		margin-bottom: 10rpx;
 	}
@@ -583,13 +583,16 @@ page,
 			.price-btn {
 				padding: 0;
 				margin: 0;
-				font-size: 30rpx;
+				font-size: 22rpx;
 				padding: 0 20rpx;
-				height: 60rpx;
-				line-height: 60rpx;
+				height: 50rpx;
+				line-height: 50rpx;
 				border-radius: 10rpx;
 				color: #fff;
 				background: #ff4f50;
+			}
+			.buy {
+				margin-right: 10upx;
 			}
 		}
 	}
