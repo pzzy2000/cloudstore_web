@@ -377,6 +377,12 @@ export const asyncRouterMap = [
         component: () => import('@/views/sys/dict/add'),
         meta: {title: '添加数字字典', icon: 'ums-resource'},
          hidden: true
+      },
+      {
+        path: 'index/slideshow',
+        name: 'slideshow',
+        component: () => import('@/views/sys/slideshow'),
+        meta: {title: '首页轮播图', icon: 'ums-resource'}
       }
     ]
   },

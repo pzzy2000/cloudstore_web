@@ -26,7 +26,7 @@
         <el-checkbox v-model="checked" style="margin-left: 120px">是否参加佣金活动</el-checkbox>
         <div style="text-align: right">
           <el-button type="primary" size="small" @click="subActname('activityForm')">提 交</el-button>
-          <el-button size="small" @click="resetForm('activityForm')">重 置</el-button>
+          <el-button size="small" @click="resetForm('activityForm')" v-show="isshow">重 置</el-button>
           <el-button size="small" @click="toback">返 回</el-button>
         </div>
       </el-form>
@@ -57,6 +57,7 @@
           endTime: '',
           picture: []
         },
+        isshow: true,
         optType: 'save',
         rwDispatcherState: 'write',
         rules: {
@@ -75,16 +76,16 @@
       }
     },
     created() {
-      console.log(this.$route.query.id)
+      this.picture = [];
       if (this.$route.query.id !== undefined) {
         this.getOneact();
         this.optType = 'update';
+        this.isshow = false;
       }
     },
     methods: {
       getOneact() {
         getoneAct({id: this.$route.query.id}).then(res => {
-          console.log(res);
           this.activityForm = res.result.result;
           this.activityForm.startTime = new Date(this.activityForm.startTime);
           this.activityForm.endTime = new Date(this.activityForm.endTime);
@@ -93,11 +94,12 @@
           }else {
             this.checked = false;
           }
-          let obj = {};
-          obj.uid = res.result.result.picture;
-          obj.url = res.result.result.picturePice;
-          this.picture.push(obj);
-          console.log(this.activityForm);
+          if (this.activityForm.picture !== null || this.activityForm.picturePice !== null) {
+            let Picobj = {};
+            Picobj.uid = this.activityForm.picture;
+            Picobj.url = this.activityForm.picturePice;
+            this.picture.push(Picobj);
+          }
         })
       },
       toback() {

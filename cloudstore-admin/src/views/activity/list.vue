@@ -72,7 +72,7 @@
         border>
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
         <el-table-column label="活动图片" align="center" fixed>
-          <template slot-scope="scope"><el-image :src="scope.row.picturePice" style="width: 35px; height: 35px"></el-image></template>
+          <template slot-scope="scope"><el-image :src="scope.row.picturePice" style="width: 35px; height: 35px; border-radius: 50%"></el-image></template>
         </el-table-column>
         <el-table-column label="活动名称" align="center" fixed>
            <template slot-scope="scope">{{scope.row.name}}</template>
