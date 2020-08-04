@@ -1,17 +1,34 @@
 <template>
 	<view>
 		<nav-bar backState="1000">{{afterSaleTitle}}</nav-bar>
-		<form @submit="" @reset="">
+		<form>
 			<view class="cu-form-group">
-				<view class="title">订单号</view>
-				<input placeholder="订单号内容" name="input" type="text" :value="orderId"></input>
+				<view class="title">订单号：</view>
+				<input placeholder="订单号内容" name="input" type="text" :value="orderId" disabled="true"></input>
+			</view>
+			<view class="goods-section">
+				<view class="g-header b-b">
+					<text class="name">店铺名：{{agentShopName}}</text>
+				</view>
+				<view class="g-item" v-for="(item, index) in goodsDetail" :key='index'>
+					<image :src="item.goodsSkuBean.photos[0].url || item.goodsPicesBean.goodsDetailPhotos[0].url"></image>
+					<view class="right">
+						<text class="title clamp">{{item.goodsPicesBean.goodsName}}</text>
+						<text class="spec">{{item.goodsSkuBean.skuValue}}</text>
+						<view class="price-box">
+							<view class="">
+								<text class="price">￥{{item.payPrice}}</text>
+							</view>
+							<view class="">
+								<text class="number">数量： {{item.quantity}}</text>
+							</view>
+						</view>
+					</view>
+					<checkbox :class="checkbox[0].checked?'checked':''" :checked="checkbox[0].checked?true:false" value="A" class="flex align-center round cyan"></checkbox>
+				</view>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">订单信息</view>
-				<input placeholder="订单信息" name="input" type="text" :value="orderInfo"></input>
-			</view>
-			<view class="cu-form-group">
-				<view class="title">售后方式</view>
+				<view class="title">售后方式：</view>
 				<picker @change="pickerChange" :value="pickerIndex" :range="picker">
 					<view class="picker">
 						{{pickerIndex>-1?picker[pickerIndex]:'请选择售后方式'}}
@@ -23,14 +40,14 @@
 			</view>
 			<view class="cu-bar bg-white margin-top">
 				<view class="action">
-					<view class="title">上传图片</view>
+					<view class="title">上传图片：</view>
 				</view>
 			</view>
-			<view class="cu-form-group">
+			<view class="cu-form-group padding-bottom-xs">
 				<tui-upload :serverUrl="serverUrl" @complete="uploadResult" @remove="uploadRemove" :value='imageList' :valueId= 'imgListId' :forbidDel='isEdit'></tui-upload>
 			</view>
 			<view class="padding flex flex-direction">
-				<button class="cu-btn bg-red margin-tb-sm lg" @click="afterSaleSubmit">提交</button>
+				<button class="cu-btn bg-cyan margin-tb-sm lg" @click="afterSaleSubmit">提交售后申请</button>
 			</view>
 		</form>
 	</view>
@@ -50,13 +67,40 @@
 				pickerIndex: 0,
 				imgListId: [],
 				imageList: [],
-				serverUrl: Api.BASEURI +'sys/upload/entity/image/update' //上传地址
+				serverUrl: Api.BASEURI +'sys/upload/entity/image/update', //上传地址
+				goodsDetail: '',
+				agentShopName: '',
+				checkbox: [{
+					value: 'A',
+					checked: true
+				}, {
+					value: 'B',
+					checked: true
+				}, {
+					value: 'C',
+					checked: false
+				}],
 			}
 		},
 		components: {
 			navBar
 		},
+		onLoad(ops) {
+			this.orderId = ops.id
+			this.getOrderData(ops.id)
+		},
 		methods: {
+			async getOrderData (id) { //加载商品数据
+				let params = { 
+					orderId: id
+				};
+				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params, true);
+				if (data) {
+					this.goodsDetail = data.result.records
+					this.agentShopName = data.result.records[0].agentShopBean.name
+					console.log(this.goodsDetail)
+				}
+			},
 			pickerChange (e) { //选择售后方式
 				console.log(e)
 			},
@@ -64,18 +108,117 @@
 				this.afterSaleInfo = e.detail.value
 			},
 			uploadResult (e) { //页面上传成功后的回调
+				this.imgListId = e.imgListId
 			},
 			uploadRemove (e) { //删除图片的回调
+				let index = e.index
+				if (this.imgListId.length != 0) {
+					this.imageList.splice(index, 1)
+					this.imgListId.splice(index, 1)
+				}
 			},
 			afterSaleSubmit () {
-				console.log(this.orderId)
-				console.log(this.orderInfo)
-				console.log(this.afterSaleInfo)
+				if (this.afterSaleInfo === '') {
+					this.$api.msg('请填写需要售后的原因')
+					return false;
+				}
+				if (this.imgListId.length === 0) {
+					this.$api.msg('请至少上传一张证明图片')
+					return false;
+				}
+				let params = {
+					orderId: this.orderId,
+					afterType: this.picker[this.pickerIndex],
+					afterSaleInfo: this.afterSaleInfo,
+					imageList: this.imgListId
+				}
+				console.log(params)
 			}
 		}
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
+	.goods-section {
+		margin-top: 16upx;
+		background: #fff;
+		border-top: 1upx solid #eee;
 
+		.g-header {
+			display: flex;
+			align-items: center;
+			height: 84upx;
+			position: relative;
+		}
+	
+		.logo {
+			display: block;
+			width: 50upx;
+			height: 50upx;
+			border-radius: 100px;
+		}
+	
+		.name {
+			font-size: 30upx;
+			color: $font-color-base;
+			margin-left: 24upx;
+		}
+	
+		.g-item {
+			display: flex;
+			padding: 20upx;
+			border-bottom: 1upx solid #eee;
+			image {
+				flex-shrink: 0;
+				display: block;
+				width: 140upx;
+				height: 140upx;
+				border-radius: 4upx;
+			}
+	
+			.right {
+				flex: 1;
+				padding: 0 25upx;
+				overflow: hidden;
+			}
+	
+			.title {
+				font-size: 30upx;
+				color: $font-color-dark;
+			}
+	
+			.spec {
+				font-size: 26upx;
+				color: $font-color-light;
+			}
+	
+			.price-box {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 32upx;
+				color: $font-color-dark;
+				padding-top: 10upx;
+	
+				.price {
+					margin-bottom: 4upx;
+				}
+				.numberBtn {
+					height: 100%;
+					width: 40upx;
+					text-align: center;
+					display: inline-block;
+				}
+				.number{
+					font-size: 26upx;
+					color: $font-color-base;
+					text-align: center;
+				}
+			}
+	
+			.step-box {
+				position: relative;
+			}
+		}
+	}
 </style>

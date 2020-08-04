@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<nav-bar bgColor='#00a79d' fontColor='#fff'>我的收益</nav-bar>
+		<nav-bar>我的收益</nav-bar>
 		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 			<view class="cu-item" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
 				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">

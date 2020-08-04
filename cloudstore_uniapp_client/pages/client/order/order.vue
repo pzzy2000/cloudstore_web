@@ -266,7 +266,7 @@
 			toAfterSale (url,order) {
 				console.log(order)
 				uni.navigateTo({
-					url: url,
+					url: url+'?id=' + order.id,
 				});
 			}
 		},

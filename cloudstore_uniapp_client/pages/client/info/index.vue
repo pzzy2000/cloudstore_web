@@ -310,7 +310,7 @@ page{
 	height: 520upx;
 	padding: 100upx 30upx 0;
 	position: relative;
-	background: #00a79d;
+	background: #5c8df1;
 	.bg {
 		position: absolute;
 		left: 0;

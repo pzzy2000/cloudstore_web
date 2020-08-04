@@ -124,7 +124,9 @@
 				imageUrl: '',
 				agentShopInfo: {
 					name: '',
-					address: ''
+					address: '',
+					latitude:  -1,
+					longitude:  -1,
 				},
 				longLat: '',
 				searchName: '',
@@ -205,27 +207,19 @@
 					agentId  = uni.getStorageSync('agentId');
 					agentId = (agentId!="undefined" && agentId !=null && agentId!='') ? agentId : '-1'
 				}
-				
-				if (res) {
-					let params = {
-						 latitude: res.latitude || '-1',
-						 longitude: res.longitude || '-1',
-						 agentId: agentId || '-1'
-					}
-					// let params = {
-					// 	 latitude:  '-1',
-					// 	 longitude:  '-1',
-					// 	 agentId:  '-1'
-					// }
-					let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params);
-					if (data) {
-						var tmpData = data.result.agentBean
-						this.agentShopInfo.name = tmpData.name
-						this.agentShopInfo.address = tmpData.detailAddress
-						this.agentId = data.result.agentId
-						uni.setStorageSync('agentId', this.agentId)
-					}else{
-					}
+				let params = {
+					 latitude: this.agentShopInfo.longitude,
+					 longitude: this.agentShopInfo.longitude,
+					 agentId: agentId || '-1'
+				}
+				let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params);
+				if (data) {
+					var tmpData = data.result.agentBean
+					this.agentShopInfo.name = tmpData.name
+					this.agentShopInfo.address = tmpData.detailAddress
+					this.agentId = data.result.agentId
+					uni.setStorageSync('agentId', this.agentId)
+				}else{
 				}
 			},
 			async getLocation () {
@@ -234,18 +228,13 @@
 				    type: 'wgs84',
 				    success: function (res) {
 						if (res) {
+							that.agentShopInfo.longitude = res.longitude
+							that.agentShopInfo.latitude = res.latitude
 							that.getAgentShop(res)
-							// console.log(res)
-							// var longLat = {
-							// 	longitude: res.longitude,
-							// 	latitude: res.latitude,
-							// }
-							// uni.setStorageSync('longLat', longLat)
-						}else{
 						}
-						// this.longLat = uni.getStorageSync('longLat')
 				    },
 					fail: function (res) {
+						that.getAgentShop()
 						console.log('获取地址错误：'+res)
 					}
 				});
@@ -462,7 +451,7 @@
 		background: #f1f1f1;
 	}
 	.MP-search {
-		background: #00A79D;
+		background: #0081ff;
 		height: 80upx;
 		display: flex;
 		justify-content: center;
@@ -473,7 +462,7 @@
 		.cu-list {
 			width: 100%;
 			.cu-item {
-				background: #00A79D;
+				background: #5c8df1;
 			}
 		}
 	}
