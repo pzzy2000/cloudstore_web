@@ -9,7 +9,7 @@
         <div style="text-align: center">
 
         </div>
-        <h2 class="login-title color-main">国创基业</h2>
+        <h2 class="login-title color-main">Y咪购管理平台</h2>
         <el-form-item prop="username">
           <el-input name="username"
             type="text"
@@ -44,9 +44,11 @@
              获取体验账号
            </el-button> -->
         </el-form-item>
+
         <el-form-item style="text-align: center;letter-spacing: 1px">
-          <span style="font-size: 12px; color: #8c939d">没有账号？<a href="void:javascript(0)" class="sign" @click="tosign">去注册</a></span>
+          <span style="font-size: 12px; color: #8c939d">没有账号？<a href="void:javascript(0)" class="sign" @click="tosign">注册供应商</a></span>
         </el-form-item>
+
       </el-form>
     </el-card>
 
