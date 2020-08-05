@@ -21,6 +21,22 @@
 						<view class="authTime" v-else>{{ auth_time }}秒</view>
 					</view>
 				</view>
+				<!-- <view class="read-privacy">
+					<checkbox-group @change="checkboxChange">
+						<label>
+							<checkbox value="" checked="checked" />登录前请阅读
+						</label>
+						<text @click.stop="toPrivacy" class="text-blue">丫咪购隐私协议</text>
+					</checkbox-group>
+				</view> -->
+				<view class="read-privacy">
+					<checkbox-group class="block" @change="CheckboxChange" style="margin-right: 10upx;">
+							<checkbox style="margin-right: 10upx;transform:scale(0.7)" class='round red checked' :class="checkbox[1].checked?'checked':''" :checked="checkbox[1].checked?true:false" value="B"></checkbox>
+						登录前请阅读
+						<text @click.stop="toPrivacy('/pages/client/info/privacy')" class="text-blue">丫咪购隐私协议</text>
+						<text @click.stop="toPrivacy('/pages/client/info/agreement')" class="text-blue">,丫咪购服务私协议</text>
+					</checkbox-group>
+				</view>
 			</view>
 			<button class="confirm-btn" @click="reguser" :disabled="logining">注册</button>
 			<view class="forget-section">
@@ -50,7 +66,6 @@
 					<view class="title">密码</view>
 					<input placeholder="请输入登录密码" name="input" :value="userPwd" @input="editInput($event,'pwd')"></input>
 				</view>
-				
 				<!-- <input type="text" :value="vxPhone" class="input-height"/>
 				<view class="phone-code">
 					手机号：<input type="text" :value="phoneCode" placeholder="请输入手机验证码" class="phone-input" @input="editInput($event,'code')"/>
@@ -82,6 +97,14 @@
 		},
 		data() {
 			return {
+				checkbox: [{
+					value: 'A',
+					checked: true
+				}, {
+					value: 'B',
+					checked: false
+				}],
+				isCheckbox: false,
 				phone: '',
 				code: '',
 				password: '',
@@ -133,6 +156,9 @@
 					}
 					if (this.code == '') {
 						throw '请填写验证码';
+					}
+					if (!this.isCheckbox) {
+						throw '请先阅读同意隐私协议';
 					}
 				} catch (err) {
 					this.$api.msg(err);
@@ -468,6 +494,19 @@
 			},
 			close () {
 				this.$refs.popupRef.close() // 关闭
+			},
+			CheckboxChange (e) {
+				var data = e.detail
+				if (data.value[0] === 'B') {
+					this.isCheckbox = true
+				} else {
+					this.isCheckbox = false
+				}
+			},
+			toPrivacy (url) {
+				uni.navigateTo({
+					url: url,
+				});
 			}
 		}
 	};
@@ -712,6 +751,18 @@
 			button {
 				width: 40%;
 			}
+		}
+	}
+	.read-privacy {
+		display: flex;
+		align-items: center;
+		margin-top: 30upx;
+		font-size: 22upx;
+		color: #999;
+	}
+	.checked {
+		:before {
+			color: #ffff00 !important;
 		}
 	}
 </style>

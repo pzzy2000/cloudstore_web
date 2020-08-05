@@ -5,6 +5,7 @@
 </template>
 
 <script>
+	import navBar from '@/components/zhouWei-navBar';
     export default {
         data() {
             return {

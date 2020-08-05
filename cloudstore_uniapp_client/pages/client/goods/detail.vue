@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-    <nav-bar backState="1000" fontColor="#FFF" :titleCenter="false" type="transparentFixed">商品详情</nav-bar>
+		<nav-bar backState="1000" fontColor="#FFF" :titleCenter="false" type="transparentFixed">商品详情</nav-bar>
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
 				<swiper-item class="swiper-item" v-for="(item, index) in swiperImgList" :key="index">
@@ -76,6 +76,27 @@
 			  </view>
 		</view>
 		
+		<view class="price-explain detail-desc ">
+			<view class="d-header"><text class="text">价格说明</text></view>
+			<view class="price-explain-main">
+				<view class="explain-main-title">
+					1.划线价格：
+				</view>
+				<text class="explain-main-text">
+					指商品的专柜价、正品零售价、厂商指导价或该商品曾经展示过的销售价等，并非原件，仅供参考。
+				</text>
+				<view class="explain-main-title">
+					2.未划线价格：
+				</view>
+				<text class="explain-main-text">
+					指商品的实时标价，不因表述的差异改变性质。具体成交价根据商品参加活动，或会员使用优惠券、积分等发生变化，最终以订单结算页价格为准。
+				</text>
+				<view class="explain-main-end">
+					3.商品详情页以图片或文字形式标注的一口价、促销价、优惠价等价格可能是在使用优惠券、满减或特定优惠活动、时段等情形下的价格，具体请以结算页面的标价、优惠条件或活动规则为准
+				</view>
+			</view>
+		</view>
+		
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
 			<navigator url="/pages/agent/goods/hotsale/hotsale" open-type='switchTab' class="p-b-btn">
@@ -88,7 +109,7 @@
 			</view>
 			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-gouwuche"></text>
-				<text>敬请期待</text>
+				<text>期待</text>
 			</view>
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec('buy')">立即购买</button>
@@ -514,7 +535,7 @@ export default {
 </script>
 
 <style lang="scss">
-page {
+.container {
 	background: $page-color-base;
 	padding-bottom: 160upx;
 }
@@ -1103,5 +1124,26 @@ page {
   text-align: justify;
   font-size: 17upx;
  }
+}
+.price-explain {
+	width: 100%;
+	background: #fff;
+	.price-explain-main {
+		width: 90%;
+		margin: 0 auto;
+		font-size: 26upx;
+		color: #999;
+		.explain-main-title {
+			line-height: 60upx;
+		}
+		.explain-main-text {
+			text-indent: 20upx;
+			display: inline-block;
+		}
+		.explain-main-end {
+			display: inline-block;
+			margin-top: 20upx;
+		}
+	}
 }
 </style>
