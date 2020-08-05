@@ -119,7 +119,7 @@
 				<text class="cell-tip">免运费</text>
 			</view>
 			<view class="yt-list-cell desc-cell pickAddress" v-if="isPickAddress">
-				<text class="cell-tit">自提地址</text>
+				<text class="cell-tit" >{{showtransport(transportType)}}</text>
 				<textarea :value="pickAddress" class="textarea" disabled="true" style="line-height: 20upx;"></textarea>
 			</view>
 			<!-- <view class="cu-form-group margin-top">
@@ -271,10 +271,24 @@
 			navBar, uniNumberBox
 		},
 		methods: {
+			showtransport(transportType){
+				 switch(transportType){
+					 case  10: {return '配送点'}
+					 case  20: {return '自提点'}
+					 default:{
+						 return '快递点'
+					 }
+				 }
+			},
 			PickerChange (e) {
 				this.pickerIndex = e.detail.value
 				this.transportType = this.pickerList[e.detail.value].code
-				this.isPickAddress = this.transportType === 20 ? true : false
+				this.isPickAddress = this.transportType == 30 ? false : true
+				if(this.transportType ===10){
+					
+				}else{
+					
+				}
 			},
 			async getAgentDistanceType () { //查询交货方式地址和方式
 				let params = {

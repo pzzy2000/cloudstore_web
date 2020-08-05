@@ -63,7 +63,7 @@
 				<text class="tit">服务</text>
 				<view class="bz-list con">
 					<text>7天无理由退换货 ·</text>
-					<text>假一赔十 ·</text>
+					<text></text>
 				</view>
 			</view>
 		</view>
