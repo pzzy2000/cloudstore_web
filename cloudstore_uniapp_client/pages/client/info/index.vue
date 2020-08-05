@@ -44,12 +44,12 @@
 				</view>
 				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-yishouhuo"></text>
-					<text>售后</text>
+					<text>敬请关注</text>
 				</view>
 
 				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>我的代理</text>
+					<text>敬请关注</text>
 				</view>
 			</view>
 			<!-- 浏览历史 -->
@@ -83,6 +83,12 @@
 						<text class="cuIcon-servicefill text-olive"></text>
 						<text class="text-block">联系客服</text>
 					</button>
+				</view>
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/agreement')">
+					<view class="content">
+						<text class="cuIcon-lock text-blue"></text>
+						<text class="text-block">服务协议</text>
+					</view>
 				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/editPwd')" v-if="user.userType">
 					<view class="content">

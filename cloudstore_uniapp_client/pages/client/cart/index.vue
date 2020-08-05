@@ -17,37 +17,39 @@
 			<view class="tui-list-item">
 				<view class="cart-list">
 					<block v-for="(item, index) in cartList" :key="item.id">
-						<tui-swipe-action :actions="actions" @click="deleteCartItem(index)">
-							<template v-slot:content>
-								<view class="cart-item" :class="{'b-b': index!==cartList.length-1}">
-									<view class="image-wrapper">
-										<image :src="item.image[0].url" 
-											:class="[item.loaded]"
-											mode="aspectFill" 
-											lazy-load 
-											@load="onImageLoad('cartList', index)" 
-											@error="onImageError('cartList', index)"></image>
-										<view class="yticon icon-xuanzhong2 checkbox" :class="{checked: item.checked}" @click="check('item', index)"></view>
+						<view class="cartList-item">
+							<tui-swipe-action :actions="actions" @click="deleteCartItem(index)">
+								<template v-slot:content>
+									<view class="cart-item" :class="{'b-b': index!==cartList.length-1}">
+										<view class="image-wrapper">
+											<image :src="item.image[0].url" 
+												:class="[item.loaded]"
+												mode="aspectFill" 
+												lazy-load 
+												@load="onImageLoad('cartList', index)" 
+												@error="onImageError('cartList', index)"></image>
+											<view class="yticon icon-xuanzhong2 checkbox" :class="{checked: item.checked}" @click="check('item', index)"></view>
+										</view>
+										<view class="item-right">
+											<text class="clamp title">{{item.title}}</text>
+											<text class="attr">{{item.attr_val}}</text>
+											<text class="price">¥{{item.price}}</text>
+											<uni-number-box 
+												class="number"
+												:min="1" 
+												:max="item.stock"
+												:value="item.number>item.stock?item.stock:item.number"
+												:isMax="item.number>=item.stock?true:false"
+												:isMin="item.number===1"
+												:index="index"
+												@eventChange="numberChange"
+											></uni-number-box>
+										</view>
+										<!-- <text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text> -->
 									</view>
-									<view class="item-right">
-										<text class="clamp title">{{item.title}}</text>
-										<text class="attr">{{item.attr_val}}</text>
-										<text class="price">¥{{item.price}}</text>
-										<uni-number-box 
-											class="number"
-											:min="1" 
-											:max="item.stock"
-											:value="item.number>item.stock?item.stock:item.number"
-											:isMax="item.number>=item.stock?true:false"
-											:isMin="item.number===1"
-											:index="index"
-											@eventChange="numberChange"
-										></uni-number-box>
-									</view>
-									<!-- <text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text> -->
-								</view>
-							</template>
-						</tui-swipe-action>
+								</template>
+							</tui-swipe-action>
+						</view>
 					</block>
 				</view>
 			</view>
@@ -96,6 +98,9 @@
 					}
 				]
 			};
+		},
+		onLoad() {
+			this.getCartList();
 		},
 		onShow(){
 			this.getCartList();
@@ -310,6 +315,10 @@
 		}
 	}
 	/* 购物车列表项 */
+	.cartList-item {
+		margin-bottom: 10upx;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1)
+	}
 	.cart-item{
 		display:flex;
 		position:relative;
@@ -369,39 +378,38 @@
 	/* 底部栏 */
 	.action-section{
 		/* #ifdef H5 */
-		margin-bottom:100upx;
+		/* margin-bottom:100upx; */
 		/* #endif */
 		position:fixed;
-		left: 30upx;
-		bottom:30upx;
+		left: 0;
+		bottom:0;
 		z-index: 95;
 		display: flex;
 		align-items: center;
-		width: 690upx;
+		width:100%;
 		height: 100upx;
-		padding: 0 30upx;
+		padding: 0 40rpx 0 80rpx;
 		background: rgba(255,255,255,.9);
-		box-shadow: 0 0 20upx 0 rgba(0,0,0,.5);
 		border-radius: 16upx;
 		.checkbox{
-			height:52upx;
+			height: 44upx;
 			position:relative;
 			image{
 				width: 52upx;
 				height: 100%;
-				position:relative;
+				left: -60upx;
 				z-index: 5;
 			}
 		}
 		.clear-btn{
 			position:absolute;
-			left: 26upx;
+			left: -26upx;
 			top: 0;
 			z-index: 4;
 			width: 0;
-			height: 52upx;
-			line-height: 52upx;
-			padding-left: 38upx;
+			height:100%;
+			line-height: 40upx;
+			padding-left: 20upx;
 			font-size: $font-base;
 			color: #fff;
 			background: $font-color-disabled;
@@ -410,7 +418,7 @@
 			transition: .2s;
 			&.show{
 				opacity: 1;
-				width: 120upx;
+				width: 90upx;
 			}
 		}
 		.total-box{
@@ -439,7 +447,6 @@
 			line-height: 76upx;
 			font-size: $font-base + 2upx;
 			background: $uni-color-primary;
-			box-shadow: 1px 2px 5px rgba(217, 60, 93, 0.72)
 		}
 	}
 	/* 复选框选中状态 */

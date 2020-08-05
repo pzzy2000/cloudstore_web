@@ -42,6 +42,10 @@
 							<view class="right">
 								<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
 								<text class="attr-box">{{order.activityBean.name}}</text>
+								<view class="attr-box">
+									{{order.goodsSkuBean.skuValue}}
+									<!-- <text>订单时间: {{order.createTime}}</text> -->
+								</view>
 								<view class="price">
 									<text>价格: ￥{{order.payPrice}}</text>
 									<!-- <text>订单时间: {{order.createTime}}</text> -->
@@ -53,9 +57,9 @@
 							<text>订单时间: {{item.createTime}}</text>
 						</view>
 						<template>
-								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
+								<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
 									<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
-								</view>
+								</view> -->
 								<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'wait'">
 									<button class="cu-btn round">立即支付</button>
 									<button class="cu-btn round">取消订单</button>
@@ -328,6 +332,7 @@
 		padding:0 30upx;
 		background: #fff;
 		margin-top: 16upx;
+		box-shadow: 0 0 4upx rgba(0, 0, 0, 0.1);
 		.i-top{
 			display: flex;
 			align-items: center;
@@ -380,6 +385,7 @@
 		.goods-box-single{
 			display: flex;
 			padding: 20upx 0;
+			border-bottom: 1px dashed #E4E7ED;
 			.goods-img{
 				display: block;
 				width: 120upx;
@@ -399,8 +405,7 @@
 				.attr-box{
 					font-size: $font-sm + 2upx;
 					color: $font-color-light;
-					padding: 10rpx 30rpx;
-					height: 45%;
+					padding: 0 30rpx;
 				}
 				.price{
 					font-size: 24upx;

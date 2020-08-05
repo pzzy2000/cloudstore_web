@@ -96,9 +96,7 @@
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params, true);
 				if (data) {
-					this.goodsDetail = data.result.records
-					this.agentShopName = data.result.records[0].agentShopBean.name
-					console.log(this.goodsDetail)
+					this.goodsDetail = data.result.details
 				}
 			},
 			pickerChange (e) { //选择售后方式

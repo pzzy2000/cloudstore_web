@@ -38,10 +38,11 @@
 				<!-- 标题栏和状态栏占位符 -->
 				<!-- <view class="titleNview-placing"></view> -->
 				<!-- 背景色区域 -->
-				<view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view>
+				<!-- <view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view> -->
+				<view class="titleNview-background"></view>
 				<swiper class="carousel" circular @change="swiperChange">
 					<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPageL(item.url)">
-						<image :src="item.pic" />
+						<image :src="item.piceUrl" />
 					</swiper-item>
 				</swiper>
 				<!-- 自定义swiper指示器 -->
@@ -91,7 +92,7 @@
 									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
 								</view>
 								<view class="flex justify-around">
-									<button type="primary" class="price-btn">购买</button>
+									<button type="primary" class="price-btn buy">购买</button>
 									<button type="primary" class="price-btn" @click.stop='shareSave(goods)'>分享</button>
 								</view>
 							</view>
@@ -195,6 +196,7 @@
 		},
 		methods: {
 			async loadData() {
+				this.getBanner();
 				this.searchActivityNavList();
 				this.searchActivityShowList();
 			},
@@ -281,22 +283,22 @@
 			 */
 			async getBanner() {
 				let params = {
-					storeId: 0
+					// storeId: 0
 				};
-				switch (uni.getSystemInfoSync().platform) {
-					case 'android':
-						params.type = 2;
-						break;
-					case 'ios':
-						params.type = 3;
-						break;
-					default:
-						params.type = 5;
-						break;
-				}
-				let data = await Api.apiCall('get', Api.index.bannerList, params);
+				// switch (uni.getSystemInfoSync().platform) {
+				// 	case 'android':
+				// 		params.type = 2;
+				// 		break;
+				// 	case 'ios':
+				// 		params.type = 3;
+				// 		break;
+				// 	default:
+				// 		params.type = 5;
+				// 		break;
+				// }
+				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params);
 				if (data) {
-					this.carouselList = data || [];
+					this.carouselList = data.result || [];
 					this.swiperLength = this.carouselList.length;
 					this.titleNViewBackground = 'rgb(203, 87, 60)';
 				}
@@ -304,15 +306,15 @@
 			/**
 			 * 获取轮播图
 			 */
-			async getCouponList() {
-				let params = {
-					pageSize: 3
-				};
-				let data = await Api.apiCall('get', Api.index.selectNotRecive, params);
-				if (data) {
-					this.couponList = data || [];
-				}
-			},
+			// async getCouponList() {
+			// 	let params = {
+			// 		pageSize: 3
+			// 	};
+			// 	let data = await Api.apiCall('get', Api.index.selectNotRecive, params);
+			// 	if (data) {
+			// 		this.couponList = data || [];
+			// 	}
+			// },
 
 			dateFormat(time) {
 				if (time == null || time === '') {
@@ -808,12 +810,15 @@
 			.price-btn {
 				padding: 0;
 				margin: 0;
-				font-size: 30upx;
+				font-size: 22upx;
 				padding: 0 20upx;
-				height: 60upx;
-				line-height: 60upx;
+				height: 50upx;
+				line-height: 50upx;
 				color: #fff;
 				background: #ff4f50;
+			}
+			.buy {
+				margin-right: 10upx;
 			}
 		}
 	}

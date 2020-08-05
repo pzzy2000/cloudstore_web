@@ -1,10 +1,13 @@
 import store from '../store/index';
 export default {
 	// BASEURI: 'http://120.24.156.254:18888/platform/',
-	BASEURI: 'http://106.52.184.24:18888/platform/',
+//	BASEURI: 'http://106.52.184.24:18888/platform/',
 	APPBASEURI: 'http://106.52.184.24:18888/',
 	//BASEURI: 'http://192.168.0.27:8088/',
+	BASEURI: 'https://api.sz-guochuang.com/platform/',
+	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
+	
 	source: 1, //1 weixinApplet 2 h5Source 3 pcSource 4 android 5ios
 	es: {
 		simpleSearchList: 'esProduct/search/simple', //简单搜索
@@ -14,8 +17,8 @@ export default {
 		province:'sys/dict/list',
 	},
 	finance: {
-		get: 'app/finance/get',
-		list: 'app/finance/list'
+		get: 'app/private/finance/get',
+		list: 'app/private/finance/list'
 	},
 	client:{
 		login:{
@@ -27,7 +30,8 @@ export default {
 			getPhone: 'sys/manager/platform/weixin/getPhone', // 传手机号加密信息
 			saveClientInfo: 'sys/manager/platform/weixin/saveClientInfo' ,//再传一系列信息
 			sendCode: 'sys/manager/platform/register/client/send',//获取手机验证码
-			updatePassword: 'sys/manager/platform/updatePassword'
+			updatePassword: 'sys/manager/platform/updatePassword', //忘记密码
+			editPassword: 'app/private/sys/manager/user/updatePassword' //修改密码
 		},
 		info:{
 			searchInfo:"app/private/client/searchClientInfo" //查询当前登录信息
@@ -113,7 +117,8 @@ export default {
 		},
 		hot: {
 			hotList: 'app/public/activity/listActivityGoods',
-			alllist: 'app/public/activity/alllist'
+			alllist: 'app/public/activity/alllist',
+			topPiceList:'app/public/sys/hotsale/pice/list'
 		},
 		address: {
 			saveAddress: 'app/client/address/saveAddress',

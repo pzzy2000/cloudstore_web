@@ -18,9 +18,9 @@
 		</view>
 		
 		<view class="goods-section">
-			<view class="g-header b-b">
+			<!-- <view class="g-header b-b">
 				<text class="name">{{agentShopName}}</text>
-			</view>
+			</view> -->
 			<view class="g-item" v-for="(item, index) in goodsDetail" :key='index'>
 				<image :src="item.goodsSkuBean.photos[0].url || item.goodsPicesBean.goodsDetailPhotos[0].url"></image>
 				<view class="right">
@@ -69,8 +69,8 @@
 				<text class="cell-tip red">{{activity}}</text>
 			</view> -->
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">运费</text>
-				<text class="cell-tip">免运费</text>
+				<text class="cell-tit clamp">配送方式</text>
+				<text class="cell-tip">{{transportType}}</text>
 			</view>
 			<!-- <view class="yt-list-cell desc-cell">
 				<text class="cell-tit clamp">备注</text>
@@ -111,6 +111,7 @@
 				goodsId: '',
 				activity: '',
 				goodsDetail: '',
+				transportType: '',
 				skuInfo: '',
 				price: '',
 				num: '1',
@@ -169,14 +170,6 @@
 			this.searchClientAddress()
 		},
 		onShow () {
-		 //  const addressData = uni.getStorageSync('addressInfo');
-		 //  if (addressData) {
-			// this.addressData.id = addressData.id
-			// this.addressData.name = addressData.name
-			// this.addressData.address = addressData.provinceBean.name + addressData.cityBean.name + addressData.areaBean.name
-			// this.addressData.phone = addressData.phone
-			// this.addressData.area = addressData.detailAddress
-		 //  }
 		},
 		components: {
 			navBar
@@ -188,9 +181,18 @@
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params);
 				if (data) {
-					this.goodsDetail = data.result.records
-					this.agentShopName = data.result.records[0].agentShopBean.name
-					console.log(this.goodsDetail)
+					this.goodsDetail = data.result.details
+					switch (data.result.orderBean.transportType) {
+						case 10:
+						this.transportType = '配送'
+						break;
+						case 20:
+						this.transportType = '自提'
+						break;
+						case 30:
+						this.transportType = '快递'
+						break;
+					}
 				}
 			},
 			async searchClientAddress () { //查询收货地址
@@ -360,6 +362,7 @@
 			}
 	
 			.title {
+				line-height: 60upx;
 				font-size: 30upx;
 				color: $font-color-dark;
 			}

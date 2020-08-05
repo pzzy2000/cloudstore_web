@@ -47,6 +47,9 @@
 		components: {
 			navBar
 		},
+		onLoad() {
+			this.clientId = uni.getStorageSync('userInfo').id
+		},
 		methods: {
 			async getCode() { // 号码获取验证码
 				if (!this.phoneRule.test(this.phone)) {
@@ -121,14 +124,14 @@
 					return false;
 				}
 				let params = {
-					'bean.phone': this.phone,
-					'bean.code': this.phoneCode ,
-					'bean.oldPassword': this.oldPassword,
-					'bean.newPassword': this.newPassword,
-					'bean.key': this.phoneKey,
-					'bean.type': 0
+					'phone': this.phone,
+					'code': this.phoneCode ,
+					'oldPassword': this.oldPassword,
+					'newPassword': this.newPassword,
+					'key': this.phoneKey,
+					'type': 0,
 				}
-				let data = await Api.ApiFalseToken ('post', Api.client.reg.updatePassword, params, true)
+				let data = await Api.apiCall('post', Api.client.reg.editPassword, params, true)
 				if (data) {
 					if (data.code === 0) {
 						this.emptyData()
