@@ -84,11 +84,11 @@
 			</navigator>
 			<view class="p-b-btn" @click="toggleSpec('cart')">
 				<text class="yticon icon-gouwuche "></text>
-				<text>购物车</text>
+				<text>加入购物车</text>
 			</view>
 			<view class="p-b-btn" @click="toFavorite(goods)">
 				<text class="yticon icon-gouwuche"></text>
-				<text>期待</text>
+				<text>敬请期待</text>
 			</view>
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec('buy')">立即购买</button>
@@ -181,7 +181,9 @@ export default {
 			goodsSkuId: '',  //具体商品的skuId
 			agentGoodsId: '', //活动商品id
 			activityId: '', //此商品的活动id
-			activity:{},
+			activity:{
+				name: '无活动'
+			},
 			shareId: '',
 			shareClientId: '',
 			goodsHtml: '',
@@ -227,25 +229,6 @@ export default {
 	},
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
-			try{
-				if(this.activityId){
-					if(this.activityId<=0)return;
-					let params = {
-						activityId:this.activityId
-					};
-					let data = await Api.apiCall('post', Api.agent.activity.searchInfo, params, false, false);
-					if (data) {
-						this.activity = data.result
-					}
-				}
-			}catch(e){
-				this.$api.msg('获取活动信息失败')
-			}
-			try{
-				this.loadMobileHtml()
-			}catch(e){
-				this.$api.msg('获取商品图文信息失败')
-			}
 		
 			let params = {
 				goodsId: goodsId ,
@@ -309,6 +292,25 @@ export default {
 						}
 					}
 				}
+			}
+			try{
+				this.loadMobileHtml()
+			}catch(e){
+				this.$api.msg('获取商品图文信息失败')
+			}
+			try{
+				if(this.activityId){
+					if(this.activityId<=0)return;
+					let params = {
+						activityId:this.activityId
+					};
+					let data = await Api.apiCall('post', Api.agent.activity.searchInfo, params, false, false);
+					if (data) {
+						this.activity = data.result
+					}
+				}
+			}catch(e){
+				this.$api.msg('获取活动信息失败')
 			}
 		},
 		toFavorite(){
