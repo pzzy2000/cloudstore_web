@@ -7,3 +7,10 @@ export function submitPics(params) {
     data: switchForm(params)
   })
 }
+
+export function getIndexpic() {
+  return request({
+    url: '/manager/sys/hotsale/pice/list',
+    method: 'POST'
+  })
+}

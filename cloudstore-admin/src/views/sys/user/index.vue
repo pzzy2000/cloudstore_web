@@ -223,7 +223,6 @@
       getList(idx) {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
-          console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt( response.result.result.total);

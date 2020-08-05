@@ -12,7 +12,7 @@
 
 <script>
   import MultiUpload from '@/components/Upload/multiUpload';
-  import {submitPics} from '@/api/indexSlid'
+  import {submitPics, getIndexpic} from '@/api/indexSlid'
   export default {
     name: "slideshow",
     components: {
@@ -23,23 +23,37 @@
         picture: []
       }
     },
+    created() {
+      this.getList();
+    },
     methods: {
+      getList() {
+        getIndexpic().then(res => {
+          console.log(res);
+        })
+      },
       submit() {
         if (this.picture.length !== 0) {
-          let pics = []
-          for (let i=0; i<this.picture.length; i++) {
-            pics.push(this.picture[i].uid);
-          }
-          console.log(pics)
-          submitPics({pice: pics, optType: 'save'}).then(res => {
-            console.log(res);
-            if (res.result.code == 0) {
-              this.$message({
-                message: '提交成功',
-                type: 'success',
-                duration: 800
-              })
+          this.$confirm('是否提交数据', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            let pics = []
+            for (let i=0; i<this.picture.length; i++) {
+              pics.push(this.picture[i].uid);
             }
+            console.log(pics)
+            submitPics({pice: pics, optType: 'save'}).then(res => {
+              console.log(res);
+              if (res.result.code == 0) {
+                this.$message({
+                  message: '提交成功',
+                  type: 'success',
+                  duration: 800
+                })
+              }
+            })
           })
         } else {
           this.$message({

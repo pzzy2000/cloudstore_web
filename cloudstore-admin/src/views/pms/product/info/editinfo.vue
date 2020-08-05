@@ -382,7 +382,6 @@
 
       getaction() {
         let action = this.$route.query.action; //1:增加 2：编辑 0:查看,默认是查看
-
         action = parseInt((typeof(action) == 'undefined') ? "1" : action);
         return action;
       },

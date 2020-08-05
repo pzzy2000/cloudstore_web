@@ -28,18 +28,15 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="pageList" size="small" label-width="130px" ref="searchList">
-          <el-form-item label="订单编号：" prop="name">
-            <el-input style="width: 214px" v-model="pageList.number" placeholder="订单编号" clearable></el-input>
+          <el-form-item label="收件人姓名：" prop="clientName">
+            <el-input style="width: 214px" v-model="pageList.clientName" placeholder="订单编号" clearable></el-input>
           </el-form-item>
-          <el-form-item label="下单时间：" prop="code">
+          <el-form-item label="订单时间：" prop="createTime">
             <el-date-picker v-model="pageList.createTime" type="date" placeholder="选择日期" :picker-options="pickerOptions" clearable>
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="用户账号：" prop="count">
-            <el-input style="width: 214px" v-model="pageList.access" placeholder="用户账号" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="用户名称：" prop="count">
-            <el-input style="width: 214px" v-model="pageList.name" placeholder="用户名称" clearable></el-input>
+          <el-form-item label="收件人电话：" prop="clientPhone">
+            <el-input style="width: 214px" v-model="pageList.clientPhone" placeholder="用户账号" clearable></el-input>
           </el-form-item>
           <el-form-item label="订单状态：" prop="orderstatus">
             <el-select v-model="pageList.orderStatus" placeholder="请选择" clearable>
@@ -126,11 +123,11 @@
           disabledDate(time) {
             return time.getTime() > Date.now();
           }
-        },
+        }
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
     },
     filters: {
       // 时间格式自定义 只需把字符串里面的改成自己所需的格式
@@ -219,12 +216,26 @@
             try {
               let status = row.orderBean.orderStatus;
               switch (status) {
-                case 'payed':
-                  return '已支付';
-                case 'peisong':
-                  return '待配送';
-                default :
-                  return '数据读取错误';
+                case 'wait': return "待支付";
+                  break;
+                case 'pay': return "支付待确认";
+                  break;
+                case 'payed': return "已支付";
+                  break;
+                case 'peisong': return "待配送";
+                  break;
+                case 'peisoged': return "已配送";
+                  break;
+                case 'complete': return "已完成";
+                  break;
+                case 'close': return "超时关闭";
+                  break;
+                case 'returns': return "退货";
+                  break;
+                case 'retud': return "已退货";
+                  break;
+                default: return "数据读取错误";
+                  break;
               }
 
             } catch (e) {
@@ -234,12 +245,34 @@
           }
         }
       },
-      getList() {
+      getList(idx) {
         this.pageList.allocationId = this.$route.query.id;
         fetchList(this.pageList).then(res => {
           if (res.result.code == 0) {
             this.orderList = res.result.result.records;
             this.total = parseInt(res.result.result.total);
+            if (idx == 0) {
+              if (response.result.result.records.length == 0) {
+                this.$message({
+                  message: "暂无数据",
+                  type: 'warning',
+                  duration: 800
+                })
+              }else {
+                this.$message({
+                  message: "查询成功",
+                  type: 'success',
+                  duration: 800
+                })
+              }
+            }
+            if (idx == 2) {
+              this.$message({
+                message: "重置成功",
+                type: 'success',
+                duration: 800
+              })
+            }
           }
         })
       },
@@ -256,16 +289,19 @@
         console.log(key, keyPath);
       },
       handleSearchList() {
-        alert("搜索事件！")
+        this.getList(0)
       },
       handleResetSearch(formName) {
-        this.$refs[formName].resetFields();
+        this.pageList = Object.assign({}, defaultList)
       },
-      handleSizeChange() {
-        this.getList();
+      handleSizeChange(val) {
+        this.pageList.pageNum = 1;
+        this.pageList.pageSize = val;
+        this.getList(1);
       },
-      handleCurrentChange() {
-        this.getList();
+      handleCurrentChange(val) {
+        this.pageList.pageNum = val;
+        this.getList(1);
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
