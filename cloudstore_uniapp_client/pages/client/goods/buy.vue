@@ -118,10 +118,13 @@
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">免运费</text>
 			</view>
-			<view class="yt-list-cell desc-cell">
-				<text class="cell-tit clamp">备注</text>
-				<input class="desc" type="text" v-model="desc" placeholder="请填写备注信息" placeholder-class="placeholder" />
+			<view class="yt-list-cell desc-cell pickAddress" v-if="isPickAddress">
+				<text class="cell-tit">自提地址</text>
+				<textarea :value="pickAddress" class="textarea" disabled="true" style="line-height: 20upx;"></textarea>
 			</view>
+			<!-- <view class="cu-form-group margin-top">
+				<textarea maxlength="-1" :value="pickAddress"></textarea>
+			</view> -->
 		</view>
 		
 		<!-- 底部 -->
@@ -224,6 +227,8 @@
 				pickerList: [],
 				transportAgentId: '',
 				transportType: '',
+				isPickAddress: false,
+				pickAddress: '',
 				//以下为购物车内容
 				cartList: [],
 				cartNum: 1,
@@ -269,13 +274,20 @@
 			PickerChange (e) {
 				this.pickerIndex = e.detail.value
 				this.transportType = this.pickerList[e.detail.value].code
+				this.isPickAddress = this.transportType === 20 ? true : false
 			},
-			async getAgentDistanceType () {
+			async getAgentDistanceType () { //查询交货方式地址和方式
 				let params = {
 					clientAddressId: this.addressData.id
 				}
 				let data = await Api.apiCall('post', Api.client.buy.getAgentDistanceType, params, false, false);
 				if (data) {
+					var tmpData = data.result.agentBean
+					try{
+						this.pickAddress = tmpData.provinceBean.name+tmpData.cityBean.name+tmpData.areaBean.name+tmpData.townBean.name+tmpData.community+tmpData.detailAddress
+					}catch(e){
+						//TODO handle the exception
+					}
 					this.transportAgentId = data.result.agentId
 					if (this.transportAgentId === '-1') {
 						uni.showModal({
@@ -298,6 +310,9 @@
 						})
 					}
 					this.transportType = this.pickerList[0].code
+					if(this.transportType === 20) {
+						this.isPickAddress = true
+					}
 				}
 			},
 			async searchDetailAddress(){ //查询地址信息
@@ -700,7 +715,15 @@
 		margin-top: 16upx;
 		background: #fff;
 	}
-	
+	.yt-list-cell.pickAddress {
+		display: flex;
+		align-items: flex-start;
+		.textarea {
+			width: 80%;
+			height: 150upx;
+			padding-top: 20upx;
+		}
+	}
 	.yt-list-cell {
 		display: flex;
 		align-items: center;
@@ -770,7 +793,7 @@
 	
 		&.desc-cell {
 			.cell-tit {
-				max-width: 90upx;
+				max-width: 20%;
 			}
 		}
 	

@@ -72,10 +72,10 @@
 				<text class="cell-tit clamp">配送方式</text>
 				<text class="cell-tip">{{transportType}}</text>
 			</view>
-			<!-- <view class="yt-list-cell desc-cell">
-				<text class="cell-tit clamp">备注</text>
-				<input class="desc" type="text" v-model="desc" placeholder="请填写备注信息" placeholder-class="placeholder" />
-			</view> -->
+			<view class="yt-list-cell desc-cell pickAddress" v-if="isPickAddress">
+				<text class="cell-tit">自提地址</text>
+				<textarea :value="pickAddress" class="textarea" disabled="true" style="line-height: 20upx;"></textarea>
+			</view>
 		</view>
 		
 		<!-- 优惠券面板 -->
@@ -156,7 +156,9 @@
 					area: '',
 					default: false,
 				},
-				agentShopName:''
+				agentShopName:'',
+				isPickAddress: false,
+				pickAddress: ''
 			}
 		},
 		onLoad(option) {
@@ -181,7 +183,13 @@
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params);
 				if (data) {
+					console.log(data)
+					var transportAgent = data.result.orderBean.transportAgentBean
 					this.goodsDetail = data.result.details
+					if (data.result.orderBean.transportType === 20) { 
+						this.isPickAddress = true
+						this.pickAddress = transportAgent.provinceBean.name+transportAgent.cityBean.name+transportAgent.areaBean.name+transportAgent.townBean.name+transportAgent.community+transportAgent.detailAddress
+					}
 					switch (data.result.orderBean.transportType) {
 						case 10:
 						this.transportType = '配送'
@@ -405,7 +413,15 @@
 		margin-top: 16upx;
 		background: #fff;
 	}
-	
+	.yt-list-cell.pickAddress {
+		display: flex;
+		align-items: flex-start;
+		.textarea {
+			width: 80%;
+			height: 150upx;
+			padding-top: 20upx;
+		}
+	}
 	.yt-list-cell {
 		display: flex;
 		align-items: center;
@@ -475,7 +491,7 @@
 	
 		&.desc-cell {
 			.cell-tit {
-				max-width: 90upx;
+				max-width: 20%;
 			}
 		}
 	
