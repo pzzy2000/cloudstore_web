@@ -319,7 +319,6 @@
 			},
 			navToDetailPage(item) {
 				//测试数据没有写id，用title代替
-				console.log(item)
 				let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
 				uni.navigateTo({
 					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}&agentId=${this.agentId}`

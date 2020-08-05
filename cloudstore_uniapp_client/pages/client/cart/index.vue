@@ -99,6 +99,9 @@
 				]
 			};
 		},
+		onLoad() {
+			this.getCartList();
+		},
 		onShow(){
 			this.getCartList();
 		},
@@ -375,39 +378,38 @@
 	/* 底部栏 */
 	.action-section{
 		/* #ifdef H5 */
-		margin-bottom:100upx;
+		/* margin-bottom:100upx; */
 		/* #endif */
 		position:fixed;
-		left: 30upx;
-		bottom:30upx;
+		left: 0;
+		bottom:0;
 		z-index: 95;
 		display: flex;
 		align-items: center;
-		width: 690upx;
+		width:100%;
 		height: 100upx;
-		padding: 0 30upx;
+		padding: 0 40rpx 0 80rpx;
 		background: rgba(255,255,255,.9);
-		box-shadow: 0 0 20upx 0 rgba(0,0,0,.5);
 		border-radius: 16upx;
 		.checkbox{
-			height:52upx;
+			height: 44upx;
 			position:relative;
 			image{
 				width: 52upx;
 				height: 100%;
-				position:relative;
+				left: -60upx;
 				z-index: 5;
 			}
 		}
 		.clear-btn{
 			position:absolute;
-			left: 26upx;
+			left: -26upx;
 			top: 0;
 			z-index: 4;
 			width: 0;
-			height: 52upx;
-			line-height: 52upx;
-			padding-left: 38upx;
+			height:100%;
+			line-height: 40upx;
+			padding-left: 20upx;
 			font-size: $font-base;
 			color: #fff;
 			background: $font-color-disabled;
@@ -416,7 +418,7 @@
 			transition: .2s;
 			&.show{
 				opacity: 1;
-				width: 120upx;
+				width: 90upx;
 			}
 		}
 		.total-box{
@@ -445,7 +447,6 @@
 			line-height: 76upx;
 			font-size: $font-base + 2upx;
 			background: $uni-color-primary;
-			box-shadow: 1px 2px 5px rgba(217, 60, 93, 0.72)
 		}
 	}
 	/* 复选框选中状态 */

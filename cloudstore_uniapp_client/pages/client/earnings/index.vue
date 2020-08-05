@@ -17,6 +17,7 @@
 				<view class="image-wrapper"><image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
 					<view class="detail-title clamp">{{item.orderDetailsPic.goodsPicBean.goodsName}}</view>
+					<view class="detail-sku clamp">规格：{{item.orderDetailsPic.goodsSkuBean.skuValue}}</view>
 					<view class="sub-title clamp">订单时间: {{item.orderBean.createTime}}</view>
 					<view class="price-box">
 						<view class="price">
@@ -86,7 +87,7 @@
 				this.pageNum = 1;
 				this.financetDataList = []
 				this.getFinanceData()
-				this.lisFinancetData(1,1)
+				this.lisFinancetData(this.status, this.type)
 			},
 			onReachBottom() { //加载更多
 				this.pageNum = this.pageNum + 1;
@@ -126,9 +127,7 @@
 						if (data.code === 0 && data.result.records != false) {
 							const tmpData = data.result.records;
 							for (let tmp in tmpData) {
-								if (this.tabEarning === tmpData[tmp].profitStauts) {
-									this.financetDataList.push(tmpData[tmp])
-								}
+								this.financetDataList.push(tmpData[tmp])
 							}
 							uni.hideLoading()
 						}else{
@@ -214,13 +213,18 @@
 				font-size: 30upx;
 				color: #000;
 				width: 100%;
-				height: 60%;
+				height: 20%;
 				.number {
 					color: #999;
 					font-size: 26upx;
 					line-height: 50upx;
 					height: 50upx;
 				}
+			}
+			.detail-sku {
+				font-size: 28upx;
+				color: #999;
+				height: 40%;
 			}
 			.sub-title {
 				height: 20%;

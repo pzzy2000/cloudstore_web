@@ -38,7 +38,8 @@
 				<!-- 标题栏和状态栏占位符 -->
 				<!-- <view class="titleNview-placing"></view> -->
 				<!-- 背景色区域 -->
-				<view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view>
+				<!-- <view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view> -->
+				<view class="titleNview-background"></view>
 				<swiper class="carousel" circular @change="swiperChange">
 					<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPageL(item.url)">
 						<image :src="item.piceUrl" />

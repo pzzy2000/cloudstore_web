@@ -212,7 +212,6 @@ export default {
 		  
 	},
 	onLoad(ops) {
-		console.log(ops)
 		this.goodsId = ops.goodsId;
 		this.agentGoodsId = ops.agentGoodsId //活动商品id
 		// this.userType = ops.userType
@@ -477,7 +476,6 @@ export default {
 					price: this.sku.price,
 					shareClientId: this.shareClientId
 				}
-				console.log("buy",buyInfo);
 				uni.setStorageSync('goodsInfo',buyInfo)
 				if (Api.isToken()) { //先判断有没有登录
 					uni.navigateTo({

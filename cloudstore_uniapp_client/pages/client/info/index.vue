@@ -44,12 +44,12 @@
 				</view>
 				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-yishouhuo"></text>
-					<text>售后</text>
+					<text>敬请关注</text>
 				</view>
 
 				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>我的代理</text>
+					<text>敬请关注</text>
 				</view>
 			</view>
 			<!-- 浏览历史 -->
