@@ -75,7 +75,7 @@
 			   </view>
 			  </view>
 		</view>
-
+		
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
 			<navigator url="/pages/agent/goods/hotsale/hotsale" open-type='switchTab' class="p-b-btn">

@@ -84,6 +84,12 @@
 						<text class="text-block">联系客服</text>
 					</button>
 				</view>
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/agreement')">
+					<view class="content">
+						<text class="cuIcon-lock text-blue"></text>
+						<text class="text-block">服务协议</text>
+					</view>
+				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/editPwd')" v-if="user.userType">
 					<view class="content">
 						<text class="cuIcon-lock text-blue"></text>
