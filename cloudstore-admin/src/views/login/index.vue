@@ -49,6 +49,7 @@
           <span style="font-size: 12px; color: #8c939d">没有账号？<a href="void:javascript(0)" class="sign" @click="tosign">去注册</a></span>
         </el-form-item>
         -->
+        </el-form-item>
       </el-form>
     </el-card>
 
