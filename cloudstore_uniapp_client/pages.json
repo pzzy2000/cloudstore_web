@@ -227,9 +227,14 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
+		},{
+		    "path" : "pages/client/info/about",
+		    "style" : {
+				"navigationBarTitleText": "关于我们",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
 		}
-		
-		
         ,{
             "path" : "pages/client/recommend/agentGoodsList/agentGoodsList",
             "style" : {
@@ -286,8 +291,6 @@
 				"enablePullDownRefresh": false
 			}
         }
-		
-		
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

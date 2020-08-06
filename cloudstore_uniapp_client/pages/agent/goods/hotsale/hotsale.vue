@@ -9,11 +9,13 @@
 				<view class="cu-item">
 					<view class="content">
 						<text class="cuIcon-locationfill text-red"></text>
-						<text class="text-white">附近店铺：{{agentShopInfo.name}}</text>
+						<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
 					</view>
+					<!--
 					<view class="action clamp">
 						<text class="text-white text-sm">地址：{{agentShopInfo.address}}</text>
 					</view>
+					-->
 				</view>
 			</view>
 			<!-- <view class="cu-bar search" style="width: 100%;">
@@ -218,7 +220,7 @@
 				if (data) {
 					var tmpData = data.result.agentBean
 					this.agentShopInfo.name = tmpData.name
-					this.agentShopInfo.address = tmpData.detailAddress
+					this.agentShopInfo.address = tmpData.community
 					this.agentId = data.result.agentId
 					uni.setStorageSync('agentId', this.agentId)
 				}else{

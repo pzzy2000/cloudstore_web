@@ -1,9 +1,6 @@
 import store from '../store/index';
 export default {
-	// BASEURI: 'http://120.24.156.254:18888/platform/',
-//	BASEURI: 'http://106.52.184.24:18888/platform/',
-	APPBASEURI: 'http://106.52.184.24:18888/',
-	//BASEURI: 'http://192.168.0.27:8088/',
+	// BASEURI: 'http://106.52.184.24:18888/platform/',
 	BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用

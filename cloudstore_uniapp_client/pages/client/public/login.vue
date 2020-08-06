@@ -16,6 +16,13 @@
 					<input type="password" placeholder="请输入密码" v-model="password" @confirm="toLogin" />
 				</view>
 			</view>
+			<!-- <label class="radio">
+				<radio value="r1" checked="checked" />登录前请阅读
+					<navigator url="../info/privacy">
+						丫咪购隐私协议
+					</navigator>
+				</radio>
+			 </label> -->
 			<button class="confirm-btn" @click.stop="toLogin" :disabled="logining">登录</button>
 			<!-- #ifdef MP-WEIXIN -->
 				<view class="vx-btn">
@@ -63,7 +70,8 @@
 				activityId: '',
 				agentGoodsId: "",
 				shareClientId: "",
-				userType: 'Client'
+				userType: 'Client',
+				checked: true,
 			};
 		},
 		onLoad() {
@@ -195,6 +203,9 @@
 					if (this.password == '') {
 						throw '请填写密码';
 					}
+					if(!this.checked) {
+						throw '请先阅读同意隐私协议';
+					}
 				} catch (err) {
 					this.$api.msg(err);
 					return;
@@ -237,6 +248,11 @@
 				}
 			},
 			toForget () { //修改密码
+			},
+			toPrivacy () {
+				uni.navigateTo({
+					url: '/pages/client/info/privacy',
+				});
 			}
 		}
 	};
@@ -427,4 +443,5 @@
 		background: none;
 		opacity: 1;
 	}
+
 </style>
