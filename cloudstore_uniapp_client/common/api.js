@@ -1,7 +1,7 @@
 import store from '../store/index';
 export default {
-	// BASEURI: 'http://106.52.184.24:18888/platform/',
-	BASEURI: 'https://api.sz-guochuang.com/platform/',
+	BASEURI: 'http://106.52.184.24:18888/platform/',
+	// BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -55,12 +55,13 @@ export default {
 			getAgentDistanceType: 'app/public/agent/getAgentDistanceType',
 			createOrder:'app/private/order/createOrder',
 			prePay: 'app/pay/prePay',
-			paySuccess: 'app/pay/paySuccess'
+			paySuccess: 'app/pay/paySuccess',
 		},
 		order: {
 			getClientOrder: 'app/private/order/getClientOrder',
 			getClientOrderDetail : 'app/private/order/getClientOrderDetail',
-			refundOrder: 'app/pay/refundOrder'
+			refundOrder: 'app/pay/refundOrder',
+			submit: 'app/private/order/aftersale/submit'
 		},
 		applyAgent: {
 			getClientAgent: 'app/private/agent/getClientAgent',

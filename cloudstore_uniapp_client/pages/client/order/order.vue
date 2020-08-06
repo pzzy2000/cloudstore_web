@@ -57,9 +57,9 @@
 							<text>订单时间: {{item.createTime}}</text>
 						</view>
 						<template>
-								<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
+								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
 									<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
-								</view> -->
+								</view>
 								<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'wait'">
 									<button class="cu-btn round">立即支付</button>
 									<button class="cu-btn round">取消订单</button>
@@ -268,7 +268,6 @@
 				});
 			},
 			toAfterSale (url,order) {
-				console.log(order)
 				uni.navigateTo({
 					url: url+'?id=' + order.id,
 				});

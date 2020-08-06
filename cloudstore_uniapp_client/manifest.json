@@ -19,8 +19,8 @@
             "Share" : {},
             "Contacts" : {},
             "Maps" : {},
-            "iBeacon" : {},
-            "OAuth" : {}
+            "OAuth" : {},
+            "Geolocation" : {}
         },
         /* 模块配置 */
         "distribute" : {
@@ -88,6 +88,13 @@
                         "appid" : "wx8bcbfdecfc3080d1",
                         "UniversalLinks" : ""
                     }
+                },
+                "geolocation" : {
+                    "amap" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appkey_ios" : "8f3a475e0c7c2136efe071f94efb1cae",
+                        "appkey_android" : "fa88e222ebc2296342a7eb4f61ab1b17"
+                    }
                 }
             },
             "icons" : {
@@ -111,7 +118,7 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        "appid" : "wx096115e2aa734480",
+        "appid" : "wx125f3ee6c9fe6c44",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
@@ -124,7 +131,7 @@
         }
     },
     "h5" : {
-        "title" : "甜园商城",
+        "title" : "丫咪购",
         "domain" : "https://uniapp.dcloud.io/h5",
         "router" : {
             "base" : ""
