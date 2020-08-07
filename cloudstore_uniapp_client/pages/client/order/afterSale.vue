@@ -24,7 +24,9 @@
 							</view>
 						</view>
 					</view>
-					<checkbox :class="checkbox[0].checked?'checked':''" :checked="checkbox[0].checked?true:false" value="A" class="flex align-center round cyan"></checkbox>
+					<checkbox-group @change="chageCheck($event,item.id)" class="flex align-center">
+					    <checkbox class="flex align-center round cyan" value="select" style="transform:scale(0.7)"></checkbox>
+					</checkbox-group>
 				</view>
 			</view>
 			<view class="cu-form-group">
@@ -63,23 +65,16 @@
 				orderInfo: '',
 				afterSaleInfo: '',
 				afterSaleTitle: '申请售后',
-				picker: ['退货', '换货'],
+				picker: ['退货'],
 				pickerIndex: 0,
+				pickerValue: 'returns',
 				imgListId: [],
 				imageList: [],
 				serverUrl: Api.BASEURI +'sys/upload/entity/image/update', //上传地址
 				goodsDetail: '',
 				agentShopName: '',
-				checkbox: [{
-					value: 'A',
-					checked: true
-				}, {
-					value: 'B',
-					checked: true
-				}, {
-					value: 'C',
-					checked: false
-				}],
+				orderDetailIds: [],
+				checkbox: [],
 			}
 		},
 		components: {
@@ -91,16 +86,37 @@
 		},
 		methods: {
 			async getOrderData (id) { //加载商品数据
-				let params = { 
+				let params = {
 					orderId: id
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params, true);
 				if (data) {
 					this.goodsDetail = data.result.details
+					console.log(data)
+					for (let tmp in this.goodsDetail) {
+						this.checkbox.push({
+							'checked': true,
+							'value': this.goodsDetail
+						})
+					}
+					console.log(this.checkbox)
 				}
 			},
 			pickerChange (e) { //选择售后方式
-				console.log(e)
+				if (e.detail.value === '1') {
+					this.pickerValue = 'return'
+				}
+			},
+			chageCheck (e,id) {
+				if (e.detail.value.length) {
+					this.orderDetailIds.push(id)
+				} else {
+					var index = this.orderDetailIds.indexOf(id);
+					if (index > -1) {
+						this.orderDetailIds.splice(index, 1);
+					}
+				}
+				console.log(this.orderDetailIds)
 			},
 			textareaAInput (e) {
 				this.afterSaleInfo = e.detail.value
@@ -115,7 +131,11 @@
 					this.imgListId.splice(index, 1)
 				}
 			},
-			afterSaleSubmit () {
+			async afterSaleSubmit () {
+				if (!this.orderDetailIds.length) {
+					this.$api.msg('请至少选择一条售后的商品')
+					return false;
+				}
 				if (this.afterSaleInfo === '') {
 					this.$api.msg('请填写需要售后的原因')
 					return false;
@@ -126,11 +146,31 @@
 				}
 				let params = {
 					orderId: this.orderId,
-					afterType: this.picker[this.pickerIndex],
-					afterSaleInfo: this.afterSaleInfo,
-					imageList: this.imgListId
+					type: this.pickerValue,
+					orderDetailIds: this.orderDetailIds.toString(), //售后的列表
+					pictures: this.imgListId.toString(), //上传的图片
+					remarks: this.afterSaleInfo
 				}
-				console.log(params)
+				let data = await Api.apiCall('post', Api.client.order.submit, params);
+				if (data) {
+					console.log(data)
+					if (data.code === 0) {
+						uni.showModal({
+							title: '提示',
+							content: '申请售后成功',
+							showCancel: false,
+							cancelText: '取消',
+							confirmText: '确定',
+							success: res => {
+								uni.navigateTo({
+									url: '/pages/client/order/order',
+								});
+							},
+						});
+					} else {
+						this.$api.msg(data.msg)
+					}
+				}
 			}
 		}
 	}

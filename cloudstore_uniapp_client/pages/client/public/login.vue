@@ -24,6 +24,11 @@
 				</radio>
 			 </label> -->
 			<button class="confirm-btn" @click.stop="toLogin" :disabled="logining">登录</button>
+			<!-- #ifdef APP-PLUS -->
+				<view class="vx-btn">
+					<image src="/static/temp/share_wechat.png" mode="" class="wxLogin" @click.stop="appLogin"></image>
+				</view>
+			<!-- #endif -->
 			<!-- #ifdef MP-WEIXIN -->
 				<view class="vx-btn">
 					<button open-type="getUserInfo" @getuserinfo='getWxInfo'  withCredentials="true">
