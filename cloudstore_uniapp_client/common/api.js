@@ -54,14 +54,16 @@ export default {
 		buy: {
 			getAgentDistanceType: 'app/public/agent/getAgentDistanceType',
 			createOrder:'app/private/order/createOrder',
-			prePay: 'app/pay/prePay',
-			paySuccess: 'app/pay/paySuccess',
+			prePay: 'app/private/pay/prePay',
+			paySuccess: 'app/private/pay/paySuccess',
+			refundOrder: 'app/private/pay/refundOrder' //退款
 		},
 		order: {
 			getClientOrder: 'app/private/order/getClientOrder',
 			getClientOrderDetail : 'app/private/order/getClientOrderDetail',
 			refundOrder: 'app/pay/refundOrder',
-			submit: 'app/private/order/aftersale/submit'
+			submit: 'app/private/order/aftersale/submit',
+			aftersaleList: 'app/private/order/aftersale/list'
 		},
 		applyAgent: {
 			getClientAgent: 'app/private/agent/getClientAgent',

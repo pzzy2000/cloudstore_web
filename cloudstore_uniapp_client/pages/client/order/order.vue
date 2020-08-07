@@ -12,79 +12,81 @@
 			</view>
 		</view>
 
-		<!-- <swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
-			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
-				<scroll-view 
-					class="list-scroll-content" 
-					scroll-y
-				> -->
-					<!-- 空白页 -->
-					<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
-					
-					<!-- 订单列表 -->
-					<view v-for="(item,index) in orderList" :key="index" class="order-item">
-						<view class="i-top b-b">
-							<text class="time">订单号: {{item.id}}</text>
-							<template>
-								<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
-								<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
-								<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
-								<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
-								<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
-								<text class="state" v-else-if="item.orderStatus === 'peisoged'">已配送</text>
-								<text class="state" v-else-if="item.orderStatus === 'complete'">已完成</text>
-								<text class="state" v-else-if="item.orderStatus === 'returns'">退货</text>
-								<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
-							</template>
-						</view>
-						<view class="goods-box-single" v-for="(order, index1) in item.detailPicBean" :key="index1" @click="toOrder(item)">
-							<image class="goods-img" :src="order.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
-							<view class="right">
-								<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
-								<text class="attr-box">{{order.activityBean.name}}</text>
-								<view class="attr-box">
-									{{order.goodsSkuBean.skuValue}}
-									<!-- <text>订单时间: {{order.createTime}}</text> -->
-								</view>
-								<view class="price">
-									<text>价格: ￥{{order.payPrice}}</text>
-									<!-- <text>订单时间: {{order.createTime}}</text> -->
-								</view>
-							</view>
-						</view>
-						<view class="i-top b-b">
-							<text class="time">总价: ￥{{item.payPrice}}</text>
-							<text>订单时间: {{item.createTime}}</text>
-						</view>
-						<template>
-								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
-									<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
-								</view>
-								<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'wait'">
-									<button class="cu-btn round">立即支付</button>
-									<button class="cu-btn round">取消订单</button>
-								</view>
-								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'payed'">
-									<button class="cu-btn round">再次购买</button>
-									<button class="cu-btn round">删除订单</button>
-								</view>
-								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisong'">
-									<button class="cu-btn round">联系卖家</button>
-									<button class="cu-btn round">查看物流</button>
-								</view>
-								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'close'">
-									<button class="cu-btn round">删除订单</button>
-									<button class="cu-btn round">售后咨询</button>
-								</view>
-								<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'complete'">
-									<button class="cu-btn round">前去评价</button>
-									<button class="cu-btn round">再次购买</button>
-								</view> -->
-						</template>
+		<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
+		
+		<!-- 订单列表 -->
+		<view v-for="(item,index) in orderList" :key="index" class="order-item">
+			<view class="i-top b-b">
+				<text class="time">订单号: {{item.id}}</text>
+				<template>
+					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
+					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
+					<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
+					<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
+					<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
+					<text class="state" v-else-if="item.orderStatus === 'peisoged'">已配送</text>
+					<text class="state" v-else-if="item.orderStatus === 'complete'">已完成</text>
+					<text class="state" v-else-if="item.orderStatus === 'returns'">退货</text>
+					<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
+				</template>
+			</view>
+			<view class="goods-box-single" v-for="(order, index1) in item.detailPicBean" :key="index1" @click="toOrder(item)">
+				<image class="goods-img" :src="order.goodsSkuBean.photos[0].url || order.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
+				<view class="right">
+					<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
+					<text class="attr-box">{{order.price}}*{{order.quantity}}</text>
+					<view class="attr-box">
+						规格：{{order.goodsSkuBean.skuValue}}
+						<!-- <text>订单时间: {{order.createTime}}</text> -->
 					</view>
-				<!-- </scroll-view>
-			</swiper-item>
-		</swiper> -->
+					<view class="price">
+						<text>价格: ￥{{order.payPrice}}</text>
+						<!-- <text>订单时间: {{order.createTime}}</text> -->
+					</view>
+				</view>
+				<view class="flex align-center">
+					<view class="" v-if="order.status === 'WaitDeliver'">待发货</view>
+					<view class="" v-else-if="order.status === 'peisoged'">已配送</view>
+					<view class="" v-else-if="order.status === 'returnsing'">退货中</view>
+					<view class="" v-else-if="order.status === 'returns'">退货成功</view>
+					<view class="" v-else-if="order.status === 'returnsfail'">退货拒绝</view>
+				</view>
+			</view>
+			<view class="i-top b-b">
+				<text class="time">总价: ￥{{item.payPrice}}</text>
+				<text>订单时间: {{item.createTime}}</text>
+			</view>
+			<template>
+				<!-- 待支付 -->
+				<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'wait'" @click="toBuy(item)">
+					<button class="cu-btn round">立即支付</button>
+				</view> -->
+				<!-- 已配送 -->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
+					<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
+				</view>
+				<!-- 待配送 -->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisong'" @click="refund(item)">
+					<button class="cu-btn round">申请退款</button>
+				</view>
+				<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'payed'">
+					<button class="cu-btn round">再次购买</button>
+					<button class="cu-btn round">删除订单</button>
+				</view>
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisong'">
+					<button class="cu-btn round">联系卖家</button>
+					<button class="cu-btn round">查看物流</button>
+				</view>
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'close'">
+					<button class="cu-btn round">删除订单</button>
+					<button class="cu-btn round">售后咨询</button>
+				</view>
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'complete'">
+					<button class="cu-btn round">前去评价</button>
+					<button class="cu-btn round">再次购买</button>
+				</view> -->
+			</template>
+		</view>
 	</view>
 </template> 
 
@@ -175,8 +177,6 @@
 		 	this.pageNum = this.pageNum + 1;
 			this.getOrderData(this.tabCurrentIndex)
 		},
-		created() {
-		},
 		methods: {
 			async getOrderData (tabIndex = 0) {
 				uni.showLoading({
@@ -191,6 +191,7 @@
 				let data = await Api.apiCall('post',Api.client.order.getClientOrder,parmas)
 				if (data) {
 					const tmpData = data.result.records
+					console.log(tmpData)
 					if(tmpData.length === 0) {
 						this.$api.msg('暂无更多数据了')
 					}else{
@@ -263,20 +264,31 @@
 				});
 			},
 			toBuy (item) {
+				console.log(item)
 				uni.navigateTo({
-					url: '/pages/client/goods/buy?goodsId='+item[0].goodsId+'&agentGoodsId='+item[0].agentGoodsId+'&goodsSkuId='+item[0].goodsSkuId+'&orderType=buyOrder'+'&orderId='+item[0].orderId
+					url: '/pages/client/goods/buy?orderId='+item.id
 				});
 			},
 			toAfterSale (url,order) {
 				uni.navigateTo({
 					url: url+'?id=' + order.id,
 				});
-			}
+			},
+			async refund (item) { //退款
+				console.log(item)
+				let parmas = {
+					id: item.id
+				}
+				let data = await Api.apiCall('post',Api.client.buy.refundOrder,parmas,true)
+				if (data) {
+					console.log(data)
+				}
+			},
 		},
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page, .content{
 		background: $page-color-base;
 		height: 100%;

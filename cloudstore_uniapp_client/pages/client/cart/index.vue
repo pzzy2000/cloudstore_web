@@ -118,7 +118,7 @@
 		},
 		methods: {
 			async getCartList(){
-				this.cartList = []
+				this.cartList.length = 0
 				let params = {
 					pageSize: 10,
 					pageNum: 1
