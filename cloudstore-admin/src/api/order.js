@@ -77,3 +77,19 @@ export function getOneorder(params) {
     data: switchForm(params)
   })
 }
+
+export function afterSalelist(params) {
+  return request({
+    url: '/order/aftersale/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function getAnorder(params) {
+  return request({
+    url: '/order/aftersale/get',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

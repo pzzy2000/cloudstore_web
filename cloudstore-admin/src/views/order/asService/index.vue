@@ -47,24 +47,24 @@
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
-        <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="服务单号" align="center" fixed>
-          <template slot-scope="scope">{{scope.row.number}}</template>
+        <el-table-column type="selection" width="60px" align="center"></el-table-column>
+        <el-table-column label="服务单号" align="center" prop="number" :formatter="showMsg">
+<!--          <template slot-scope="scope">{{scope.row.orderBean.number}}</template>-->
         </el-table-column>
-        <el-table-column label="申请时间" align="center">
-          <template slot-scope="scope">{{scope.row.goods}}</template>
+        <el-table-column label="申请时间" align="center" prop="createTime" :formatter="showMsg">
+<!--          <template slot-scope="scope">{{scope.row.orderBean.createTime | formatDate}}</template>-->
         </el-table-column>
-        <el-table-column label="用户账号" align="center">
-          <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
+        <el-table-column label="用户账号" align="center" prop="userphone" :formatter="showMsg">
+<!--          <template slot-scope="scope">{{scope.row.clientAddressBean.phone}}</template>-->
         </el-table-column>
-        <el-table-column label="退款金额" align="center">
-          <template slot-scope="scope">{{scope.row.count}}</template>
+        <el-table-column label="退款金额" align="center" prop="payPrice" :formatter="showMsg">
+<!--          <template slot-scope="scope">{{scope.row.orderBean.payPrice}}</template>-->
         </el-table-column>
         <el-table-column label="联系人" align="center">
-          <template slot-scope="scope">{{scope.row.payPrice}}</template>
+          <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
         <el-table-column label="申请状态" align="center">
-          <template slot-scope="scope">{{scope.row.payType}}</template>
+          <template slot-scope="scope">{{scope.row.type | changeMsg}}</template>
         </el-table-column>
         <el-table-column label="处理时间" align="center">
           <template slot-scope="scope">{{scope.row.ordertype}}</template>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-  import {fetchList} from '@/api/order'
+  import {afterSalelist} from '@/api/order'
   import { formatDate } from '@/assets/common/data.js'
   const defaultList = {
     pageNum: 1,
@@ -106,14 +106,14 @@
         activeIndex: '1',
         searchList: {},
         orderList: [{
-          code: '1111',
-          goods: '12313',
-          ordertime: '12313',
-          count: '123132',
-          cost: '11123',
-          apply: '321321',
-          ordertype: '45678',
-          status: '32164'
+          code: '',
+          goods: '',
+          ordertime: '',
+          count: '',
+          cost: '',
+          apply: '',
+          ordertype: '',
+          status: ''
         }],
         listLoading: false,
         pageList: Object.assign({}, defaultList),
@@ -138,7 +138,7 @@
       // 时间格式自定义 只需把字符串里面的改成自己所需的格式
       formatDate(time) {
         let date = new Date(time);
-        return formatDate(date, 'yyyy-MM-dd');
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
       },
       changeStatus(data) {
         switch (data) {
@@ -149,11 +149,67 @@
           case 'close': return "超时关闭";
             break;
         }
+      },
+      changeMsg(data) {
+        switch (data) {
+          case 'wait': return "待支付";
+            break;
+          case 'pay': return "支付待确认";
+            break;
+          case 'payed': return "已支付";
+            break;
+          case 'peisong': return "待配送";
+            break;
+          case 'peisoged': return "已配送";
+            break;
+          case 'complete': return "已完成";
+            break;
+          case 'close': return "超时关闭";
+            break;
+          case 'returns': return "退货";
+            break;
+          case 'retud': return "已退货";
+            break;
+          default: return "数据读取错误";
+            break;
+        }
       }
     },
     methods: {
+      showMsg(row, col) {
+        switch (col.property) {
+          case "number":{
+            try {
+              return row.orderBean.number
+            }catch (e) {
+              return '数据读取错误'
+            }
+          }
+          case "userphone":{
+            try {
+              return row.orderBean.clientAddressBean.phone
+            }catch (e) {
+              return '数据读取错误'
+            }
+          }
+          case "createTime":{
+            try {
+              return row.orderBean.createTime
+            }catch (e) {
+              return '数据读取错误'
+            }
+          }
+          case "payPrice":{
+            try {
+              return row.orderBean.payPrice
+            }catch (e) {
+              return '数据读取错误'
+            }
+          }
+        }
+      },
       getList() {
-        fetchList(this.pageList).then(res => {
+        afterSalelist(this.pageList).then(res => {
           if (res.result.code == 0) {
             this.orderList = res.result.result.records;
             this.total = parseInt(res.result.result.total);
@@ -177,7 +233,7 @@
       },
       readOrder(index, row){
         console.log(index, row);
-        this.$router.push("/order/manage/readorder")
+        this.$router.push({path: "/order/manage/asinfo", query: {id: row.id}})
       },
       handleClose(done) {
         this.$confirm('确认关闭？')

@@ -497,6 +497,13 @@ export const asyncRouterMap = [
         meta: {title: '售后服务', icon: 'product-list'}
       },
       {
+        path: 'asinfo',
+        name: 'as_info',
+        component: () => import('@/views/order/asService/asInfo'),
+        meta: {title: '退款详情', icon: 'product-list'},
+        hidden: true
+      },
+      {
         path: 'temoffre',
         name: 'temof_fre',
         component: () => import('@/views/order/temOffre/index'),
