@@ -25,7 +25,7 @@
 				<image :src="item.goodsSkuBean.photos[0].url || item.goodsPicesBean.goodsDetailPhotos[0].url"></image>
 				<view class="right">
 					<text class="title clamp">{{item.goodsPicesBean.goodsName}}</text>
-					<text class="spec">{{item.goodsSkuBean.skuValue}}</text>
+					<text class="spec">规格：{{item.goodsSkuBean.skuValue}}</text>
 					<view class="price-box">
 						<view class="">
 							<text class="price">￥{{item.payPrice}}</text>

@@ -42,9 +42,9 @@
 					<text class="yticon icon-daifukuan"></text>
 					<text>提现</text>
 				</view>
-				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo('/pages/client/order/afterSaleList')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-yishouhuo"></text>
-					<text>敬请关注</text>
+					<text>售后</text>
 				</view>
 
 				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">

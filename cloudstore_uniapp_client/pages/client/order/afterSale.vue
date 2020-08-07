@@ -24,9 +24,12 @@
 							</view>
 						</view>
 					</view>
-					<checkbox-group @change="chageCheck($event,item.id)" class="flex align-center">
-					    <checkbox class="flex align-center round cyan" value="select" style="transform:scale(0.7)"></checkbox>
-					</checkbox-group>
+					<template>
+						<checkbox-group @change="chageCheck($event,item.id)" class="flex align-center" v-if="item.status === 'peisoged'">
+						    <checkbox class="flex align-center round cyan" value="select" style="transform:scale(0.7)"></checkbox>
+						</checkbox-group>
+						<view class="flex align-center" v-else>{{item.status}}</view>
+					</template>
 				</view>
 			</view>
 			<view class="cu-form-group">
@@ -46,7 +49,7 @@
 				</view>
 			</view>
 			<view class="cu-form-group padding-bottom-xs">
-				<tui-upload :serverUrl="serverUrl" @complete="uploadResult" @remove="uploadRemove" :value='imageList' :valueId= 'imgListId' :forbidDel='isEdit'></tui-upload>
+				<tui-upload :serverUrl="serverUrl" @complete="uploadResult" @remove="uploadRemove" :value='imageList' :valueId= 'imgListId' :forbidDel='isEdit' :limit='10'></tui-upload>
 			</view>
 			<view class="padding flex flex-direction">
 				<button class="cu-btn bg-cyan margin-tb-sm lg" @click="afterSaleSubmit">提交售后申请</button>
@@ -84,6 +87,10 @@
 			this.orderId = ops.id
 			this.getOrderData(ops.id)
 		},
+		onUnload() {
+			this.imageList = []
+			this.imgListId = []
+		},
 		methods: {
 			async getOrderData (id) { //加载商品数据
 				let params = {
@@ -99,7 +106,6 @@
 							'value': this.goodsDetail
 						})
 					}
-					console.log(this.checkbox)
 				}
 			},
 			pickerChange (e) { //选择售后方式
@@ -123,13 +129,16 @@
 			},
 			uploadResult (e) { //页面上传成功后的回调
 				this.imgListId = e.imgListId
+				console.log(this.imgListId)
 			},
 			uploadRemove (e) { //删除图片的回调
+				console.log(e)
 				let index = e.index
 				if (this.imgListId.length != 0) {
 					this.imageList.splice(index, 1)
 					this.imgListId.splice(index, 1)
 				}
+				console.log(this.imgListId)
 			},
 			async afterSaleSubmit () {
 				if (!this.orderDetailIds.length) {
@@ -151,6 +160,7 @@
 					pictures: this.imgListId.toString(), //上传的图片
 					remarks: this.afterSaleInfo
 				}
+				console.log(params)
 				let data = await Api.apiCall('post', Api.client.order.submit, params);
 				if (data) {
 					console.log(data)

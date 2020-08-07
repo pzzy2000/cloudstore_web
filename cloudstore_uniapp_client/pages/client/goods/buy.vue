@@ -51,32 +51,6 @@
 			</view>
 		</view>
 		
-		
-		<!-- <view class="goods-section">
-			<view class="g-header b-b">
-				<text class="name">店铺:</text>
-				<text class="name">{{agentShop.name}}</text>
-			</view>
-			<view class="g-item">
-				<image :src="goodsDetail.goodsPhotos[0].url"></image>
-				<view class="right">
-					<text class="title clamp">{{goodsDetail.goodsName}}</text>
-					<text class="spec">商品规格: {{goodsSku.skuValue}} </text>
-					<view class="price-box">
-						<view class="">
-							<text class="price">￥{{totalPrice}}</text>
-						</view>
-						<view class="">
-							<text class="numberBtn" @click="subtractNum">-</text>
-							<text class="number">{{num}}</text>
-							<text class="numberBtn" @click="addNum">+</text>
-						</view>
-					</view>
-				</view>
-			</view>
-		</view> -->
-
-		
 		<!-- 优惠明细 	-->
 		<view class="yt-list">
 			<!--
@@ -252,7 +226,12 @@
 				this.searchCart(option.cartId)
 				this.buyListType = 'detail'
 				this.agentId = uni.getStorageSync('agentId')
-			} else {
+			} else if (option.orderId){
+				console.log(option.orderId)
+				this.orderType = 'buyOrder'
+				this.orderId = option.orderId
+				this.searchWaitBuyDetil(this.orderId)
+			} else{
 				this.buyListType = 'cart'
 				this.goodsId = option.goodsId
 				this.agentId = option.agentId
@@ -294,7 +273,7 @@
 				let params = {
 					clientAddressId: this.addressData.id
 				}
-				let data = await Api.apiCall('post', Api.client.buy.getAgentDistanceType, params, false, false);
+				let data = await Api.apiCall('post', Api.client.buy.getAgentDistanceType, params, true, false);
 				if (data) {
 					var tmpData = data.result.agentBean
 					try{
@@ -356,7 +335,7 @@
 							shareId: this.shareClientId,
 							number: 1,
 							payPrice: tmpData[tmp].goodsOneSku.price,
-							image: tmpData[tmp].goodsPicesBean.goodsPhotos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
+							image: tmpData[tmp].goodsOneSku.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
 							title: tmpData[tmp].goodsPicesBean.goodsName,
 							attr_val: tmpData[tmp].goodsOneSku.skuValue,
 							price: tmpData[tmp].goodsOneSku.price,
@@ -364,11 +343,6 @@
 						})
 					}
 					this.calcTotal()
-					// this.goodsDetail = data.result.goodsPicesBean
-					// this.agentShop = data.result.agentShopBean;
-					// this.goodsSku = data.result.goodsOneSku;
-					// this.totalPrice =this.goodsSku.price; 
-					// this.activity=data.result.activityBean;
 				}
 			},
 			radioChange: function(evt) { //选择支付方式
@@ -379,17 +353,7 @@
 					}
 				}
 			},
-			subtractNum() { //商品数量的简单减少
-				if (this.num >1) {
-					this.num = parseInt(this.num) - 1
-					this.totalPrice = (this.num * Number(this.goodsSku.price * 100))/100
-				}
-			},
-			addNum() { //商品数量的简单增加
-				this.num = parseInt(this.num) + 1
-				this.totalPrice =  (this.num * Number(this.goodsSku.price * 100))/100
-			},
-			buy(index = 1){
+			buy(index = 1){ //点击支付按钮
 				if (!this.addressData.id) {
 					this.$api.msg('您还未选择收货地址')
 					return;
@@ -468,7 +432,7 @@
 					  }
 				})
 			},
-			payMent(res) {
+			payMent(res) { //吊起微信支付
 				var that = this;
 				let vxBuyInfo = res.result;
 				//微信支付
@@ -509,7 +473,7 @@
 				let parmas = {
 					orderId: id
 				}
-				let data = Api.apiCall('post', Api.client.buy.paySuccess,parmas)
+				let data = Api.apiCall('post', Api.client.buy.paySuccess,parmas, true)
 				if (data) {
 					console.log(data)
 				}
@@ -547,6 +511,7 @@
 				var data = await Api.apiCall('post', Api.client.cart.listShopCar, params, true)
 				if (data) {
 					var tmpData = data.result.list
+					console.log(tmpData)
 					for (let tmp in tmpData) {
 						this.buyGoodsList.push({
 							activityId: tmpData[tmp].activityId,
@@ -555,11 +520,36 @@
 							shareId: tmpData[tmp].shareId,
 							number: 1,
 							payPrice: tmpData[tmp].goodsOneSku.price,
-							image: tmpData[tmp].goodsPicesBean.goodsPhotos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
+							image: tmpData[tmp].goodsOneSku.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
 							title: tmpData[tmp].goodsPicesBean.goodsName,
 							attr_val: tmpData[tmp].goodsOneSku.skuValue,
 							price: tmpData[tmp].goodsOneSku.price,
 							stock: tmpData[tmp].goodsOneSku.stock,
+						})
+					}
+					this.calcTotal()
+				}
+			},
+			async searchWaitBuyDetil (id) {
+				let params = {
+					orderId: id
+				};
+				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params, true);
+				if (data) {
+					var tmpData = data.result.details
+					console.log(tmpData)
+					for (let tmp in tmpData) {
+						this.buyGoodsList.push({
+							activityId: tmpData[tmp].activityId,
+							goodsId: tmpData[tmp].goodsId,
+							goodsSkuId: tmpData[tmp].goodsSkuId,
+							number: 1,
+							payPrice: tmpData[tmp].goodsSkuBean.price,
+							image: tmpData[tmp].goodsSkuBean.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
+							title: tmpData[tmp].goodsPicesBean.goodsName,
+							attr_val: tmpData[tmp].goodsSkuBean.skuValue,
+							price: tmpData[tmp].goodsSkuBean.price,
+							stock: tmpData[tmp].goodsSkuBean.stock,
 						})
 					}
 					this.calcTotal()

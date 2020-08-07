@@ -107,9 +107,9 @@
 				<text class="yticon icon-gouwuche "></text>
 				<text>加入购物车</text>
 			</view>
-			<view class="p-b-btn" @click="toFavorite(goods)">
-				<text class="yticon icon-gouwuche"></text>
-				<text>期待</text>
+			<view class="p-b-btn" @click="toPage('/pages/agent/goods/category/category')">
+				<text class="yticon icon-weixinzhifu"></text>
+				<text>商品分类</text>
 			</view>
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec('buy')">立即购买</button>
@@ -197,6 +197,7 @@ export default {
 			swiperImgList: [],
 			skuList: [],
 			agentId: '',
+			imageUrl: '',//分享出去的图片
 			goodsId:'',
 			goodsName: '',
 			goodsSkuId: '',  //具体商品的skuId
@@ -218,6 +219,7 @@ export default {
 		if (res.from === 'button') {// 来自页面内分享按钮
 			var shareObj = {
 				title: this.goodsName,
+				imageUrl: this.imageUrl,
 				params: {
 					agentId: this.agentId,
 					goodsId: this.goodsId,
@@ -267,6 +269,7 @@ export default {
 				try{
 					if (this.skuList[0].photos[0]) {
 						this.sku.imgUrl = this.skuList[0].photos[0].url
+						this.imageUrl = this.skuList[0].photos[0].url
 					}
 				}catch(e){
 					console.log('sku图片出错')
@@ -334,8 +337,10 @@ export default {
 				this.$api.msg('获取活动信息失败')
 			}
 		},
-		toFavorite(){
-			this.$api.msg("敬请期待");
+		toPage(url){
+			uni.navigateTo({
+				url: url,
+			});
 		},
 		openAgent () {
 			this.$refs.popup.open()
@@ -415,6 +420,7 @@ export default {
 						this.sku.price = this.skuList[data].price
 						try{
 							this.sku.imgUrl = this.skuList[data].photos[0].url
+							this.imageUrl = this.skuList[data].photos[0].url
 						}catch(e){
 							console.log('sku图片出错')
 						}
@@ -938,19 +944,16 @@ export default {
 /* 底部操作菜单 */
 .page-bottom {
 	position: fixed;
-	left: 50%;
-	margin-left: -49%;
-	bottom: 30upx;
+	left: 0;
+	bottom: 0;
 	z-index: 95;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	width:98%;
+	width:100%;
 	height: 100upx;
 	background: rgba(255, 255, 255, 0.9);
 	box-shadow: 0 0 20upx 0 rgba(0, 0, 0, 0.5);
-	border-radius: 16upx;
-
 	.p-b-btn {
 		display: flex;
 		flex-direction: column;
