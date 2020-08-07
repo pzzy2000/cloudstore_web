@@ -10,7 +10,7 @@
     :loading="loading"
     popper-class="selectstyle"
     ref="select"
-    @focus="resetOpt">
+    @change="resetOpt">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -41,10 +41,9 @@
           setTimeout(() => {
             this.loading = false;
             fetchList(this.url, {key: query}).then(res => {
-              console.log(res);
               let data = res.result.result;
               this.options = data.map(item => {
-                return { value: `${item.id}`, label: `供应商名称：${item.name} / 供应商电话：${item.phone}` };
+                return { value: `${item.id}`, label: this.labelList(item) };
               });
             })
           }, 200);
@@ -58,7 +57,15 @@
           if (this.value.length == 0) {
             this.options = [];
           }
+          this.$emit('input', this.value);
         };
+      },
+      labelList(item) {
+        let a;
+        this.$emit('tochild', item, val => {
+          a = val;
+        });
+        return a;
       }
     }
   }

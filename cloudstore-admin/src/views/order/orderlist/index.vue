@@ -31,21 +31,23 @@
           <el-form-item label="订单编号：" prop="name">
             <el-input style="width: 214px" v-model="pageList.number" placeholder="订单编号" clearable></el-input>
           </el-form-item>
-          <el-form-item label="下单时间：" prop="code">
-            <el-date-picker v-model="pageList.createTime" type="date" placeholder="选择日期" :picker-options="pickerOptions" clearable>
+          <el-form-item label="开始时间：" prop="code">
+            <el-date-picker v-model="pageList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" clearable>
+<!--              :picker-options="pickerOptions"-->
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="用户账号：" prop="count">
-            <el-input style="width: 214px" v-model="pageList.access" placeholder="用户账号" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="用户名称：" prop="count">
-            <el-input style="width: 214px" v-model="pageList.name" placeholder="用户名称" clearable></el-input>
+          <el-form-item label="结束时间：" prop="code">
+            <el-date-picker v-model="pageList.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" clearable>
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="订单状态：" prop="orderstatus">
             <el-select v-model="pageList.orderStatus" placeholder="请选择" clearable>
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="用户信息：">
+            <remoteCom v-model="pageList.clientIds" url="/manage/search/client/search" @tochild="tochild"></remoteCom>
           </el-form-item>
         </el-form>
       </div>
@@ -67,10 +69,10 @@
         <el-table-column label="下单时间" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
         </el-table-column>
-        <el-table-column label="用户账号" align="center" :formatter="showMsg">
+        <el-table-column prop="useraccess" label="用户账号" align="center" :formatter="showMsg">
 <!--          <template slot-scope="scope">{{scope.row.clientBean.access}}</template>-->
         </el-table-column>
-        <el-table-column label="用户名称" align="center" :formatter="showMsg">
+        <el-table-column prop="username" label="用户名称" align="center" :formatter="showMsg">
 <!--          <template slot-scope="scope">{{scope.row.clientBean.name}}</template>-->
         </el-table-column>
         <el-table-column label="订单金额" align="center">
@@ -112,6 +114,7 @@
 <script>
     import {fetchList} from '@/api/order'
     import { formatDate } from '@/assets/common/data.js'
+    import remoteCom from '@/components/remoteCom'
     const defaultList = {
       pageNum: 1,
       pageSize: 10,
@@ -120,6 +123,9 @@
     let that;
     export default {
       name: "list",
+      components: {
+        remoteCom
+      },
       data() {
         return {
           activeIndex: '1',
@@ -133,11 +139,11 @@
           listLoading: false,
           pageList: Object.assign({}, defaultList),
           total: 1,
-          pickerOptions: {
-            disabledDate(time) {
-              return time.getTime() > Date.now();
-            }
-          },
+          // pickerOptions: {
+          //   disabledDate(time) {
+          //     return time.getTime() > Date.now();
+          //   }
+          // },
           options: [
             {label: "待支付", value: "wait"},
             {label: "支付待确认", value: "pay"},
@@ -151,7 +157,7 @@
           ],
           dialogVisible: false,
           btnMsg: '',
-          type: ''
+          type: '',
         }
       },
       beforeCreate() {
@@ -214,6 +220,11 @@
         }
       },
       methods: {
+        tochild(item, callback){
+          console.log(item)
+          // return `用户名称：${item.name} / 用户账号：${item.access}`;
+          callback(`用户名称：${item.name} / 用户账号：${item.access}`);
+        },
         getList(idx) {
           fetchList(this.pageList).then(res => {
             if (res.result.code == 0) {
@@ -245,10 +256,21 @@
           })
         },
         showMsg(row, column) {
-          try{
-            return row.clientBean.access
-          }catch (e) {
-            return "数据读取出错"
+          switch (column.property) {
+            case "useraccess":{
+              try{
+                return row.clientBean.access
+              }catch (e) {
+                return "数据读取出错"
+              }
+            }
+            case "username":{
+              try{
+                return row.clientBean.name
+              }catch (e) {
+                return "数据读取出错"
+              }
+            }
           }
         },
         showDanger() {
@@ -258,6 +280,13 @@
           console.log(key, keyPath);
         },
         handleSearchList() {
+          if (this.pageList.startTime !== undefined || this.pageList.startTime !== '') {
+            this.pageList.startTime = this.pageList.startTime + ' ' + "00:00:00";
+          }
+          if (this.pageList.endTime !== undefined || this.pageList.endTime !== '') {
+            this.pageList.endTime = this.pageList.endTime + ' ' + "23:59:59";
+          }
+          console.log(this.pageList);
           this.pageList.pageNum = 1;
           this.getList(0);
         },

@@ -14,7 +14,7 @@
       <div style="padding-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="供应商名称：">
-            <remoteCom url="/manage/search/supplier/search"></remoteCom>
+            <remoteCom v-model="listQuery.supplierId" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
 <!--            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名称"></el-input>-->
           </el-form-item>
 <!--          <el-form-item label="供应商电话：">-->
@@ -169,6 +169,11 @@
       }
     },
     methods: {
+      tochild(item, callback){
+        console.log(item)
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
+      },
       showAccess(row,column){
         return ( row.sysManagerUserBean ==null )?'数据读取错误':row.sysManagerUserBean.name ;
       },
