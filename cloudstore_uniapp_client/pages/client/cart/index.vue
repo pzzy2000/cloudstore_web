@@ -100,9 +100,10 @@
 			};
 		},
 		onLoad() {
-			this.getCartList();
+			// this.getCartList();
 		},
 		onShow(){
+			this.cartList.length = 0
 			this.getCartList();
 		},
 		watch:{

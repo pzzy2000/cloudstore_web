@@ -171,7 +171,6 @@
 				uni.stopPullDownRefresh();
 			}, 2000);
 		},
-		onShareAppMessage() {},
 		onLoad(ops) {
 			this.loadData();
 		},
@@ -383,11 +382,12 @@
 				});
 			},
 			async shareSave (info) { //分享调用接口
+				console.log(info)
 				  this.goodsId = info.goodsId
 				  this.activityId = info.activityId
 				  this.agentGoodsId = info.id
 				  this.goodsName = info.goodsPicesBean.goodsName
-				  this.imageUrl = info.goodsPicesBean.goodsPhotos[0].url || info.goodsPicesBean.goodsDetailPhotos[0].url
+				  this.imageUrl = info.goodsPicesBean.goodsDetailPhotos[0].url || info.goodsPicesBean.goodsPhotos[0].url
 					if (Api.isToken()) {
 						uni.showLoading({
 							title: '正在加载',

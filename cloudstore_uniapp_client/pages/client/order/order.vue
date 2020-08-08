@@ -22,12 +22,14 @@
 					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
 					<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
-					<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
 					<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
+					<text class="state" v-else-if="item.orderStatus === 'refunding'">退款中</text>
+					<text class="state" v-else-if="item.orderStatus === 'refunded'">已退款</text>
 					<text class="state" v-else-if="item.orderStatus === 'peisoged'">已配送</text>
 					<text class="state" v-else-if="item.orderStatus === 'complete'">已完成</text>
-					<text class="state" v-else-if="item.orderStatus === 'returns'">退货</text>
-					<text class="state" v-else-if="item.orderStatus === 'retud'">已退货</text>
+					<text class="state" v-else-if="item.orderStatus === 'returnsing'">退货</text>
+					<text class="state" v-else-if="item.orderStatus === 'returns'">已退货</text>
+					<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
 				</template>
 			</view>
 			<view class="goods-box-single" v-for="(order, index1) in item.detailPicBean" :key="index1" @click="toOrder(item)">
@@ -48,8 +50,11 @@
 					<view class="" v-if="order.status === 'WaitDeliver'">待发货</view>
 					<view class="" v-else-if="order.status === 'peisoged'">已配送</view>
 					<view class="" v-else-if="order.status === 'returnsing'">退货中</view>
+					<view class="" v-else-if="order.status === 'refunding'">退款中</view>
+					<view class="" v-else-if="order.status === 'refunded'">已退款</view>
 					<view class="" v-else-if="order.status === 'returns'">退货成功</view>
 					<view class="" v-else-if="order.status === 'returnsfail'">退货拒绝</view>
+					<view class="" v-else-if="order.status === 'delivered'">已收货</view>
 				</view>
 			</view>
 			<view class="i-top b-b">
@@ -58,33 +63,53 @@
 			</view>
 			<template>
 				<!-- 待支付 -->
-				<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'wait'" @click="toBuy(item)">
-					<button class="cu-btn round">立即支付</button>
-				</view> -->
-				<!-- 已配送 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
-					<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'wait'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+					<button class="cu-btn round" @click.stop="toBuy(item)">立即支付</button>
+				</view>
+				<!-- 支付待确认 -->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'pay'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+				</view>
+				<!-- 已支付 -->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'payed'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 待配送 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisong'" @click="refund(item)">
-					<button class="cu-btn round">申请退款</button>
-				</view>
-				<!-- <view class="margin-tb-sm text-right" v-if="item.orderStatus === 'payed'">
-					<button class="cu-btn round">再次购买</button>
-					<button class="cu-btn round">删除订单</button>
-				</view>
 				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisong'">
-					<button class="cu-btn round">联系卖家</button>
-					<button class="cu-btn round">查看物流</button>
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+					<button class="cu-btn round" @click="refund(item)">申请退款</button>
 				</view>
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'close'">
-					<button class="cu-btn round">删除订单</button>
-					<button class="cu-btn round">售后咨询</button>
+				<!-- 已配送 -->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+					<button class="cu-btn round" @click.stop="confirmOrder(item)">确认收货</button>
+					<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
 				</view>
+				<!-- 退款中 -->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'refunding'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+				</view>
+				<!-- 已退款 -->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'refunded'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+				</view>
+				<!-- 已完成 -->
 				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'complete'">
-					<button class="cu-btn round">前去评价</button>
-					<button class="cu-btn round">再次购买</button>
-				</view> -->
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+				</view>
+				<!-- 退货-->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'returnsing'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+				</view>
+				<!-- 已退货-->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'returns'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+				</view>
+				<!-- 超时关闭-->
+				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'close'">
+					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
+				</view>
 			</template>
 		</view>
 	</view>
@@ -115,8 +140,8 @@
 					},
 					{
 						state: 1,
-						text: '已支付',
-						type: 'payed',
+						text: '待支付',
+						type: 'wait',
 						loadingType: 'more',
 						orderList: []
 					},
@@ -153,7 +178,7 @@
 					this.orderStatus = ''
 					break;
 					case 1:
-					this.orderStatus = 'payed'
+					this.orderStatus = 'wait'
 					break;
 					case 2:
 					this.orderStatus = 'peisong'
@@ -191,7 +216,6 @@
 				let data = await Api.apiCall('post',Api.client.order.getClientOrder,parmas)
 				if (data) {
 					const tmpData = data.result.records
-					console.log(tmpData)
 					if(tmpData.length === 0) {
 						this.$api.msg('暂无更多数据了')
 					}else{
@@ -203,7 +227,7 @@
 							break;
 							case 1:
 								for (let tmp in tmpData) {
-									if (tmpData[tmp].orderStatus === 'payed') {
+									if (tmpData[tmp].orderStatus === 'wait') {
 										this.orderList.push(tmpData[tmp])
 									}
 								}
@@ -264,26 +288,78 @@
 				});
 			},
 			toBuy (item) {
-				console.log(item)
 				uni.navigateTo({
 					url: '/pages/client/goods/buy?orderId='+item.id
 				});
 			},
-			toAfterSale (url,order) {
+			toAfterSale (url,order) { 
 				uni.navigateTo({
 					url: url+'?id=' + order.id,
 				});
 			},
-			async refund (item) { //退款
-				console.log(item)
+			initData () {
+				this.pageNum = 1
+				this.orderList = []
+				this.getOrderData(this.tabCurrentIndex)
+			},
+			refund (item) { //点击退款按钮
+				uni.showModal({
+					title: '退款确认',
+					content: '您确定申请退款？',
+					showCancel: true,
+					cancelText: '取消',
+					confirmText: '确定',
+					success: res => {
+						if (res.confirm) {
+							this.setRefund(item)
+						} else if (res.cancel) {
+						}
+					},
+				});
+			},
+			async setRefund (item) { //调用退款接口
 				let parmas = {
 					id: item.id
 				}
 				let data = await Api.apiCall('post',Api.client.buy.refundOrder,parmas,true)
 				if (data) {
-					console.log(data)
+					if (data.code ===0) {
+						this.initData()
+						this.$api.msg('申请退款成功')
+					} else {
+						this.$api.msg(code.msg)
+					}
 				}
 			},
+			async confirmOrder (item) { //点击确认收货按钮
+				uni.showModal({
+					title: '收货确认',
+					content: '您确定已收到货物？',
+					showCancel: true,
+					cancelText: '取消',
+					confirmText: '确定',
+					success: res => {
+						if (res.confirm) {
+							this.setConfirmOrder(item)
+						} else if (res.cancel) {
+						}
+					},
+				});
+			},
+			async setConfirmOrder (item) { //调用确认收货接口
+				let parmas = {
+					id: item.id
+				}
+				let data = await Api.apiCall('post',Api.client.order.confirmOrder,parmas,true)
+				if (data) {
+					if (data.code ===0) {
+						this.initData()
+						this.$api.msg('确认收货成功')
+					} else {
+						this.$api.msg(code.msg)
+					}
+				}
+			}
 		},
 	}
 </script>
@@ -617,5 +693,8 @@
 		100% {
 			opacity: .2
 		}
+	}
+	.cu-btn {
+		margin-left: 10upx;
 	}
 </style>

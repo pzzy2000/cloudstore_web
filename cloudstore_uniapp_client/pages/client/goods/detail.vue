@@ -107,10 +107,10 @@
 				<text class="yticon icon-gouwuche "></text>
 				<text>加入购物车</text>
 			</view>
-			<view class="p-b-btn" @click="toPage('/pages/agent/goods/category/category')">
-				<text class="yticon icon-weixinzhifu"></text>
+			<navigator url="/pages/agent/goods/category/category" open-type="switchTab" class="p-b-btn">
+				<text class="yticon icon-fenlei"></text>
 				<text>商品分类</text>
-			</view>
+			</navigator>
 			<view class="action-btn-group">
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec('buy')">立即购买</button>
 				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
@@ -262,6 +262,7 @@ export default {
 				this.goods = data.result.goodsPicesBean;
 				this.activity = data.result.activityBean;
 				this.goodsName = data.result.goodsPicesBean.goodsName
+				this.imageUrl = data.result.goodsPicesBean.goodsDetailPhotos[0].url
 				this.skuList = data.result.goodsSku
 				//赋值默认商品价格，库存和图片
 				this.sku.price = this.skuList[0].price
@@ -269,7 +270,6 @@ export default {
 				try{
 					if (this.skuList[0].photos[0]) {
 						this.sku.imgUrl = this.skuList[0].photos[0].url
-						this.imageUrl = this.skuList[0].photos[0].url
 					}
 				}catch(e){
 					console.log('sku图片出错')
