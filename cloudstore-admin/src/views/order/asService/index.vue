@@ -267,6 +267,9 @@
   .el-menu .el-menu-item span{
     color: red;
   }
+  .el-menu .el-menu-item:hover span{
+    color: #1abc9c;
+  }
   .el-menu--horizontal>.el-menu-item.is-active{
     border: none;
     background-color: #1abc9c !important;

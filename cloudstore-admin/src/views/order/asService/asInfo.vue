@@ -6,8 +6,6 @@
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
-        <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
-        <el-table-column type="selection" width="60px" align="center"></el-table-column>
         <el-table-column label="商品图片" align="center">
           <template slot-scope="scope">
             <el-image :src="scope.row.orderDetail[0].detailPic.goodsSkuBean.picUrl" style="width: 80px"></el-image>
@@ -48,7 +46,7 @@
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">申请时间</div></el-col>
-        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].clientBean.createDate}}</div></el-col>
+        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].orderBean.createTime}}</div></el-col>
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">申请状态</div></el-col>
@@ -56,15 +54,15 @@
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">用户账号</div></el-col>
-        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].clientBean.access}}</div></el-col>
+        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].orderBean.clientAddressBean.phone}}</div></el-col>
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">联系人</div></el-col>
-        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].clientBean.name}}</div></el-col>
+        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].orderBean.clientAddressBean.name}}</div></el-col>
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">联系电话</div></el-col>
-        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].clientBean.phone}}</div></el-col>
+        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].orderBean.clientAddressBean.phone}}</div></el-col>
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">退货原因</div></el-col>
@@ -86,29 +84,36 @@
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">收货人姓名</div></el-col>
-        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].clientBean.name}}</div></el-col>
+        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].orderBean.clientAddressBean.name}}</div></el-col>
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">收货地址</div></el-col>
-        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].clientBean.name}}</div></el-col>
+        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{address}}</div></el-col>
       </el-row>
       <el-row :gutter="0">
         <el-col :span="4"><div class="grid-content bg-purple nomarr">联系电话</div></el-col>
-        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].clientBean.phone}}</div></el-col>
+        <el-col :span="20"><div class="grid-content bg-purple marl" v-if='orderList[0]'>{{orderList[0].orderBean.clientAddressBean.phone}}</div></el-col>
       </el-row>
     </div>
-    <div style="text-align: center; margin: 20px 0"><el-button type="primary">确认</el-button></div>
+    <div style="text-align: center; margin: 20px 0">
+      <el-button type="primary" @click="confirmRet" v-if="isshow">审核通过</el-button>
+      <el-button type="danger" @click="refuseRet" v-if="isshow">审核拒绝</el-button>
+      <el-button @click="backPage">返回</el-button>
+    </div>
   </div>
 </template>
 
 <script>
-  import {getAnorder} from '@/api/order'
+  import {getAnorder, auditStatus, tuikuan} from '@/api/order'
   export default {
     name: "asInfo",
     data() {
       return {
         orderList: [],
-        listLoading: false
+        listLoading: false,
+        address: '',
+        status: 0,
+        isshow: true
       }
     },
     created() {
@@ -126,15 +131,67 @@
           default: return "数据读取出错";
           break;
         }
+      },
+      showMsg(data) {
+        console.log(data);
+        if (data !== null || data !== undefined) {
+          return data;
+        } else {
+          return "数据读取出错";
+        }
       }
     },
     methods: {
       getList() {
         getAnorder({id: this.$route.query.id}).then(res => {
           console.log(res)
-          this.orderList.push(res.result.result)
-          console.log(this.orderList[0].orderDetail[0].detailPic.goodsSkuBean.picUrl)
+          this.orderList = [];
+          this.orderList.push(res.result.result);
+          this.address = this.orderList[0].orderBean.clientAddressBean.provinceBean.name + ' ' + this.orderList[0].orderBean.clientAddressBean.cityBean.name + ' ' +this.orderList[0].orderBean.clientAddressBean.areaBean.name;
+          this.status = this.orderList[0].status;
+          console.log(this.status);
+          if (this.status == 0) {
+            this.isshow = true
+          } else {
+            this.isshow = false
+          }
         })
+      },
+      confirmRet() {
+        auditStatus({id: this.$route.query.id, status: 1}).then(res => {
+          if (res.result.code == 0) {
+            this.$message({
+              message: '审核通过了！',
+              type: 'success',
+              duration: 800
+            })
+            tuikuan({id: this.$route.query.id}).then(res => {
+              if (res.result.code == 0){
+                this.$message({
+                  message: '退款成功',
+                  type: 'success',
+                  duration: 800
+                })
+              }
+            })
+            this.getList();
+          }
+        })
+      },
+      refuseRet() {
+        auditStatus({id: this.$route.query.id, status: -1}).then(res => {
+          if (res.result.code == 0) {
+            this.$message({
+              message: '审核拒绝了！',
+              type: 'success',
+              duration: 800
+            })
+            this.getList()
+          }
+        })
+      },
+      backPage() {
+        this.$router.back();
       }
     }
   }
@@ -171,7 +228,7 @@
     text-indent: 25px;
   }
   .picsale{
-    height: 150px;
-    line-height: 150px;
+    height: 250px;
+    line-height: 250px;
   }
 </style>

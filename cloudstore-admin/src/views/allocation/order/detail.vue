@@ -188,12 +188,26 @@
             try {
               let status = row.orderBean.orderStatus;
              switch (status) {
-               case 'payed':
-                 return '已支付';
-               case 'peisong':
-                 return '待配送';
-               default :
-                 return '数据读取错误';
+               case 'wait': return "待支付";
+                 break;
+               case 'pay': return "支付待确认";
+                 break;
+               case 'payed': return "已支付";
+                 break;
+               case 'peisong': return "待配送";
+                 break;
+               case 'peisoged': return "已配送";
+                 break;
+               case 'complete': return "已完成";
+                 break;
+               case 'close': return "超时关闭";
+                 break;
+               case 'returns': return "退货";
+                 break;
+               case 'retud': return "已退货";
+                 break;
+               default: return "数据读取错误";
+                 break;
              }
 
             } catch (e) {

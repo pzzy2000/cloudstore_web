@@ -93,3 +93,19 @@ export function getAnorder(params) {
     data: switchForm(params)
   })
 }
+
+export function auditStatus(params) {
+  return request({
+    url: '/order/aftersale/auditStatus',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function tuikuan(params) {
+  return request({
+    url: '/app/private/pay/refundAfter',
+    method: "POST",
+    data: switchForm(params)
+  })
+}
