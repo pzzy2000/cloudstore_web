@@ -44,138 +44,87 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog title="物流信息" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
-      <div style="height: 200px;">
-        <el-steps direction="vertical" :active="1">
-          <el-step title="步骤 1">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-          <el-step title="步骤 2">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-          <el-step title="步骤 3">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-        </el-steps>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" size="mini">关闭</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-    import {fetchRoleModuleList,roleModueSaveRemove} from '@/api/role'
-    import { formatDate } from '@/assets/common/data.js'
-    import {
-      msg
-    } from '@/api/iunits'
+  import {fetchRoleModuleList,roleModueSaveRemove} from '@/api/role'
+  import {
+    msg
+  } from '@/api/iunits'
+  const defaultList = {
+    pageNum: 1,
+    pageSize: 10,
+    optType:'search'
+  };
+  export default {
+    name: "module_list",
+    data() {
+      return {
+        activeIndex: '1',
+        searchList: {},
+        list: [],
+        listLoading: false,
+        pageList: Object.assign({}, defaultList),
+        total: 1,
+        disabled: false,
+      }
+    },
+    created() {
+      this.getList();
+    },
+    methods: {
+      getList() {
+        this.pageList.roleId = this.$route.query.roleId
+        fetchRoleModuleList(this.pageList).then(res => {
+          if (res.result.code == 0) {
+            this.list = res.result.result.records;
+            this.total = parseInt(res.result.result.total);
+          }
+        })
+      },
+      roleModueSaveRole(params,idx){
+        roleModueSaveRemove(params).then(res => {
+          // this.disabled = false;
+          if (res.result.code == 0) {
+            if(idx==0){
+              msg("关联模块成功");
+            }else{
+              msg("删除模块关联成功");
+            }
+          }
+        })
+      },
 
-    const defaultList = {
-      pageNum: 1,
-      pageSize: 100,
-      optType:'search'
-    };
-    let that;
-    export default {
-      name: "module_list",
-      data() {
-        return {
-          activeIndex: '1',
-          searchList: {},
-          list: [],
-          listLoading: false,
-          pageList: Object.assign({}, defaultList),
-          total: 1,
-          dialogVisible: false,
-          disabled: false,
-          btnMsg: '',
-          type: ''
+      changeSwitch(idx , row){
+        // this.disabled = true;
+        let params={
+          roleId:this.$route.query.roleId,
+          moduleId:row.id
         }
+        if (idx == 0) {  //断开
+           params.optType="update";
+           this.roleModueSaveRole(params ,idx );
+        } else { //关联
+        params.optType="save";
+        this.roleModueSaveRole(params ,idx );
+        }
+
       },
-      beforeCreate() {
-        that = this;
+      handleSelect(key, keyPath) {
+        console.log(key, keyPath);
       },
-      created() {
+      handleCurrentChange(val) {
+        this.pageList.pageNum = val;
         this.getList();
       },
-      filters: {
-        // 时间格式自定义 只需把字符串里面的改成自己所需的格式
-        formatDate(time) {},
-        changeStatus(data) {},
-        changeMsg(data) {}
-      },
-      methods: {
-        getList() {
-          this.pageList.roleId = this.$route.query.roleId
-          fetchRoleModuleList(this.pageList).then(res => {
-            if (res.result.code == 0) {
-              this.list = res.result.result.records;
-              this.total = parseInt(res.result.result.total);
-            }
-          })
-        },
-
-        roleModueSaveRole(params,idx){
-              roleModueSaveRemove(params).then(res => {
-                // this.disabled = false;
-                if (res.result.code == 0) {
-                  if(idx==0){
-                    msg("关联模块成功");
-                  }else{
-                    msg("删除模块关联成功");
-                  }
-                }
-              })
-        },
-
-        changeSwitch(idx , row){
-                // this.disabled = true;
-                let params={
-                  roleId:this.$route.query.roleId,
-                  moduleId:row.id
-                }
-                if (idx == 0) {  //断开
-                   params.optType="update";
-                   this.roleModueSaveRole(params ,idx );
-                } else { //关联
-                params.optType="save";
-                this.roleModueSaveRole(params ,idx );
-                }
-
-        },
-
-        showDanger() {
-          this.isshow = false;
-        },
-        handleSelect(key, keyPath) {
-          console.log(key, keyPath);
-        },
-        handleSearchList() {
-          alert("搜索事件！")
-        },
-        handleResetSearch(formName) {
-          this.$refs[formName].resetFields();
-        },
-        handleSizeChange() {
-          this.getList();
-        },
-        handleCurrentChange() {
-          this.getList();
-        },
-        readOrder(index, row){
-          this.$router.push({name: "role_module_list", params: {id: row.id}});
-        },
-        handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then(() => {
-              done();
-            })
-            .catch(() => {});
-        }
+      handleSizeChange(val) {
+        this.pageList.pageNum = 1;
+        this.pageList.pageSize = val;
+        this.getList();
       }
     }
+  }
 </script>
 
 <style scoped>

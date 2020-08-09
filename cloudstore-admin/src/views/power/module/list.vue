@@ -37,29 +37,11 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="pageList.pageSize"
-        :page-sizes="[100]"
+        :page-sizes="[10]"
         :current-page.sync="pageList.pageNum"
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog title="物流信息" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
-      <div style="height: 200px;">
-        <el-steps direction="vertical" :active="1">
-          <el-step title="步骤 1">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-          <el-step title="步骤 2">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-          <el-step title="步骤 3">
-            <i class="el-icon-circle" slot="icon"></i>
-          </el-step>
-        </el-steps>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" size="mini">关闭</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -68,7 +50,7 @@
     import { formatDate } from '@/assets/common/data.js'
     const defaultList = {
       pageNum: 1,
-      pageSize: 100,
+      pageSize: 10,
       optType:'search'
     };
     let that;
@@ -81,10 +63,7 @@
           list: [],
           listLoading: false,
           pageList: Object.assign({}, defaultList),
-          total: 1,
-          dialogVisible: false,
-          btnMsg: '',
-          type: ''
+          total: 1
         }
       },
       beforeCreate() {
@@ -120,10 +99,13 @@
         handleResetSearch(formName) {
           this.$refs[formName].resetFields();
         },
-        handleSizeChange() {
+        handleCurrentChange(val) {
+          this.pageList.pageNum = val;
           this.getList();
         },
-        handleCurrentChange() {
+        handleSizeChange(val) {
+          this.pageList.pageNum = 1;
+          this.pageList.pageSize = val;
           this.getList();
         },
         readOrder(index, row){

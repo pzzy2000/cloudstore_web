@@ -112,209 +112,196 @@
 </template>
 
 <script>
-    import {fetchList} from '@/api/order'
-    import { formatDate } from '@/assets/common/data.js'
-    import remoteCom from '@/components/remoteCom'
-    const defaultList = {
-      pageNum: 1,
-      pageSize: 10,
-      optType:'search'
-    };
-    let that;
-    export default {
-      name: "list",
-      components: {
-        remoteCom
-      },
-      data() {
-        return {
-          activeIndex: '1',
-          searchList: {
-            code: '',
-            ordertime: '',
-            count: '',
-            orderstatus: ''
-          },
-          orderList: [],
-          listLoading: false,
-          pageList: Object.assign({}, defaultList),
-          total: 1,
-          // pickerOptions: {
-          //   disabledDate(time) {
-          //     return time.getTime() > Date.now();
-          //   }
-          // },
-          options: [
-            {label: "待支付", value: "wait"},
-            {label: "支付待确认", value: "pay"},
-            {label: "已支付", value: "payed"},
-            {label: "待配送", value: "peisong"},
-            {label: "已配送", value: "peisoged"},
-            {label: "已完成", value: "complete"},
-            {label: "超时关闭", value: "close"},
-            {label: "退货", value: "returns"},
-            {label: "已退货", value: "retud"},
-          ],
-          dialogVisible: false,
-          btnMsg: '',
-          type: '',
-        }
-      },
-      beforeCreate() {
-        that = this;
-      },
-      created() {
-        this.getList(1);
-      },
-      filters: {
-        // showClient(row){
-        //        try{
-        //          return   "名字:"+row.name+"  登录账号："+row.access;
-        //        } catch (e) {
-        //          return '数据提取错误'
-        //        }
+  import {fetchList} from '@/api/order'
+  import { formatDate } from '@/assets/common/data.js'
+  import remoteCom from '@/components/remoteCom'
+  const defaultList = {
+    pageNum: 1,
+    pageSize: 10,
+    optType:'search'
+  };
+  let that;
+  export default {
+    name: "list",
+    components: {
+      remoteCom
+    },
+    data() {
+      return {
+        activeIndex: '1',
+        searchList: {
+          code: '',
+          ordertime: '',
+          count: '',
+          orderstatus: ''
+        },
+        orderList: [],
+        listLoading: false,
+        pageList: Object.assign({}, defaultList),
+        total: 1,
+        // pickerOptions: {
+        //   disabledDate(time) {
+        //     return time.getTime() > Date.now();
+        //   }
         // },
-        // 时间格式自定义 只需把字符串里面的改成自己所需的格式
-        formatDate(time) {
-          let date = new Date(time);
-          return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
-        },
-        changeStatus(data) {
-          switch (data) {
-            case 'wait': return "待支付";
-              break;
-            case 'pay': return "支付待确认";
-              break;
-            case 'payed': return "已支付";
-              break;
-            case 'peisong': return "待配送";
-              break;
-            case 'peisoged': return "已配送";
-              break;
-            case 'complete': return "已完成";
-              break;
-            case 'close': return "超时关闭";
-              break;
-            case 'returns': return "退货";
-              break;
-            case 'retud': return "已退货";
-              break;
-            default: return "数据读取错误";
-              break;
-          }
-        },
-        changeMsg(data) {
-          switch (data) {
-            case 'wait':
-              return "关闭订单";
-              break;
-            case 'complete':
-              return "订单发货";
-              break;
-            case 'close':
-              return "删除订单";
-              break;
-            default: return "关闭订单";
-              break;
-          }
+        options: [
+          {label: "待支付", value: "wait"},
+          {label: "支付待确认", value: "pay"},
+          {label: "已支付", value: "payed"},
+          {label: "待配送", value: "peisong"},
+          {label: "已配送", value: "peisoged"},
+          {label: "已完成", value: "complete"},
+          {label: "超时关闭", value: "close"},
+          {label: "退货", value: "returns"},
+          {label: "已退货", value: "retud"},
+        ],
+        dialogVisible: false,
+        btnMsg: '',
+        type: '',
+      }
+    },
+    beforeCreate() {
+      that = this;
+    },
+    created() {
+      this.getList(1);
+    },
+    filters: {
+      // showClient(row){
+      //        try{
+      //          return   "名字:"+row.name+"  登录账号："+row.access;
+      //        } catch (e) {
+      //          return '数据提取错误'
+      //        }
+      // },
+      // 时间格式自定义 只需把字符串里面的改成自己所需的格式
+      formatDate(time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+      },
+      changeStatus(data) {
+        switch (data) {
+          case 'wait': return "待支付";
+            break;
+          case 'pay': return "支付待确认";
+            break;
+          case 'payed': return "已支付";
+            break;
+          case 'peisong': return "待配送";
+            break;
+          case 'peisoged': return "已配送";
+            break;
+          case 'complete': return "已完成";
+            break;
+          case 'close': return "超时关闭";
+            break;
+          case 'returns': return "退货";
+            break;
+          case 'retud': return "已退货";
+            break;
+          default: return "数据读取错误";
+            break;
         }
       },
-      methods: {
-        tochild(item, callback){
-          console.log(item)
-          // return `用户名称：${item.name} / 用户账号：${item.access}`;
-          callback(`用户名称：${item.name} / 用户账号：${item.access}`);
-        },
-        getList(idx) {
-          fetchList(this.pageList).then(res => {
-            if (res.result.code == 0) {
-              this.orderList = res.result.result.records;
-              this.total = parseInt(res.result.result.total);
-              if (idx == 0) {
-                if (res.result.result.records.length == 0) {
-                  this.$message({
-                    message: "暂无数据",
-                    type: 'warning',
-                    duration: 800
-                  })
-                }else {
-                  this.$message({
-                    message: "查询成功",
-                    type: 'success',
-                    duration: 800
-                  })
-                }
-              }
-              if (idx == 2) {
+      changeMsg(data) {
+        switch (data) {
+          case 'wait':
+            return "关闭订单";
+            break;
+          case 'complete':
+            return "订单发货";
+            break;
+          case 'close':
+            return "删除订单";
+            break;
+          default: return "关闭订单";
+            break;
+        }
+      }
+    },
+    methods: {
+      tochild(item, callback){
+        console.log(item)
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`用户名称：${item.name} / 用户账号：${item.access}`);
+      },
+      getList(idx) {
+        fetchList(this.pageList).then(res => {
+          if (res.result.code == 0) {
+            this.orderList = res.result.result.records;
+            this.total = parseInt(res.result.result.total);
+            if (idx == 0) {
+              if (res.result.result.records.length == 0) {
                 this.$message({
-                  message: "重置成功",
+                  message: "暂无数据",
+                  type: 'warning',
+                  duration: 800
+                })
+              }else {
+                this.$message({
+                  message: "查询成功",
                   type: 'success',
                   duration: 800
                 })
               }
             }
-          })
-        },
-        showMsg(row, column) {
-          switch (column.property) {
-            case "useraccess":{
-              try{
-                return row.clientBean.access
-              }catch (e) {
-                return "数据读取出错"
-              }
-            }
-            case "username":{
-              try{
-                return row.clientBean.name
-              }catch (e) {
-                return "数据读取出错"
-              }
+            if (idx == 2) {
+              this.$message({
+                message: "重置成功",
+                type: 'success',
+                duration: 800
+              })
             }
           }
-        },
-        showDanger() {
-          this.isshow = false;
-        },
-        handleSelect(key, keyPath) {
-          console.log(key, keyPath);
-        },
-        handleSearchList() {
-          if (this.pageList.startTime !== undefined || this.pageList.startTime !== '') {
-            this.pageList.startTime = this.pageList.startTime + ' ' + "00:00:00";
+        })
+      },
+      showMsg(row, column) {
+        switch (column.property) {
+          case "useraccess":{
+            try{
+              return row.clientBean.access
+            }catch (e) {
+              return "数据读取出错"
+            }
           }
-          if (this.pageList.endTime !== undefined || this.pageList.endTime !== '') {
-            this.pageList.endTime = this.pageList.endTime + ' ' + "23:59:59";
+          case "username":{
+            try{
+              return row.clientBean.name
+            }catch (e) {
+              return "数据读取出错"
+            }
           }
-          console.log(this.pageList);
-          this.pageList.pageNum = 1;
-          this.getList(0);
-        },
-        handleResetSearch() {
-          this.pageList = Object.assign({}, defaultList);
-          this.getList(2);
-        },
-        handleCurrentChange(val) {
-          this.pageList.pageNum = val;
-          this.getList(1);
-        },
-        handleSizeChange(val) {
-          this.pageList.pageNum = 1;
-          this.pageList.pageSize = val;
-          this.getList(1);
-        },
-        readOrder(index, row){
-          this.$router.push({name: "read_order", query: {id: row.id}});
-        },
-        handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then(() => {
-              done();
-            })
-            .catch(() => {});
         }
+      },
+      handleSearchList() {
+        if (this.pageList.startTime !== undefined || this.pageList.startTime !== '') {
+          this.pageList.startTime = this.pageList.startTime + ' ' + "00:00:00";
+        }
+        if (this.pageList.endTime !== undefined || this.pageList.endTime !== '') {
+          this.pageList.endTime = this.pageList.endTime + ' ' + "23:59:59";
+        }
+        console.log(this.pageList);
+        this.pageList.pageNum = 1;
+        this.getList(0);
+      },
+      handleResetSearch() {
+        this.pageList = Object.assign({}, defaultList);
+        this.getList(2);
+      },
+      handleCurrentChange(val) {
+        this.pageList.pageNum = val;
+        this.getList(1);
+      },
+      handleSizeChange(val) {
+        this.pageList.pageNum = 1;
+        this.pageList.pageSize = val;
+        this.getList(1);
+      },
+      readOrder(index, row){
+        this.$router.push({name: "read_order", query: {id: row.id}});
       }
     }
+  }
 </script>
 
 <style scoped>
