@@ -39,12 +39,11 @@
 				</view>
 			</view>
 			<button class="confirm-btn" @click="reguser" :disabled="logining">注册</button>
-			<view class="forget-section">
+			<!-- <view class="forget-section">
 				<button class='vxUserInfo-btn' open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials="true">
 					微信注册
 				</button>
-				<!-- <text @click="getWxCode">微信注册</text> -->
-			</view>
+			</view> -->
 			<view class="forget-section text-blue" @click="toLoginPwd">已经有账号?马上登录</view>
 		</view>
 		<uni-popup ref="popup" type="center">

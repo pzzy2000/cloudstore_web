@@ -160,7 +160,7 @@
 			getuserinfo(){
 				let userInfo = uni.getStorageSync('userInfo');
 				if (userInfo) {
-					this.user.name = userInfo.name
+					this.user.name = userInfo.name || '游客'
 					this.user.url = userInfo.wxPic;
 					this.user.relationId = userInfo.relationId
 					if (!userInfo.wxPic) {

@@ -315,26 +315,26 @@
 			//client
 			{
 				"pagePath": "pages/agent/goods/hotsale/hotsale",
-				"iconPath": "static/tabbar/classify.png",
-				"selectedIconPath": "static/tabbar/select-classify.png",
-				"text": "推荐"
+				"iconPath": "static/index.png",
+				"selectedIconPath": "static/index.png"
+				// "text": "推荐"
 			},
 			{
 				"pagePath": "pages/agent/goods/category/category",
-				"iconPath": "static/tabbar/classify.png",
-				"selectedIconPath": "static/tabbar/select-classify.png",
+				"iconPath": "static/fenglei.png",
+				"selectedIconPath": "static/fenglei.png",
 				"text": "商品分类"
 			},
 			{
 				"pagePath": "pages/client/cart/index",
-				"iconPath": "static/tabbar/cart.png",
-				"selectedIconPath": "static/tabbar/cart.png",
+				"iconPath": "static/cart.png",
+				"selectedIconPath": "static/cart.png",
 				"text": "购物车"
 			},
 			{
 				"pagePath": "pages/client/earnings/index",
-				"iconPath": "static/tabbar/earnings.png",
-				"selectedIconPath": "static/tabbar/select-earnings.png",
+				"iconPath": "static/shouyi.png",
+				"selectedIconPath": "static/shouyi.png",
 				"text": "收益"
 			},
 			// {
@@ -345,8 +345,8 @@
 			// },
 			{
 				"pagePath": "pages/client/info/index",
-				"iconPath": "static/tabbar/myAgent.png",
-				"selectedIconPath": "static/tabbar/select-myAgent.png",
+				"iconPath": "static/my.png",
+				"selectedIconPath": "static/my.png",
 				"text": "我的"
 			}
  
@@ -390,7 +390,7 @@
 		"list": [{
 			"name": "", //模式名称
 			//"path": "", //启动页面，必选
-			"path": "", //启动页面，必选
+			"path": "pages/agent/goods/hotsale/hotsale", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

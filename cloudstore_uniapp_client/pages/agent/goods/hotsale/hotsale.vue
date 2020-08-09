@@ -1,109 +1,69 @@
 <template>
 	<view class="container">
-		<!-- 小程序头部兼容 -->
-		<!-- #ifdef MP -->
-		<nav-bar>丫咪购</nav-bar>
-		
+		<!-- <nav-bar>丫咪购</nav-bar> -->
 		<view class="MP-search">
-			<view class="cu-list menu">
-				<view class="cu-item">
-					<view class="content">
-						<text class="cuIcon-locationfill text-red"></text>
-						<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
-					</view>
-					<!--
-					<view class="action clamp">
-						<text class="text-white text-sm">地址：{{agentShopInfo.address}}</text>
-					</view>
-					-->
-				</view>
+			<image src="/static/index-top-bg.png" mode="" class="indexTopBg"></image>
+			<view class="nav-title">丫咪购</view>
+			<view class="content">
+				<text class="cuIcon-locationfill text-white"></text>
+				<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
 			</view>
-			<!-- <view class="cu-bar search" style="width: 100%;">
+			<view class="search-input">
 				<view class="search-form round">
 					<text class="cuIcon-search"></text>
-					<input :adjust-position="false" type="text" placeholder="搜索商品" confirm-type="search" @input="inputName"></input>
+					<text>云吞</text>
+					<!-- <input :adjust-position="false" type="text" placeholder="搜索商品" confirm-type="search" @input="inputName"></input> -->
 				</view>
-				<view class="action">
+				<!-- <view class="action">
 					<button class="cu-btn bg-green shadow-blur round" @click="search">搜索</button>
-				</view>
-			</view> -->
+				</view> -->
+			</view>
 		</view>
-		<!-- #endif -->
 
 		<!-- 头部轮播 -->
-		<!-- #ifdef MP -->
 		<view class="carousel-section">
-			<!-- #endif -->
-			<!-- #ifndef MP -->
-			<view class="carousel-section">
-				<!-- #endif -->
-				<!-- 标题栏和状态栏占位符 -->
-				<!-- <view class="titleNview-placing"></view> -->
-				<!-- 背景色区域 -->
-				<!-- <view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view> -->
-				<view class="titleNview-background"></view>
-				<swiper class="carousel" circular @change="swiperChange">
-					<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPageL(item.url)">
-						<image :src="item.piceUrl" />
-					</swiper-item>
-				</swiper>
-				<!-- 自定义swiper指示器 -->
-				<view class="swiper-dots">
-					<text class="num">{{ swiperCurrent + 1 }}</text>
-					<text class="sign">/</text>
-					<text class="num">{{ swiperLength }}</text>
-				</view>
+			<view class="titleNview-background"></view>
+			<swiper class="carousel" circular @change="swiperChange">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPageL(item.url)">
+					<image :src="item.piceUrl" />
+				</swiper-item>
+			</swiper>
+			<!-- 自定义swiper指示器 -->
+			<view class="swiper-dots">
+				<text class="num">{{ swiperCurrent + 1 }}</text>
+				<text class="sign">/</text>
+				<text class="num">{{ swiperLength }}</text>
 			</view>
-
-			<!-- 活动 -->
-			<view class="activity-main">
-				<view class="cate-section">
-					<view class="cate-item" v-for="(item,index) in activity.nav.one" :key="item.id" @click="navToCategory(item)">
-						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
-						<text class="clamp">{{item.name}}</text>
-					</view>
-				</view>
-				<view class="cate-section">
-					<view class="cate-item" v-for="(item,index) in activity.nav.two" :key="item.id" @click="navToCategory(item)">
-						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
-						<text class="clamp">{{item.name}}</text>
-					</view>
-				</view>
-			</view>
-			<!-- 热门活动列表 -->
-			<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
-				<view   class="f-header m-t" @click="navToCategory(item)">
-					<view class="faddish-title">
-						<view class="title-main">
-							{{item.name}}
-						</view>
-						<text class='more'>更多></text>
-					</view>
-				</view>
-				<view class="goods-list">
-					<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
-						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
-						<view class="goods-detail">
-							<view class="detail-title">
-								<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
-								<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
-							</view>
-							<view class="detail-price">
-								<view class="price-main">
-									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
-									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
-								</view>
-								<view class="flex justify-around">
-									<button type="primary" class="price-btn buy">购买</button>
-									<button type="primary" class="price-btn" @click.stop='shareSave(goods)'>分享</button>
-								</view>
-							</view>
-						</view>
-					</view>
-				</view>
-			</view>
-			<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 		</view>
+		<!-- 活动 -->
+		<view class="activity-main">
+			<view class="cate-section">
+				<view class="cate-item" v-for="(item,index) in activity.nav.one" :key="item.id" @click="navToCategory(item)">
+					<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
+					<text class="clamp">{{item.name}}</text>
+				</view>
+			</view>
+			<view class="cate-section">
+				<view class="cate-item" v-for="(item,index) in activity.nav.two" :key="item.id" @click="navToCategory(item)">
+					<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
+					<text class="clamp">{{item.name}}</text>
+				</view>
+			</view>
+		</view>
+		<!-- 热门活动列表 -->
+		<scroll-view scroll-x class="nav" scroll-with-animation :scroll-left="scrollLeft">
+			<view class="cu-item" :class="index==TabCur?'text-green cur':''" v-for="(item,index) in activity.show" :key="index" @tap="tabSelect" :data-id="index" @click="searchActivityGoodsShowList(item)">
+				{{item.name}}
+			</view>
+		</scroll-view>
+		<view class="goods-list">
+			<view v-for="(goods, index) in activityShopList" :key="index" class="goods-item bg-white" @click="navToDetailPage(goods)">
+				<view>
+					<image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="" class="detail-img"></image>
+				</view>
+			</view>
+		</view>
+		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 	</view>
 </template>
 
@@ -118,6 +78,8 @@
 		},
 		data() {
 			return {
+				TabCur: 0,
+				scrollLeft: 0,
 				agentId: '',
 				goodsId: '',
 				goodsName: '',
@@ -138,6 +100,7 @@
 					nav: {},
 					show: []
 				},
+				activityShopList: '',
 				titleNViewBackground: '',
 				carouselList: [
 					{
@@ -242,6 +205,10 @@
 					}
 				});
 			},
+			tabSelect(e) {
+				this.TabCur = e.currentTarget.dataset.id;
+				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
+			},
 			async searchActivityNavList() {
 				let params = {
 					// pageNum: 1,
@@ -263,20 +230,20 @@
 					let showActivity = data.result.records;
 					for (let i = 0; i < showActivity.length; i++) {
 						showActivity[i].goodsList = [];
-						this.searchActivityGoodsShowList(showActivity[i])
 					}
 					this.activity.show = showActivity;
 				}
 			},
-			async searchActivityGoodsShowList(activity) {
+			async searchActivityGoodsShowList(item) {
 				let params = {
-					activityId: activity.id,
+					activityId: item.id,
 					pageNum: 1,
-					pageSize: 5
+					pageSize: 6
 				};
 				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params);
 				if (data) {
-					activity.goodsList = data.result.records;
+					console.log(data.result.records)
+					this.activityShopList = data.result.records;
 				}
 			},
 			/**
@@ -455,18 +422,52 @@
 		background: #f1f1f1;
 	}
 	.MP-search {
-		background: #0081ff;
-		height: 80upx;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		.indexTopBg {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			z-index: -1;
+		}
 		position: fixed;
 		width: 100%;
 		z-index: 999;
+		.content {
+			width: 100%;
+			padding: 0 20upx;
+			font-size: 29upx;
+		}
+		.nav-title {
+			color: #fff;
+			line-height: 88upx;
+			text-align: center;
+			font-size: 32upx;
+			font-weight: bold;
+			padding-top: 20px;
+		}
+		.search-input {
+			width: 100%;
+			text-align: center;
+			padding: 0 20upx;
+			margin: 20upx 0;
+		}
 		.cu-list {
 			width: 100%;
 			.cu-item {
 				background: #5c8df1;
+			}
+		}
+		.search-form {
+			margin: 0;
+			height: 60upx;
+			line-height: 60upx;
+			font-size: 22upx;
+			color: #999;
+			background-color: #fff;
+			.cuIcon-search {
+				font-size: 28upx;
+				color: #333;
+				margin-right: 10upx;
+				display: inline-block;
 			}
 		}
 	}
@@ -475,7 +476,7 @@
 		padding-bottom: 160upx;
 		.activity-main {
 			width: 100%;
-			margin-top: 20upx;
+			margin:15upx 0;
 			.cate-section {
 				position: relative;
 				z-index: 5;
@@ -491,6 +492,7 @@
 				}
 			
 				.carousel {
+					height: 300upx;
 					margin-bottom: 20upx;
 					.carousel-item {
 						padding: 0;
@@ -512,7 +514,7 @@
 	/* 头部 轮播图 */
 	.carousel-section {
 		position: relative;
-		padding-top: 100upx;
+		padding-top: 285upx;
 		width: 94%;
 		margin: 0 auto;
 
@@ -747,82 +749,15 @@
 .goods-list {
 	display: flex;
 	flex-wrap: wrap;
-	margin-top: 20upx;
-	background: #fff;
-	border-bottom: 1upx solid #eee;
-	padding:0 20upx 40upx;
-	border-bottom-left-radius: 25rpx;
-	border-bottom-right-radius: 25rpx;
+	width: 100%;
+	justify-content: space-between;
 	.goods-item {
-		display: flex;
-		flex-direction: column;
-		flex-flow: nowrap;
-		width: 100%;
-		height: 200upx;
-		margin-bottom: 20upx;
-		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-		border-radius: 10rpx;
-		padding: 10rpx;
+		width: 340upx;
+		height: 400upx;
 	}
-	.image-wrapper {
-		width: 180upx;
-		height: 180upx;
-		border-radius: 3upx;
-		overflow: hidden;
-		image {
-			opacity: 1;
-		}
-	}
-	.goods-detail {
-		display: inline-block;
-		margin-left: 20upx;
-		display: flex;
-		justify-content: flex-start;
-		flex-wrap: wrap;
-		width: 65%;
-		.detail-title {
-			font-size: 30upx;
-			color: #000;
-			width: 100%;
-			.number {
-				color: #999;
-				font-size: 26upx;
-				line-height: 50upx;
-				height: 50upx;
-			}
-		}
-		.detail-price {
-			display: flex;
-			justify-content: space-between;
-			align-items: flex-end;
-			width: 100%;
-			padding-bottom: 20upx;
-			.price-main {
-				color: #999;
-				font-size: 24upx;
-				.surprised {
-					font-size: 30upx;
-					color: #000;
-					.surprised-price {
-						font-size: 35upx;
-						color: red;
-					}
-				}
-			}
-			.price-btn {
-				padding: 0;
-				margin: 0;
-				font-size: 22upx;
-				padding: 0 20upx;
-				height: 50upx;
-				line-height: 50upx;
-				color: #fff;
-				background: #ff4f50;
-			}
-			.buy {
-				margin-right: 10upx;
-			}
-		}
+	.detail-img {
+		width:230upx ;
+		height: 240upx;
 	}
 }
 </style>

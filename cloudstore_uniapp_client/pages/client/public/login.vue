@@ -30,8 +30,15 @@
 				</view>
 			<!-- #endif -->
 			<!-- #ifdef MP-WEIXIN -->
-				<view class="vx-btn">
+				<!-- 微信授权信息 -->
+				<!-- <view class="vx-btn">
 					<button open-type="getUserInfo" @getuserinfo='getWxInfo'  withCredentials="true">
+						<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
+					</button>
+				</view> -->
+				<!-- 微信授权手机号 -->
+				<view class="vx-btn">
+					<button type="primary" open-type='getPhoneNumber' @getphonenumber="getPhoneNumber">
 						<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
 					</button>
 				</view>
@@ -77,6 +84,10 @@
 				shareClientId: "",
 				userType: 'Client',
 				checked: true,
+				vxPhoneInfo: '',
+				openId: '',
+				sessionKey: '',
+				phoneDetail: ''
 			};
 		},
 		onLoad() {
@@ -87,6 +98,9 @@
 			this.activityId = this.goodsInfo.activityId
 			this.agentGoodsId = this.goodsInfo.agentGoodsId
 			this.shareClientId = this.goodsInfo.shareClientId
+		},
+		onShow() {
+			this.getVxOpenId()
 		},
 		computed: {
 			// ...mapState(['hasLogin', 'userInfo'])
@@ -114,28 +128,26 @@
 						});
 					},
 					success: function(loginRes) {
-						uni.getUserInfo({
-							provider: 'weixin',
-							success: function(infoRes) {
-								if (infoRes) {
-									uni.setStorageSync('vxInfo', infoRes.rawData)
-								}
-							}
-						});
-						that.vxLogin(loginRes)
+						// uni.getUserInfo({
+						// 	provider: 'weixin',
+						// 	success: function(infoRes) {
+						// 		if (infoRes) {
+						// 			uni.setStorageSync('vxInfo', infoRes.rawData)
+						// 		}
+						// 	}
+						// });
+						// that.vxLogin(loginRes)
 					}
 				});
 			},
-			vxLogin (loginRes) {
+			async vxLogin () {
 				var that = this
-				// uni.setStorageSync('code',loginRes.code)
-				var code = loginRes.code
 				let params = {
 					'bean.logintype': 'client',
 					'bean.action': 'weixin',
-					'bean.password': code,
-					'bean.access': code
-				}
+					'bean.password': this.openId,
+					'bean.access': this.openId
+				} 
 				uni.request({
 					url: Api.BASEURI + Api.agent.user.wxLogin,
 					method: 'post',
@@ -143,61 +155,35 @@
 						'content-type': 'application/x-www-form-urlencoded'
 					},
 					data: params,
-					fail: function() {
-						uni.hideLoading();
-						uni.showToast({
-							title: '微信登录失败',
-							icon: 'none'
-						});
-					},
-					success: function(res) {
-						uni.hideLoading();
-						if (res.data.result.code === 100006) {
-							var data = res.data.result
-							uni.showModal({
-								title: '提示',
-								content: '您的微信暂未绑定手机号，请前往绑定。若没有使用手机号注册过请前往注册。',
-								showCancel: true,
-								cancelText: '注册',
-								confirmText: '绑定',
-								success: res => {
-									if (res.confirm) {
-										uni.navigateTo({
-											url: '/pages/client/public/getVxPhone?openId=' + data.msg
-										});
-									} else if (res.cancel) {
-										uni.navigateTo({
-											url: '/pages/client/public/reg'
-										});
-									}
-								}
-							});
-						} else if (res.data.result.code === 0) {
+					success: res => {
+						var data = res.data
+						console.log(data)
+						if(data.result.code === 0) {
 							uni.showToast({
 								title: '登录成功',
 								icon: 'none'
 							});
 							var userInfo = {
-								id: res.data.result.result.id,
-								name: res.data.result.result.name,
-								url: res.data.result.result.url,
-								phone: res.data.result.result.phone,
-								agent: res.data.result.result.agent,
-								userType: res.data.result.result.userType,
-								relationId: res.data.result.result.relationId,
-								wxPic: res.data.result.result.wxPic
+								id: data.result.result.id,
+								name: data.result.result.name,
+								url: data.result.result.url,
+								phone: data.result.result.phone,
+								agent: data.result.result.agent,
+								userType: data.result.result.userType,
+								relationId: data.result.result.relationId,
+								wxPic: data.result.result.wxPic
 							}
 							uni.setStorageSync('userInfo', userInfo)
-							uni.setStorageSync('token', res.data.result.result.token)
+							uni.setStorageSync('token', data.result.result.token)
 							that.toPages() //判断跳到首页还是商品详情页
+						} else if (data.result.code === 100006){
+							// that.openId = data.result.msg
+							that.vxRegister()
 						} else {
-							uni.showToast({
-								title: res.data.result.msg,
-								icon: 'none'
-							});
+							that.$api.msg(data.result.msg)
 						}
 					}
-				})
+				});
 			},
 			async toLogin() { //账号密码登录
 				var that = this;
@@ -258,7 +244,83 @@
 				uni.navigateTo({
 					url: '/pages/client/info/privacy',
 				});
+			},
+			getVxOpenId (res) {
+				uni.showLoading({
+					title: '正在加载',
+					mask: false
+				});
+				var that = this
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						let params = {
+							'bean.code': loginRes.code
+						} 
+						uni.request({
+							url: Api.BASEURI + Api.client.reg.auth,
+							method: 'post',
+							header: {
+								'content-type': 'application/x-www-form-urlencoded'
+							},
+							data: params,
+							success: res => {
+								uni.hideLoading()
+								console.log(res)
+								that.openId = res.data.result.result.openid
+								that.sessionKey = res.data.result.result.session_key
+							}
+						});
+					},
+					fail: function() {
+						uni.showToast({
+							title: '微信登录失败',
+							icon: 'none'
+						});
+					},
+				})
+			},
+			getPhoneNumber (res) { //获取微信手机加密信息
+				var that = this
+				if (res.detail.errMsg === 'getPhoneNumber:ok') {
+					this.vxPhoneInfo = res.detail
+					this.vxLogin()
+				}else{
+					uni.showModal({
+						title: '注册提示',
+						content: '微信授权手机号码失败，请使用手机号码注册',
+						showCancel: false,
+						cancelText: '取消',
+						confirmText: '确定',
+						success: res => {
+							uni.navigateTo({
+								url: '/pages/client/public/reg',
+							});
+						},
+					});
+				}
+			},
+			async vxRegister () {
+				let params = {
+					'encryptedData': this.vxPhoneInfo.encryptedData,
+					'openId': this.openId,
+					'iv': this.vxPhoneInfo.iv,
+					'session_key': this.sessionKey
+					// 'userInfo': ""
+				}
+				let data = await Api.apiCall('post', Api.agent.user.savePhone, params ,true)
+				if (data) {
+					if (data.code === 0) {
+						this.vxLogin()
+					} else {
+						this.$api.msg(data.msg)
+					}
+				}
+			},
+			getOpenId() {
+				
 			}
+			
 		}
 	};
 </script>

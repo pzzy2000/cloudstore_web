@@ -61,7 +61,7 @@
 						cuIcon: 'goods',
 						color: 'yellow',
 						badge: 0,
-						name: '积分',
+						name: '已收益积分',
 						num: '计算中',
 						value: 2
 					}],
