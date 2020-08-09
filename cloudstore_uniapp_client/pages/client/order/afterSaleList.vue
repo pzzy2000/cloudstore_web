@@ -27,15 +27,11 @@
 						<text>价格: ￥{{order.detailPic.payPrice}}</text>
 					</view>
 				</view>
-				<!-- WaitDeliver("wait", "待发货"), peisoged("receipt", "已配送 "),returnsing("returnsing", "退货中"),
-				 returns("returns", "退货成功"),returnsfail("returnsfail", "退货拒绝"); -->
 				<view class="flex align-center">
 					售后状态：
-					<view class="" v-if="order.detailPic.status === 'WaitDeliver'">待发货</view>
-					<view class="" v-else-if="order.detailPic.status === 'peisoged'">已配送</view>
-					<view class="" v-else-if="order.detailPic.status === 'returnsing'">退货中</view>
-					<view class="" v-else-if="order.detailPic.status === 'returns'">退货成功</view>
-					<view class="" v-else-if="order.detailPic.status === 'returnsfail'">退货拒绝</view>
+					<view class="" v-if="item.status === 0">申请中</view>
+					<view class="" v-else-if="item.status === 1">审核通过</view>
+					<view class="" v-else-if="item.status === 2">审核拒绝</view>
 				</view>
 			</view>
 			<view class="i-top b-b">
@@ -110,7 +106,6 @@
 				}
 				let data = await Api.apiCall('post', Api.client.order.aftersaleList, parmas, true)
 				if (data) {
-					console.log(data.result.records)
 					if (data.result.records.length != 0) {
 						if (this.afterSaleList.length) {
 							this.afterSaleList.push(data.result.records)
@@ -121,7 +116,6 @@
 				}
 			},
 			toAfterSale (item) {
-				console.log(item)
 				// uni.navigateTo({
 				// 	url: '/pages/client/order/afterSale?id='+item.orderId,
 				// });

@@ -52,18 +52,19 @@ export default {
 			getClientAddressById: 'app/private/client/address/getClientAddressById'
 		},
 		buy: {
-			getAgentDistanceType: 'app/public/agent/getAgentDistanceType',
-			createOrder:'app/private/order/createOrder',
-			prePay: 'app/private/pay/prePay',
-			paySuccess: 'app/private/pay/paySuccess',
+			getAgentDistanceType: 'app/public/agent/getAgentDistanceType', //获取自提点信息
+			createOrder:'app/private/order/createOrder', //创建订单
+			prePay: 'app/private/pay/prePay', //微信预支付
+			paySuccess: 'app/private/pay/paySuccess', //支付成功回调
 			refundOrder: 'app/private/pay/refundOrder' //退款
 		},
 		order: {
-			getClientOrder: 'app/private/order/getClientOrder',
-			getClientOrderDetail : 'app/private/order/getClientOrderDetail',
-			refundOrder: 'app/pay/refundOrder',
-			submit: 'app/private/order/aftersale/submit',
-			aftersaleList: 'app/private/order/aftersale/list'
+			getClientOrder: 'app/private/order/getClientOrder', //订单列表
+			getClientOrderDetail : 'app/private/order/getClientOrderDetail', //订单详情
+			refundOrder: 'app/pay/refundOrder', //申请退款
+			submit: 'app/private/order/aftersale/submit', //提交售后
+			aftersaleList: 'app/private/order/aftersale/list', //售后列表
+			confirmOrder: 'app/private/order/confirmOrder', //确认收货
 		},
 		applyAgent: {
 			getClientAgent: 'app/private/agent/getClientAgent',

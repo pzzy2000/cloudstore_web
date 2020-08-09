@@ -35,29 +35,18 @@
 						</view>
 					</view>
 				</view>
+				<view class="flex align-center justify-end" style="width: 20%;">
+					<view class="" v-if="item.status === 'WaitDeliver'">待发货</view>
+					<view class="" v-else-if="item.status === 'peisoged'">已配送</view>
+					<view class="" v-else-if="item.status === 'returnsing'">退货中</view>
+					<view class="" v-else-if="item.status === 'refunding'">退款中</view>
+					<view class="" v-else-if="item.status === 'refunded'">已退款</view>
+					<view class="" v-else-if="item.status === 'returns'">退货成功</view>
+					<view class="" v-else-if="item.status === 'returnsfail'">退货拒绝</view>
+					<view class="" v-else-if="item.status === 'delivered'">已收货</view>
+				</view>
 			</view>
 		</view>
-		
-		<!-- 优惠明细 -->
-		<!-- <view class="yt-list">
-			<view class="yt-list-cell b-b" @click="toggleMask('show')">
-				<view class="cell-icon">
-					券
-				</view>
-				<text class="cell-tit clamp">优惠券</text>
-				<text class="cell-tip active">
-					选择优惠券
-				</text>
-				<text class="cell-more wanjia wanjia-gengduo-d"></text>
-			</view>
-			<view class="yt-list-cell b-b">
-				<view class="cell-icon hb">
-					减
-				</view>
-				<text class="cell-tit clamp">商家促销</text>
-				<text class="cell-tip disabled">暂无可用优惠</text>
-			</view>
-		</view> -->
 		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">

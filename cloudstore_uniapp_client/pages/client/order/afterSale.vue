@@ -25,10 +25,16 @@
 						</view>
 					</view>
 					<template>
-						<checkbox-group @change="chageCheck($event,item.id)" class="flex align-center" v-if="item.status === 'peisoged'">
+						<checkbox-group @change="chageCheck($event,item.id)" class="flex align-center justify-end wid20" v-if="item.status === 'peisoged'">
 						    <checkbox class="flex align-center round cyan" value="select" style="transform:scale(0.7)"></checkbox>
 						</checkbox-group>
-						<view class="flex align-center" v-else>{{item.status}}</view>
+						<view class="flex align-center justify-end wid20" v-else-if="item.status === 'WaitDeliver'">待发货</view>
+						<view class="flex align-center justify-end wid20" v-else-if="item.status === 'returnsing'">退货中</view>
+						<view class="flex align-center justify-end wid20" v-else-if="item.status === 'refunding'">退款中</view>
+						<view class="flex align-center justify-end wid20" v-else-if="item.status === 'refunded'">已退款</view>
+						<view class="flex align-center justify-end wid20" v-else-if="item.status === 'returns'">退货成功</view>
+						<view class="flex align-center justify-end wid20" v-else-if="item.status === 'returnsfail'">退货拒绝</view>
+						<view class="flex align-center justify-end wid20" v-else-if="item.status === 'delivered'">已收货</view>
 					</template>
 				</view>
 			</view>
@@ -268,5 +274,8 @@
 				position: relative;
 			}
 		}
+	}
+	.wid20 {
+		width: 20%;
 	}
 </style>

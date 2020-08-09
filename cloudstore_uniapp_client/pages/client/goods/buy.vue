@@ -37,7 +37,7 @@
 						<view class="">
 							<uni-number-box
 								class="step"
-								:min="1" 
+								:min="1"
 								:max="item.stock"
 								:value="item.number>item.stock?item.stock:item.number"
 								:isMax="item.number>=item.stock?true:false"
@@ -152,6 +152,7 @@
 				agentShop:{},
 				goodsSku:{},
 				num: 1,
+				isNumBtn: true,
 				totalPrice: '',
 				buyInfo: '',
 				buyType: '',
@@ -411,7 +412,7 @@
 													'orderId': re.id
 												}
 												that.orderId = re.id
-												Api.apiCallbackCall("POST", Api.client.buy.prePay, params, false, true, function(da_ta){
+												Api.apiCallbackCall("POST", Api.client.buy.prePay, params, true, true, function(da_ta){
 												if (da_ta) {
 													that.payMent(da_ta)
 													}
@@ -462,10 +463,11 @@
 						}
 					},
 					fail: function(err) {
+						uni.showModal({  
+							content: "支付失败",  
+							showCancel: false  
+						})  
 						console.log('fail:' + JSON.stringify(err));
-					},
-					complete: function(res) {
-						
 					}
 				});
 			},
@@ -543,7 +545,7 @@
 							activityId: tmpData[tmp].activityId,
 							goodsId: tmpData[tmp].goodsId,
 							goodsSkuId: tmpData[tmp].goodsSkuId,
-							number: 1,
+							number: tmpData[tmp].quantity,
 							payPrice: tmpData[tmp].goodsSkuBean.price,
 							image: tmpData[tmp].goodsSkuBean.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
 							title: tmpData[tmp].goodsPicesBean.goodsName,
@@ -552,10 +554,15 @@
 							stock: tmpData[tmp].goodsSkuBean.stock,
 						})
 					}
+					this.isNumBtn = false
 					this.calcTotal()
 				}
 			},
 			numberChange1(data){
+				if (!this.isNumBtn) {
+					return false;
+				}
+				console.log(1)
 				this.buyGoodsList[data.index].number = data.number;
 				this.calcTotal();
 			},
