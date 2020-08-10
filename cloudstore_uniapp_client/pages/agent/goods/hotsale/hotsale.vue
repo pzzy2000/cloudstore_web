@@ -235,7 +235,7 @@
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params, true);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params, false);
 				if (data) {
 					// this.activity.show = data.result.records;
 					let showActivity = data.result.records;
@@ -253,7 +253,7 @@
 					pageNum: 1,
 					pageSize: 6
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, true);
+				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, false);
 				if (data) {
 					this.activityShopList = data.result.records;
 				}
@@ -273,7 +273,7 @@
 				// 		params.type = 5;
 				// 		break;
 				// }
-				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params, true);
+				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params, false);
 				if (data) {
 					this.carouselList = data.result || [];
 					this.swiperLength = this.carouselList.length;

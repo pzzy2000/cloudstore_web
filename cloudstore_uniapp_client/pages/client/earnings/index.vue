@@ -28,14 +28,16 @@
 					<view class="sub-title clamp">订单时间: {{item.orderBean.createTime}}</view>
 					<view class="price-box">
 						<view class="price">
-							收益:
-							<text v-if="type==2&&status==2" class="priceSale">{{item.points}}积分</text>
+							<text v-if="status==1" class="priceSale" style="color:#9E9E9E;">待结算:</text> 
+							<text  v-else class="priceSale" style="color:#9E9E9E;"> 以结算:</text> 
+							<text v-if="type==2" class="priceSale">{{item.points}} 积分</text>
 							<text class="priceSale" v-else>
 								￥{{item.profit}}
 							</text>
 							 <!-- <text class="priceSale">{{item.orderId}}</text> -->
 							 <text class="line">/</text>
 							 <text class="text-gray">总价:{{item.orderDetailsPic.payPrice}}</text>
+							 <text class="text-gray" style="color:#9E9E9E;font-size: 26upx;">[{{item.financeType.name}}]</text>
 						</view>
 					</view>
 				</view>	
@@ -77,7 +79,7 @@
 						badge: 0,
 						name: '待结算积分',
 						num: '0',
-						value: 2
+						value: 3
 					}],
 					gridCol: 4,
 					gridBorder: false,
@@ -118,6 +120,7 @@
 							this.cuIconList[0].num =  data.result.profited
 							this.cuIconList[1].num =  data.result.profiting
 							this.cuIconList[2].num =  data.result.pointsed
+							this.cuIconList[3].num =  data.result.pointsing
 						}else{
 							this.$api.msg(data.msg)
 						}
@@ -150,7 +153,9 @@
 						}
 					}
 				},
+				
 				earninngType (index) {
+			
 					this.financetDataList = []
 					this.tabEarning = index
 					this.pageNum = 1
@@ -168,7 +173,12 @@
 						this.lisFinancetData(2, 2)
 						this.status = 2;
 						this.type = 2;
-						this.tabText = '积分'
+						this.tabText = '已积分'
+					}else if (index === 3) {
+						this.lisFinancetData(1, 2)
+						this.status = 1;
+						this.type = 2;
+						this.tabText = '待积分'
 					}
 					// if (index === 1 || index === 2) {
 					// 	this.financetDataList = []
