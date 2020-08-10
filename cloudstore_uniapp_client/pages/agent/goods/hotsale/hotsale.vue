@@ -51,15 +51,26 @@
 			</view>
 		</view>
 		<!-- 热门活动列表 -->
-		<scroll-view scroll-x class="nav" scroll-with-animation :scroll-left="scrollLeft">
-			<view class="cu-item" :class="index==TabCur?'text-green cur':''" v-for="(item,index) in activity.show" :key="index" @tap="tabSelect" :data-id="index" @click="searchActivityGoodsShowList(item)">
-				{{item.name}}
+		<scroll-view scroll-x class="activity-nav nav" scroll-with-animation :scroll-left="scrollLeft">
+			<view class="cu-item" :class="index==TabCur?'text-blue':''" v-for="(item,index) in activity.show" :key="index" @tap="tabSelect" :data-id="index" @click="searchActivityGoodsShowList(item)">
+				<view class="cu-item-title">{{item.name}}</view>
+				<!-- <text class="activity-nav-text">猜你喜欢</text> -->
 			</view>
 		</scroll-view>
 		<view class="goods-list">
-			<view v-for="(goods, index) in activityShopList" :key="index" class="goods-item bg-white" @click="navToDetailPage(goods)">
-				<view>
-					<image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="" class="detail-img"></image>
+			<view v-for="(goods, index) in activityShopList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
+				<image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="" class="detail-img"></image>
+				<view class="detail-title clamp">
+					{{goods.goodsPicesBean.goodsName}}
+				</view>
+				<view class="detail-bottom">
+					<view class="price">
+						<text class="price-sale">¥{{goods.goodsPicesBean.salePrice}}</text>
+						<text class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</text>
+					</view>
+					<view class="cart-icon">
+						<text class="cuIcon-cart text-white"></text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -214,7 +225,7 @@
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params, true);
 				if (data) {
 					this.activity.nav = data.result; //查询出来的 
 				}
@@ -224,7 +235,7 @@
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params, true);
 				if (data) {
 					// this.activity.show = data.result.records;
 					let showActivity = data.result.records;
@@ -232,6 +243,8 @@
 						showActivity[i].goodsList = [];
 					}
 					this.activity.show = showActivity;
+					console.log(this.activity.show)
+					this.searchActivityGoodsShowList(this.activity.show[0])
 				}
 			},
 			async searchActivityGoodsShowList(item) {
@@ -240,15 +253,11 @@
 					pageNum: 1,
 					pageSize: 6
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, true);
 				if (data) {
-					console.log(data.result.records)
 					this.activityShopList = data.result.records;
 				}
 			},
-			/**
-			 * 获取轮播图
-			 */
 			async getBanner() {
 				let params = {
 					// storeId: 0
@@ -264,16 +273,13 @@
 				// 		params.type = 5;
 				// 		break;
 				// }
-				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params);
+				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params, true);
 				if (data) {
 					this.carouselList = data.result || [];
 					this.swiperLength = this.carouselList.length;
 					this.titleNViewBackground = 'rgb(203, 87, 60)';
 				}
 			},
-			/**
-			 * 获取轮播图
-			 */
 			// async getCouponList() {
 			// 	let params = {
 			// 		pageSize: 3
@@ -361,7 +367,6 @@
 							mask: false
 						});
 					let params = {
-						// 'agentGoodsId': this.agentGoodsId,
 						'agentId': this.agentId,
 						'goodsId': info.goodsId,
 						'activityId': info.activityId,
@@ -388,31 +393,11 @@
 				this.$refs.share.toggleMask();
 			},
 		},
-
 		// 标题栏input搜索框点击
 		onNavigationBarSearchInputClicked: async function(e) {
 			uni.navigateTo({
 				url: '/pages/agent/goods/category/category'
 			});
-		},
-		//点击导航栏 buttons 时触发
-		onNavigationBarButtonTap(e) {
-			const index = e.index;
-			if (index === 0) {
-				this.$api.msg('点击了扫描');
-			} else if (index === 1) {
-				// #ifdef APP-PLUS
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];
-				const currentWebview = page.$getAppWebview();
-				currentWebview.hideTitleNViewButtonRedDot({
-					index
-				});
-				// #endif
-				uni.navigateTo({
-					url: '../../pagesU/notice/notice'
-				});
-			}
 		}
 	};
 </script>
@@ -511,7 +496,6 @@
 		margin-top: 20upx;
 	}
 
-	/* 头部 轮播图 */
 	.carousel-section {
 		position: relative;
 		padding-top: 285upx;
@@ -582,7 +566,6 @@
 		}
 	}
 
-	/* 分类 */
 	.cate-section {
 		display: flex;
 		justify-content: space-around;
@@ -601,7 +584,6 @@
 			}
 		}
 
-		/* 原图标颜色太深,不想改图了,所以加了透明度 */
 		image {
 			width: 96upx;
 			height: 96upx;
@@ -744,20 +726,93 @@
 		font-size: 32upx;
 		background-color: #fff;
 	}
-	
-/* 商品列表 */
+	.activity-nav {
+		font-size: 26upx;
+		color: #000;
+		height: 80upx;
+		line-height: 80upx;
+		.cu-item {
+			text-align: center;
+			width: 25%;
+			height: 50upx;
+			line-height: 50upx;
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+			.cu-item-title {
+				border-right: 1upx solid #E5E5E5;
+			}
+		}
+		.activity-nav-text {
+			background-color: #fff;
+			font-size: 20upx;
+			width: 120upx;
+			height: 30upx;
+			line-height: 30upx;
+			display: inline-block;
+			border-radius: 14upx;
+		}
+	}
+	// 商品列表
 .goods-list {
 	display: flex;
-	flex-wrap: wrap;
 	width: 100%;
 	justify-content: space-between;
+	flex-wrap: wrap;
+	align-content: flex-start;
+	padding: 0 25rpx;
 	.goods-item {
 		width: 340upx;
 		height: 400upx;
+		padding: 18upx;
+		margin-bottom: 36upx;
+		border-radius: 10upx;
+		background-color: #fff;
 	}
 	.detail-img {
 		width:230upx ;
 		height: 240upx;
+		margin: 0 auto;
+		display: block;
+		margin-bottom: 36upx;
+	}
+	.detail-title {
+		color: #000000;
+		font-size: 28upx;
+	}
+	.detail-bottom {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		height: 50upx;
+		padding-top: 10upx;
+		.price {
+			display: flex;
+			flex-wrap: wrap;
+			.price-sale {
+				color: #FF1313 ;
+				font-size: 32upx;
+				margin-right: 5upx;
+				display: flex;
+				align-items: flex-end;
+			}
+			.price-bazaar {
+				color: #BABABA;
+				font-size: 22upx;
+				text-decoration: line-through;
+				display: flex;
+				align-items: flex-end;
+				line-height: 35upx;
+			}
+		}
+		.cart-icon {
+			border-radius: 50%;
+			background-image: linear-gradient(#39A9FF, #2D9BEF);
+			height: 44upx;
+			width: 44upx;
+			line-height: 44upx;
+			text-align: center;
+		}
 	}
 }
 </style>

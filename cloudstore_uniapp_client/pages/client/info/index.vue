@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="user-section">
-			<!-- <image class="bg" src="/static/user-bg.jpg"></image> -->
+			<image class="bg" src="/static/client/info-bg.png"></image>
 			<view class="user-info-box">
 				<view class="member-top-c">
 					<template>
@@ -31,84 +31,80 @@
 			@touchmove="coverTouchmove"
 			@touchend="coverTouchend"
 		>
-			<image class="arc" src="/static/arc.png"></image>
 			<!-- 订单 -->
 			<view class="order-section">
 				<view class="order-item" @click="navTo('/pages/client/order/order?status=0')" hover-class="common-hover" :hover-stay-time="50">
-					<text class="yticon icon-shouye"></text>
-					<text>全部订单</text>
+					<text class="yticon icon-shouye text-blue"></text>
+					<text class="text">全部订单</text>
 				</view>
-				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
-					<text class="yticon icon-daifukuan"></text>
-					<text>提现</text>
+				<view class="order-item cu-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
+					<text class="cuIcon-sponsor text-blue" style="font-size: 60upx;"></text>
+					<text class="text">提现</text>
 				</view>
 				<view class="order-item" @click="navTo('/pages/client/order/afterSaleList')" hover-class="common-hover" :hover-stay-time="50">
-					<text class="yticon icon-yishouhuo"></text>
-					<text>售后</text>
+					<text class="yticon icon-yishouhuo text-blue"></text>
+					<text class="text">售后</text>
 				</view>
 
 				<view class="order-item" @click="navTo(false,false)" hover-class="common-hover" :hover-stay-time="50">
-					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>敬请关注</text>
+					<text class="yticon icon-shouhoutuikuan text-blue"></text>
+					<text class="text">敬请关注</text>
 				</view>
 			</view>
 			<!-- 浏览历史 -->
 			<view class="cu-list menu sm-border margin-top">
 				<view class="cu-item arrow" @click="toapplyAgent('/pages/client/info/address')" v-if="user.userType">
 					<view class="content">
-						<text class="cuIcon-locationfill text-cyan"></text>
-						<text class="text-block">地址管理</text>
+						<text class="cuIcon-location"></text>
+						<text class="text-block text">地址管理</text>
 					</view>
 				</view>
 				<view class="cu-item arrow" @click="toapplyAgent('/pages/client/info/showInfo')">
 					<view class="content">
-						<text class="cuIcon-people text-pink"></text>
-						<text class="text-block">个人资料</text>
+						<text class="cuIcon-peoplelist"></text>
+						<text class="text-block text">个人资料</text>
 					</view>
 				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.relationId > 0">
 					<view class="content">
-						<text class="cuIcon-sponsor text-blue"></text>
-						<text class="text-block">代理资料</text>
+						<text class="cuIcon-vip"></text>
+						<text class="text-block text">代理资料</text>
 					</view>
 				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-else>
 					<view class="content">
-						<text class="cuIcon-sponsor text-blue"></text>
-						<text class="text-block">申请代理</text>
+						<text class="cuIcon-vip"></text>
+						<text class="text-block text">申请代理</text>
 					</view>
 				</view>
 				<view class="cu-item arrow">
 					<button class="cu-btn content" open-type="contact">
-						<text class="cuIcon-servicefill text-olive"></text>
-						<text class="text-block">联系客服</text>
+						<text class="cuIcon-service"></text>
+						<text class="text-block text">联系客服</text>
 					</button>
 				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/about')">
 					<view class="content">
-						<text class="cuIcon-emoji text-brown"></text>
-						<text class="text-block">关于我们</text>
+						<text class="cuIcon-question"></text>
+						<text class="text-block text">关于我们</text>
 					</view>
 				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/editPwd')" v-if="user.userType">
 					<view class="content">
-						<text class="cuIcon-lock text-blue"></text>
-						<text class="text-block">修改密码</text>
+						<text class="cuIcon-lock"></text>
+						<text class="text-block text">修改密码</text>
 					</view>
 				</view>
-				<view class="cu-item arrow" @click="navTo('/pages/agent/goods/hotsale/hotsale','exit')" v-if="user.userType">
+				<view class="cu-item arrow" @click="navTo('/pages/client/public/login',)" v-if="!user.userType">
 					<view class="content">
-						<text class="cuIcon-exit text-purple"></text>
-						<text class="text-block">退出</text>
-					</view>
-				</view>
-				<view class="cu-item arrow" @click="navTo('/pages/client/public/login',)" v-else>
-					<view class="content">
-						<text class="cuIcon-exit text-purple"></text>
-						<text class="text-block">登录</text>
+						<text class="cuIcon-exit"></text>
+						<text class="text-block text">登录</text>
 					</view>
 				</view>
 			</view>
+		</view>
+		<view @click="navTo('/pages/agent/goods/hotsale/hotsale','exit')" v-if="user.userType" class="info-exit">
+			<button class="cu-btn block lg bg-white">退出</button>
 		</view>
 		<!-- <tabbar :role="'client'" :id="'cwd'"></tabbar> -->
 	</view>
@@ -283,6 +279,7 @@
 }
 page{
 	background: #F3F3F3;
+	padding-bottom: 100upx;
 }
 .cgtt {
 	font-family: "cgtt" !important;
@@ -316,14 +313,12 @@ page{
 	height: 520upx;
 	padding: 100upx 30upx 0;
 	position: relative;
-	background: #5c8df1;
 	.bg {
 		position: absolute;
 		left: 0;
 		top: 0;
 		width: 100%;
-		height: 100%;
-		filter: blur(1px);
+		height: 360upx;
 		// opacity: 0.7;
 	}
 }
@@ -338,8 +333,8 @@ page{
 		align-items: center;
 	}
 	.portrait {
-		width: 130upx;
-		height: 130upx;
+		width: 100upx;
+		height: 100upx;
 		border: 5upx solid #fff;
 		border-radius: 50%;
 		margin-right: 20rpx;
@@ -360,18 +355,17 @@ page{
 	font-size: 12px;
 }
 .cu-list.menu {
-	border-radius: 20upx;
+	border-radius: 10upx;
 }
 .vip-card-box {
 	display: flex;
 	flex-direction: column;
 	color: #f7d680;
 	height: 240upx;
-	background: linear-gradient(left, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
 	border-radius: 16upx 16upx 0 0;
 	overflow: hidden;
 	position: relative;
-	padding: 20upx 24upx;
+	padding: 0 24upx;
 	.card-bg {
 		position: absolute;
 		top: 20upx;
@@ -456,13 +450,6 @@ page{
 	position: relative;
 	background: #f5f5f5;
 	padding-bottom: 20upx;
-	.arc {
-		position: absolute;
-		left: 0;
-		top: -34upx;
-		width: 100%;
-		height: 36upx;
-	}
 }
 .tj-sction {
 	@extend %section;
@@ -481,23 +468,21 @@ page{
 }
 .order-section {
 	@extend %section;
-	padding: 28upx 0;
-	margin-top: 20upx;
+	height: 200upx;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	.order-item {
 		@extend %flex-center;
-		width: 120upx;
-		height: 120upx;
+		width: 25%;
 		border-radius: 10upx;
-		font-size: $font-sm;
-		color: $font-color-dark;
+		.text {
+			font-size: 30upx;
+			color: #212121;
+		}
 	}
 	.yticon {
-		font-size: 48upx;
-		margin-bottom: 18upx;
-		color: #fa436a;
-	}
-	.icon-shouhoutuikuan {
-		font-size: 44upx;
+		font-size: 60upx;
 	}
 }
 .history-section {
@@ -530,5 +515,27 @@ page{
 			border-radius: 10upx;
 		}
 	}
+}
+.cu-list.menu>.cu-item  {
+	display: flex;
+	align-items: center;
+}
+.cu-list.menu>.cu-item .content {
+	display: flex;
+	align-items: center;
+}
+.cu-list.menu>.cu-item .content>text {
+	font-size: 50upx;
+}
+.cu-list.menu>.cu-item .content>.text {
+	font-size: 30upx;
+	color: #333333;
+}
+.info-exit {
+	background-color: #fff;
+	color: #000;
+	font-size: 30upx;
+	margin: 0 20upx;
+	border-radius: 10upx;
 }
 </style>

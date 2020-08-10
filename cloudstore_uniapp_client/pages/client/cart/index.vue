@@ -9,12 +9,30 @@
 				<navigator class="navigator" v-if="hasLogin" url="../index/index" open-type="switchTab">随便逛逛></navigator>
 			</view> -->
 			<view class="empty-tips">
-				空空如也
-				<navigator class="navigator"  url="/pages/agent/goods/hotsale/hotsale" open-type="switchTab">随便逛逛></navigator>
+				<view class="cart-empty">
+					<image src="/static/client/cart-icon.png" mode="" class="cart-empty-img"></image>
+					<text class="cart-empty-text">购物车还是空的</text>
+				</view>
+				<button type="default" class="cart-empty-btn">购物车还是空的哦</button>
 			</view>
 		</view>
 		<view v-else>
 			<view class="tui-list-item">
+				<view class="cart-list-top">
+					<image 
+						class='top-img'
+						:src="allChecked?'/static/selected.png':'/static/select.png'" 
+						mode="aspectFit"
+						@click="check('all')"
+					></image>
+					<image src="/static/client/cart-logo.png" mode="" class="top-logo"></image>
+					<view class="top-delete" @click="check('all')" v-if="!allChecked">
+						全选
+					</view>
+					<view class="top-delete" :class="{show: allChecked}" @click="clearCart" v-else>
+						删除
+					</view>
+				</view>
 				<view class="cart-list">
 					<block v-for="(item, index) in cartList" :key="item.id">
 						<view class="cartList-item">
@@ -32,8 +50,11 @@
 										</view>
 										<view class="item-right">
 											<text class="clamp title">{{item.title}}</text>
-											<text class="attr">{{item.attr_val}}</text>
-											<text class="price">¥{{item.price}}</text>
+											<text class="attr">{{item.subTitle}}</text>
+											<view class="price-detail">
+												¥<text class="price">{{item.price}}</text>
+												<text class="sku">/{{item.attr_val}}</text>
+											</view>
 											<uni-number-box 
 												class="number"
 												:min="1" 
@@ -60,14 +81,12 @@
 						mode="aspectFit"
 						@click="check('all')"
 					></image>
-					<view class="clear-btn" :class="{show: allChecked}" @click="clearCart">
-						清空
-					</view>
 				</view>
 				<view class="total-box">
-					<text class="price">总价：¥{{total}}</text>
+					<text class="price-text">总价:</text>
+					<text class="price">¥{{total}}</text>
 				</view>
-				<button type="primary" class="no-border confirm-btn" @click="createOrder">去结算</button>
+				<button type="primary" class="no-border confirm-btn" @click="createOrder">结算({{checkNum}})</button>
 			</view>
 		</view>
 	</view>
@@ -96,7 +115,8 @@
 						width: 70, //单位px
 						background: '#FD3B31'
 					}
-				]
+				],
+				checkNum: 0
 			};
 		},
 		onLoad() {
@@ -127,6 +147,7 @@
 				let data = await Api.apiCall('post', Api.client.cart.myShopCar, params)
 				if (data) {
 					var tmpData = data.result.records
+					console.log(tmpData)
 					if (tmpData.length != 0) {
 						for (let tmp in tmpData) {
 							try{
@@ -136,6 +157,7 @@
 									number: 1,
 									image: (tmpData[tmp].goodsSkuBean.photos!=null && tmpData[tmp].goodsSkuBean.photos.length>0) ? tmpData[tmp].goodsSkuBean.photos: tmpData[tmp].goodsPicesBean.goodsPhotos,
 									title: tmpData[tmp].goodsPicesBean.goodsName,
+									subTitle: tmpData[tmp].goodsPicesBean.goodsSubtitle,
 									attr_val: tmpData[tmp].goodsSkuBean.skuValue,
 									price: tmpData[tmp].goodsSkuBean.price,
 									stock: tmpData[tmp].goodsSkuBean.stock,
@@ -237,6 +259,7 @@
 				let list = this.cartList;
 				if(list.length === 0){
 					this.empty = true;
+					this.$api('您还未选中商品')
 					return;
 				}
 				let total = 0;
@@ -250,6 +273,13 @@
 				})
 				this.allChecked = checked;
 				this.total = Number(total.toFixed(2));
+				var checkNums = []
+				for (let tmp in  this.cartList) {
+					if (this.cartList[tmp].checked) {
+						checkNums.push(this.cartList[tmp].id)
+					}
+				}
+				this.checkNum = checkNums.length
 			},
 			async createOrder(){ //跳转到支付界面
 				var ids = []
@@ -305,28 +335,83 @@
 				margin-bottom:30upx;
 			}
 			.empty-tips{
-				display:flex;
-				font-size: $font-sm+2upx;
-				color: $font-color-disabled;
-				.navigator{
-					color: $uni-color-primary;
-					margin-left: 16upx;
+				margin: 0 auto;
+				display: flex;
+				flex-wrap: wrap;
+				.cart-empty {
+					width: 100%;
+					display: flex;
+					justify-content: center;
+					flex-wrap: wrap;
+					.cart-empty-img {
+						width: 290upx;
+						height: 240upx;
+					}
+					.cart-empty-text {
+						width: 100%;
+						text-align: center;
+						color: #999999;
+						font-size: 28upx;
+						margin-top: 30upx;
+					}
 				}
+				.cart-empty-btn {
+					background-color: #39A9FF;
+					border-radius: 36upx;
+					font-size: 32upx;
+					text-align: center;
+					height: 72upx;
+					line-height: 72upx;
+					width: 392upx;
+					color: #fff;
+					letter-spacing: 5upx;
+					margin-top: 60upx;
+				}
+			}
+		}
+	}
+	.tui-list-item {
+		margin: 20upx 20upx 0;
+		position: relative;
+		.cart-list-top {
+			width: 100%;
+			background-color: #fff;
+			height: 80upx;
+			line-height: 80upx;
+			display: flex;
+			border-top-right-radius: 15upx;
+			border-top-left-radius: 15upx;
+			justify-content: space-between;
+			padding: 0 40upx 0 80upx;
+			align-items: center;
+			border-bottom: 1upx solid #eee;
+			.top-img {
+				height: 36upx;
+				width: 36upx;
+				position: absolute;
+				left: 25upx;
+				top: 50upx;
+				margin-top: -25upx;
+			}
+			.top-logo {
+				height: 35upx;
+				width: 140upx;
+			}
+			.top-delete {
+				
 			}
 		}
 	}
 	/* 购物车列表项 */
 	.cartList-item {
-		margin-bottom: 10upx;
-		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1)
 	}
 	.cart-item{
 		display:flex;
 		position:relative;
 		padding:30upx 40upx 30upx 80upx;
 		.image-wrapper{
-			width: 150upx;
-			height: 150upx;
+			width: 128upx;
+			height: 128upx;
 			flex-shrink: 0;
 			position:relative;
 			image{
@@ -352,21 +437,32 @@
 			overflow: hidden;
 			position:relative;
 			padding-left: 30upx;
-			.title,.price{
-				font-size:$font-base + 2upx;
-				color: $font-color-dark;
+			.title{
+				color: #333333;
+				font-size: 32upx;
 				height: 40upx;
 				line-height: 40upx;
 			}
 			.attr{
-				font-size: $font-sm + 2upx;
-				color: $font-color-light;
+				font-size: 24upx;
+				color: #999999;
 				height: 50upx;
 				line-height: 50upx;
 			}
-			.price{
+			.price-detail{
 				height: 50upx;
 				line-height:50upx;
+				color: #FF1313;
+				.price {
+					color: #FF1313;
+					font-size: 32upx;
+					margin-left: 8upx;
+				}
+				.sku {
+					color: #999999;
+					font-size: 24upx;
+					letter-spacing: 5upx;
+				}
 			}
 		}
 		.del-btn{
@@ -375,6 +471,10 @@
 			height: 50upx;
 			color: $font-color-light;
 		}
+	}
+	.cart-list:nth-last-child(1) {
+		border-top-right-radius: 15upx;
+		border-top-left-radius: 15upx;
 	}
 	/* 底部栏 */
 	.action-section{
@@ -398,7 +498,7 @@
 			image{
 				width: 52upx;
 				height: 100%;
-				left: -60upx;
+				left: -50upx;
 				z-index: 5;
 			}
 		}
@@ -424,13 +524,16 @@
 		}
 		.total-box{
 			flex: 1;
-			display:flex;
 			flex-direction: column;
 			text-align:right;
 			padding-right: 40upx;
 			.price{
-				font-size: $font-lg;
-				color: $font-color-dark;
+				font-size: 32upx;
+				color: #FF1313;
+			}
+			.price-text {
+				color: #000000;
+				font-size: 32upx;
 			}
 			.coupon{
 				font-size: $font-sm;
@@ -441,21 +544,25 @@
 			}
 		}
 		.confirm-btn{
-			padding: 0 38upx;
 			margin: 0;
-			border-radius: 100px;
-			height: 76upx;
-			line-height: 76upx;
-			font-size: $font-base + 2upx;
-			background: $uni-color-primary;
+			border-radius: 36upx;
+			width: 176upx;
+			height: 74upx;
+			height: 74upx;
+			text-align: center;
+			font-size: 28upx;
+			background: #39A9FF;
+			color: #FFFFFF;
 		}
 	}
 	/* 复选框选中状态 */
 	.action-section .checkbox.checked,
 	.cart-item .checkbox.checked{
-		color: $uni-color-primary;
+		color: #39A9FF;
 	}
-	.number { 
+	.number {
+		height: 40upx;
+		width: 132upx;
 		font-size: 20uxp;
 		position: absolute;
 		bottom: 0;

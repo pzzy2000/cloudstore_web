@@ -1,17 +1,24 @@
 <template>
 	<view>
-		<nav-bar>我的收益</nav-bar>
-		<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
-			<view class="cu-item" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
-				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
-					<view class="cu-tag badge" v-if="item.badge!=0">
-						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
+		<view class=" earning-main">
+			<nav-bar :bgColor="['#74c5fd','#49b2fe']" bgColorAngle="90">我的收益</nav-bar>
+			<image src="/static/index-top-bg.png" mode="" class="earning-bg"></image>
+			<view class="earning-main-computed">
+				<view class="earning-title">历史总收益</view>
+				<view class="earning-number">00.00</view>
+				<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
+					<view class="cu-item earnin-content" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
+						<text class="num">{{item.num}}</text>
+						<view class="title">{{item.name}}</view>
 					</view>
 				</view>
-				<text>{{item.name}}:{{item.num}}</text>
 			</view>
 		</view>
-		<p style='text-align: center;line-height: 100upx;' v-if='financetDataList.length === 0'>暂无{{tabText}}数据</p>
+		<view class="earning-empty" v-if='financetDataList.length === 0'>
+			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
+			<view class="earning-empty-text">您还没有任何收益记录哦！</view>
+			<button type="default" class="earning-empty-btn">我要下单赚收益</button>
+		</view>
 		<view class="goods-list">
 			<view v-for="(item, index) in financetDataList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
 				<view class="image-wrapper"><image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
@@ -48,24 +55,31 @@
 						color: 'red',
 						badge: 0,
 						name: '已收益',
-						num: '计算中',
+						num: '00.00',
 						value: 0
 					}, {
 						cuIcon: 'refund',
 						color: 'orange',
 						badge: 0,
 						name: '待收益',
-						num: '计算中',
+						num: '00.00',
 						value: 1
 					}, {
 						cuIcon: 'goods',
 						color: 'yellow',
 						badge: 0,
-						name: '已收益积分',
-						num: '计算中',
+						name: '已结算积分',
+						num: '0',
+						value: 2
+					},{
+						cuIcon: 'goods',
+						color: 'yellow',
+						badge: 0,
+						name: '待结算积分',
+						num: '0',
 						value: 2
 					}],
-					gridCol: 3,
+					gridCol: 4,
 					gridBorder: false,
 					tabEarning: 2,
 					tabText: '已收益',
@@ -167,6 +181,57 @@
 </script>
 
 <style scoped lang="scss">
+	.earning-main {
+		position: relative;
+		height: 400upx;
+		width: 100%;
+		.earning-bg {
+			position: absolute;
+			left: 0;
+			top: 0;
+			z-index: -1;
+			width: 100%;
+			height: 100%;
+		}
+		.earning-main-computed {
+			width: 100%;
+			color: #fff;
+			text-align: center;
+			.earning-title {
+				font-size: 30upx;
+				margin: 0 30upx;
+				line-height: 50upx;
+			}
+			.earning-number {
+				font-size: 72upx;
+				line-height: 110upx;
+				font-weight: blod;
+				white-space: 5upx;
+			}
+		}
+	}
+	.cu-list.grid.no-border {
+		padding: 0;
+	}
+	.cu-list.grid.no-border >.cu-item {
+		padding: 0;
+	}
+	.earnin-content {
+		color: #fff;
+		.title {
+			font-size: 30upx;
+		}
+		.num {
+			font-size: 26upx;
+			color: #fff !important;
+		}
+	}
+	.cu-list.grid {
+		background: none;
+	}
+	.cu-list.menu-avatar>.cu-item {
+		color: #fff;
+	}
 	.cu-list.menu-avatar>.cu-item .action {
 		width: auto;
 		text-align: right;
@@ -174,8 +239,36 @@
 	.cu-list.menu-avatar>.cu-item .content {
 		width: 40%;
 	}
-	.cu-list.grid {
-		margin-bottom: 20upx;
+	.earning-empty {
+		padding-top: 100upx;
+		.earning-logo {
+			width: 300upx;
+			height: 180upx;
+			margin: 0 auto;
+			display: block;
+		}
+		.earning-empty-text {
+			color: #999999;
+			font-size: 30upx;
+			white-space: 5upx;
+			line-height: 150upx;
+			width: 100%;
+			text-align: center;
+			display: block;
+		}
+		.earning-empty-btn {
+			color: #F1F1F1;
+			background-color: #39A9FF;
+			white-space: 5upx;
+			width: 500upx;
+			height: 72upx;
+			text-align: center;
+			border: none;
+			border-radius: 36upx;
+			&:after {
+				border: none
+			}
+		}
 	}
 	/* 商品列表 */
 	.goods-list {

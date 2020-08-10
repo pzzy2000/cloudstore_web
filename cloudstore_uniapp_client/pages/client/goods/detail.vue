@@ -11,6 +11,7 @@
 
 		<view class="introduce-section">
 			<text class="title">{{ goods.goodsName }}</text>
+			<view class="sub-title">{{ goods.goodsSubtitle }}</view>
 			<view class="price-box">
 				<text class="price-tip">¥</text>
 				<text class="price">{{ sku.price }}</text>
@@ -38,7 +39,7 @@
 
 		<view class="c-list">
 			<view class="c-row b-b" v-if="specList && specList.length > 0" @click="toggleSpec">
-				<text class="tit">规格类型</text>
+				<text class="tit">产品规格</text>
 				<view class="con">
 					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
 				</view>
@@ -56,11 +57,10 @@
 				<text class="tit">活动内容</text>
 				<view class="con-list">
 					<text>{{activity.name}}</text>
-					
 				</view>
 			</view>
 			<view class="c-row b-b">
-				<text class="tit">服务</text>
+				<text class="tit">售后服务</text>
 				<view class="bz-list con">
 					<text>7天无理由退换货 ·</text>
 					<text></text>
@@ -576,12 +576,17 @@ export default {
 .introduce-section {
 	background: #fff;
 	padding: 20upx 30upx;
-
+	margin-top: 10upx;
 	.title {
-		font-size: 32upx;
-		color: $font-color-dark;
+		font-size: 34upx;
+		color: #333333;
 		height: 50upx;
 		line-height: 50upx;
+	}
+	.sub-title {
+		color: #999999;
+		font-size: 26upx;
+		line-height: 80upx;
 	}
 	.price-box {
 		display: flex;
@@ -592,7 +597,10 @@ export default {
 		color: $uni-color-primary;
 	}
 	.price {
-		font-size: $font-lg + 2upx;
+		color: #FF1313;
+		font-size: 34upx;
+		white-space: 5upx;
+		margin-left: 5upx;
 	}
 	.m-price {
 		margin: 0 12upx;
@@ -682,17 +690,19 @@ export default {
 }
 
 .c-list {
-	font-size: $font-sm + 2upx;
-	color: $font-color-base;
-	background: #fff;
+	color: #333333;
+	font-size: 26upx;
 	.c-row {
 		display: flex;
 		align-items: center;
 		padding: 20upx 30upx;
 		position: relative;
+		margin-bottom: 5rpx;
+		background: #F5F5F5;
 	}
 	.tit {
 		width: 140upx;
+		color: #656565;
 	}
 	.con {
 		flex: 1;

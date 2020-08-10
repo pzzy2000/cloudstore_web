@@ -150,8 +150,8 @@
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
-		width:190upx;
-		height: 60upx;
+		width:132upx;
+		height: 40upx;
 		background:#f5f5f5;
 	}
 
@@ -159,15 +159,15 @@
 	.uni-numbox-plus {
 		margin: 0;
 		background-color: #f5f5f5;
-		width: 60upx;
+		width: 40upx;
 		height: 100%;
-		line-height: 60upx;
+		line-height: 40upx;
 		text-align: center;
 		position: relative;
 	}
 	.uni-numbox-minus .yticon,
 	.uni-numbox-plus .yticon{
-		font-size: 36upx;
+		font-size: 18upx;
 		color: #555;
 	}
 
@@ -185,12 +185,13 @@
 
 	.uni-numbox-value {
 		position: relative;
-		background-color: #f5f5f5;
-		width: 70upx;
-		height: 50upx;
+		width: 52upx;
+		height: 30upx;
+		min-height: 50upx;
 		text-align: center;
 		padding: 0;
 		font-size: 22upx;
+		color: #39A9FF;
 	}
 
 	.uni-numbox-disabled.yticon {
