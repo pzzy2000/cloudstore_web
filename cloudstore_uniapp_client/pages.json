@@ -115,6 +115,14 @@
 				"enablePullDownRefresh": true
 			}
 		},
+		{
+			"path": "pages/agent/goods/hotGoodsList/hotGoodsList",
+			"style": { //热门活动商品列表
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
 	    {
             "path" : "pages/client/order/order",
             "style" : { //客户端订单
@@ -131,7 +139,7 @@
 				"enablePullDownRefresh": false
 			}
 		},
-	{
+        {
             "path" : "pages/client/info/applyAgent",
             "style" : {
 				"navigationBarTitleText": "",
@@ -263,6 +271,12 @@
 				"selectedIconPath": "static/tabbar/earnings-select.png",
 				"text": "收益"
 			},
+			// {
+			// 	"pagePath": "pages/client/cart/index",
+			// 	"iconPath": "static/tab-home.png",
+			// 	"selectedIconPath": "static/tab-home-current.png",
+			// 	"text": "购物车"
+			// },
 			{
 				"pagePath": "pages/client/info/index",
 				"iconPath": "static/tabbar/my.png",
@@ -270,6 +284,38 @@
 				"text": "我的"
 			}
  
+			//end
+
+			// {
+			// 	"pagePath": "pages/agent/goods/hotsale/hotsale",
+			// 	"iconPath": "static/tab-cate.png",
+			// 	"selectedIconPath": "static/tab-cate-current.png",
+			// 	"text": "热销商品"
+			// },
+			// {
+			// 	"pagePath": "pages/agent/goods/category/category",
+			// 	"iconPath": "static/tab-cate.png",
+			// 	"selectedIconPath": "static/tab-cate-current.png",
+			// 	"text": "商品分类"
+			// },
+			// {
+			// 	"pagePath": "pages/agent/home/index",
+			// 	"iconPath": "static/fujin.png",
+			// 	"selectedIconPath": "static/fujin_.png",
+			// 	"text": "我的代理"
+			// }
+			// {
+			// 	"pagePath": "pages/agent/money/profit",
+			// 	"iconPath": "static/tab-cart.png",
+			// 	"selectedIconPath": "static/tab-cart-current.png",
+			// 	"text": "我的收益"
+			// },
+			// {
+			// 	"pagePath": "pages/agent/info/index",
+			// 	"iconPath": "static/tab-my.png",
+			// 	"selectedIconPath": "static/tab-my-current.png",
+			// 	"text": "代理信息"
+			// }
 		]
 	},
 	"condition": {
@@ -278,7 +324,7 @@
 		"list": [{
 			"name": "", //模式名称
 			//"path": "", //启动页面，必选
-			"path": "pages/agent/goods/hotsale/hotsale", //启动页面，必选
+			"path": "pages/client/earnings/index", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

@@ -386,11 +386,11 @@
 			align-items: center;
 			border-bottom: 1upx solid #eee;
 			.top-img {
-				height: 36upx;
-				width: 36upx;
+				height: 32upx;
+				width: 32upx;
 				position: absolute;
-				left: 25upx;
-				top: 50upx;
+				left: 26upx;
+				top: 45upx;
 				margin-top: -25upx;
 			}
 			.top-logo {
@@ -423,7 +423,7 @@
 			left:-60upx;
 			top: 50upx;
 			z-index: 8;
-			font-size: 44upx;
+			font-size: 38upx;
 			line-height: 1;
 			padding: 4upx;
 			color: $font-color-disabled;
@@ -493,12 +493,12 @@
 		background: rgba(255,255,255,.9);
 		border-radius: 16upx;
 		.checkbox{
-			height: 44upx;
+			height:36upx;
 			position:relative;
 			image{
-				width: 52upx;
+				width: 36upx;
 				height: 100%;
-				left: -50upx;
+				left: -40upx;
 				z-index: 5;
 			}
 		}

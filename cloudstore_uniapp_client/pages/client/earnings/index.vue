@@ -5,7 +5,7 @@
 			<image src="/static/index-top-bg.png" mode="" class="earning-bg"></image>
 			<view class="earning-main-computed">
 				<view class="earning-title">历史总收益</view>
-				<view class="earning-number">00.00</view>
+				<view class="earning-number">{{cuIconList[0].num}}</view>
 				<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
 					<view class="cu-item earnin-content" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
 						<text class="num">{{item.num}}</text>
@@ -19,28 +19,44 @@
 			<view class="earning-empty-text">您还没有任何收益记录哦！</view>
 			<button type="default" class="earning-empty-btn">我要下单赚收益</button>
 		</view>
-		<view class="goods-list">
-			<view v-for="(item, index) in financetDataList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
-				<view class="image-wrapper"><image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
-				<view class="goods-detail">
-					<view class="detail-title clamp">{{item.orderDetailsPic.goodsPicBean.goodsName}}</view>
-					<view class="detail-sku clamp">规格：{{item.orderDetailsPic.goodsSkuBean.skuValue}}</view>
-					<view class="sub-title clamp">订单时间: {{item.orderBean.createTime}}</view>
-					<view class="price-box">
-						<view class="price">
-							<text v-if="status==1" class="priceSale" style="color:#9E9E9E;">待结算:</text> 
-							<text  v-else class="priceSale" style="color:#9E9E9E;"> 以结算:</text> 
-							<text v-if="type==2" class="priceSale">{{item.points}} 积分</text>
-							<text class="priceSale" v-else>
-								￥{{item.profit}}
-							</text>
-							 <!-- <text class="priceSale">{{item.orderId}}</text> -->
-							 <text class="line">/</text>
-							 <text class="text-gray">总价:{{item.orderDetailsPic.payPrice}}</text>
-							 <text class="text-gray" style="color:#9E9E9E;font-size: 26upx;">[{{item.financeType.name}}]</text>
+		<view class="order-conent">
+			<view class="order-list" v-for="(item, index) in financetDataList" :key="index">
+				<view class="order-list-top">
+					<text>
+						下单时间：{{item.orderBean.createTime}}
+					</text>
+					<text>
+						{{item.financeType.name}}
+					</text>
+				</view>
+				<view class="order-list-content">
+					<image :src="item.orderDetailsPic.goodsPicBean.goodsPhotos[0].url" mode="aspectFill" class="image-wrapper"></image>
+					<view class="goods-detail">
+						<view class="detail-title clamp">{{item.orderDetailsPic.goodsPicBean.goodsName}}</view>
+						<view class="detail-sku">产品规格：{{item.orderDetailsPic.goodsSkuBean.skuValue}}</view>
+						<view class="detail-price">
+							<text class="num">下单数量 × {{item.orderDetailsPic.quantity}}</text>
+							<text>订单价格：{{item.orderDetailsPic.payPrice}}</text>
 						</view>
 					</view>
-				</view>	
+				</view>
+				<view class="order-list-bottom">
+					<text>
+						订单号： {{item.id}}
+					</text>
+					<!-- 收益 -->
+					<view class="profit" v-if="type === 1">
+						<text v-if="status === 1">待收益：</text>
+						<text v-if="status === 2">已收益：</text>
+						<text class="profit-num">{{item.profit}}元</text>
+					</view>
+					<!-- 积分 -->
+					<view class="profit" v-if="type === 2">
+						<text v-if="status === 1">待结算：</text>
+						<text v-if="status === 2">已结算：</text>
+						<text class="profit-num">{{item.points}}积分</text>
+					</view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -153,9 +169,7 @@
 						}
 					}
 				},
-				
 				earninngType (index) {
-			
 					this.financetDataList = []
 					this.tabEarning = index
 					this.pageNum = 1
@@ -173,18 +187,13 @@
 						this.lisFinancetData(2, 2)
 						this.status = 2;
 						this.type = 2;
-						this.tabText = '已积分'
-					}else if (index === 3) {
+						this.tabText = '已收益积分'
+					} else if (index === 3) {
 						this.lisFinancetData(1, 2)
 						this.status = 1;
 						this.type = 2;
-						this.tabText = '待积分'
+						this.tabText = '待收益积分'
 					}
-					// if (index === 1 || index === 2) {
-					// 	this.financetDataList = []
-					// 	this.tabEarning = index
-					// 	this.lisFinancetData()
-					// }
 				}
 			}
 		}
@@ -221,7 +230,7 @@
 		}
 	}
 	.cu-list.grid.no-border {
-		padding: 0;
+		padding: 0 0 30upx 0;
 	}
 	.cu-list.grid.no-border >.cu-item {
 		padding: 0;
@@ -281,91 +290,72 @@
 		}
 	}
 	/* 商品列表 */
-	.goods-list {
-		display: flex;
-		flex-wrap: wrap;
-		margin: 0 auto;
-		width: 94%;
-		.goods-item {
-			background: #fff;
-			display: flex;
-			flex-direction: column;
-			flex-flow: nowrap;
-			width: 100%;
-			padding: 20upx 30upx;
-			box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+	.order-conent {
+		width: 100%;
+		padding: 20upx 20upx 0;
+		.order-list {
+			border-radius: 15upx;
+			background-color: #FFFFFF;
 			margin-bottom: 10upx;
-		}
-		.image-wrapper {
-			width: 200upx;
-			height:200upx;
-			border-radius: 3upx;
-			overflow: hidden;
-			image {
-				opacity: 1;
-				border-radius: 15upx;
+			.order-list-top {
+				display: flex;
+				justify-content: space-between;
+				height: 80upx;
+				line-height: 80upx;
+				color: #666666;
+				font-size: 22upx;
+				padding: 0 30upx;
+				border-bottom: 1upx solid #F1F1F1;
 			}
-		}
-		.goods-detail {
-			display: inline-block;
-			margin-left: 20upx;
-			width: 65%;
-			font-size: 25upx;
-			height: 100%;
-			.detail-title {
-				font-size: 30upx;
-				color: #000;
+			.order-list-content {
+				height: 230upx;
+				padding: 20upx;
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
 				width: 100%;
-				height: 20%;
-				.number {
-					color: #999;
-					font-size: 26upx;
-					line-height: 50upx;
-					height: 50upx;
+				.image-wrapper {
+					width: 164upx;
+					height: 164upx;
 				}
-			}
-			.detail-sku {
-				font-size: 28upx;
-				color: #999;
-				height: 40%;
-			}
-			.sub-title {
-				height: 20%;
-				text-align: right;
-			}
-			.price-box {
-				text-align: right;
-				// display: flex;
-				// justify-content: space-between;
-				// align-items: flex-end;
-				width: 100%;
-				height: 20%;
-				.price {
-					font-size: 30upx;
-					.priceSale {
-						color: red;
-						font-size: 25upx;
+				.goods-detail {
+					margin-left: 30upx;
+					line-height: 60upx;
+					width: 65%;
+					.detail-title {
+						color: #333;
+						font-size: 30upx;
+						letter-spacing: 4upx;
 					}
-					.line {
-						margin: 0 15upx;
+					.detail-sku {
+						color: #999999;
+						font-size: 24upx;
 					}
-					.pricemart {
-						color: #999;
-						font-size: 25upx;
-						text-decoration: line-through;
+					.detail-price {
+						color: #999999;
+						font-size: 24upx;
+						display: flex;
+						justify-content: space-between;
 					}
 				}
 			}
-			.price-btn {
-				padding: 0;
-				margin: 0;
-				font-size: 24upx;
+			.order-list-bottom {
+				border-top: 1upx solid #F1F1F1;
+				display: flex;
+				justify-content: space-between;
+				color: #666666;
+				font-size: 22upx;
+				height: 80upx;
+				align-items: center;
 				padding: 0 20upx;
-				height: 50upx;
-				line-height: 50upx;
-				border-radius: 40upx;
-				color: #fff;
-				background: #ff4f50;
+				.profit {
+					font-size: 28upx;
+					color: #999999;
+					.profit-num {
+						color: #FF1313;
+						font-size: 36upx;
+					}
+				}
 			}
 		}
 	}

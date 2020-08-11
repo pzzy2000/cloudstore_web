@@ -8,7 +8,6 @@
 				</swiper-item>
 			</swiper>
 		</view>
-
 		<view class="introduce-section">
 			<text class="title">{{ goods.goodsName }}</text>
 			<view class="sub-title">{{ goods.goodsSubtitle }}</view>
@@ -16,54 +15,25 @@
 				<text class="price-tip">¥</text>
 				<text class="price">{{ sku.price }}</text>
 			</view>
-			<!-- <view class="bot-row">
-				<text>销量: {{ goods.sale }}</text>
-				<text>库存: {{ goods.stock }}</text>
-				<text>浏览量: {{ goods.hit }}</text>
-			</view> -->
 		</view>
-
-		<!--  分享 -->
-		<!-- <view class="share-section">
-			<view class="share-icon">
-				<text class="yticon icon-xingxing"></text>
-				返
-			</view>
-			<text class="tit">该商品分享可领49减10红包</text>
-			<text class="yticon icon-bangzhu1"></text>
-			<view class="share-btn">
-				立即分享
-				<text class="yticon icon-you"></text>
-			</view>
-		</view> -->
-
 		<view class="c-list">
-			<view class="c-row b-b" v-if="specList && specList.length > 0" @click="toggleSpec">
+			<view class="c-row" v-if="specList && specList.length > 0" @click="toggleSpec">
 				<text class="tit">产品规格</text>
 				<view class="con">
 					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
-			<!--
-			<view class="c-row b-b">
-				<text class="tit">优惠券</text>
-				<text class="con t-r red">领取优惠券</text>
-				<text class="yticon icon-you"></text>
-			</view>
-             -->
-
-			<view class="c-row b-b">
+			<view class="c-row">
 				<text class="tit">活动内容</text>
 				<view class="con-list">
 					<text>{{activity.name}}</text>
 				</view>
 			</view>
-			<view class="c-row b-b">
+			<view class="c-row">
 				<text class="tit">售后服务</text>
-				<view class="bz-list con">
-					<text>7天无理由退换货 ·</text>
-					<text></text>
+				<view class="con-list">
+					<text>7天无理由退换货</text>
 				</view>
 			</view>
 		</view>
@@ -75,7 +45,6 @@
 			   </view>
 			  </view>
 		</view>
-		
 		<view class="price-explain detail-desc ">
 			<view class="d-header"><text class="text">价格说明</text></view>
 			<view class="price-explain-main">
@@ -103,18 +72,14 @@
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</navigator>
-			<view class="p-b-btn" @click="toggleSpec('cart')">
+			<view class="p-b-btn" @click.stop="toggleSpec('cart')">
 				<text class="yticon icon-gouwuche "></text>
 				<text>加入购物车</text>
 			</view>
-			<navigator url="/pages/agent/goods/category/category" open-type="switchTab" class="p-b-btn">
-				<text class="yticon icon-fenlei"></text>
-				<text>商品分类</text>
-			</navigator>
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec('buy')">立即购买</button>
+				<button class="action-btn action-buy-btn" @click.stop="toggleSpec('buy')">立即购买</button>
 				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="shareSave" >立即分享</button>
+				<button class="action-btn action-share-btn" @click.stop="shareSave" >立即分享</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -126,7 +91,7 @@
 					<view class="a-t">
 						<image :src="sku.imgUrl"></image>
 						<view class="right">
-							<text class="price">¥{{ sku.price }}</text>
+							<text class="price">¥ <text class="price-num">{{ sku.price }}</text></text>
 							<text class="stock">库存：{{ sku.stock }}件</text>
 							<view class="selected">
 								已选：
@@ -151,7 +116,7 @@
 					</view>
 				</div>
 				<view class="buyBtn" @click.stop="toBuy(buy)">
-					<button class="cu-btn bg-red lg">确定</button>
+					<button class="cu-btn bg-red">确定</button>
 				</view>
 			</view>
 		</view>
@@ -188,7 +153,7 @@ export default {
 			goods: '',
 			shareList: [
 				{
-				  icon: "/static/temp/share_wechat.png",
+				  icon: "/static/share_wechat.png",
 				  text: "微信好友",
 				  type: 1
 				}
@@ -582,17 +547,18 @@ export default {
 		color: #333333;
 		height: 50upx;
 		line-height: 50upx;
+		white-space: 10upx;
 	}
 	.sub-title {
 		color: #999999;
 		font-size: 26upx;
-		line-height: 80upx;
+		line-height: 50upx;
 	}
 	.price-box {
 		display: flex;
 		align-items: baseline;
 		height: 64upx;
-		padding: 10upx 0;
+		line-height: 64upx;
 		font-size: 26upx;
 		color: $uni-color-primary;
 	}
@@ -695,9 +661,10 @@ export default {
 	.c-row {
 		display: flex;
 		align-items: center;
-		padding: 20upx 30upx;
+		padding: 0 30upx;
+		line-height: 80upx;
 		position: relative;
-		margin-bottom: 5rpx;
+		margin-bottom: 5upx;
 		background: #F5F5F5;
 	}
 	.tit {
@@ -772,8 +739,9 @@ export default {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		font-size: $font-base;
-		color: $font-color-base;
+		font-size: 34upx;
+		letter-spacing: 4upx;
+		color: #FF1313;
 		padding-left: 26upx;
 		.con {
 			font-size: $font-base;
@@ -793,28 +761,32 @@ export default {
 .attr-content {
 	position: relative;
 	.sku-detail {
-	  padding: 0 40rpx 100rpx 40rpx;
+	  padding: 0 40rpx 50rpx 40rpx;
 	}
 	.a-t {
 		display: flex;
 		image {
-			width: 170upx;
-			height: 170upx;
+			width: 180upx;
+			height: 180upx;
 			flex-shrink: 0;
 			margin-top: -40upx;
 			border-radius: 8upx;
+			box-shadow: 0 0 4upx rgba(0, 0, 0, 0.5);
 		}
 		.right {
 			display: flex;
 			flex-direction: column;
 			padding-left: 24upx;
-			font-size: $font-sm + 2upx;
-			color: $font-color-base;
+			font-size: 26upx;
+			color: #999;
 			line-height: 42upx;
 			.price {
-				font-size: $font-lg;
-				color: $uni-color-primary;
-				margin-bottom: 10upx;
+				color: #FF1313;
+				margin: 20upx 0 10upx 0;
+				.price-num {
+					font-size: 34upx;
+					margin-left: 10upx;
+				}
 			}
 			.selected-text {
 				margin-right: 10upx;
@@ -824,8 +796,9 @@ export default {
 	.attr-list {
 		display: flex;
 		flex-direction: column;
-		font-size: $font-base + 2upx;
-		color: $font-color-base;
+		font-size: 32upx;
+		color: #333333;
+		letter-spacing: 4upx;
 		padding-top: 30upx;
 		padding-left: 10upx;
 	}
@@ -837,27 +810,34 @@ export default {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			background: #eee;
+			background: #F1F1F1;
 			margin-right: 20upx;
 			margin-bottom: 20upx;
-			border-radius: 100upx;
+			border-radius: 30upx;
 			min-width: 60upx;
+			font-size: 26upx;
+			width: 160upx;
 			height: 60upx;
-			padding: 0 40upx;
-			font-size: $font-base;
-			color: $font-color-dark;
+			color: #999999;
 		}
 		.selected {
-			background: #fbebee;
-			color: $uni-color-primary;
+			background: linear-gradient(-90deg, #39A9FF, #6BBFFF);
+			color: #FFFFFF;
 		}
 	}
 	.buyBtn {
 		width: 100%;
-		position: absolute;
-		bottom: 0;
+		padding: 0 40upx;
+		margin-bottom: 36upx;
 		.cu-btn {
 			width: 100%;
+			height: 60upx;
+			line-height: 60upx;
+			background: linear-gradient(-90deg, #39A9FF, #6BBFFF);
+			font-size: 34upx;
+			font-weight: blod;
+			letter-spacing: 4upx;
+			border-radius: 30upx;
 		}
 	}
 }
@@ -904,7 +884,6 @@ export default {
 		z-index: 99;
 		bottom: 0;
 		width: 100%;
-		min-height: 40vh;
 		border-radius: 10upx 10upx 0 0;
 		background-color: #fff;
 		.btn {
@@ -969,14 +948,14 @@ export default {
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		font-size: $font-sm;
-		color: $font-color-base;
-		width: 120upx;
+		font-size: #333333;
+		color: 20upx;
+		letter-spacing: 4upx;
 		height: 80upx;
 		.yticon {
 			font-size: 40upx;
 			line-height: 48upx;
-			color: $font-color-light;
+			color: #333333;
 		}
 		&.active,
 		&.active .yticon {
@@ -992,33 +971,26 @@ export default {
 	}
 	.action-btn-group {
 		display: flex;
-		height: 76upx;
-		border-radius: 100px;
-		overflow: hidden;
-		box-shadow: 0 20upx 40upx -16upx #fa436a;
-		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
-		background: linear-gradient(to right, #ffac30, #fa436a, #f56c6c);
-		position: relative;
-		&:after {
-			content: '';
-			position: absolute;
-			top: 50%;
-			right: 50%;
-			transform: translateY(-50%);
-			height: 28upx;
-			width: 0;
-			border-right: 1px solid rgba(255, 255, 255, 0.5);
-		}
 		.action-btn {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			width: 180upx;
-			height: 100%;
-			font-size: $font-base;
-			padding: 0;
-			border-radius: 0;
-			background: transparent;
+			color: #fff;
+			width: 200upx;
+			height: 72upx;
+			border-radius: 36upx;
+			font-size: 30upx;
+			letter-spacing: 4upx;
+			margin-right: 10upx;
+			&:after {
+				border: none;
+			}
+		}
+		.action-buy-btn {
+			background-image: linear-gradient(-90deg, #39A9FF, #6BBFFF);
+		}
+		.action-share-btn {
+			background-image: linear-gradient(-90deg, #FE8A14, #FED041);
 		}
 	}
 }

@@ -11,19 +11,16 @@
 					<text class="tit">手机号码</text>
 					<input type="number" v-model="access" placeholder="请输入手机号码/登录账号" />
 				</view>
-				<view class="input-item">
+				<view class="input-item pwd-input">
 					<text class="tit">密码</text>
 					<input type="password" placeholder="请输入密码" v-model="password" @confirm="toLogin" />
+					<text class="forget-section" @click.stop="toForget">忘记密码？</text>
 				</view>
 			</view>
-			<!-- <label class="radio">
-				<radio value="r1" checked="checked" />登录前请阅读
-					<navigator url="../info/privacy">
-						丫咪购隐私协议
-					</navigator>
-				</radio>
-			 </label> -->
 			<button class="confirm-btn" @click.stop="toLogin" :disabled="logining">登录</button>
+			<view class="register-section">
+				还没有账号?<text @click="toRegist">马上注册</text>
+			</view>
 			<!-- #ifdef APP-PLUS -->
 				<view class="vx-btn">
 					<image src="/static/temp/share_wechat.png" mode="" class="wxLogin" @click.stop="appLogin"></image>
@@ -38,19 +35,11 @@
 				</view> -->
 				<!-- 微信授权手机号 -->
 				<view class="vx-btn">
-					<button type="primary" open-type='getPhoneNumber' @getphonenumber="getPhoneNumber">
-						<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
+					<button open-type='getPhoneNumber' @getphonenumber="getPhoneNumber">
+						<image src="/static/share_wechat.png" mode="" class="wxLogin"></image>
 					</button>
 				</view>
 			<!-- #endif -->
-			<view class="forget-section">
-				<navigator url="/pages/client/public/forgetPwd">
-					忘记密码?
-				</navigator>
-			</view>
-		</view>
-		<view class="register-section">
-			还没有账号?<text @click="toRegist">马上注册</text>
 		</view>
 		<mallplusCopyright></mallplusCopyright>
 	</view>
@@ -238,9 +227,12 @@
 					});
 				}
 			},
-			toForget () { //修改密码
+			toForget () { //忘记密码
+				uni.navigateTo({
+					url: '/pages/client/public/forgetPwd',
+				});
 			},
-			toPrivacy () {
+			toPrivacy () { //协议
 				uni.navigateTo({
 					url: '/pages/client/info/privacy',
 				});
@@ -407,9 +399,10 @@
 		position: relative;
 		left: 50upx;
 		top: -40upx;
-		font-size: 46upx;
-		color: #555;
-		text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
+		font-size: 52upx;
+		letter-spacing: 4upx;
+		color: #333333;
+		font-weight: blod;
 	}
 
 	.input-content {
@@ -422,11 +415,10 @@
 		align-items: flex-start;
 		justify-content: center;
 		padding: 0 30upx;
-		background: $page-color-light;
 		height: 120upx;
 		border-radius: 4px;
-		margin-bottom: 50upx;
-
+		margin-top: 35upx;
+		border-bottom: 1upx solid #F1F1F1;
 		&:last-child {
 			margin-bottom: 0;
 		}
@@ -434,23 +426,39 @@
 		.tit {
 			height: 50upx;
 			line-height: 56upx;
-			font-size: $font-sm + 2upx;
-			color: $font-color-base;
+			letter-spacing: 4upx;
+			font-size: 28upx;
+			color: #333;
+			font-weight: blod;
 		}
 
 		input {
-			height: 60upx;
-			font-size: $font-base + 2upx;
-			color: $font-color-dark;
+			height: 65upx;
+			font-size: 34upx;
+			color: #999999;
 			width: 100%;
+			letter-spacing: 4upx;
 		}
 	}
-
+	.pwd-input {
+		position: relative;
+		.forget-section {
+			position: absolute;
+			right: 0;
+			bottom: 10upx;
+			color: #3DABFF;
+			font-size: 34upx;
+			letter-spacing: 4upx;
+			z-index: 10;
+		}
+	}
 	.vx-btn {
 		background: #fff;
 		display: flex;
 		justify-content: space-around;
+		height: 90upx;
 		button{
+			height: 100%;
 			background: #fff;
 			&:after {
 				border: none;
@@ -463,46 +471,41 @@
 	}
 
 	.wxLogin {
-		height: 80upx;
-		width: 80upx;
+		height: 86upx;
+		width: 86upx;
 		display: block;
 		margin: 0 auto;
 	}
 
 	.confirm-btn {
 		width: 630upx;
-		height: 76upx;
-		line-height: 76upx;
-		border-radius: 50px;
+		height: 72upx;
+		line-height: 72upx;
+		border-radius: 36px;
 		margin-top: 70upx;
-		margin-bottom: 70upx;
-		background: $uni-color-primary;
+		margin-bottom: 35upx;
+		background: linear-gradient(-90deg, #39A9FF, #6BBFFF);
 		color: #fff;
-		font-size: $font-lg;
+		font-size: 36upx;
+		font-weight: blod;
+		letter-spacing: 4upx;
 
 		&:after {
 			border-radius: 100px;
+			border: none;
 		}
 	}
 
-	.forget-section {
-		font-size: $font-sm + 2upx;
-		color: $font-color-spec;
-		text-align: center;
-		margin-top: 40upx;
-	}
-
 	.register-section {
-		// position: absolute;
-		// left: 0;
-		// bottom: 100upx;
 		width: 100%;
-		font-size: $font-sm + 2upx;
-		color: $font-color-base;
-		text-align: center;
-
+		font-size: 24upx;
+		letter-spacing: 4upx;
+		color: #999;
+		text-align: right;
+		padding: 0 60upx;
+		margin-bottom: 65upx;
 		text {
-			color: $font-color-spec;
+			color: #3DABFF;
 			margin-left: 10upx;
 		}
 	}

@@ -30,8 +30,8 @@
 					</checkbox-group>
 				</view> -->
 				<view class="read-privacy">
-					<checkbox-group class="block" @change="CheckboxChange" style="margin-right: 10upx;">
-							<checkbox style="margin-right: 10upx;transform:scale(0.7)" class='round red checked' :class="checkbox[1].checked?'checked':''" :checked="checkbox[1].checked?true:false" value="B"></checkbox>
+					<checkbox-group class="block" @change="CheckboxChange" style="display: flex;align-items: center;">
+							<checkbox style="transform:scale(0.5)" class='round blue checked' :class="checkbox[1].checked?'checked':''" :checked="checkbox[1].checked?true:false" value="B"></checkbox>
 						登录前请阅读
 						<text @click.stop="toPrivacy('/pages/client/info/privacy')" class="text-blue">丫咪购隐私协议</text>
 						<text @click.stop="toPrivacy('/pages/client/info/agreement')" class="text-blue">,丫咪购服务私协议</text>
@@ -44,7 +44,7 @@
 					微信注册
 				</button>
 			</view> -->
-			<view class="forget-section text-blue" @click="toLoginPwd">已经有账号?马上登录</view>
+			<view class="forget-section text-blue" @click="toLoginPwd">已经有账号?<text class="forget-section-login text-blue">马上登录</text></view>
 		</view>
 		<uni-popup ref="popup" type="center">
 			<button type="primary" open-type='getPhoneNumber' @getphonenumber="getPhoneNumber">微信授权手机号码</button>
@@ -58,8 +58,8 @@
 				<view class="cu-form-group">
 					<view class="title">验证码</view>
 					<input placeholder="请输入手机验证码" name="input" :value="phoneCode" @input="editInput($event,'code')"></input>
-					<button class='cu-btn bg-green shadow' v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</button>
-					<button class='cu-btn bg-green shadow' v-else>{{ auth_register_time }}秒</button>
+					<button class='cu-btn bg-green text-blue shadow' v-if="registerCoding == false" @click.stop="getRegisterCode">发送验证码</button>
+					<button class='cu-btn bg-green text-blue shadow' v-else>{{ auth_register_time }}秒</button>
 				</view>
 				<view class="cu-form-group pwd">
 					<view class="title">密码</view>
@@ -541,21 +541,23 @@
 	}
 
 	.codeText {
-		font-size: 28upx;
-		width: 25%;
+		font-size: 34upx;
+		width: 35%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: #fa436a;
+		color: #3DABFF;
+		letter-spacing: 4upx;
 	}
 
 	.authTime {
-		font-size: 28upx;
-		width: 25%;
+		font-size: 34upx;
+		width: 35%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: #fa436a;
+		color: #3DABFF;
+		letter-spacing: 4upx;
 	}
 
 	.back-btn {
@@ -618,9 +620,10 @@
 		position: relative;
 		left: 50upx;
 		top: -40upx;
-		font-size: 46upx;
-		color: #555;
-		text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
+		font-size: 52upx;
+		letter-spacing: 4upx;
+		color: #333333;
+		font-weight: blod;
 	}
 
 	.input-content {
@@ -633,11 +636,10 @@
 		align-items: flex-start;
 		justify-content: center;
 		padding: 0 30upx;
-		background: $page-color-light;
 		height: 120upx;
 		border-radius: 4px;
-		margin-bottom: 50upx;
-
+		margin-top: 35upx;
+		border-bottom: 1upx solid #F1F1F1;
 		&:last-child {
 			margin-bottom: 0;
 		}
@@ -645,38 +647,44 @@
 		.tit {
 			height: 50upx;
 			line-height: 56upx;
-			font-size: $font-sm + 2upx;
-			color: $font-color-base;
+			letter-spacing: 4upx;
+			font-size: 28upx;
+			color: #333;
+			font-weight: blod;
 		}
 
 		input {
-			height: 60upx;
-			font-size: $font-base + 2upx;
-			color: $font-color-dark;
+			height: 65upx;
+			font-size: 34upx;
+			color: #999999;
 			width: 100%;
+			letter-spacing: 4upx;
 		}
 	}
 
 	.confirm-btn {
 		width: 630upx;
-		height: 76upx;
+		height: 72upx;
 		line-height: 76upx;
-		border-radius: 50px;
+		border-radius: 36px;
 		margin-top: 70upx;
-		background: $uni-color-primary;
+		background: linear-gradient(-90deg, #39A9FF, #6BBFFF);
 		color: #fff;
-		font-size: $font-lg;
-
+		font-size: 36upx;
+		font-weight: blod;
+		letter-spacing: 4upx;
 		&:after {
 			border-radius: 100px;
 		}
 	}
 
 	.forget-section {
-		font-size: $font-sm + 2upx;
-		color: $font-color-spec;
-		text-align: center;
+		font-size: 24upx;
+		letter-spacing: 4upx;
+		color: #999999;
+		text-align: right;
 		margin-top: 40upx;
+		padding: 0 60upx;
 		.vxUserInfo-btn {
 			background: #fff;
 			border: none;
@@ -689,11 +697,12 @@
 	}
 
 	.register-section {
+		
 		position: absolute;
 		left: 0;
 		bottom: 50upx;
 		width: 100%;
-		font-size: $font-sm + 2upx;
+		font-size: 24upx;;
 		color: $font-color-base;
 		text-align: center;
 
@@ -755,9 +764,10 @@
 	.read-privacy {
 		display: flex;
 		align-items: center;
-		margin-top: 30upx;
-		font-size: 22upx;
+		margin-top: 20upx;
+		font-size: 24upx;
 		color: #999;
+		letter-spacing: 4upx;
 	}
 	.checked {
 		:before {

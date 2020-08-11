@@ -26,9 +26,9 @@
 					<input type="password" placeholder="请再次输入新密码" v-model="passwords" maxlength="16"/>
 				</view>
 			</view>
-			<button class="confirm-btn" @click.stop="editPassword">修改</button>
+			<button class="confirm-btn" @click.stop="editPassword">确认修改</button>
 		</view>
-		<view class="register-section flex justify-around">
+		<view class="register-section flex justify-between">
 			<view class="text-blue">
 				<navigator url="/pages/client/public/reg">马上注册</navigator>
 			</view>
@@ -247,9 +247,10 @@
 		position: relative;
 		left: 50upx;
 		top: -40upx;
-		font-size: 46upx;
-		color: #555;
-		text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
+		font-size: 52upx;
+		letter-spacing: 4upx;
+		color: #333333;
+		font-weight: blod;
 	}
 
 	.input-content {
@@ -262,10 +263,9 @@
 		align-items: flex-start;
 		justify-content: center;
 		padding: 0 30upx;
-		background: $page-color-light;
-		height: 120upx;
 		border-radius: 4px;
-		margin-bottom: 50upx;
+		margin-top: 35upx;
+		border-bottom: 1upx solid #F1F1F1;
 
 		&:last-child {
 			margin-bottom: 0;
@@ -286,12 +286,13 @@
 		}
 	
 		.codeText {
-			font-size: 28upx;
-			width: 25%;
+			font-size: 34upx;
+			letter-spacing: 4upx;
+			width: 35%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			color: #fa436a;
+			color: #3DABFF;
 		}
 
 		.authTime {
@@ -338,13 +339,14 @@
 		width: 630upx;
 		height: 76upx;
 		line-height: 76upx;
-		border-radius: 50px;
+		border-radius: 36px;
 		margin-top: 70upx;
-		margin-bottom: 70upx;
-		background: $uni-color-primary;
+		margin-bottom: 25upx;
+		background: linear-gradient(-90deg, #39A9FF, #6BBFFF);
 		color: #fff;
-		font-size: $font-lg;
-
+		font-size: 36upx;
+		font-weight: blod;
+		letter-spacing: 4upx;
 		&:after {
 			border-radius: 100px;
 		}
@@ -358,16 +360,14 @@
 	}
 
 	.register-section {
-		// position: absolute;
-		// left: 0;
-		// bottom: 100upx;
 		width: 100%;
-		font-size: $font-sm + 2upx;
-		color: $font-color-base;
+		font-size: 24upx;
+		color: #3DABFF;
 		text-align: center;
-
+		letter-spacing: 4upx;
+		padding: 0 60upx;
 		text {
-			color: $font-color-spec;
+			color: #3DABFF;
 			margin-left: 10upx;
 		}
 	}
