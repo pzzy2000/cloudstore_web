@@ -63,7 +63,7 @@
 			"style": { //用户 首页
 				"navigationBarTitleText": "我的购物车",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -233,6 +233,14 @@
 				"enablePullDownRefresh": true
 			}
         }
+        ,{
+            "path" : "pages/agent/goods/hotsale/search",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -257,7 +265,7 @@
 				"pagePath": "pages/agent/goods/category/category",
 				"iconPath": "static/tabbar/classify.png",
 				"selectedIconPath": "static/tabbar/classify-select.png",
-				"text": "商品分类"
+				"text": "分类"
 			},
 			{
 				"pagePath": "pages/client/cart/index",
@@ -324,7 +332,7 @@
 		"list": [{
 			"name": "", //模式名称
 			//"path": "", //启动页面，必选
-			"path": "pages/client/earnings/index", //启动页面，必选
+			"path": "", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}

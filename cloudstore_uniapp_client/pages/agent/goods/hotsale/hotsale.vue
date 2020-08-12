@@ -8,7 +8,7 @@
 				<text class="cuIcon-locationfill text-white"></text>
 				<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
 			</view>
-			<view class="search-input">
+			<view class="search-input" @click.stop="search">
 				<view class="search-form round">
 					<text class="cuIcon-search"></text>
 					<text>云吞</text>
@@ -51,12 +51,9 @@
 			</view>
 		</view>
 		<!-- 热门活动列表 -->
-		<scroll-view scroll-x class="activity-nav nav" scroll-with-animation :scroll-left="scrollLeft">
-			<view class="cu-item" :class="index==TabCur?'text-blue':''" v-for="(item,index) in activity.show" :key="index" @tap="tabSelect" :data-id="index" @click="searchActivityGoodsShowList(item)">
-				<view class="cu-item-title">{{item.name}}</view>
-				<!-- <text class="activity-nav-text">猜你喜欢</text> -->
-			</view>
-		</scroll-view>
+		<!-- <view class="cu-item" v-for="(item,index) in activity.show" :key="index" @click="searchActivityGoodsShowList(item)">
+			<view class="cu-item-title">{{item.name}}</view>
+		</view>
 		<view class="goods-list">
 			<view v-for="(goods, index) in activityShopList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
 				<image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="" class="detail-img"></image>
@@ -71,6 +68,36 @@
 					<view class="cart-icon">
 						<text class="cuIcon-cart text-white"></text>
 					</view>
+				</view>
+				<button class="detail-share" @click.stop="shareSave(goods)">分享</button>
+			</view>
+		</view> -->
+		<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
+			<view   class="f-header m-t" @click="navToCategory(item)">
+				<view class="faddish-title">
+					<view class="title-main">
+						{{item.name}}
+					</view>
+					<text class='more'>查看更多 ></text>
+				</view>
+			</view>
+			<view class="goods-list">
+				<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
+					<view class="detail-img"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
+					<view class="goods-detail">
+						<view class="detail-title">
+							<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
+						</view>
+						<view class="detail-bottom">
+							<view class="price">
+								<text class="price-sale">¥{{goods.goodsPicesBean.salePrice}}</text>
+								<text class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</text>
+							</view>
+							<view class="cart-icon">购买</view>
+						</view>
+						<button class="detail-share" @click.stop="shareSave(goods)">分享</button>
+					</view>
+					<button type="primary" class="detail-share" @click.stop='shareSave(goods)'>分享</button>
 				</view>
 			</view>
 		</view>
@@ -127,7 +154,7 @@
 				swiperCurrent: '',
 				swiperLength: '3',
 				shareList: [{
-					icon: "/static/temp/share_wechat.png",
+					icon: "/static/share_wechat.png",
 					text: "微信好友",
 					type: 1
 				}]
@@ -225,7 +252,7 @@
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params, true);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params);
 				if (data) {
 					this.activity.nav = data.result; //查询出来的 
 				}
@@ -235,44 +262,63 @@
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params, false);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params);
 				if (data) {
 					// this.activity.show = data.result.records;
 					let showActivity = data.result.records;
 					for (let i = 0; i < showActivity.length; i++) {
 						showActivity[i].goodsList = [];
+						this.searchActivityGoodsShowList(showActivity[i])
 					}
 					this.activity.show = showActivity;
-					console.log(this.activity.show)
-					this.searchActivityGoodsShowList(this.activity.show[0])
 				}
 			},
-			async searchActivityGoodsShowList(item) {
+			async searchActivityGoodsShowList(activity) {
 				let params = {
-					activityId: item.id,
+					activityId: activity.id,
 					pageNum: 1,
-					pageSize: 6
+					pageSize: 5
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, false);
+				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params);
 				if (data) {
-					this.activityShopList = data.result.records;
+					activity.goodsList = data.result.records;
 				}
 			},
+			// async searchActivityNavList() {
+			// 	let params = {
+			// 	};
+			// 	let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params, true);
+			// 	if (data) {
+			// 		this.activity.nav = data.result; //查询出来的 
+			// 	}
+			// },
+			// async searchActivityShowList() {
+			// 	let params = {
+			// 	};
+			// 	let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params, false);
+			// 	if (data) {
+			// 		let showActivity = data.result.records;
+			// 		for (let i = 0; i < showActivity.length; i++) {
+			// 			showActivity[i].goodsList = [];
+			// 		}
+			// 		this.activity.show = showActivity;
+			// 		this.searchActivityGoodsShowList(this.activity.show[0])
+			// 	}
+			// },
+			// async searchActivityGoodsShowList(item) {
+			// 	let params = {
+			// 		activityId: item.id,
+			// 		pageNum: 1,
+			// 		pageSize: 6
+			// 	};
+			// 	let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, false);
+			// 	if (data) {
+			// 		this.activityShopList = data.result.records;
+			// 	}
+			// },
 			async getBanner() {
 				let params = {
-					// storeId: 0
 				};
-				// switch (uni.getSystemInfoSync().platform) {
-				// 	case 'android':
-				// 		params.type = 2;
-				// 		break;
-				// 	case 'ios':
-				// 		params.type = 3;
-				// 		break;
-				// 	default:
-				// 		params.type = 5;
-				// 		break;
-				// }
 				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params, false);
 				if (data) {
 					this.carouselList = data.result || [];
@@ -280,16 +326,6 @@
 					this.titleNViewBackground = 'rgb(203, 87, 60)';
 				}
 			},
-			// async getCouponList() {
-			// 	let params = {
-			// 		pageSize: 3
-			// 	};
-			// 	let data = await Api.apiCall('get', Api.index.selectNotRecive, params);
-			// 	if (data) {
-			// 		this.couponList = data || [];
-			// 	}
-			// },
-
 			dateFormat(time) {
 				if (time == null || time === '') {
 					return 'N/A';
@@ -340,7 +376,7 @@
 				let  agentId = this.agentId;
 				if (item.status) {
 					uni.navigateTo({
-						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?agentId='+agentId+'&id='+activitId
+						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?agentId='+agentId+'&id='+activitId+'&name='+item.name
 					});
 				} else {
 					this.$api.msg('敬请期待')
@@ -351,11 +387,10 @@
 			},
 			search() {
 				uni.navigateTo({
-					url: "/pages/agent/goods/category/category?goodsName=" + this.searchName
+					url: "/pages/agent/goods/hotsale/search"
 				});
 			},
 			async shareSave (info) { //分享调用接口
-				console.log(info)
 				  this.goodsId = info.goodsId
 				  this.activityId = info.activityId
 				  this.agentGoodsId = info.id
@@ -404,7 +439,7 @@
 
 <style lang="scss" scoped>
 	.container {
-		background: #f1f1f1;
+		background: #f5f5f5;
 	}
 	.MP-search {
 		.indexTopBg {
@@ -457,11 +492,12 @@
 		}
 	}
 	page {
-		background: $page-color-base;
+		background: #f5f5f5;
 		padding-bottom: 160upx;
 		.activity-main {
 			width: 100%;
-			margin:15upx 0;
+			padding:15upx 0;
+			background-color: #fff;
 			.cate-section {
 				position: relative;
 				z-index: 5;
@@ -470,7 +506,7 @@
 			
 			.carousel-section {
 				padding: 0;
-			
+				
 				.titleNview-placing {
 					padding-top: 0;
 					height: 0;
@@ -499,15 +535,13 @@
 	.carousel-section {
 		position: relative;
 		padding-top: 285upx;
-		width: 94%;
-		margin: 0 auto;
-
+		width: 100%;
+		background-color: #fff;
 		.titleNview-placing {
 			height: var(--status-bar-height);
 			padding-top: 44upx;
 			box-sizing: content-box;
 		}
-
 		.titleNview-background {
 			position: absolute;
 			top: 0;
@@ -519,9 +553,9 @@
 	}
 
 	.carousel {
-		width: 100%;
+		width: 94%;
 		height: 350upx;
-
+		margin: 0 auto;
 		.carousel-item {
 			width: 100%;
 			height: 100%;
@@ -583,14 +617,11 @@
 				text-align: center;
 			}
 		}
-
 		image {
-			width: 96upx;
-			height: 96upx;
+			width: 120upx;
+			height: 120upx;
 			margin-bottom: 14upx;
 			border-radius: 50%;
-			opacity: 0.7;
-			box-shadow: 4upx 4upx 20upx rgba(250, 67, 106, 0.3);
 		}
 	}
 
@@ -608,9 +639,7 @@
 
 	.activity-list {
 		background: #fff;
-		margin: 0 auto;
-		width: 94%;
-		border-radius: 20upx;
+		width: 100%;
 	}
 	.f-header {
 		display: flex;
@@ -627,26 +656,27 @@
 			justify-content: space-between;
 			background: #fff;
 			width: 100%;
-			height: 60rpx;
+			height: 60upx;
 			position: relative;
 			.title-main {
-				font-size: 30rpx;
-				padding: 5rpx 10rpx;
-				background-color: #b48e4f;
-				border-bottom-right-radius: 10rpx;
-				border-bottom-left-radius: 10rpx;
+				font-size: 30upx;
+				padding: 5upx 10upx;
+				background-color: #ff6a7f;
+				border-bottom-right-radius: 10upx;
+				border-bottom-left-radius: 10upx;
 				position: absolute;
-				left: 20rpx;
+				left: 20upx;
 				top: 0;
 				color: #fff;
 
 			}
 			.more {
-				color: #999;
-				font-size: 24rpx;
+				color: #666666;
+				font-size: 22upx;
 				text-align: right;
 				display: inline-block;
 				width: 100%;
+				line-height: 60upx;
 			}
 		}
 		image {
@@ -760,14 +790,38 @@
 	justify-content: space-between;
 	flex-wrap: wrap;
 	align-content: flex-start;
-	padding: 0 25rpx;
+	padding: 25upx 25upx 0;
+	background-color: #F5F5F5;
+	background-image: linear-gradient(180deg, #fff, #F5F5F5);
 	.goods-item {
 		width: 340upx;
 		height: 400upx;
 		padding: 18upx;
-		margin-bottom: 36upx;
+		margin-bottom: 30upx;
 		border-radius: 10upx;
-		background-color: #fff;
+		background: #fff;
+		position: relative;
+		.detail-share {
+			position: absolute;
+			right: 0;
+			top: 0;
+			font-size: 20upx;
+			padding: 0;
+			margin: 0;
+			color: #fff;
+			text-align: center;
+			line-height: 40upx;
+			width: 70upx;
+			height: 40upx;
+			background-image: linear-gradient(-90deg, #FE8A14, #FED041);
+			border-top-left-radius: 0;
+			border-top-right-radius: 10upx;
+			border-bottom-left-radius: 10upx;
+			border-bottom-right-radius: 0;
+			&:after {
+				border: none;
+			}
+		}
 	}
 	.detail-img {
 		width:230upx ;
@@ -775,6 +829,10 @@
 		margin: 0 auto;
 		display: block;
 		margin-bottom: 36upx;
+		image {
+			height: 100%;
+			width: 100%;
+		}
 	}
 	.detail-title {
 		color: #000000;
@@ -806,12 +864,15 @@
 			}
 		}
 		.cart-icon {
-			border-radius: 50%;
 			background-image: linear-gradient(#39A9FF, #2D9BEF);
-			height: 44upx;
-			width: 44upx;
-			line-height: 44upx;
+			height: 50upx;
+			width: 70upx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			text-align: center;
+			border-radius: 10upx;
+			color: #fff;
 		}
 	}
 }

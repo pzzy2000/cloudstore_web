@@ -27,7 +27,7 @@
 					<text class="state" v-else-if="item.orderStatus === 'refunded'">已退款</text>
 					<text class="state" v-else-if="item.orderStatus === 'peisoged'">已配送</text>
 					<text class="state" v-else-if="item.orderStatus === 'complete'">已完成</text>
-					<text class="state" v-else-if="item.orderStatus === 'returnsing'">退货</text>
+					<text class="state" v-else-if="item.orderStatus === 'returnsing'">退货中</text>
 					<text class="state" v-else-if="item.orderStatus === 'returns'">已退货</text>
 					<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
 				</template>
@@ -48,26 +48,26 @@
 					</view> -->
 				</view>
 				<view class="flex align-center">
-					<view class="" v-if="order.status === 'WaitDeliver'">待发货</view>
-					<view class="" v-else-if="order.status === 'peisoged'">已配送</view>
-					<view class="" v-else-if="order.status === 'returnsing'">退货中</view>
-					<view class="" v-else-if="order.status === 'refunding'">退款中</view>
-					<view class="" v-else-if="order.status === 'refunded'">已退款</view>
-					<view class="" v-else-if="order.status === 'returns'">退货成功</view>
-					<view class="" v-else-if="order.status === 'returnsfail'">退货拒绝</view>
-					<view class="" v-else-if="order.status === 'delivered'">已收货</view>
+					<view class="status" v-if="order.status === 'WaitDeliver'">待发货</view>
+					<view class="status" v-else-if="order.status === 'peisoged'">已配送</view>
+					<view class="status" v-else-if="order.status === 'returnsing'">退货中</view>
+					<view class="status" v-else-if="order.status === 'refunding'">退款中</view>
+					<view class="status" v-else-if="order.status === 'refunded'">已退款</view>
+					<view class="status" v-else-if="order.status === 'returns'">退货成功</view>
+					<view class="status" v-else-if="order.status === 'returnsfail'">退货拒绝</view>
+					<view class="status" v-else-if="order.status === 'delivered'">已收货</view>
 				</view>
 			</view>
 			<view class="i-top">
 				<text>订单时间: {{item.createTime}}</text>
 				<view class="price-box">
-					<text class="num">共{{orderList.length}}件 &nbsp;&nbsp;&nbsp;&nbsp; 总价:</text>
+					<text class="num">总价:</text>
 					<text class="price">{{item.payPrice}}</text>
 				</view>
 			</view>
 			<template>
 				<!-- 待支付 -->
-				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'wait'">
+				<view class="padd-tb-sm text-right state-btn" v-if="item.orderStatus === 'wait'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 					<button class="cu-btn round" @click.stop="toBuy(item)">立即支付</button>
 				</view>
@@ -220,6 +220,7 @@
 				let data = await Api.apiCall('post',Api.client.order.getClientOrder,parmas)
 				if (data) {
 					const tmpData = data.result.records
+					console.log(tmpData)
 					if(tmpData.length === 0) {
 						this.$api.msg('暂无更多数据了')
 					}else{
@@ -407,7 +408,7 @@
 					transform: translateX(-50%);
 					width: 44px;
 					height: 0;
-					// border-bottom: 2px solid #41b0ff;
+					border-bottom: 2px solid #41b0ff;
 				}
 			}
 		}
@@ -428,11 +429,15 @@
 			align-items: center;
 			justify-content: space-between;
 			height: 80upx;
-			padding-right:30upx;
 			font-size: 22upx;
 			color: #999999;
+			.time {
+				color: #333333;
+				font-size: 24upx;
+			}
 			.state {
 				color: #49B1FD;
+				font-size: 24upx;
 			}
 			.price-box {
 				color: #999;
@@ -443,7 +448,7 @@
 				}
 				.price {
 					color: #FF1313;
-					font-size: 24upx;
+					font-size: 32upx;
 					font-weight: bold;
 				}
 			}
@@ -517,7 +522,7 @@
 					line-height: 50upx;
 					.price-num {
 						color: #FF1313;
-						font-size: 35upx;
+						font-size: 32upx;
 						font-weight: blod;
 						.price-sku {
 							color: #999;
@@ -529,14 +534,20 @@
 					}
 				}
 			}
+			.flex {
+				.status {
+					font-size: 20upx;
+					color: #666;
+				}
+			}
 		}
 		
 		.price-box{
 			display: flex;
 			justify-content: flex-end;
 			align-items: baseline;
-			padding: 20upx 30upx;
-			font-size: $font-sm + 2upx;
+			padding: 20upx 0;
+			font-size: 32upx;
 			color: $font-color-light;
 			.num{
 				margin: 0 8upx;
@@ -721,6 +732,9 @@
 		margin-left: 10upx;
 	}
 	.state-btn {
+		padding: 20upx 0;
+		margin: 0;
+		border-top: 1upx solid #eee;
 		.cu-btn {
 			background-image: linear-gradient(#39A9FF, #2D9BEF);
 			color: #fff;
