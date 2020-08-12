@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">全部申请(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="2">待处理(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="3">退货中(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="4">已完成(<span>1000</span>)</el-menu-item>
-      <el-menu-item index="5">已拒绝(<span>1000</span>)</el-menu-item>
-    </el-menu>
+<!--    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">-->
+<!--      <el-menu-item index="1">全部申请(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="2">待处理(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="3">退货中(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="4">已完成(<span>1000</span>)</el-menu-item>-->
+<!--      <el-menu-item index="5">已拒绝(<span>1000</span>)</el-menu-item>-->
+<!--    </el-menu>-->
     <el-card class="filter-container" shadow="never" style="margin: 0 20px">
       <div>
         <i class="el-icon-search"></i>
@@ -28,12 +28,12 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="searchList" size="small" label-width="130px" ref="searchList">
           <el-form-item label="服务单号：" prop="name">
-            <el-input style="width: 214px" v-model="searchList.code" placeholder="订单编号"></el-input>
+            <el-input style="width: 214px" v-model="searchList.code" placeholder="服务单号"></el-input>
           </el-form-item>
           <el-form-item label="用户账号：" prop="count">
             <el-input style="width: 214px" v-model="searchList.count" placeholder="用户账号"></el-input>
           </el-form-item>
-          <el-form-item label="申请时间：" prop="ordertime">
+          <el-form-item label="下单时间：" prop="ordertime">
             <el-date-picker v-model="searchList.ordertime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
             </el-date-picker>
           </el-form-item>
@@ -51,7 +51,7 @@
         <el-table-column label="服务单号" align="center" prop="number" :formatter="showMsg">
 <!--          <template slot-scope="scope">{{scope.row.orderBean.number}}</template>-->
         </el-table-column>
-        <el-table-column label="申请时间" align="center" prop="createTime" :formatter="showMsg">
+        <el-table-column label="下单时间" align="center" prop="createTime" :formatter="showMsg">
 <!--          <template slot-scope="scope">{{scope.row.orderBean.createTime | formatDate}}</template>-->
         </el-table-column>
         <el-table-column label="用户账号" align="center" prop="userphone" :formatter="showMsg">
@@ -60,8 +60,8 @@
         <el-table-column label="退款金额" align="center" prop="payPrice" :formatter="showMsg">
 <!--          <template slot-scope="scope">{{scope.row.orderBean.payPrice}}</template>-->
         </el-table-column>
-        <el-table-column label="联系人" align="center">
-          <template slot-scope="scope">{{scope.row.phone}}</template>
+        <el-table-column label="联系人" align="center" prop="name" :formatter="showMsg">
+<!--          <template slot-scope="scope">{{scope.row.clientBean.name}}</template>-->
         </el-table-column>
         <el-table-column label="申请状态" align="center">
           <template slot-scope="scope">{{scope.row.type | changeMsg}}</template>
@@ -180,7 +180,7 @@
         switch (col.property) {
           case "number":{
             try {
-              return row.orderBean.number
+              return row.id;
             }catch (e) {
               return '数据读取错误'
             }
@@ -202,6 +202,13 @@
           case "payPrice":{
             try {
               return row.orderBean.payPrice
+            }catch (e) {
+              return '数据读取错误'
+            }
+          }
+          case "name":{
+            try {
+              return row.clientBean.name
             }catch (e) {
               return '数据读取错误'
             }

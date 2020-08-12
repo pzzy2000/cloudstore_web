@@ -146,6 +146,9 @@
       created() {
         this.getList(1);
       },
+      activated() {
+        this.getList(1)
+      },
       filters: {
         // 时间格式自定义 只需把字符串里面的改成自己所需的格式
         formatDate(time) {
