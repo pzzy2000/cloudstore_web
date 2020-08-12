@@ -11,39 +11,35 @@
 					<text class="tit">手机号码</text>
 					<input type="number" v-model="access" placeholder="请输入手机号码/登录账号" />
 				</view>
-				<view class="input-item">
+				<view class="input-item pwd-input">
 					<text class="tit">密码</text>
 					<input type="password" placeholder="请输入密码" v-model="password" @confirm="toLogin" />
+					<text class="forget-section" @click.stop="toForget">忘记密码？</text>
 				</view>
 			</view>
-			<!-- <label class="radio">
-				<radio value="r1" checked="checked" />登录前请阅读
-					<navigator url="../info/privacy">
-						丫咪购隐私协议
-					</navigator>
-				</radio>
-			 </label> -->
 			<button class="confirm-btn" @click.stop="toLogin" :disabled="logining">登录</button>
+			<view class="register-section">
+				还没有账号?<text @click="toRegist">马上注册</text>
+			</view>
 			<!-- #ifdef APP-PLUS -->
 				<view class="vx-btn">
 					<image src="/static/temp/share_wechat.png" mode="" class="wxLogin" @click.stop="appLogin"></image>
 				</view>
 			<!-- #endif -->
 			<!-- #ifdef MP-WEIXIN -->
-				<view class="vx-btn">
+				<!-- 微信授权信息 -->
+				<!-- <view class="vx-btn">
 					<button open-type="getUserInfo" @getuserinfo='getWxInfo'  withCredentials="true">
 						<image src="/static/temp/share_wechat.png" mode="" class="wxLogin"></image>
 					</button>
+				</view> -->
+				<!-- 微信授权手机号 -->
+				<view class="vx-btn">
+					<button open-type='getPhoneNumber' @getphonenumber="getPhoneNumber">
+						<image src="/static/share_wechat.png" mode="" class="wxLogin"></image>
+					</button>
 				</view>
 			<!-- #endif -->
-			<view class="forget-section">
-				<navigator url="/pages/client/public/forgetPwd">
-					忘记密码?
-				</navigator>
-			</view>
-		</view>
-		<view class="register-section">
-			还没有账号?<text @click="toRegist">马上注册</text>
 		</view>
 		<mallplusCopyright></mallplusCopyright>
 	</view>
@@ -77,6 +73,10 @@
 				shareClientId: "",
 				userType: 'Client',
 				checked: true,
+				vxPhoneInfo: '',
+				openId: '',
+				sessionKey: '',
+				phoneDetail: ''
 			};
 		},
 		onLoad() {
@@ -87,6 +87,9 @@
 			this.activityId = this.goodsInfo.activityId
 			this.agentGoodsId = this.goodsInfo.agentGoodsId
 			this.shareClientId = this.goodsInfo.shareClientId
+		},
+		onShow() {
+			this.getVxOpenId()
 		},
 		computed: {
 			// ...mapState(['hasLogin', 'userInfo'])
@@ -114,28 +117,26 @@
 						});
 					},
 					success: function(loginRes) {
-						uni.getUserInfo({
-							provider: 'weixin',
-							success: function(infoRes) {
-								if (infoRes) {
-									uni.setStorageSync('vxInfo', infoRes.rawData)
-								}
-							}
-						});
-						that.vxLogin(loginRes)
+						// uni.getUserInfo({
+						// 	provider: 'weixin',
+						// 	success: function(infoRes) {
+						// 		if (infoRes) {
+						// 			uni.setStorageSync('vxInfo', infoRes.rawData)
+						// 		}
+						// 	}
+						// });
+						// that.vxLogin(loginRes)
 					}
 				});
 			},
-			vxLogin (loginRes) {
+			async vxLogin () {
 				var that = this
-				// uni.setStorageSync('code',loginRes.code)
-				var code = loginRes.code
 				let params = {
 					'bean.logintype': 'client',
 					'bean.action': 'weixin',
-					'bean.password': code,
-					'bean.access': code
-				}
+					'bean.password': this.openId,
+					'bean.access': this.openId
+				} 
 				uni.request({
 					url: Api.BASEURI + Api.agent.user.wxLogin,
 					method: 'post',
@@ -143,61 +144,35 @@
 						'content-type': 'application/x-www-form-urlencoded'
 					},
 					data: params,
-					fail: function() {
-						uni.hideLoading();
-						uni.showToast({
-							title: '微信登录失败',
-							icon: 'none'
-						});
-					},
-					success: function(res) {
-						uni.hideLoading();
-						if (res.data.result.code === 100006) {
-							var data = res.data.result
-							uni.showModal({
-								title: '提示',
-								content: '您的微信暂未绑定手机号，请前往绑定。若没有使用手机号注册过请前往注册。',
-								showCancel: true,
-								cancelText: '注册',
-								confirmText: '绑定',
-								success: res => {
-									if (res.confirm) {
-										uni.navigateTo({
-											url: '/pages/client/public/getVxPhone?openId=' + data.msg
-										});
-									} else if (res.cancel) {
-										uni.navigateTo({
-											url: '/pages/client/public/reg'
-										});
-									}
-								}
-							});
-						} else if (res.data.result.code === 0) {
+					success: res => {
+						var data = res.data
+						console.log(data)
+						if(data.result.code === 0) {
 							uni.showToast({
 								title: '登录成功',
 								icon: 'none'
 							});
 							var userInfo = {
-								id: res.data.result.result.id,
-								name: res.data.result.result.name,
-								url: res.data.result.result.url,
-								phone: res.data.result.result.phone,
-								agent: res.data.result.result.agent,
-								userType: res.data.result.result.userType,
-								relationId: res.data.result.result.relationId,
-								wxPic: res.data.result.result.wxPic
+								id: data.result.result.id,
+								name: data.result.result.name,
+								url: data.result.result.url,
+								phone: data.result.result.phone,
+								agent: data.result.result.agent,
+								userType: data.result.result.userType,
+								relationId: data.result.result.relationId,
+								wxPic: data.result.result.wxPic
 							}
 							uni.setStorageSync('userInfo', userInfo)
-							uni.setStorageSync('token', res.data.result.result.token)
+							uni.setStorageSync('token', data.result.result.token)
 							that.toPages() //判断跳到首页还是商品详情页
+						} else if (data.result.code === 100006){
+							// that.openId = data.result.msg
+							that.vxRegister()
 						} else {
-							uni.showToast({
-								title: res.data.result.msg,
-								icon: 'none'
-							});
+							that.$api.msg(data.result.msg)
 						}
 					}
-				})
+				});
 			},
 			async toLogin() { //账号密码登录
 				var that = this;
@@ -252,13 +227,92 @@
 					});
 				}
 			},
-			toForget () { //修改密码
+			toForget () { //忘记密码
+				uni.navigateTo({
+					url: '/pages/client/public/forgetPwd',
+				});
 			},
-			toPrivacy () {
+			toPrivacy () { //协议
 				uni.navigateTo({
 					url: '/pages/client/info/privacy',
 				});
+			},
+			getVxOpenId (res) {
+				uni.showLoading({
+					title: '正在加载',
+					mask: false
+				});
+				var that = this
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						let params = {
+							'bean.code': loginRes.code
+						} 
+						uni.request({
+							url: Api.BASEURI + Api.client.reg.auth,
+							method: 'post',
+							header: {
+								'content-type': 'application/x-www-form-urlencoded'
+							},
+							data: params,
+							success: res => {
+								uni.hideLoading()
+								console.log(res)
+								that.openId = res.data.result.result.openid
+								that.sessionKey = res.data.result.result.session_key
+							}
+						});
+					},
+					fail: function() {
+						uni.showToast({
+							title: '微信登录失败',
+							icon: 'none'
+						});
+					},
+				})
+			},
+			getPhoneNumber (res) { //获取微信手机加密信息
+				var that = this
+				if (res.detail.errMsg === 'getPhoneNumber:ok') {
+					this.vxPhoneInfo = res.detail
+					this.vxLogin()
+				}else{
+					uni.showModal({
+						title: '注册提示',
+						content: '微信授权手机号码失败，请使用手机号码注册',
+						showCancel: false,
+						cancelText: '取消',
+						confirmText: '确定',
+						success: res => {
+							uni.navigateTo({
+								url: '/pages/client/public/reg',
+							});
+						},
+					});
+				}
+			},
+			async vxRegister () {
+				let params = {
+					'encryptedData': this.vxPhoneInfo.encryptedData,
+					'openId': this.openId,
+					'iv': this.vxPhoneInfo.iv,
+					'session_key': this.sessionKey
+					// 'userInfo': ""
+				}
+				let data = await Api.apiCall('post', Api.agent.user.savePhone, params ,true)
+				if (data) {
+					if (data.code === 0) {
+						this.vxLogin()
+					} else {
+						this.$api.msg(data.msg)
+					}
+				}
+			},
+			getOpenId() {
+				
 			}
+			
 		}
 	};
 </script>
@@ -345,9 +399,10 @@
 		position: relative;
 		left: 50upx;
 		top: -40upx;
-		font-size: 46upx;
-		color: #555;
-		text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
+		font-size: 52upx;
+		letter-spacing: 4upx;
+		color: #333333;
+		font-weight: blod;
 	}
 
 	.input-content {
@@ -360,11 +415,10 @@
 		align-items: flex-start;
 		justify-content: center;
 		padding: 0 30upx;
-		background: $page-color-light;
 		height: 120upx;
 		border-radius: 4px;
-		margin-bottom: 50upx;
-
+		margin-top: 35upx;
+		border-bottom: 1upx solid #F1F1F1;
 		&:last-child {
 			margin-bottom: 0;
 		}
@@ -372,23 +426,39 @@
 		.tit {
 			height: 50upx;
 			line-height: 56upx;
-			font-size: $font-sm + 2upx;
-			color: $font-color-base;
+			letter-spacing: 4upx;
+			font-size: 28upx;
+			color: #333;
+			font-weight: blod;
 		}
 
 		input {
-			height: 60upx;
-			font-size: $font-base + 2upx;
-			color: $font-color-dark;
+			height: 65upx;
+			font-size: 34upx;
+			color: #999999;
 			width: 100%;
+			letter-spacing: 4upx;
 		}
 	}
-
+	.pwd-input {
+		position: relative;
+		.forget-section {
+			position: absolute;
+			right: 0;
+			bottom: 10upx;
+			color: #3DABFF;
+			font-size: 34upx;
+			letter-spacing: 4upx;
+			z-index: 10;
+		}
+	}
 	.vx-btn {
 		background: #fff;
 		display: flex;
 		justify-content: space-around;
+		height: 90upx;
 		button{
+			height: 100%;
 			background: #fff;
 			&:after {
 				border: none;
@@ -401,46 +471,41 @@
 	}
 
 	.wxLogin {
-		height: 80upx;
-		width: 80upx;
+		height: 86upx;
+		width: 86upx;
 		display: block;
 		margin: 0 auto;
 	}
 
 	.confirm-btn {
 		width: 630upx;
-		height: 76upx;
-		line-height: 76upx;
-		border-radius: 50px;
+		height: 72upx;
+		line-height: 72upx;
+		border-radius: 36px;
 		margin-top: 70upx;
-		margin-bottom: 70upx;
-		background: $uni-color-primary;
+		margin-bottom: 35upx;
+		background: linear-gradient(-90deg, #39A9FF, #6BBFFF);
 		color: #fff;
-		font-size: $font-lg;
+		font-size: 36upx;
+		font-weight: blod;
+		letter-spacing: 4upx;
 
 		&:after {
 			border-radius: 100px;
+			border: none;
 		}
 	}
 
-	.forget-section {
-		font-size: $font-sm + 2upx;
-		color: $font-color-spec;
-		text-align: center;
-		margin-top: 40upx;
-	}
-
 	.register-section {
-		// position: absolute;
-		// left: 0;
-		// bottom: 100upx;
 		width: 100%;
-		font-size: $font-sm + 2upx;
-		color: $font-color-base;
-		text-align: center;
-
+		font-size: 24upx;
+		letter-spacing: 4upx;
+		color: #999;
+		text-align: right;
+		padding: 0 60upx;
+		margin-bottom: 65upx;
 		text {
-			color: $font-color-spec;
+			color: #3DABFF;
 			margin-left: 10upx;
 		}
 	}

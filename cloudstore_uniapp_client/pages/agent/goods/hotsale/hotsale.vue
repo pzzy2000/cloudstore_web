@@ -1,109 +1,80 @@
 <template>
 	<view class="container">
-		<!-- 小程序头部兼容 -->
-		<!-- #ifdef MP -->
-		<nav-bar>丫咪购</nav-bar>
-		
+		<!-- <nav-bar>丫咪购</nav-bar> -->
 		<view class="MP-search">
-			<view class="cu-list menu">
-				<view class="cu-item">
-					<view class="content">
-						<text class="cuIcon-locationfill text-red"></text>
-						<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
-					</view>
-					<!--
-					<view class="action clamp">
-						<text class="text-white text-sm">地址：{{agentShopInfo.address}}</text>
-					</view>
-					-->
-				</view>
+			<image src="/static/index-top-bg.png" mode="" class="indexTopBg"></image>
+			<view class="nav-title">丫咪购</view>
+			<view class="content">
+				<text class="cuIcon-locationfill text-white"></text>
+				<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
 			</view>
-			<!-- <view class="cu-bar search" style="width: 100%;">
+			<view class="search-input">
 				<view class="search-form round">
 					<text class="cuIcon-search"></text>
-					<input :adjust-position="false" type="text" placeholder="搜索商品" confirm-type="search" @input="inputName"></input>
+					<text>云吞</text>
+					<!-- <input :adjust-position="false" type="text" placeholder="搜索商品" confirm-type="search" @input="inputName"></input> -->
 				</view>
-				<view class="action">
+				<!-- <view class="action">
 					<button class="cu-btn bg-green shadow-blur round" @click="search">搜索</button>
-				</view>
-			</view> -->
+				</view> -->
+			</view>
 		</view>
-		<!-- #endif -->
 
 		<!-- 头部轮播 -->
-		<!-- #ifdef MP -->
 		<view class="carousel-section">
-			<!-- #endif -->
-			<!-- #ifndef MP -->
-			<view class="carousel-section">
-				<!-- #endif -->
-				<!-- 标题栏和状态栏占位符 -->
-				<!-- <view class="titleNview-placing"></view> -->
-				<!-- 背景色区域 -->
-				<!-- <view class="titleNview-background" :style="{ backgroundColor: titleNViewBackground }"></view> -->
-				<view class="titleNview-background"></view>
-				<swiper class="carousel" circular @change="swiperChange">
-					<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPageL(item.url)">
-						<image :src="item.piceUrl" />
-					</swiper-item>
-				</swiper>
-				<!-- 自定义swiper指示器 -->
-				<view class="swiper-dots">
-					<text class="num">{{ swiperCurrent + 1 }}</text>
-					<text class="sign">/</text>
-					<text class="num">{{ swiperLength }}</text>
-				</view>
+			<view class="titleNview-background"></view>
+			<swiper class="carousel" circular @change="swiperChange">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPageL(item.url)">
+					<image :src="item.piceUrl" />
+				</swiper-item>
+			</swiper>
+			<!-- 自定义swiper指示器 -->
+			<view class="swiper-dots">
+				<text class="num">{{ swiperCurrent + 1 }}</text>
+				<text class="sign">/</text>
+				<text class="num">{{ swiperLength }}</text>
 			</view>
-
-			<!-- 活动 -->
-			<view class="activity-main">
-				<view class="cate-section">
-					<view class="cate-item" v-for="(item,index) in activity.nav.one" :key="item.id" @click="navToCategory(item)">
-						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
-						<text class="clamp">{{item.name}}</text>
-					</view>
-				</view>
-				<view class="cate-section">
-					<view class="cate-item" v-for="(item,index) in activity.nav.two" :key="item.id" @click="navToCategory(item)">
-						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
-						<text class="clamp">{{item.name}}</text>
-					</view>
-				</view>
-			</view>
-			<!-- 热门活动列表 -->
-			<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
-				<view   class="f-header m-t" @click="navToCategory(item)">
-					<view class="faddish-title">
-						<view class="title-main">
-							{{item.name}}
-						</view>
-						<text class='more'>更多></text>
-					</view>
-				</view>
-				<view class="goods-list">
-					<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
-						<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
-						<view class="goods-detail">
-							<view class="detail-title">
-								<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
-								<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
-							</view>
-							<view class="detail-price">
-								<view class="price-main">
-									<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
-									<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
-								</view>
-								<view class="flex justify-around">
-									<button type="primary" class="price-btn buy">购买</button>
-									<button type="primary" class="price-btn" @click.stop='shareSave(goods)'>分享</button>
-								</view>
-							</view>
-						</view>
-					</view>
-				</view>
-			</view>
-			<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 		</view>
+		<!-- 活动 -->
+		<view class="activity-main">
+			<view class="cate-section">
+				<view class="cate-item" v-for="(item,index) in activity.nav.one" :key="item.id" @click="navToCategory(item)">
+					<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
+					<text class="clamp">{{item.name}}</text>
+				</view>
+			</view>
+			<view class="cate-section">
+				<view class="cate-item" v-for="(item,index) in activity.nav.two" :key="item.id" @click="navToCategory(item)">
+					<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
+					<text class="clamp">{{item.name}}</text>
+				</view>
+			</view>
+		</view>
+		<!-- 热门活动列表 -->
+		<scroll-view scroll-x class="activity-nav nav" scroll-with-animation :scroll-left="scrollLeft">
+			<view class="cu-item" :class="index==TabCur?'text-blue':''" v-for="(item,index) in activity.show" :key="index" @tap="tabSelect" :data-id="index" @click="searchActivityGoodsShowList(item)">
+				<view class="cu-item-title">{{item.name}}</view>
+				<!-- <text class="activity-nav-text">猜你喜欢</text> -->
+			</view>
+		</scroll-view>
+		<view class="goods-list">
+			<view v-for="(goods, index) in activityShopList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
+				<image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="" class="detail-img"></image>
+				<view class="detail-title clamp">
+					{{goods.goodsPicesBean.goodsName}}
+				</view>
+				<view class="detail-bottom">
+					<view class="price">
+						<text class="price-sale">¥{{goods.goodsPicesBean.salePrice}}</text>
+						<text class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</text>
+					</view>
+					<view class="cart-icon">
+						<text class="cuIcon-cart text-white"></text>
+					</view>
+				</view>
+			</view>
+		</view>
+		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 	</view>
 </template>
 
@@ -118,6 +89,8 @@
 		},
 		data() {
 			return {
+				TabCur: 0,
+				scrollLeft: 0,
 				agentId: '',
 				goodsId: '',
 				goodsName: '',
@@ -138,6 +111,7 @@
 					nav: {},
 					show: []
 				},
+				activityShopList: '',
 				titleNViewBackground: '',
 				carouselList: [
 					{
@@ -242,12 +216,16 @@
 					}
 				});
 			},
+			tabSelect(e) {
+				this.TabCur = e.currentTarget.dataset.id;
+				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
+			},
 			async searchActivityNavList() {
 				let params = {
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params, true);
 				if (data) {
 					this.activity.nav = data.result; //查询出来的 
 				}
@@ -257,31 +235,29 @@
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params, false);
 				if (data) {
 					// this.activity.show = data.result.records;
 					let showActivity = data.result.records;
 					for (let i = 0; i < showActivity.length; i++) {
 						showActivity[i].goodsList = [];
-						this.searchActivityGoodsShowList(showActivity[i])
 					}
 					this.activity.show = showActivity;
+					console.log(this.activity.show)
+					this.searchActivityGoodsShowList(this.activity.show[0])
 				}
 			},
-			async searchActivityGoodsShowList(activity) {
+			async searchActivityGoodsShowList(item) {
 				let params = {
-					activityId: activity.id,
+					activityId: item.id,
 					pageNum: 1,
-					pageSize: 5
+					pageSize: 6
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, false);
 				if (data) {
-					activity.goodsList = data.result.records;
+					this.activityShopList = data.result.records;
 				}
 			},
-			/**
-			 * 获取轮播图
-			 */
 			async getBanner() {
 				let params = {
 					// storeId: 0
@@ -297,16 +273,13 @@
 				// 		params.type = 5;
 				// 		break;
 				// }
-				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params);
+				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params, false);
 				if (data) {
 					this.carouselList = data.result || [];
 					this.swiperLength = this.carouselList.length;
 					this.titleNViewBackground = 'rgb(203, 87, 60)';
 				}
 			},
-			/**
-			 * 获取轮播图
-			 */
 			// async getCouponList() {
 			// 	let params = {
 			// 		pageSize: 3
@@ -394,7 +367,6 @@
 							mask: false
 						});
 					let params = {
-						// 'agentGoodsId': this.agentGoodsId,
 						'agentId': this.agentId,
 						'goodsId': info.goodsId,
 						'activityId': info.activityId,
@@ -421,31 +393,11 @@
 				this.$refs.share.toggleMask();
 			},
 		},
-
 		// 标题栏input搜索框点击
 		onNavigationBarSearchInputClicked: async function(e) {
 			uni.navigateTo({
 				url: '/pages/agent/goods/category/category'
 			});
-		},
-		//点击导航栏 buttons 时触发
-		onNavigationBarButtonTap(e) {
-			const index = e.index;
-			if (index === 0) {
-				this.$api.msg('点击了扫描');
-			} else if (index === 1) {
-				// #ifdef APP-PLUS
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];
-				const currentWebview = page.$getAppWebview();
-				currentWebview.hideTitleNViewButtonRedDot({
-					index
-				});
-				// #endif
-				uni.navigateTo({
-					url: '../../pagesU/notice/notice'
-				});
-			}
 		}
 	};
 </script>
@@ -455,18 +407,52 @@
 		background: #f1f1f1;
 	}
 	.MP-search {
-		background: #0081ff;
-		height: 80upx;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		.indexTopBg {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			z-index: -1;
+		}
 		position: fixed;
 		width: 100%;
 		z-index: 999;
+		.content {
+			width: 100%;
+			padding: 0 20upx;
+			font-size: 29upx;
+		}
+		.nav-title {
+			color: #fff;
+			line-height: 88upx;
+			text-align: center;
+			font-size: 32upx;
+			font-weight: bold;
+			padding-top: 20px;
+		}
+		.search-input {
+			width: 100%;
+			text-align: center;
+			padding: 0 20upx;
+			margin: 20upx 0;
+		}
 		.cu-list {
 			width: 100%;
 			.cu-item {
 				background: #5c8df1;
+			}
+		}
+		.search-form {
+			margin: 0;
+			height: 60upx;
+			line-height: 60upx;
+			font-size: 22upx;
+			color: #999;
+			background-color: #fff;
+			.cuIcon-search {
+				font-size: 28upx;
+				color: #333;
+				margin-right: 10upx;
+				display: inline-block;
 			}
 		}
 	}
@@ -475,7 +461,7 @@
 		padding-bottom: 160upx;
 		.activity-main {
 			width: 100%;
-			margin-top: 20upx;
+			margin:15upx 0;
 			.cate-section {
 				position: relative;
 				z-index: 5;
@@ -491,6 +477,7 @@
 				}
 			
 				.carousel {
+					height: 300upx;
 					margin-bottom: 20upx;
 					.carousel-item {
 						padding: 0;
@@ -509,10 +496,9 @@
 		margin-top: 20upx;
 	}
 
-	/* 头部 轮播图 */
 	.carousel-section {
 		position: relative;
-		padding-top: 100upx;
+		padding-top: 285upx;
 		width: 94%;
 		margin: 0 auto;
 
@@ -580,7 +566,6 @@
 		}
 	}
 
-	/* 分类 */
 	.cate-section {
 		display: flex;
 		justify-content: space-around;
@@ -599,7 +584,6 @@
 			}
 		}
 
-		/* 原图标颜色太深,不想改图了,所以加了透明度 */
 		image {
 			width: 96upx;
 			height: 96upx;
@@ -742,86 +726,92 @@
 		font-size: 32upx;
 		background-color: #fff;
 	}
-	
-/* 商品列表 */
+	.activity-nav {
+		font-size: 26upx;
+		color: #000;
+		height: 80upx;
+		line-height: 80upx;
+		.cu-item {
+			text-align: center;
+			width: 25%;
+			height: 50upx;
+			line-height: 50upx;
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+			.cu-item-title {
+				border-right: 1upx solid #E5E5E5;
+			}
+		}
+		.activity-nav-text {
+			background-color: #fff;
+			font-size: 20upx;
+			width: 120upx;
+			height: 30upx;
+			line-height: 30upx;
+			display: inline-block;
+			border-radius: 14upx;
+		}
+	}
+	// 商品列表
 .goods-list {
 	display: flex;
+	width: 100%;
+	justify-content: space-between;
 	flex-wrap: wrap;
-	margin-top: 20upx;
-	background: #fff;
-	border-bottom: 1upx solid #eee;
-	padding:0 20upx 40upx;
-	border-bottom-left-radius: 25rpx;
-	border-bottom-right-radius: 25rpx;
+	align-content: flex-start;
+	padding: 0 25rpx;
 	.goods-item {
-		display: flex;
-		flex-direction: column;
-		flex-flow: nowrap;
-		width: 100%;
-		height: 200upx;
-		margin-bottom: 20upx;
-		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-		border-radius: 10rpx;
-		padding: 10rpx;
+		width: 340upx;
+		height: 400upx;
+		padding: 18upx;
+		margin-bottom: 36upx;
+		border-radius: 10upx;
+		background-color: #fff;
 	}
-	.image-wrapper {
-		width: 180upx;
-		height: 180upx;
-		border-radius: 3upx;
-		overflow: hidden;
-		image {
-			opacity: 1;
-		}
+	.detail-img {
+		width:230upx ;
+		height: 240upx;
+		margin: 0 auto;
+		display: block;
+		margin-bottom: 36upx;
 	}
-	.goods-detail {
-		display: inline-block;
-		margin-left: 20upx;
+	.detail-title {
+		color: #000000;
+		font-size: 28upx;
+	}
+	.detail-bottom {
 		display: flex;
-		justify-content: flex-start;
-		flex-wrap: wrap;
-		width: 65%;
-		.detail-title {
-			font-size: 30upx;
-			color: #000;
-			width: 100%;
-			.number {
-				color: #999;
-				font-size: 26upx;
-				line-height: 50upx;
-				height: 50upx;
-			}
-		}
-		.detail-price {
+		justify-content: space-between;
+		align-items: flex-end;
+		height: 50upx;
+		padding-top: 10upx;
+		.price {
 			display: flex;
-			justify-content: space-between;
-			align-items: flex-end;
-			width: 100%;
-			padding-bottom: 20upx;
-			.price-main {
-				color: #999;
-				font-size: 24upx;
-				.surprised {
-					font-size: 30upx;
-					color: #000;
-					.surprised-price {
-						font-size: 35upx;
-						color: red;
-					}
-				}
+			flex-wrap: wrap;
+			.price-sale {
+				color: #FF1313 ;
+				font-size: 32upx;
+				margin-right: 5upx;
+				display: flex;
+				align-items: flex-end;
 			}
-			.price-btn {
-				padding: 0;
-				margin: 0;
+			.price-bazaar {
+				color: #BABABA;
 				font-size: 22upx;
-				padding: 0 20upx;
-				height: 50upx;
-				line-height: 50upx;
-				color: #fff;
-				background: #ff4f50;
+				text-decoration: line-through;
+				display: flex;
+				align-items: flex-end;
+				line-height: 35upx;
 			}
-			.buy {
-				margin-right: 10upx;
-			}
+		}
+		.cart-icon {
+			border-radius: 50%;
+			background-image: linear-gradient(#39A9FF, #2D9BEF);
+			height: 44upx;
+			width: 44upx;
+			line-height: 44upx;
+			text-align: center;
 		}
 	}
 }

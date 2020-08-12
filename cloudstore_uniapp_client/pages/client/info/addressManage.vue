@@ -15,8 +15,8 @@
 				{{addressData.addressName}}
 			</text>
 		</view>
-		<view class="cu-form-group" @click="selectMap">
-			<view class="title">选择社区：</view>
+		<view class="row b-b cu-form-group" @click="selectMap">
+			<view class="title">选择社区</view>
 			<input :value="addressData.mapText" placeholder="请选择社区" disabled='true' style="color:#000;"></input>
 		</view>
 		<view class="row b-b"> 

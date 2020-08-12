@@ -222,6 +222,7 @@
 		background-color: #fff;
 		position: relative;
 		overflow: hidden;
+		/* height: 254upx; */
 	}
 
 	.swipe-action-show {

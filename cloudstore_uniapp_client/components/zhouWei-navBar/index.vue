@@ -74,7 +74,7 @@ export default {
 		bgColor: {
 			type: [String, Array],
 			default: function() {
-				return '#5c8df1';
+				return '#39a9ff';
 			}
 		},
 		// 导航背景色渐变角度

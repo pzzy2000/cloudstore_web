@@ -36,15 +36,16 @@
 				<image class="goods-img" :src="order.goodsSkuBean.photos[0].url || order.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 				<view class="right">
 					<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
-					<text class="attr-box">{{order.price}}*{{order.quantity}}</text>
-					<view class="attr-box">
-						规格：{{order.goodsSkuBean.skuValue}}
-						<!-- <text>订单时间: {{order.createTime}}</text> -->
+					<text class="subtitle clamp">{{order.goodsPicesBean.goodsSubtitle}}</text>
+					<view class="detail-price">
+						<view class="price-num">￥{{order.goodsSkuBean.price}} <text class="price-sku">/{{order.goodsSkuBean.skuValue}}</text> </view>
+						<text>× {{order.quantity}}</text>
 					</view>
-					<view class="price">
-						<text>价格: ￥{{order.payPrice}}</text>
-						<!-- <text>订单时间: {{order.createTime}}</text> -->
-					</view>
+					<!-- <view class="attr-box">
+						{{order.price}} 
+						<view> /{{order.goodsSkuBean.skuValue}}</text>
+						<text>订单时间: {{order.createTime}}</text>
+					</view> -->
 				</view>
 				<view class="flex align-center">
 					<view class="" v-if="order.status === 'WaitDeliver'">待发货</view>
@@ -57,57 +58,60 @@
 					<view class="" v-else-if="order.status === 'delivered'">已收货</view>
 				</view>
 			</view>
-			<view class="i-top b-b">
-				<text class="time">总价: ￥{{item.payPrice}}</text>
+			<view class="i-top">
 				<text>订单时间: {{item.createTime}}</text>
+				<view class="price-box">
+					<text class="num">共{{orderList.length}}件 &nbsp;&nbsp;&nbsp;&nbsp; 总价:</text>
+					<text class="price">{{item.payPrice}}</text>
+				</view>
 			</view>
 			<template>
 				<!-- 待支付 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'wait'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'wait'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 					<button class="cu-btn round" @click.stop="toBuy(item)">立即支付</button>
 				</view>
 				<!-- 支付待确认 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'pay'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'pay'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 已支付 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'payed'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'payed'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 待配送 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisong'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'peisong'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 					<button class="cu-btn round" @click="refund(item)">申请退款</button>
 				</view>
 				<!-- 已配送 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'peisoged'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'peisoged'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 					<button class="cu-btn round" @click.stop="confirmOrder(item)">确认收货</button>
 					<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
 				</view>
 				<!-- 退款中 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'refunding'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'refunding'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 已退款 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'refunded'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'refunded'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 已完成 -->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'complete'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'complete'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 退货-->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'returnsing'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'returnsing'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 已退货-->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'returns'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'returns'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 超时关闭-->
-				<view class="margin-tb-sm text-right" v-if="item.orderStatus === 'close'">
+				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'close'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 			</template>
@@ -376,7 +380,6 @@
 	.list-scroll-content{
 		height: 100%;
 	}
-	
 	.navbar{
 		display: flex;
 		height: 40px;
@@ -395,7 +398,7 @@
 			color: $font-color-dark;
 			position: relative;
 			&.current{
-				color: $base-color;
+				color: #41b0ff;
 				&:after{
 					content: '';
 					position: absolute;
@@ -404,7 +407,7 @@
 					transform: translateX(-50%);
 					width: 44px;
 					height: 0;
-					border-bottom: 2px solid $base-color;
+					// border-bottom: 2px solid #41b0ff;
 				}
 			}
 		}
@@ -423,16 +426,26 @@
 		.i-top{
 			display: flex;
 			align-items: center;
+			justify-content: space-between;
 			height: 80upx;
 			padding-right:30upx;
-			font-size: $font-base;
-			color: $font-color-dark;
-			position: relative;
-			.time{
-				flex: 1;
+			font-size: 22upx;
+			color: #999999;
+			.state {
+				color: #49B1FD;
 			}
-			.state{
-				color: $base-color;
+			.price-box {
+				color: #999;
+				font-size: 22upx;
+				.num {
+					color: #656565;
+					font-size: 24upx;
+				}
+				.price {
+					color: #FF1313;
+					font-size: 24upx;
+					font-weight: bold;
+				}
 			}
 			.del-btn{
 				padding: 10upx 0 10upx 36upx;
@@ -472,11 +485,10 @@
 		.goods-box-single{
 			display: flex;
 			padding: 20upx 0;
-			border-bottom: 1px dashed #E4E7ED;
 			.goods-img{
 				display: block;
-				width: 120upx;
-				height: 120upx;
+				width: 172upx;
+				height: 172upx;
 			}
 			.right{
 				flex: 1;
@@ -485,25 +497,36 @@
 				padding: 0 30upx 0 24upx;
 				overflow: hidden;
 				.title{
-					font-size: $font-base + 2upx;
-					color: $font-color-dark;
+					font-size: 32upx;
+					color: #333333;
 					line-height: 1;
+					letter-spacing: 4upx;
+					line-height: 50upx;
 				}
-				.attr-box{
-					font-size: $font-sm + 2upx;
-					color: $font-color-light;
-					padding: 0 30rpx;
-				}
-				.price{
+				.subtitle {
+					color: #999999;
+					line-height: 50upx;
 					font-size: 24upx;
-					color: $font-color-dark;
+				}
+				.detail-price {
+					color: #333333;
+					font-size: 32upx;
 					display: flex;
-					justify-content: space-between;
-				// 	&:before{
-				// 		content: '￥';
-				// 		font-size: $font-sm;
-				// 		margin: 0 2upx 0 8upx;
-				// 	}
+					justify-content: flex-start;
+					width: 100%;
+					line-height: 50upx;
+					.price-num {
+						color: #FF1313;
+						font-size: 35upx;
+						font-weight: blod;
+						.price-sku {
+							color: #999;
+							font-size: 28upx;
+							margin-left: 10upx;
+							margin-right: 40upx;
+							font-weight: normal;
+						}
+					}
 				}
 			}
 		}
@@ -696,5 +719,11 @@
 	}
 	.cu-btn {
 		margin-left: 10upx;
+	}
+	.state-btn {
+		.cu-btn {
+			background-image: linear-gradient(#39A9FF, #2D9BEF);
+			color: #fff;
+		}
 	}
 </style>

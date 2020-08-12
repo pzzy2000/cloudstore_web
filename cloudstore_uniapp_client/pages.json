@@ -115,32 +115,6 @@
 				"enablePullDownRefresh": true
 			}
 		},
-		 { 
-			"path": "pages/agent/home/index",
-			"style": { //用户 首页
-				"navigationBarTitleText": "我的小店",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor":"#18b6ff",
-				"navigationBarTextStyle":"#ffffff"  //状态栏字体颜色
-			}
-		}, 
-		{
-			"path": "pages/agent/money/profit",
-			"style": { //用户 首页
-				"navigationBarTitleText": "我的收益",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		}, 
-		{
-			"path": "pages/agent/info/index",
-			"style": { //用户 首页
-				"navigationBarTitleText": "代理信息",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-		},
 		{
 			"path": "pages/agent/goods/hotGoodsList/hotGoodsList",
 			"style": { //热门活动商品列表
@@ -149,31 +123,7 @@
 				"enablePullDownRefresh": true
 			}
 		},
-		{
-			"path": "pages/agent/home/agentGoodsList/agentGoodsList",
-			"style": { //代理商代理商品列表
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
-			"path": "pages/agent/goods/goodsDetail/goodsDetail",
-			"style": { //商品详情
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/agent/goods/agent/detail",
-			"style": { //代理商品详情
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-		}
-	    ,{
+	    {
             "path" : "pages/client/order/order",
             "style" : { //客户端订单
 				"navigationBarTitleText": "",
@@ -189,23 +139,7 @@
 				"enablePullDownRefresh": false
 			}
 		},
-		{
-		    "path" : "pages/agent/home/order/order",
-		    "style" : { //代理商订单
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-		}
-        ,{
-            "path" : "pages/agent/home/order/orderDetail",
-            "style" : { //代理商订单详情
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-        }
-        ,{
+        {
             "path" : "pages/client/info/applyAgent",
             "style" : {
 				"navigationBarTitleText": "",
@@ -315,26 +249,26 @@
 			//client
 			{
 				"pagePath": "pages/agent/goods/hotsale/hotsale",
-				"iconPath": "static/tabbar/classify.png",
-				"selectedIconPath": "static/tabbar/select-classify.png",
+				"iconPath": "static/tabbar/index.png",
+				"selectedIconPath": "static/tabbar/index-select.png",
 				"text": "推荐"
 			},
 			{
 				"pagePath": "pages/agent/goods/category/category",
 				"iconPath": "static/tabbar/classify.png",
-				"selectedIconPath": "static/tabbar/select-classify.png",
+				"selectedIconPath": "static/tabbar/classify-select.png",
 				"text": "商品分类"
 			},
 			{
 				"pagePath": "pages/client/cart/index",
 				"iconPath": "static/tabbar/cart.png",
-				"selectedIconPath": "static/tabbar/cart.png",
+				"selectedIconPath": "static/tabbar/cart-select.png",
 				"text": "购物车"
 			},
 			{
 				"pagePath": "pages/client/earnings/index",
 				"iconPath": "static/tabbar/earnings.png",
-				"selectedIconPath": "static/tabbar/select-earnings.png",
+				"selectedIconPath": "static/tabbar/earnings-select.png",
 				"text": "收益"
 			},
 			// {
@@ -345,8 +279,8 @@
 			// },
 			{
 				"pagePath": "pages/client/info/index",
-				"iconPath": "static/tabbar/myAgent.png",
-				"selectedIconPath": "static/tabbar/select-myAgent.png",
+				"iconPath": "static/tabbar/my.png",
+				"selectedIconPath": "static/tabbar/my-select.png",
 				"text": "我的"
 			}
  
@@ -390,7 +324,7 @@
 		"list": [{
 			"name": "", //模式名称
 			//"path": "", //启动页面，必选
-			"path": "", //启动页面，必选
+			"path": "pages/client/earnings/index", //启动页面，必选
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
