@@ -383,6 +383,12 @@ export const asyncRouterMap = [
         name: 'slideshow',
         component: () => import('@/views/sys/slideshow'),
         meta: {title: '首页轮播图', icon: 'ums-resource'}
+      },
+      {
+        path: 'setting',
+        name: 'setting',
+        component: () => import('@/views/sys/setting'),
+        meta: {title: '系统设置', icon: 'ums-resource'}
       }
     ]
   },

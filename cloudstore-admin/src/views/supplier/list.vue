@@ -14,7 +14,7 @@
       <div style="padding-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="供应商名称：">
-            <remoteCom v-model="listQuery.supplierId" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
+            <remoteCom v-model="listQuery.supplierId" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
 <!--            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名称"></el-input>-->
           </el-form-item>
 <!--          <el-form-item label="供应商电话：">-->
@@ -284,6 +284,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.$refs.clearInput.clearInput();
         this.getList(2)
       },
       handleDelete(index, row) {

@@ -2,14 +2,29 @@
   <div class="app-container">
     <el-card class="filter-container" shadow="never">
       <div>
+        <el-button style="float: right;margin-bottom: 10px;" @click="handleSearchList()" type="primary" size="small">
+          查询
+        </el-button>
+        <el-button style="float: right;margin-right: 15px;margin-bottom: 10px;" @click="handleResetSearch()" size="small">
+          重置
+        </el-button>
+      </div>
+      <div>
         <i class="el-icon-search"></i>
         <span>活动申请</span>
-        <el-form :inline="true" :model="listQuery" ref="activityFrom" size="small" label-width="80px" style="margin-top: 20px">
+        <el-form :inline="true" :model="listQuery" ref="activityFrom" size="small" label-width="120px" style="margin-top: 20px">
           <el-form-item label="活动：">
             <el-select v-model="listQuery.activityId" remote placeholder="活动" :loading="loading" v-on:change="seclectactivity($event, 1)">
+<!--              v-on:change="seclectactivity($event, 1)"-->
               <el-option v-for="item in activityList" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="商品信息：">
+            <remoteCom v-model="listQuery.goodsIds_" ref="clearInput" url="/manage/search/goods/search" @tochild="tochild"></remoteCom>
+          </el-form-item>
+          <el-form-item label="供应商信息：">
+            <dbremoteCom v-model="listQuery.supplierIds_" ref="clearInputone" url="/manage/search/supplier/search" @dbTochild="dbTochild"></dbremoteCom>
           </el-form-item>
         </el-form>
       </div>
@@ -17,11 +32,11 @@
         <!--@selection-change="handleSelectionChange"-->
         <el-table-column type="selection" width="50">
         </el-table-column>
-        <el-table-column label="商品名称" align="center" :formatter="goodsinfo" column-key='goodsName' fixed="">
+        <el-table-column label="商品名称" align="center" :formatter="goodsinfo" column-key='goodsName' width="300">
         </el-table-column>
-        <el-table-column label="商品分类" align="center" fixed :formatter="goodsinfo" column-key="category">
+        <el-table-column label="商品分类" align="center" :formatter="goodsinfo" column-key="category">
         </el-table-column>
-        <el-table-column label="销售价/市场价" align="center" fixed :formatter="goodsinfo" column-key="pics">
+        <el-table-column label="销售价/市场价" align="center" :formatter="goodsinfo" column-key="pics" width="150">
         </el-table-column>
         <el-table-column label="商品图片" align="center"  column-key="goodsPhotos">
           <template slot-scope="scope">
@@ -32,11 +47,11 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="供应商" align="center" fixed :formatter="goodsinfo" column-key="supplierBean">
+        <el-table-column label="供应商" align="center" :formatter="goodsinfo" column-key="supplierBean">
         </el-table-column>
-        <el-table-column label="供应商店铺" align="center" fixed :formatter="goodsinfo" column-key="supplierShopBean">
+        <el-table-column label="供应商店铺" align="center" :formatter="goodsinfo" column-key="supplierShopBean">
         </el-table-column>
-        <el-table-column prop="address" label="是否关联" align="center">
+        <el-table-column prop="address" label="是否关联" align="center" width="100">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#409eff"
               inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
@@ -66,14 +81,21 @@
   import {
     msg
   } from '@/api/iunits'
+  import remoteCom from '@/components/remoteCom'
+  import dbremoteCom from '@/components/remoteCom/dbIndex'
 
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
+    optType: 'search'
   };
 
   export default {
     name: "asso-goods",
+    components: {
+      remoteCom,
+      dbremoteCom
+    },
     data() {
       return {
         loading: false,
@@ -90,6 +112,12 @@
       // this.getList();
     },
     methods: {
+      tochild(item, callback){
+        callback(`商品名称：${item.goodsName}`);
+      },
+      dbTochild(item, callback){
+        callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
+      },
       goodsinfo(row, column) {
         let goods = row.goodsPicesBean;
         switch (column.columnKey) {
@@ -144,7 +172,25 @@
       seclectactivity(event) {
         let activityId = event;
         this.activityId = activityId;
-        this.getList(activityId);
+        this.getList(this.activityId);
+      },
+      handleSearchList() {
+        // let activityId = event;
+        // this.activityId = activityId;
+        this.listQuery.pageNum = 1;
+        this.getList(this.listQuery);
+      },
+      handleResetSearch() {
+        this.listQuery = Object.assign({}, defaultListQuery);
+        this.$refs.clearInput.clearInput();
+        this.$refs.clearInputone.clearInput();
+        this.list = [];
+        this.total = 0,
+        this.$message({
+          message: "重置成功",
+          type: 'success',
+          duration: 800
+        })
       },
       getList(activityId) {
         this.list = [];
@@ -152,6 +198,11 @@
           console.log(response);
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          this.$message({
+            message: "查询成功",
+            type: 'success',
+            duration: 800
+          })
         })
       },
       handleSizeChange(val) {
@@ -177,7 +228,6 @@
               row.link = 1;
               setTimeout(function () {
                 _this.disabled = false;
-                _this.getList(_this.activityId);
               },500);
             }
           })
@@ -196,7 +246,6 @@
               row.link = 0;
               setTimeout(function(){
                 _this.disabled = false;
-                _this.getList(_this.activityId);
               },500);
             }
           })

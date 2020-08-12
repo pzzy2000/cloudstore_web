@@ -5,33 +5,33 @@
       <span>退货商品</span>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
-      <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
+      <el-table ref="productTable" v-if="orderList[0]" :data="orderList[0].orderDetail" style="width:100%" v-loading="listLoading" border>
         <el-table-column label="商品图片" align="center">
           <template slot-scope="scope">
-            <el-image :src="scope.row.orderDetail[0].detailPic.goodsSkuBean.picUrl" style="width: 80px"></el-image>
+            <el-image :src="scope.row.detailPic.goodsSkuBean.picUrl" style="width: 80px"></el-image>
           </template>
         </el-table-column>
-        <el-table-column label="商品名称" align="center">
-          <template slot-scope="scope">{{scope.row.orderDetail[0].detailPic.goodsBean.goodsName}}</template>
+        <el-table-column label="商品名称" align="center" prop="goodsName" :formatter="showMsg">
+<!--          <template slot-scope="scope">{{scope.row.detailPic.goodsBean.goodsName}}</template>-->
         </el-table-column>
         <el-table-column label="价格/货号" align="center">
           <template slot-scope="scope">
-            <p>价格：{{scope.row.orderDetail[0].detailPic.goodsBean.price}}</p>
-            <p>货号：{{scope.row.orderDetail[0].detailPic.goodsBean.goodsBrand}}</p>
+            <p>价格：{{scope.row.detailPic.goodsBean.price}}</p>
+            <p>货号：{{scope.row.detailPic.goodsBean.goodsBrand}}</p>
           </template>
         </el-table-column>
         <el-table-column label="属性" align="center">
           <template slot-scope="scope">
-            <p v-for="(item, key) in scope.row.orderDetail[0].detailPic.goodsSkuBean.skuKeys" :key="key">
-              {{item}}:{{scope.row.orderDetail[0].detailPic.goodsSkuBean.skuValues[key]}}
+            <p v-for="(item, key) in scope.row.detailPic.goodsSkuBean.skuKeys" :key="key">
+              {{item}}:{{scope.row.detailPic.goodsSkuBean.skuValues[key]}}
             </p>
           </template>
         </el-table-column>
         <el-table-column label="数量" align="center">
-          <template slot-scope="scope">{{scope.row.orderDetail[0].detailPic.quantity}}</template>
+          <template slot-scope="scope">{{scope.row.detailPic.quantity}}</template>
         </el-table-column>
         <el-table-column label="小计" align="center">
-          <template slot-scope="scope">{{scope.row.orderDetail[0].detailPic.payPrice}}</template>
+          <template slot-scope="scope">{{scope.row.detailPic.payPrice}}</template>
         </el-table-column>
       </el-table>
     </div>
@@ -132,16 +132,19 @@
           break;
         }
       },
-      showMsg(data) {
-        console.log(data);
-        if (data !== null || data !== undefined) {
-          return data;
-        } else {
-          return "数据读取出错";
-        }
-      }
     },
     methods: {
+      showMsg(row, col) {
+        switch (col.property) {
+          case "goodsName":{
+            try {
+              return row.detailPic.goodsBean.goodsName
+            }catch (e) {
+              return "数据读取出错";
+            }
+          }
+        }
+      },
       getList() {
         getAnorder({id: this.$route.query.id}).then(res => {
           console.log(res)
@@ -158,36 +161,48 @@
         })
       },
       confirmRet() {
-        auditStatus({id: this.$route.query.id, status: 1}).then(res => {
-          if (res.result.code == 0) {
-            this.$message({
-              message: '审核通过了！',
-              type: 'success',
-              duration: 800
-            })
-            tuikuan({id: this.$route.query.id}).then(res => {
-              if (res.result.code == 0){
-                this.$message({
-                  message: '退款成功',
-                  type: 'success',
-                  duration: 800
-                })
-              }
-            })
-            this.getList();
-          }
+        this.$confirm('是否通过?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          auditStatus({id: this.$route.query.id, status: 1}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: '审核通过了！',
+                type: 'success',
+                duration: 800
+              })
+              tuikuan({id: this.$route.query.id}).then(res => {
+                if (res.result.code == 0){
+                  this.$message({
+                    message: '退款成功',
+                    type: 'success',
+                    duration: 800
+                  })
+                }
+              })
+              this.getList();
+            }
+          })
         })
       },
       refuseRet() {
-        auditStatus({id: this.$route.query.id, status: -1}).then(res => {
-          if (res.result.code == 0) {
-            this.$message({
-              message: '审核拒绝了！',
-              type: 'success',
-              duration: 800
-            })
-            this.getList()
-          }
+        this.$confirm('是否拒绝?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          auditStatus({id: this.$route.query.id, status: -1}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: '审核拒绝了！',
+                type: 'success',
+                duration: 800
+              })
+              this.getList()
+            }
+          })
         })
       },
       backPage() {

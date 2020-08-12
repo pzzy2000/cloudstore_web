@@ -12,7 +12,7 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="120px">
           <el-form-item label="商品名称：">
             <el-input style="width: 214px" v-model="listQuery.goodsName" placeholder="商品名称" clearable></el-input>
           </el-form-item>
@@ -35,7 +35,7 @@
 <!--            </el-select>-->
 <!--          </el-form-item>-->
           <el-form-item label="供应商：">
-            <el-input style="width: 214px" v-model="listQuery.supplierBean" placeholder="供应商" clearable></el-input>
+            <remoteCom v-model="listQuery.supplierIds_" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
           </el-form-item>
         </el-form>
       </div>
@@ -89,6 +89,7 @@
 <script>
   import {fetchActivityGoodsList, delActivityGoodsList, fetchListWithChildren} from '@/api/activity'
   import {msg} from '@/api/iunits'
+  import remoteCom from '@/components/remoteCom'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -96,6 +97,9 @@
   };
   export default {
     name: "trackinglist",
+    components: {
+      remoteCom
+    },
     data() {
       return {
         operateType: null,
@@ -138,6 +142,11 @@
       // }
     },
     methods: {
+      tochild(item, callback){
+        console.log(item)
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
+      },
       getList(idx) {
         this.listLoading = true;
         fetchActivityGoodsList(this.listQuery).then(response => {
@@ -238,10 +247,12 @@
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.$refs.clearInput.clearInput();
         this.listQuery.activityId = this.$route.query.id;
         this.category.two = [];
         this.category.three = [];
-        this.getList(2)
+        this.getList(2);
+        console.log(this.listQuery)
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;

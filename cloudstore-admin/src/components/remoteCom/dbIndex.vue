@@ -62,7 +62,7 @@
       },
       labelList(item) {
         let a;
-        this.$emit('tochild', item, val => {
+        this.$emit('dbTochild', item, val => {
           a = val;
         });
         return a;
