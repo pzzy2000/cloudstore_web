@@ -26,7 +26,7 @@ export function fetchDetailList(params) {
 }
 export function peisong(params) {
   return request({
-    url: '/order/delivery/agent',
+    url: '/order/delivery/order',
     method: 'POST',
     params: params
   })

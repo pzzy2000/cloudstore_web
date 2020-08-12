@@ -38,6 +38,8 @@
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
+        <el-table-column label="订单号" align="center" width="250" prop="orderNumber" :formatter="showAllocDetail">
+        </el-table-column>
         <el-table-column label="收件人姓名" align="center" prop="clientName" :formatter="showAllocDetail">
         </el-table-column>
         <el-table-column label="收件人电话" align="center" prop="clientPhone" :formatter="showAllocDetail">
@@ -48,12 +50,16 @@
         </el-table-column>
         <el-table-column label="支付时间" align="center" prop="payTime" :formatter="showAllocDetail" width="180">
         </el-table-column>
+        <el-table-column label="配送状态" align="center" prop="allocStatus" :formatter="showAllocDetail">
+        </el-table-column>
         <el-table-column label="订单状态" align="center" prop="orderStatus" :formatter="showAllocDetail">
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
                   <template slot-scope="scope">
-                    <el-button size="mini" @click="readOrder(scope.$index, scope.row)">订单详情</el-button>
-        <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
+                    <el-button size="mini"  @click="readOrder(scope.$index, scope.row)">订单详情</el-button>
+                    <el-button size="mini"  type="primary" :disabled="scope.row.status == 'yps' ? true : false"  @click="peisong(scope.$index, scope.row)">配送</el-button>
+
+                       <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
                   </template>
                 </el-table-column>
       </el-table>
@@ -73,7 +79,7 @@
   </div>
 </template>
 <script>
-  import {fetchDetailList as fetchList} from '@/api/allocation'
+  import {fetchDetailList as fetchList,peisong} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
   const defaultList = {
     pageNum: 1,
@@ -108,6 +114,14 @@
     methods: {
       showAllocDetail(row, r) {
         switch (r.property) {
+          case 'orderNumber':{
+            try {
+              return row.orderBean.number;
+            } catch (e) {
+              return '数据读取错误';
+            }
+            break;
+          }
           case 'goodsName': {
             try {
               return row.orderDetailBean.goodsBean.goodsName;
@@ -184,6 +198,24 @@
             break;
           }
 
+          case 'allocStatus':{
+            try {
+              let status = row.status;
+             switch (status) {
+               case 'dps': return "待配送";
+                 break;
+               case 'yps': return "已配送";
+                 break;
+               default: return "数据读取错误";
+                 break;
+             }
+
+            } catch (e) {
+              return '数据读取错误';
+            }
+            break;
+          }
+
           case 'orderStatus': {
             try {
               let status = row.orderBean.orderStatus;
@@ -216,6 +248,20 @@
             break;
           }
         }
+      },
+      peisong(index, row) {
+        peisong({id: row.id}).then(res => {
+          if (res.result.code == 0) {
+            this.$message({
+              message: '配送成功',
+              type: 'success',
+              duration: 800
+            })
+
+            row.status = res.result.status;
+            row.orderBean.orderStatus = res.result.orderBean.orderStatus;
+          }
+        })
       },
       getList() {
         this.pageList.allocationId = this.$route.query.id;

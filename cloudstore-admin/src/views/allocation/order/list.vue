@@ -61,7 +61,7 @@
         </el-table-column>
          <el-table-column label="代理商电话" align="center" width="200"  prop="agentPhone" :formatter="showAllocInfo">
         </el-table-column>
-        <el-table-column label="代理商地址" width="400" align="center"   prop="agentaddress" :formatter="showAllocInfo">
+        <el-table-column label="代理商地址"  align="center"   prop="agentaddress" :formatter="showAllocInfo">
         </el-table-column>
         <el-table-column label="配送单号" align="center" width="200">
            <template slot-scope="scope">{{scope.row.allocationNo}}</template>
@@ -69,14 +69,16 @@
         <el-table-column label="配送时间" width="200" align="center">
           <template slot-scope="scope">{{scope.row.allocationTime | formatDate}}</template>
         </el-table-column>
-
+         <!--
         <el-table-column label="配送状态" align="center" prop="allocStatus" :formatter="showAllocInfo">
         </el-table-column>
+        -->
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="readOrder(scope.$index, scope.row)">配送详情</el-button>
+<!--
             <el-button size="mini" :disabled="scope.row.status == 'yps' ? true : false" @click="peisong(scope.$index, scope.row)">一键配送</el-button>
-<!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
+          <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
           </template>
         </el-table-column>
       </el-table>
