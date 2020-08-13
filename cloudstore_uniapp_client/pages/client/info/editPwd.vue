@@ -9,8 +9,8 @@
 			<view class="cu-form-group">
 				<view class="title">验证码</view>
 				<input placeholder="请输入验证码" name="input" type="text" :value="phoneCode" @input="editInput($event,'phoneCode')" maxlength="6"></input>
-				<button class='cu-btn bg-green shadow' v-if="coding == false" @click.stop="getCode">获取验证码</button>
-				<button class='cu-btn bg-green shadow' v-else>{{ auth_time }}秒</button>
+				<button class='cu-btn bg-blue shadow' v-if="coding == false" @click.stop="getCode">获取验证码</button>
+				<button class='cu-btn bg-blue shadow' v-else>{{ auth_time }}秒</button>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">旧密码</view>
@@ -22,7 +22,7 @@
 			</view>
 		</view>
 		<view class="flex flex-direction margin-top">
-			<button class="cu-btn bg-red margin-tb-sm lg" @click.stop="editPassword">确定</button>
+			<button class="cu-btn bg-blue margin-tb-sm lg" @click.stop="editPassword">确定</button>
 		</view>
 	</view>
 </template>

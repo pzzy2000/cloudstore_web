@@ -16,21 +16,19 @@
 			</view>
 		</navigator>
 		
-		
-		
 		<view class="goods-section">
-			<!-- <view class="g-header b-b">
-				<text class="name">店铺:</text>
-				<text class="name">{{agentShop.name}}</text>
-			</view> -->
 			<view class="g-item" v-for="(item,index) in buyGoodsList" :key='index'>
 				<image :src="item.image.url"></image>
 				<view class="right">
-					<text class="title clamp">{{item.title}}</text>
-					<text class="spec">商品规格: {{item.attr_val}} </text>
+					<view class="right-title">
+						<text class="title clamp">{{item.title}}</text>
+						<text class="activity">{{item.activityName}}</text>
+					</view>
+					<text class="subtitle clamp">{{item.subtitle}}</text>
 					<view class="price-box">
 						<view class="">
 							<text class="price">￥{{item.price}}</text>
+							<text class="sku">/{{item.attr_val}} </text>
 						</view>
 						<view class="">
 							<uni-number-box
@@ -83,7 +81,7 @@
 				<text class="price-tip">￥</text>
 				<text class="price">{{cartTotal}}</text>
 			</view>
-			<text class="submit" @click="buy">支付</text>
+			<text class="submit" @click="buy">去支付</text>
 		</view>
 		
 		<!-- 优惠券面板 
@@ -307,6 +305,7 @@
 					for (let tmp in tmpData) {
 						this.buyGoodsList.push({
 							activityId: tmpData[tmp].activityId,
+							activityName: tmpData[tmp].activityBean ? tmpData[tmp].activityBean.name : '无活动',
 							goodsId: tmpData[tmp].goodsOneSku.goodsId,
 							goodsSkuId: tmpData[tmp].goodsOneSku.id,
 							shareId: this.shareClientId,
@@ -314,6 +313,7 @@
 							payPrice: tmpData[tmp].goodsOneSku.price,
 							image: tmpData[tmp].goodsOneSku.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
 							title: tmpData[tmp].goodsPicesBean.goodsName,
+							subtitle: tmpData[tmp].goodsPicesBean.goodsSubtitle,
 							attr_val: tmpData[tmp].goodsOneSku.skuValue,
 							price: tmpData[tmp].goodsOneSku.price,
 							stock: tmpData[tmp].goodsOneSku.stock,
@@ -409,7 +409,7 @@
 					  }
 				})
 			},
-			payMent(res) { //吊起微信支付
+			payMent(res) { //调起微信支付
 				var that = this;
 				let vxBuyInfo = res.result;
 				//微信支付
@@ -493,6 +493,7 @@
 					for (let tmp in tmpData) {
 						this.buyGoodsList.push({
 							activityId: tmpData[tmp].activityId,
+							activityName: tmpData[tmp].activityBean ? tmpData[tmp].activityBean.name : '无活动',
 							goodsId: tmpData[tmp].goodsOneSku.goodsId,
 							goodsSkuId: tmpData[tmp].goodsOneSku.id,
 							shareId: tmpData[tmp].shareId,
@@ -500,6 +501,7 @@
 							payPrice: tmpData[tmp].goodsOneSku.price,
 							image: tmpData[tmp].goodsOneSku.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
 							title: tmpData[tmp].goodsPicesBean.goodsName,
+							subtitle: tmpData[tmp].goodsPicesBean.goodsSubtitle,
 							attr_val: tmpData[tmp].goodsOneSku.skuValue,
 							price: tmpData[tmp].goodsOneSku.price,
 							stock: tmpData[tmp].goodsOneSku.stock,
@@ -519,12 +521,14 @@
 					for (let tmp in tmpData) {
 						this.buyGoodsList.push({
 							activityId: tmpData[tmp].activityId,
+							activityName: tmpData[tmp].activityBean ? tmpData[tmp].activityBean.name : '无活动',
 							goodsId: tmpData[tmp].goodsId,
 							goodsSkuId: tmpData[tmp].goodsSkuId,
 							number: tmpData[tmp].quantity,
 							payPrice: tmpData[tmp].goodsSkuBean.price,
 							image: tmpData[tmp].goodsSkuBean.photos[0] || tmpData[tmp].goodsPicesBean.goodsDetailPhotos[0],
 							title: tmpData[tmp].goodsPicesBean.goodsName,
+							subtitle: tmpData[tmp].goodsPicesBean.goodsSubtitle,
 							attr_val: tmpData[tmp].goodsSkuBean.skuValue,
 							price: tmpData[tmp].goodsSkuBean.price,
 							stock: tmpData[tmp].goodsSkuBean.stock,
@@ -564,13 +568,14 @@
 		padding: 30upx 0;
 		margin-top: 30upx;
 		font-size: 26upx;
-		line-height: 50upx;
+		height: 130upx;
 		background: #fff;
 		position: relative;
 		color: #333333;
 		.order-content {
 			display: flex;
 			align-items: center;
+			height: 100%;
 		}
 	
 		.icon-shouhuodizhi {
@@ -579,29 +584,35 @@
 			align-items: center;
 			justify-content: center;
 			width: 90upx;
-			color: #888;
-			font-size: 44upx;
+			font-size: 35upx;
 		}
 	
 		.cen {
 			display: flex;
-			flex-direction: column;
-			flex: 1;
+			justify-content: flex-start;
+			align-items: center;
+			flex-wrap: wrap;
 			font-size: 28upx;
-			color: $font-color-dark;
+			width: 100%;
 		}
-	
-		.name {
-			font-size: 34upx;
-			margin-right: 24upx;
-		}
-	
 		.address {
-			margin-top: 16upx;
-			margin-right: 20upx;
-			color: $font-color-light;
+			color: #333333;
+			width: 100%;
+			line-height: 50upx;
 		}
-	
+		.top {
+			.name {
+				font-size: 24upx;
+				color: #666666;
+				width: 100%;
+			}
+			.mobile {
+				font-size: 24upx;
+				margin-right: 24upx;
+				color: #666666;
+				width: 100%;
+			}
+		}
 		.icon-you {
 			font-size: 32upx;
 			color: $font-color-light;
@@ -646,58 +657,84 @@
 	
 		.g-item {
 			display: flex;
-			margin: 20upx 30upx;
-	
+			padding: 34upx;
 			image {
-				flex-shrink: 0;
 				display: block;
-				width: 140upx;
-				height: 140upx;
-				border-radius: 4upx;
+				width: 124upx;
+				height: 124upx;
+				border-radius: 10upx;
 			}
 	
 			.right {
 				flex: 1;
 				padding-left: 24upx;
 				overflow: hidden;
-			}
-	
-			.title {
-				font-size: 30upx;
-				color: $font-color-dark;
-			}
-	
-			.spec {
-				font-size: 26upx;
-				color: $font-color-light;
-			}
-	
-			.price-box {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				font-size: 32upx;
-				color: $font-color-dark;
-				padding-top: 10upx;
-	
-				.price {
-					margin-bottom: 4upx;
+				.right-title {
+					width: 100%;
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+					.title {
+						font-size: 32upx;
+						color: #333333;
+						letter-spacing: 4upx;
+						line-height: 50upx;
+						max-width: 85%;
+						margin-right: 10upx;
+					}
+					.activity {
+						color: #FE961C;
+						font-size: 15upx;
+						border: 1upx solid #FE961C;
+						height: 30upx;
+						line-height: 30upx;
+						border-radius: 5upx;
+						width: 70upx;
+						text-align: center;
+					}
 				}
-				.numberBtn {
-					height: 100%;
-					width: 40upx;
-					text-align: center;
-					display: inline-block;
+				.subtitle {
+					font-size: 24upx;
+					color: #999;
+					line-height: 50upx;
 				}
-				.number{
+				.spec {
 					font-size: 26upx;
-					color: $font-color-base;
-					text-align: center;
+					color: $font-color-light;
 				}
-			}
-	
-			.step-box {
-				position: relative;
+					
+				.price-box {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					font-size: 32upx;
+					color: $font-color-dark;
+					.price {
+						color: #FF1313;
+						font-size: 32upx;
+						letter-spacing: 4upx;
+					}
+					.sku {
+						color: #999;
+						font-size: 24upx;
+						margin-left: 10upx;
+					}
+					.numberBtn {
+						height: 100%;
+						width: 40upx;
+						text-align: center;
+						display: inline-block;
+					}
+					.number{
+						font-size: 26upx;
+						color: $font-color-base;
+						text-align: center;
+					}
+				}
+					
+				.step-box {
+					position: relative;
+				}
 			}
 		}
 	}
@@ -710,7 +747,7 @@
 		align-items: flex-start;
 		.textarea {
 			width: 80%;
-			height: 150upx;
+			height: 85upx;
 			padding-top: 20upx;
 		}
 	}
@@ -761,13 +798,13 @@
 		.cell-tit {
 			flex: 1;
 			font-size: 26upx;
-			color: $font-color-light;
+			color: #999;
 			margin-right: 10upx;
 		}
 	
 		.cell-tip {
-			font-size: 26upx;
-			color: $font-color-dark;
+			font-size: 24upx;
+			color: #333;
 	
 			&.disabled {
 				color: $font-color-light;
@@ -843,6 +880,7 @@
 		width: 100%;
 		height: 90upx;
 		justify-content: space-between;
+		align-items: center;
 		font-size: 30upx;
 		background-color: #fff;
 		z-index: 998;
@@ -852,22 +890,26 @@
 			padding-left: 30upx;
 		}
 		.price-tip{
-			color: $base-color;
+			color: #FF1313;
+			font-size: 26upx;
 			margin-left: 8upx;
 		}
 		.price{
-			font-size: 36upx;
-			color: $base-color;
+			font-size: 26upx;
+			color: #FF1313;;
 		}
 		.submit{
 			display:flex;
 			align-items:center;
 			justify-content: center;
-			width: 280upx;
-			height: 100%;
+			width: 180upx;
+			height: 74upx;
+			margin-right: 28upx;
+			border-radius: 40upx;
 			color: #fff;
-			font-size: 32upx;
-			background-color: $base-color;
+			font-size: 28upx;
+			background-color: #39a9ff;
+			letter-spacing: 4upx;
 		}
 	}
 	

@@ -7,9 +7,9 @@
 				<input placeholder="订单号内容" name="input" type="text" :value="orderId" disabled="true"></input>
 			</view>
 			<view class="goods-section">
-				<view class="g-header b-b">
+				<!-- <view class="g-header b-b">
 					<text class="name">店铺名：{{agentShopName}}</text>
-				</view>
+				</view> -->
 				<view class="g-item" v-for="(item, index) in goodsDetail" :key='index'>
 					<image :src="item.goodsSkuBean.photos[0].url || item.goodsPicesBean.goodsDetailPhotos[0].url"></image>
 					<view class="right">
@@ -58,7 +58,7 @@
 				<tui-upload :serverUrl="serverUrl" @complete="uploadResult" @remove="uploadRemove" :value='imageList' :valueId= 'imgListId' :forbidDel='isEdit' :limit='10'></tui-upload>
 			</view>
 			<view class="padding flex flex-direction">
-				<button class="cu-btn bg-cyan margin-tb-sm lg" @click="afterSaleSubmit">提交售后申请</button>
+				<button class="cu-btn bg-blue margin-tb-sm lg" @click="afterSaleSubmit">提交售后申请</button>
 			</view>
 		</form>
 	</view>

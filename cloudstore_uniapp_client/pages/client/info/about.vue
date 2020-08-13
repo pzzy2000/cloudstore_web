@@ -1,15 +1,17 @@
 <template>
 	<view class="container">
 		<nav-bar backState="1000">关于我们</nav-bar>
-		<view class="logo">
+		<view class="logo bg-white">
 			<image src="/static/log.png" mode="" class="logo-img"></image>
 		</view>
-		<view class="agreement">
+		<view class="agreement bg-white">
 			<navigator class="content" hover-class="none" url="./privacy">
-				<text class="text-blue">丫咪购隐私协议</text>
+				<text>丫咪购隐私协议</text>
+				<text class="yticon icon-you"></text>
 			</navigator>
 			<navigator class="content" hover-class="none" url="./agreement">
-				<text class="text-blue">丫咪购服务协议</text>
+				<text>丫咪购服务协议</text>
+				<text class="yticon icon-you"></text>
 			</navigator>
 		</view>
 	</view>
@@ -38,11 +40,13 @@
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
+		background-color: #f1f1f1;
 	}
 	.logo {
 		width: 100%;
-		margin-top: 300upx;
+		padding: 250upx 0 150upx 0;
 		text-align: center;
+		margin-bottom: 30upx;
 	}
 	.logo-img {
 		height: 250upx;
@@ -50,12 +54,26 @@
 		margin: 0 auto;
 	}
 	.agreement {
-		margin-top: 100upx;
+		width: 100%;
+		text-align: left;
 	}
 	.content {
+		font-size: 26upx;
 		width: 100%;
-		text-align: center;
-		line-height: 60upx;
+		line-height: 80upx;
+		height: 80upx;
 		color: blue;
+		display: flex;
+		justify-content: space-between;
+		padding: 0 30upx;
+		border: 1upx solid #f1f1f1;
+		text {
+			color: #343434;
+		}
+		.yticon {
+			width: 18upx;
+			height: 30upx;
+			color: #9A9A9A;
+		}
 	}
 </style>

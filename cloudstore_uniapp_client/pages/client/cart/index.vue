@@ -126,6 +126,10 @@
 			this.cartList.length = 0
 			this.getCartList();
 		},
+		onPullDownRefresh() { //下拉刷新
+			this.cartList.length = 0
+			this.getCartList();
+		},
 		watch:{
 			//显示空白页
 			cartList(e){
@@ -146,8 +150,8 @@
 				}
 				let data = await Api.apiCall('post', Api.client.cart.myShopCar, params)
 				if (data) {
+					uni.stopPullDownRefresh();
 					var tmpData = data.result.records
-					console.log(tmpData)
 					if (tmpData.length != 0) {
 						for (let tmp in tmpData) {
 							try{
