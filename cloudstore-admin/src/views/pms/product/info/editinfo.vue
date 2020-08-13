@@ -223,7 +223,8 @@
           martPrice: [
             {required: true, message: '请输入市场价', trigger: 'blur'},
             { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '整数,不超过3位，小数点后2位' }
-          ]
+          ],
+          unit: [{required: true, message: '请输入计量单位', trigger: 'blur'}]
         }
       }
     },

@@ -93,6 +93,8 @@
           <template slot-scope="scope">
             <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="changeSwitch(scope.row)">
             </el-switch>
+<!--            <div v-else>{{scope.row.activityBean.name}}</div>-->
+<!--            v-if="!scope.row.activityBean.name"-->
           </template>
         </el-table-column>
         <el-table-column label="是否启用" align="center">

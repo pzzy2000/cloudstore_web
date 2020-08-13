@@ -32,12 +32,12 @@
             <el-input style="width: 214px" v-model="pageList.number" placeholder="订单编号" clearable></el-input>
           </el-form-item>
           <el-form-item label="开始时间：" prop="code">
-            <el-date-picker v-model="pageList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" clearable>
+            <el-date-picker v-model="pageList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" type="date" :picker-options="startDatePicker" placeholder="选择日期" clearable>
 <!--              :picker-options="pickerOptions"-->
             </el-date-picker>
           </el-form-item>
           <el-form-item label="结束时间：" prop="code">
-            <el-date-picker v-model="pageList.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择日期" clearable>
+            <el-date-picker v-model="pageList.endsTime" sformat="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" type="date" :picker-options="endDatePicker" placeholder="选择日期" clearable>
             </el-date-picker>
           </el-form-item>
           <el-form-item label="订单状态：" prop="orderstatus">
@@ -137,7 +137,10 @@
         },
         orderList: [],
         listLoading: false,
-        pageList: Object.assign({}, defaultList),
+        pageList: Object.assign({
+          startTime: '',
+          endsTime: '',
+        }, defaultList),
         total: 1,
         // pickerOptions: {
         //   disabledDate(time) {
@@ -158,6 +161,8 @@
         dialogVisible: false,
         btnMsg: '',
         type: '',
+        startDatePicker: this.beginDate(),
+        endDatePicker: this.processDate(),
       }
     },
     beforeCreate() {
@@ -274,13 +279,13 @@
         }
       },
       handleSearchList() {
-        if (this.pageList.startTime !== undefined || this.pageList.startTime !== '') {
-          this.pageList.startTime = this.pageList.startTime + ' ' + "00:00:00";
-        }
-        if (this.pageList.endTime !== undefined || this.pageList.endTime !== '') {
-          this.pageList.endTime = this.pageList.endTime + ' ' + "23:59:59";
-        }
-        console.log(this.pageList);
+        // if (this.pageList.startTime !== undefined && this.pageList.startTime !== '') {
+        //   this.pageList.startTime = this.pageList.startTime + ' ' + "00:00:00";
+        // }
+        // if (this.pageList.endTime !== undefined && this.pageList.endTime !== '') {
+        //   this.pageList.endTime = this.pageList.endTime + ' ' + "23:59:59";
+        // }
+        // console.log(this.pageList);
         this.pageList.pageNum = 1;
         this.getList(0);
       },
@@ -299,6 +304,26 @@
       },
       readOrder(index, row){
         this.$router.push({name: "read_order", query: {id: row.id}});
+      },
+      beginDate(){
+        const self = this
+        return {
+          disabledDate(time){
+            if (self.pageList.endsTime !== '') {  //如果结束时间不为空，则小于结束时间
+              return new Date(self.pageList.endsTime).getTime() <= time.getTime()
+            }
+          }
+        }
+      },
+      processDate() {
+        const  self = this
+        return {
+          disabledDate(time) {
+            if (self.pageList.startTime !== '') {  //如果开始时间不为空，则结束时间大于开始时间
+              return new Date(self.pageList.startTime).getTime() >= time.getTime()
+            }
+          }
+        }
       }
     }
   }
