@@ -11,7 +11,7 @@
 					<text :class="{ active: priceOrder === 2 && filterIndex === 2 }" class="yticon icon-shang xia"></text>
 				</view> -->
 			</view>
-			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
+			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
 		</view>
 		<view class="goods-list" v-if='isGoodsList'>
 			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
@@ -51,9 +51,9 @@
 		<uni-popup ref="popup" type="bottom">
 			<tui-cascade-selection
 				height="350px"
-				activeColor="#EB0909"
-				lineColor="#EB0909"
-				checkMarkColor="#EB0909"
+				activeColor="#08affe"
+				lineColor="#08affe"
+				checkMarkColor="#08affe"
 				:itemList="itemList"
 				request
 				@complete="complete"
@@ -108,15 +108,17 @@
 				categoryTwoId: '',
 				categoryThreeId: '',
 				shareList: [{
-					icon: "/static/temp/share_wechat.png",
+					icon: "/static/share_wechat.png",
 					text: "微信好友",
 					type: 1
 				}]
 			};
 		},
 		onLoad(options) {
+			console.log(options)
 			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
 			this.goodsName = options.goodsName
+			console.log(this.goodsName)
 			this.loadActiviList();
 			this.loadgoodsType();
 			this.loadData();
@@ -138,7 +140,7 @@
 		//加载更多
 		onReachBottom() {
 			this.pageNum = this.pageNum + 1;
-			this.goodsName = ''
+			// this.goodsName = ''
 			this.loadData('next');
 		},
 		onShareAppMessage(res) {
@@ -397,7 +399,7 @@ page,
 		color: $font-color-dark;
 		position: relative;
 		&.current {
-			color: $base-color;
+			color: #08affe;
 			&:after {
 				content: '';
 				position: absolute;
@@ -406,7 +408,7 @@ page,
 				transform: translateX(-50%);
 				width: 120upx;
 				height: 0;
-				border-bottom: 4upx solid $base-color;
+				border-bottom: 4upx solid #08affe;
 			}
 		}
 	}
@@ -587,8 +589,8 @@ page,
 				height: 50rpx;
 				line-height: 50rpx;
 				border-radius: 10rpx;
+				background-color: #08affe;
 				color: #fff;
-				background: #ff4f50;
 			}
 			.buy {
 				margin-right: 10upx;

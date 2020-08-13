@@ -136,8 +136,21 @@ export default {
 			getAgentShop: 'agent/goods/app/getAgentShop'
 		}
 	},
-	statusBarHeight () {
+	statusBarHeight () { //获取导航栏高度
 		return  uni.getSystemInfoSync().statusBarHeight
+	},
+	throttle(func, wait) { //节流
+		let timer = null;
+		return function () {
+			var that = this;
+			var args = arguments;
+			if (!time) {
+				timer = setTimeout(function () {
+					func.apply(that, args);
+					timer = null;
+				}, wait);
+			}	
+		};
 	},
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
 		if (load) {

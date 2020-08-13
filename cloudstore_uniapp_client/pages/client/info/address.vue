@@ -4,13 +4,13 @@
 		<view class="list b-b" v-for="(item, index) in addressList" :key="index" @click="checkAddress(item)">
 			<view class="wrapper">
 				<view class="address-box">
-					<text v-if="item.status ==1 " class="tag">默认</text>
+					<text v-if="item.status ==1 " class="tag text-blue">默认</text>
 				</view>
 				<view class="u-box">
 					<view class="">
-						<text class="name">{{item.name}} {{item.phone}} </text><br/>
+						<text class="address">{{item|address}}</text><br/>
 						<text class="name">{{item.detailAddress}} </text><br/>
-						<text class="address">{{item|address}}</text>
+						<text class="name">{{item.name}} {{item.phone}} </text>
 					</view>
 					<view class="">
 						<text class="address text-red" v-if='isDelete' @click.stop="deleteAddress(item.id)">删除</text>
@@ -19,11 +19,7 @@
 			</view>
 			<text class="yticon icon-bianji" @click.stop="addAddress('edit', item.id)"></text>
 		</view>
-		<text style="display:block;padding: 16upx 30upx 10upx;lihe-height: 1.6;color: #fa436a;font-size: 24upx;">
-			
-		</text>
-		
-		<button class="add-btn" @click="addAddress">新增地址</button>
+		<button class="add-btn bg-blue" @click="addAddress">新增地址</button>
 	</view>
 </template>
 
@@ -133,10 +129,8 @@
 		align-items: center;
 		.tag{
 			font-size: 24upx;
-			color: $base-color;
 			margin-right: 10upx;
-			background: #fffafb;
-			border: 1px solid #ffb4c7;
+			border: 1px solid #08affe;
 			border-radius: 4upx;
 			padding: 4upx 10upx;
 			line-height: 1;
@@ -179,8 +173,6 @@
 		height: 80upx;
 		font-size: 32upx;
 		color: #fff;
-		background-color: $base-color;
 		border-radius: 10upx;
-		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);		
 	}
 </style>

@@ -28,13 +28,13 @@
 			<text class="tit">设为默认</text>
 			<switch :checked="addressData.status" color="#fa436a" @change="detailChange" />
 		</view>
-		<button class="add-btn" @click="confirm">提交</button>
+		<button class="add-btn bg-blue" @click="confirm">提交</button>
 		<uni-popup ref="popup" type="bottom" class="popup">
 			<tui-cascade-selection
 				height="280px"
-				activeColor="#EB0909"
-				lineColor="#EB0909"
-				checkMarkColor="#EB0909"
+				activeColor="#08affe"
+				lineColor="#08affe"
+				checkMarkColor="#08affe"
 				:itemList="itemList"
 				request
 				@complete="complete"
@@ -349,9 +349,6 @@
 		height: 80upx;
 		margin: 60upx auto;
 		font-size: $font-lg;
-		color: #fff;
-		background-color: $base-color;
 		border-radius: 10upx;
-		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
 	}
 </style>

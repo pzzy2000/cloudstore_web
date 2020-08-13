@@ -42,7 +42,7 @@
 				</view>
 				<view class="order-list-bottom">
 					<text>
-						订单号： {{item.id}}
+						订单号： {{item.orderId}}
 					</text>
 					<!-- 收益 -->
 					<view class="profit" v-if="type === 1">
@@ -202,8 +202,8 @@
 <style scoped lang="scss">
 	.earning-main {
 		position: relative;
-		height: 400upx;
 		width: 100%;
+		padding-bottom: 30upx;
 		.earning-bg {
 			position: absolute;
 			left: 0;
@@ -230,7 +230,7 @@
 		}
 	}
 	.cu-list.grid.no-border {
-		padding: 0 0 30upx 0;
+		padding: 0;
 	}
 	.cu-list.grid.no-border >.cu-item {
 		padding: 0;

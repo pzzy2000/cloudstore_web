@@ -12,31 +12,33 @@
 			</view>
 		</view> -->
 		<view v-for="item in afterSaleList" class="order-item" :key= 'item.orderId' @click="toAfterSale(item)">
-			<view class="i-top b-b">
-				<text class="time">订单号: {{item.orderId}}</text>
+			<view class="i-top">
+				<text class="order-id">订单号: {{item.orderId}}</text>
 			</view>
 			<view class="goods-box-single" v-for="(order, index1) in item.orderDetail" :key="index1">
 				<image class="goods-img" :src="order.detailPic.goodsSkuBean.picUrl" mode="aspectFill"></image>
 				<view class="right">
 					<text class="title clamp">{{order.detailPic.goodsBean.goodsName}}</text>
-					<text class="attr-box">{{order.detailPic.price}}*{{order.detailPic.quantity}}</text>
 					<view class="attr-box">
 						规格：{{order.detailPic.goodsSkuBean.skuValue}}
 					</view>
+					<!-- <text class="attr-box">{{order.detailPic.price}}*{{order.detailPic.quantity}}</text> -->
 					<view class="price">
-						<text>价格: ￥{{order.detailPic.payPrice}}</text>
+						<text class="price-num">￥{{order.detailPic.price}}</text>
+						<text class="price-quantity"> × {{order.detailPic.quantity}}</text>
+					</view>
+					<view class="payPrice">
+						合计金额：<text class="payPrice-detial">￥{{order.detailPic.payPrice}}</text>
 					</view>
 				</view>
 				<view class="flex align-center">
-					售后状态：
 					<view class="" v-if="item.status === 0">申请中</view>
 					<view class="" v-else-if="item.status === 1">审核通过</view>
 					<view class="" v-else-if="item.status === 2">审核拒绝</view>
 				</view>
 			</view>
 			<view class="i-top b-b">
-				<!-- <text class="time">总价: ￥{{item.orderBean.payPrice}}</text> -->
-				<text>订单时间: {{item.orderBean.createTime}}</text>
+				<text class="time">订单时间: {{item.orderBean.createTime}}</text>
 			</view>
 			<!-- <template> -->
 					<!-- 已配送 -->
@@ -131,7 +133,6 @@
 		padding:0 30upx;
 		background: #fff;
 		margin-top: 16upx;
-		box-shadow: 0 0 4upx rgba(0, 0, 0, 0.1);
 		.i-top{
 			display: flex;
 			align-items: center;
@@ -140,11 +141,16 @@
 			font-size: $font-base;
 			color: $font-color-dark;
 			position: relative;
-			.time{
-				flex: 1;
+			.order-id{
+				color: #333;
+				font-size: 24upx;
 			}
-			.state{
-				color: $base-color;
+			.time{
+				color: #999;
+			}
+			.payPrice{
+				color: #FF1313;
+				color: 32upx;
 			}
 			.del-btn{
 				padding: 10upx 0 10upx 36upx;
@@ -184,11 +190,13 @@
 		.goods-box-single{
 			display: flex;
 			padding: 20upx 0;
-			border-bottom: 1px dashed #E4E7ED;
+			border-top: 1upx solid #eee;
+			align-items: center;
 			.goods-img{
 				display: block;
-				width: 120upx;
-				height: 120upx;
+				width: 124upx;
+				height: 124upx;
+				border-radius: 10upx;
 			}
 			.right{
 				flex: 1;
@@ -197,25 +205,37 @@
 				padding: 0 30upx 0 24upx;
 				overflow: hidden;
 				.title{
-					font-size: $font-base + 2upx;
-					color: $font-color-dark;
-					line-height: 1;
+					font-size: 32upx;
+					color: #333;
 				}
 				.attr-box{
-					font-size: $font-sm + 2upx;
-					color: $font-color-light;
-					padding: 0 30rpx;
+					font-size: 26upx;
+					color: #999;
+					line-height: 50upx;
 				}
 				.price{
-					font-size: 24upx;
-					color: $font-color-dark;
-					display: flex;
-					justify-content: space-between;
+					font-size: 32upx;
+					color: #FF1313;
+					.price-quantity {
+						color: #333333;
+						font-size: 32upx;
+						letter-spacing: 4upx;
+						margin-left: 20upx;
+					}
 				// 	&:before{
 				// 		content: '￥';
 				// 		font-size: $font-sm;
 				// 		margin: 0 2upx 0 8upx;
 				// 	}
+				}
+				.payPrice {
+					color:#353535;
+					font-size: 32upx;
+					.payPrice-detial {
+						color: #FF1313;
+						font-size: 28upx;
+						display: inline-block;
+					}
 				}
 			}
 		}
