@@ -89,11 +89,8 @@
 							<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
 						</view>
 						<view class="share-amount">
-							分享最高挣
 							<template>
-								<text v-if="userType === 'agent'">{{goods.goodsPicesBean.agent}}</text>
-								<text v-else-if ="userType === 'leader'">{{shareAmount(goods.goodsPicesBean.agent, goods.goodsPicesBean.leader)}}元</text>
-								<text v-else>{{goods.goodsPicesBean.client}}</text>
+							 分享最高挣 <text v-text="goods.goodsPicesBean.client"></text>
 							</template>
 						</view>
 						<view class="detail-bottom">
@@ -187,6 +184,14 @@
 		},
 		onShow() {
 			this.getLocation()
+			 let list = this.activity.show;
+			 for( let i in list){
+				 let goodsList = list[i].goodsList;
+				 for( let j in goodsList){
+					 goodsList[j].goodsPicesBean.client=this.ishareAmount(goodsList[j].goodsPicesBean);
+				 }
+				 
+			 }
 		},
 		onShareAppMessage(res) {
 			if (res.from === 'button') {// 来自页面内分享按钮
@@ -206,7 +211,19 @@
 			}
 			return shareObj
 		},
+		
 		methods: {
+			ishareAmount(data){
+				this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
+				switch (this.userType){
+					case 'agent':
+						return data.agent;
+					case 'leader':
+						return  Number(data.agent) + Number(data.leader)
+					default:
+						 return data.client;
+				}
+			},
 			shareAmount (data1, data2) {
 				var price = Number(data1) + Number(data2)
 				return price;
