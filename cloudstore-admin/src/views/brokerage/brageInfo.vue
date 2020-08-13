@@ -100,10 +100,7 @@
           leader: [{ required: true, message: '请输入团长佣金', trigger: 'blur' }],
           agent: [{ required: true, message: '请输入代理佣金', trigger: 'blur' }],
           client: [{ required: true, message: '请输入客户佣金', trigger: 'blur' }],
-          clientPoints: [
-            { required: true, message: '请输入积分', trigger: 'blur' },
-            // { pattern: /^([1,5000])$/, message: '不能超过5000' }
-          ]
+          clientPoints: [{ required: true, message: '请输入积分', trigger: 'blur' }]
         }
       }
     },

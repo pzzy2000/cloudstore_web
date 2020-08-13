@@ -71,3 +71,27 @@ export function fetchListWithChildren(params) {
     method:'get',
   })
 }
+
+export function fetchList(params) {
+  return request({
+    url:'/goods/list',
+    method:'POST',
+    data:switchForm(params)
+  })
+}
+
+export function getgoodsSku(params) {
+  return request({
+    url: '/finance/profit/goods/detail/list',
+    method: 'post',
+    data: switchForm(params)
+  })
+}
+
+export function saveSetting(params) {
+  return request({
+    url: '/finance/profit/goods/detail/save',
+    method: 'post',
+    data: params
+  })
+}

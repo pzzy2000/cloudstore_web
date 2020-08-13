@@ -200,9 +200,13 @@
             break;
           case 'close': return "超时关闭";
             break;
-          case 'returns': return "退货";
+          case 'refunding': return "退款中";
             break;
-          case 'retud': return "已退货";
+          case 'refunded': return "已退款";
+            break;
+          case 'returnsing': return "退货中";
+            break;
+          case 'returns': return "已退货";
             break;
           default: return "数据读取错误";
             break;

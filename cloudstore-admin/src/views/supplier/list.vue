@@ -14,14 +14,10 @@
       <div style="padding-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
           <el-form-item label="供应商名称：">
-            <remoteCom v-model="listQuery.supplierId" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
-<!--            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名称"></el-input>-->
+            <el-input style="width: 214px" v-model="listQuery.name" placeholder="供应商名称"></el-input>
           </el-form-item>
-<!--          <el-form-item label="供应商电话：">-->
-<!--            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="供应商电话"></el-input>-->
-<!--          </el-form-item>-->
-          <el-form-item label="所属账号：">
-            <el-input style="width: 214px" v-model="listQuery.accont" placeholder="所属账号"></el-input>
+          <el-form-item label="供应商电话：">
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="供应商电话"></el-input>
           </el-form-item>
           <el-form-item label="审核状态：">
             <el-select v-model="listQuery.status" placeholder="请选择审核状态" clearable>
@@ -34,6 +30,10 @@
               <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="所属账号：">
+            <remoteCom v-model="listQuery.supplierId" ref="clearInput" url="/manage/search/manager/search" @tochild="tochild"></remoteCom>
+            <!--            <el-input style="width: 214px" v-model="listQuery.accont" placeholder="所属账号"></el-input>-->
           </el-form-item>
         </el-form>
       </div>
@@ -140,6 +140,21 @@
       }
     },
     created() {
+      // function Foo() {
+      //   getName = function () { alert(1); };
+      //   return this;
+      // }
+      // Foo.getName = function () { alert(2); };
+      // Foo.prototype.getName = function () { alert(3); };
+      // var getName = function () { alert(4); };
+      // function getName() { alert(5); };
+      // Foo.getName();
+      // getName();
+      // Foo().getName();
+      // getName();
+      // new Foo.getName();
+      // new Foo().getName();
+      // new new Foo().getName();
       this.getList(1);
     },
     watch: {
@@ -172,7 +187,7 @@
       tochild(item, callback){
         console.log(item)
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
-        callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
+        callback(`所属账号：${item.name} / 联系人：${item.phone}`);
       },
       showAccess(row,column){
         return ( row.sysManagerUserBean ==null )?'数据读取错误':row.sysManagerUserBean.name ;
