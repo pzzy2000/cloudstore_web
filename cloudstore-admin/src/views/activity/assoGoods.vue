@@ -52,10 +52,13 @@
         <el-table-column label="供应商店铺" align="center" :formatter="goodsinfo" column-key="supplierShopBean">
         </el-table-column>
         <el-table-column prop="address" label="是否关联" align="center" width="100">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="scope.row.joins == 1">
             <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#409eff"
               inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
             </el-switch>
+          </template>
+          <template slot-scope="scope" v-else>
+              {{scope.row.activityBean.name}}
           </template>
         </el-table-column>
       </el-table>
