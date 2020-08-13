@@ -52,7 +52,7 @@
 											<text class="clamp title">{{item.title}}</text>
 											<text class="attr">{{item.subTitle}}</text>
 											<view class="price-detail">
-												¥<text class="price">{{item.price}}</text>
+												<text class="price price-symbol">{{item.price}}</text>
 												<text class="sku">/{{item.attr_val}}</text>
 											</view>
 											<uni-number-box 

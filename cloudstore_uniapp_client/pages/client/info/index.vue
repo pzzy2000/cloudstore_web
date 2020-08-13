@@ -472,6 +472,7 @@ page{
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	padding: 0 10upx;
 	.order-item {
 		@extend %flex-center;
 		width: 25%;

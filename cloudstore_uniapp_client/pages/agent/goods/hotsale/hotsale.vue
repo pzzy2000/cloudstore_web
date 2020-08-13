@@ -88,9 +88,17 @@
 						<view class="detail-title">
 							<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
 						</view>
+						<view class="share-amount">
+							分享最高挣
+							<template>
+								<text v-if="userType === 'agent'">{{goods.goodsPicesBean.agent}}</text>
+								<text v-else-if ="userType === 'leader'">{{shareAmount(goods.goodsPicesBean.agent, goods.goodsPicesBean.leader)}}元</text>
+								<text v-else>{{goods.goodsPicesBean.client}}</text>
+							</template>
+						</view>
 						<view class="detail-bottom">
 							<view class="price">
-								<text class="price-sale">¥{{goods.goodsPicesBean.salePrice}}</text>
+								<text class="price-sale price-symbol">{{goods.goodsPicesBean.salePrice}}</text>/{{goods.goodsPicesBean.unit}}
 								<text class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</text>
 							</view>
 							<view class="cart-icon">购买</view>
@@ -133,6 +141,8 @@
 				},
 				longLat: '',
 				searchName: '',
+				shareAmounts: '',
+				userType: '',
 				loadingType: 'more', //加载更多状态
 				activity: {
 					nav: {},
@@ -160,7 +170,6 @@
 				}]
 			};
 		},
-
 		//加载更多
 		onReachBottom() {
 			this.pageNum = this.pageNum + 1;
@@ -174,6 +183,7 @@
 		},
 		onLoad(ops) {
 			this.loadData();
+			this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 		},
 		onShow() {
 			this.getLocation()
@@ -197,6 +207,10 @@
 			return shareObj
 		},
 		methods: {
+			shareAmount (data1, data2) {
+				var price = Number(data1) + Number(data2)
+				return price;
+			},
 			async loadData() {
 				this.getBanner();
 				this.searchActivityNavList();
@@ -619,8 +633,7 @@
 		}
 		image {
 			width: 120upx;
-			height: 120upx;
-			margin-bottom: 14upx;
+			height: 130upx;
 			border-radius: 50%;
 		}
 	}
@@ -795,7 +808,6 @@
 	background-image: linear-gradient(180deg, #fff, #F5F5F5);
 	.goods-item {
 		width: 340upx;
-		height: 400upx;
 		padding: 18upx;
 		margin-bottom: 30upx;
 		border-radius: 10upx;
@@ -838,12 +850,21 @@
 		color: #000000;
 		font-size: 28upx;
 	}
+	.share-amount {
+		height: 35upx;
+		line-height: 35upx;
+		border-radius: 5upx;
+		width: 160upx;
+		text-align: center;
+		background-color: #FFEFBC;
+		color: #FF8213;
+		font-size: 18upx;
+		margin-top: 10upx;
+	}
 	.detail-bottom {
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
-		height: 50upx;
-		padding-top: 10upx;
 		.price {
 			display: flex;
 			flex-wrap: wrap;
@@ -861,11 +882,12 @@
 				display: flex;
 				align-items: flex-end;
 				line-height: 35upx;
+				margin-left: 10upx;
 			}
 		}
 		.cart-icon {
 			background-image: linear-gradient(#39A9FF, #2D9BEF);
-			height: 50upx;
+			height: 40upx;
 			width: 70upx;
 			display: flex;
 			align-items: center;
@@ -873,6 +895,7 @@
 			text-align: center;
 			border-radius: 10upx;
 			color: #fff;
+			font-size: 20upx;
 		}
 	}
 }

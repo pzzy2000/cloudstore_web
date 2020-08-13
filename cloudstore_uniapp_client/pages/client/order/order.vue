@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<nav-bar backState="1000">我的订单</nav-bar>
+		<nav-bar backState="3000" @backClick='toInfo'>我的订单</nav-bar>
 		<view class="navbar">
 			<view 
 				v-for="(item, index) in navList" :key="index" 
@@ -207,6 +207,11 @@
 			this.getOrderData(this.tabCurrentIndex)
 		},
 		methods: {
+			toInfo () {
+				uni.switchTab({
+					url:"/pages/client/info/index"
+				})
+			},
 			async getOrderData (tabIndex = 0) {
 				uni.showLoading({
 					title: '正在加载',
@@ -220,7 +225,6 @@
 				let data = await Api.apiCall('post',Api.client.order.getClientOrder,parmas)
 				if (data) {
 					const tmpData = data.result.records
-					console.log(tmpData)
 					if(tmpData.length === 0) {
 						this.$api.msg('暂无更多数据了')
 					}else{

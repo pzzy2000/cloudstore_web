@@ -26,8 +26,8 @@
 					<view class="price-box">
 						<!-- <view class="clamp subhead">供应商:{{goods.supplierShopBean.shopName}}</view> -->
 						<view class="price">
-							 <text class="priceSale">￥{{ goods.salePrice }}</text>
-							 <text class="pricemart">￥{{ goods.martPrice}}</text>
+							 <text class="priceSale price-symbol">{{ goods.salePrice }}</text>
+							 <text class="pricemart price-symbol">{{ goods.martPrice}}</text>
 						</view>
 						<view class="flex justify-around">
 							<button class="price-btn buy">购买</button>
@@ -115,10 +115,8 @@
 			};
 		},
 		onLoad(options) {
-			console.log(options)
 			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
 			this.goodsName = options.goodsName
-			console.log(this.goodsName)
 			this.loadActiviList();
 			this.loadgoodsType();
 			this.loadData();
@@ -328,7 +326,6 @@
 			},
 			stopPrevent() {},
 			async shareSave (info) { //分享调用接口
-				console.log(info)
 				this.goodsId = info.id
 				this.activityId = info.activityId
 				this.agentGoodsId = info.activityGoodsId
@@ -528,6 +525,7 @@ page,
 		height:200upx;
 		border-radius: 3upx;
 		overflow: hidden;
+		background-color: #fff;
 		image {
 			opacity: 1;
 			border-radius: 15upx;

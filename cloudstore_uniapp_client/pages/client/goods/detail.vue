@@ -129,7 +129,6 @@
 import Api from '@/common/api';
 import navBar from '@/components/zhouWei-navBar';
 import share from '@/components/share';
-import { mapState } from 'vuex';
 import uniPopup from '@/components/uni-popup/uni-popup'
 import uniPopupMessage from '@/components/uni-popup/uni-popup-message'
 import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog'
@@ -141,6 +140,57 @@ export default {
 	},
 	data() {
 		return {
+			fab: {
+				show: true,
+				left: 0,
+				right: 80,
+				bottom: 200,
+				bgColor: "#5677fc",
+				btnList: [],
+				list: [{
+					bgColor: "#16C2C2",
+					//图标/图片地址
+					imgUrl: "/static/images/fab/fab_about.png",
+					//图片高度 rpx
+					imgHeight: 64,
+					//图片宽度 rpx
+					imgWidth: 64,
+					//名称
+					text: "关于",
+					//字体大小
+					fontSize: 34,
+					//字体颜色
+					color: "#fff"
+				}, {
+					bgColor: "#64B532",
+					//图标/图片地址
+					imgUrl: "/static/images/fab/fab_share.png",
+					//图片高度 rpx
+					imgHeight: 64,
+					//图片宽度 rpx
+					imgWidth: 64,
+					//名称
+					text: "分享",
+					//字体大小
+					fontSize: 34,
+					//字体颜色
+					color: "#fff"
+				}, {
+					bgColor: "#FFA000",
+					//图标/图片地址
+					imgUrl: "/static/images/fab/fab_reward.png",
+					//图片高度 rpx
+					imgHeight: 64,
+					//图片宽度 rpx
+					imgWidth: 64,
+					//名称
+					text: "赞赏",
+					//字体大小
+					fontSize: 34,
+					//字体颜色
+					color: "#fff"
+				}]
+			},
 			specClass: 'none',
 			specSelected: [],
 			small: [],
@@ -217,7 +267,6 @@ export default {
 	},
 	methods: {
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
-		
 			let params = {
 				goodsId: goodsId ,
 				agentGoodsId: agentGoodsId,

@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<view class=" earning-main">
-			<nav-bar :bgColor="['#74c5fd','#49b2fe']" bgColorAngle="90">我的收益</nav-bar>
+		<nav-bar :bgColor="['#66bdff','#3ebdff']" type="fixed">我的收益</nav-bar>
+		<view class="earning-main">
 			<image src="/static/index-top-bg.png" mode="" class="earning-bg"></image>
 			<view class="earning-main-computed">
 				<view class="earning-title">历史总收益</view>
@@ -17,7 +17,9 @@
 		<view class="earning-empty" v-if='financetDataList.length === 0'>
 			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
 			<view class="earning-empty-text">您还没有任何收益记录哦！</view>
-			<button type="default" class="earning-empty-btn">我要下单赚收益</button>
+			<navigator url="pages/client/cart/index" open-type="switchTab">
+				<button type="default" class="earning-empty-btn" open-type="s">我要下单赚收益</button>
+			</navigator>
 		</view>
 		<view class="order-conent">
 			<view class="order-list" v-for="(item, index) in financetDataList" :key="index">

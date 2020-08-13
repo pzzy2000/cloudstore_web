@@ -17,8 +17,8 @@
 					</view>
 					<view class="detail-price">
 						<view class="price-main">
-							<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
-							<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
+							<view class="">市场价<text class="price-symbol">{{goods.goodsPicesBean.martPrice}}</text></view>
+							<view class="surprised">抢购价 <text class="surprised-price price-symbol">{{goods.goodsPicesBean.salePrice}}</text></view>
 						</view>
 						<view class="flex justify-around">
 							<button type="primary" class="price-btn bg-blue buy">购买</button>
