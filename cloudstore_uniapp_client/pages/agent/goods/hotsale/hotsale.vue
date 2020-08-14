@@ -8,15 +8,11 @@
 				<text class="cuIcon-locationfill text-white"></text>
 				<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
 			</view>
-			<view class="search-input" @click.stop="search">
+			<view class="search-input" @click.stop="toSearch">
 				<view class="search-form round">
 					<text class="cuIcon-search"></text>
 					<text>云吞</text>
-					<!-- <input :adjust-position="false" type="text" placeholder="搜索商品" confirm-type="search" @input="inputName"></input> -->
 				</view>
-				<!-- <view class="action">
-					<button class="cu-btn bg-green shadow-blur round" @click="search">搜索</button>
-				</view> -->
 			</view>
 		</view>
 
@@ -90,7 +86,7 @@
 						</view>
 						<view class="share-amount">
 							<template>
-							 分享最高挣 <text v-text="goods.goodsPicesBean.client"></text>
+							 分享最高赚 <text v-text="goods.goodsPicesBean.client"></text>元
 							</template>
 						</view>
 						<view class="detail-bottom">
@@ -137,7 +133,6 @@
 					longitude:  -1,
 				},
 				longLat: '',
-				searchName: '',
 				shareAmounts: '',
 				userType: '',
 				loadingType: 'more', //加载更多状态
@@ -184,56 +179,41 @@
 		},
 		onShow() {
 			this.getLocation()
-			 let list = this.activity.show;
-			 for( let i in list){
-				 let goodsList = list[i].goodsList;
-				 for( let j in goodsList){
-					 goodsList[j].goodsPicesBean.client=this.ishareAmount(goodsList[j].goodsPicesBean);
-				 }
-				 
-			 }
+			this.shareAmount()
+			uni.removeStorageSync('goodsInfo');
 		},
 		onShareAppMessage(res) {
-			if (res.from === 'button') {// 来自页面内分享按钮
-				var shareObj = {
-					title: this.goodsName,
-					imageUrl: this.imageUrl,
-					params: {
-						agentId: this.agentId,
-						goodsId: this.goodsId,
-						activityId: this.activityId,
-						agentGoodsId: this.agentGoodsId,
-						shareClientId: this.shareClientId || '-1',
-						userType: 'Client'
-					},
-					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
-				}
+			var shareObj = {
+				title: this.goodsName,
+				imageUrl: this.imageUrl,
+				params: {
+					agentId: this.agentId,
+					goodsId: this.goodsId,
+					activityId: this.activityId,
+					agentGoodsId: this.agentGoodsId,
+					shareClientId: this.shareClientId || '-1',
+					userType: 'Client'
+				},
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 			}
 			return shareObj
 		},
-		
 		methods: {
-			ishareAmount(data){
-				this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
-				switch (this.userType){
-					case 'agent':
-						return data.agent;
-					case 'leader':
-						return  Number(data.agent) + Number(data.leader)
-					default:
-						 return data.client;
+			shareAmount () { //处理分享出去的金额
+				let list = this.activity.show;
+				for( let i in list){
+					let goodsList = list[i].goodsList;
+					for( let j in goodsList){
+						goodsList[j].goodsPicesBean.client= Api.ishareAmount(goodsList[j].goodsPicesBean);
+					}
 				}
-			},
-			shareAmount (data1, data2) {
-				var price = Number(data1) + Number(data2)
-				return price;
 			},
 			async loadData() {
 				this.getBanner();
 				this.searchActivityNavList();
 				this.searchActivityShowList();
 			},
-			async getAgentShop (res) {
+			async getAgentShop (res) { //获取最近的代理商
 				let agentId =-1;
 				let userInfo =  uni.getStorageSync('userInfo') ; 
 				if(userInfo!=null && userInfo.agent!=null){
@@ -257,7 +237,7 @@
 				}else{
 				}
 			},
-			async getLocation () {
+			async getLocation () { //用户同意获取后获取经纬度信息
 				var that = this
 				uni.getLocation({
 				    type: 'wgs84',
@@ -274,11 +254,7 @@
 					}
 				});
 			},
-			tabSelect(e) {
-				this.TabCur = e.currentTarget.dataset.id;
-				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
-			},
-			async searchActivityNavList() {
+			async searchActivityNavList() { //查询轮播图下的活动nav
 				let params = {
 					// pageNum: 1,
 					// pageSize: 20
@@ -288,7 +264,7 @@
 					this.activity.nav = data.result; //查询出来的 
 				}
 			},
-			async searchActivityShowList() {
+			async searchActivityShowList() {//查询首页显示的活动名称
 				let params = {
 					// pageNum: 1,
 					// pageSize: 20
@@ -304,7 +280,7 @@
 					this.activity.show = showActivity;
 				}
 			},
-			async searchActivityGoodsShowList(activity) {
+			async searchActivityGoodsShowList(activity) { //查询首页显示活动的商品列表
 				let params = {
 					activityId: activity.id,
 					pageNum: 1,
@@ -347,7 +323,7 @@
 			// 		this.activityShopList = data.result.records;
 			// 	}
 			// },
-			async getBanner() {
+			async getBanner() { //获取轮播图
 				let params = {
 				};
 				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params, false);
@@ -357,24 +333,11 @@
 					this.titleNViewBackground = 'rgb(203, 87, 60)';
 				}
 			},
-			dateFormat(time) {
-				if (time == null || time === '') {
-					return 'N/A';
-				}
-				let date = new Date(time);
-				return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
-			},
 			//轮播图切换修改背景色
 			swiperChange(e) {
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 				this.titleNViewBackground = this.carouselList[index].background;
-			},
-			
-			navToTabPage(item) {
-				uni.navigateTo({
-					url: url
-				});
 			},
 			//详情页
 			navToDetailPage(item) {
@@ -389,20 +352,7 @@
 					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}&agentId=${this.agentId}`
 				});
 			},
-			async acceptCoupon(item) {
-				uni.showLoading({
-					title: '请稍后'
-				});
-				let params = {
-					couponId: item.id
-				};
-				let data = await Api.apiCall('post', Api.index.acceptCoupon, params);
-				if (data) {
-					this.$api.msg(data);
-				}
-				uni.hideLoading();
-			},
-			navToCategory(item) {
+			navToCategory(item) { //跳转至热门活动列表
 				let activitId = item.id;
 				let  agentId = this.agentId;
 				if (item.status) {
@@ -413,25 +363,18 @@
 					this.$api.msg('敬请期待')
 				}
 			},
-			inputName (e) {
-				this.searchName = e.detail.value
-			},
-			search() {
+			toSearch() { //跳转至搜索界面
 				uni.navigateTo({
 					url: "/pages/agent/goods/hotsale/search"
 				});
 			},
 			async shareSave (info) { //分享调用接口
-				  this.goodsId = info.goodsId
-				  this.activityId = info.activityId
-				  this.agentGoodsId = info.id
-				  this.goodsName = info.goodsPicesBean.goodsName
-				  this.imageUrl = info.goodsPicesBean.goodsDetailPhotos[0].url || info.goodsPicesBean.goodsPhotos[0].url
-					if (Api.isToken()) {
-						uni.showLoading({
-							title: '正在加载',
-							mask: false
-						});
+				this.goodsId = info.goodsId
+				this.activityId = info.activityId
+				this.agentGoodsId = info.id
+				this.goodsName = info.goodsPicesBean.goodsName
+				this.imageUrl = info.goodsPicesBean.sharePicsUrl
+				if (Api.isToken()) {
 					let params = {
 						'agentId': this.agentId,
 						'goodsId': info.goodsId,
@@ -439,9 +382,8 @@
 						'shareId': this.shareClientId || '-1',
 						'type': ''
 					} 
-					let data = await Api.apiCall('post', Api.agent.share.save, params);
+					let data = await Api.apiCall('post', Api.agent.share.save, params, true);
 					if (data) {
-						uni.hideLoading() 
 						if (data.code === 0) {
 							this.shareClientId = data.result.id
 							if (this.shareClientId) {
@@ -458,12 +400,6 @@
 			share() { //分享显示弹窗
 				this.$refs.share.toggleMask();
 			},
-		},
-		// 标题栏input搜索框点击
-		onNavigationBarSearchInputClicked: async function(e) {
-			uni.navigateTo({
-				url: '/pages/agent/goods/category/category'
-			});
 		}
 	};
 </script>
@@ -865,7 +801,7 @@
 	}
 	.detail-title {
 		color: #000000;
-		font-size: 28upx;
+		font-size: 34upx;
 	}
 	.share-amount {
 		height: 35upx;
@@ -885,6 +821,8 @@
 		.price {
 			display: flex;
 			flex-wrap: wrap;
+			align-items: center;
+			font-size: 22upx;
 			.price-sale {
 				color: #FF1313 ;
 				font-size: 32upx;

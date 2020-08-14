@@ -17,9 +17,7 @@
 		<view class="earning-empty" v-if='financetDataList.length === 0'>
 			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
 			<view class="earning-empty-text">您还没有任何收益记录哦！</view>
-			<navigator url="pages/client/cart/index" open-type="switchTab">
-				<button type="default" class="earning-empty-btn" open-type="s">我要下单赚收益</button>
-			</navigator>
+				<button type="default" class="earning-empty-btn" @click="toCategory">我要下单赚收益</button>
 		</view>
 		<view class="order-conent">
 			<view class="order-list" v-for="(item, index) in financetDataList" :key="index">
@@ -196,6 +194,11 @@
 						this.type = 2;
 						this.tabText = '待收益积分'
 					}
+				},
+				toCategory(){
+					uni.switchTab({
+						url: '/pages/agent/goods/category/category'
+					})
 				}
 			}
 		}

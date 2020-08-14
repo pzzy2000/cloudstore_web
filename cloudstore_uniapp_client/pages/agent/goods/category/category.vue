@@ -19,14 +19,16 @@
 				<view class="goods-detail">
 					<view class="detail-title clamp">{{ goods.goodsName }}</view>
 					<view class="sub-title clamp text-gray">{{ goods.goodsSubtitle }}</view>
+					<view class="share-amount">
+						 分享最高赚 <text v-text="goods.client"></text>元
+					</view>
 					<view class="activity clamp">
 						<text class="text-gray" v-if="!goods.activityBean.name">无活动</text>
 						<text class="text-gray" v-else>{{ goods.activityBean.name }}</text>
 					</view>
 					<view class="price-box">
-						<!-- <view class="clamp subhead">供应商:{{goods.supplierShopBean.shopName}}</view> -->
 						<view class="price">
-							 <text class="priceSale price-symbol">{{ goods.salePrice }}</text>
+							 <text class="priceSale price-symbol">{{ goods.salePrice }}</text>/{{ goods.unit }}
 							 <text class="pricemart price-symbol">{{ goods.martPrice}}</text>
 						</view>
 						<view class="flex justify-around">
@@ -117,10 +119,13 @@
 		onLoad(options) {
 			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
 			this.goodsName = options.goodsName
+			this.agentId = uni.getStorageSync('agentId')
+		},
+		onShow () {
 			this.loadActiviList();
 			this.loadgoodsType();
-			this.loadData();
-			this.agentId = uni.getStorageSync('agentId')
+			this.loadData('initialize');
+			this.pageNum = 1;
 		},
 		onPageScroll(e) {
 			//兼容iOS端下拉时顶部漂移
@@ -142,24 +147,27 @@
 			this.loadData('next');
 		},
 		onShareAppMessage(res) {
-			if (res.from === 'button') {// 来自页面内分享按钮
-				var shareObj = {
-					title: this.goodsName,
-					imageUrl: this.imageUrl,
-					params: {
-						agentId: this.agentId,
-						goodsId: this.goodsId,
-						activityId: this.activityId,
-						agentGoodsId: this.agentGoodsId,
-						shareClientId: this.shareClientId || '-1',
-						userType: 'Client'
-					},
-					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
-				}
+			var shareObj = {
+				title: this.goodsName,
+				imageUrl: this.imageUrl,
+				params: {
+					agentId: this.agentId,
+					goodsId: this.goodsId,
+					activityId: this.activityId,
+					agentGoodsId: this.agentGoodsId,
+					shareClientId: this.shareClientId || '-1',
+					userType: 'Client'
+				},
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 			}
 			return shareObj
 		},
 		methods: {
+			shareAmount () { //处理分享出去的金额
+				for( let i in this.goodsList){
+					this.goodsList.client= Api.ishareAmount(this.goodsList);
+				}
+			},
 			async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
 				uni.showLoading({
 					title: '正在加载',
@@ -185,7 +193,6 @@
 				};
 				let list = await Api.apiCall('post', Api.agent.goods.list, params);
 				if (list) {
-					
 					let goodsList = list.result.records;
 					this.isGoodsList = true
 					if (type === 'next') {
@@ -199,6 +206,7 @@
 						this.goodsList = goodsList;
 						uni.hideLoading()
 					}
+					this.shareAmount()
 					uni.stopPullDownRefresh()
 				}
 			},
@@ -237,7 +245,7 @@
 				this.loadData();
 				this.toggleCateMask('hide');
 			},
-			toggleCateMask (type) {
+			toggleCateMask (type) { //点击顶部右侧的活动分类小图标
 				let timer = type === 'show' ? 10 : 300;
 				let state = type === 'show' ? 1 : 0;
 				this.cateMaskState = 2;
@@ -304,8 +312,7 @@
 			},
 			complete(e) { //点击了商品分类的上一级分类
 			},
-			//查询分类的具体数据
-			async searchtype () {
+			async searchtype () { //查询分类的具体数据
 				let params = {
 					pageNum: '1',
 					pageSize: '10',
@@ -317,8 +324,7 @@
 					uni.hideLoading();
 				}
 			},
-			navToDetailPage(item) {
-				//测试数据没有写id，用title代替
+			navToDetailPage(item) { //跳转到商品详情页
 				let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
 				uni.navigateTo({
 					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${activityGoodsId}&agentId=${this.agentId}`
@@ -330,7 +336,7 @@
 				this.activityId = info.activityId
 				this.agentGoodsId = info.activityGoodsId
 				this.goodsName = info.goodsName
-				this.imageUrl = info.goodsPhotos[0].url || info.goodsDetailPhotos[0].url
+				this.imageUrl = info.sharePicsUrl
 				if (Api.isToken()) {
 						uni.showLoading({
 							title: '正在加载',
@@ -367,15 +373,12 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 page,
 .content {
-	padding-bottom: 100upx;
-}
-.content {
 	padding-top: 96upx;
+	padding-bottom: 40upx;
 }
-
 .navbar {
 	position: fixed;
 	left: 0;
@@ -556,10 +559,22 @@ page,
 			align-items: flex-end;
 		}
 		.activity {
-			height: 35%;
+			height: 20%;
 			display: flex;
 			align-items: flex-end;
 			font-size: 24upx;
+		}
+		.share-amount {
+			height: 35upx;
+			line-height: 35upx;
+			border-radius: 5upx;
+			width: 160upx;
+			text-align: center;
+			background-color: #FFEFBC;
+			color: #FF8213;
+			font-size: 18upx;
+			margin-top: 10upx;
+			display: inline-block;
 		}
 		.price-box {
 			display: flex;
@@ -568,14 +583,15 @@ page,
 			width: 100%;
 			height: 25%;
 			.price {
+				font-size: 22upx;
 				.priceSale {
 					color: red;
 					font-size: 35upx;
-					margin-right: 15upx;
 				}
 				.pricemart {
 					color: #999;
 					font-size: 25upx;
+					margin-left: 15upx;
 					text-decoration: line-through;
 				}
 			}

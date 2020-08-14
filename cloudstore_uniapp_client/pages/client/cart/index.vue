@@ -13,7 +13,7 @@
 					<image src="/static/client/cart-icon.png" mode="" class="cart-empty-img"></image>
 					<text class="cart-empty-text">购物车还是空的</text>
 				</view>
-				<button type="default" class="cart-empty-btn">购物车还是空的哦</button>
+				<button type="default" class="cart-empty-btn" @click="toCategory">购物车还是空的哦</button>
 			</view>
 		</view>
 		<view v-else>
@@ -105,7 +105,6 @@
 			return {
 				total: 0, //总价格
 				allChecked: false, //全选状态  true|false
-				empty: false, //空白页现实  true|false
 				cartList: [],
 				actions: [
 					{
@@ -130,19 +129,10 @@
 			this.cartList.length = 0
 			this.getCartList();
 		},
-		watch:{
-			//显示空白页
-			cartList(e){
-				let empty = e.length === 0 ? true: false;
-				if(this.empty !== empty){
-					this.empty = empty;
-				}
-			}
-		},
 		computed:{
 		},
 		methods: {
-			async getCartList(){
+			async getCartList(){ //获取购物车列表数据
 				this.cartList.length = 0
 				let params = {
 					pageSize: 10,
@@ -183,9 +173,9 @@
 			onImageError(key, index) {
 				this[key][index].image = '/static/errorImage.jpg';
 			},
-			navToLogin(){
-				uni.navigateTo({
-					url: '/pages/public/login'
+			toCategory(){
+				uni.switchTab({
+					url: '/pages/agent/goods/category/category'
 				})
 			},
 			 //选中状态处理
@@ -261,11 +251,6 @@
 			//计算总价
 			calcTotal(){
 				let list = this.cartList;
-				if(list.length === 0){
-					this.empty = true;
-					this.$api('您还未选中商品')
-					return;
-				}
 				let total = 0;
 				let checked = true;
 				list.forEach(item=>{
@@ -285,7 +270,11 @@
 				}
 				this.checkNum = checkNums.length
 			},
-			async createOrder(){ //跳转到支付界面
+			createOrder(){ //跳转到支付界面
+				if(this.cartList.length === 0){
+					this.$api.msg('您还未选择需要购买商品')
+					return false;
+				}
 				var ids = []
 				for (let tmp in  this.cartList) {
 					if (this.cartList[tmp].checked) {
@@ -298,14 +287,6 @@
 						url: '/pages/client/goods/buy?cartId='+id,
 					});
 				}
-				// console.log(ids)
-				// let params = {
-				// 	idss: ids.join(',')
-				// }
-				// var data = await Api.apiCall('post', Api.client.cart.listShopCar, params, true)
-				// if (data) {
-				// 	console.log()
-				// }
 			},
 			handlerButton(e) {
 				let index = e.index;
