@@ -26,16 +26,10 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="searchList" size="small" label-width="130px" ref="searchList">
-          <el-form-item label="服务单号：" prop="name">
-            <el-input style="width: 214px" v-model="searchList.code" placeholder="服务单号"></el-input>
-          </el-form-item>
-          <el-form-item label="用户账号：" prop="count">
-            <el-input style="width: 214px" v-model="searchList.count" placeholder="用户账号"></el-input>
-          </el-form-item>
-          <el-form-item label="下单时间：" prop="ordertime">
-            <el-date-picker v-model="searchList.ordertime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
-            </el-date-picker>
+        <el-form :inline="true" :model="pageList" size="small" label-width="130px" ref="searchList">
+          <el-form-item label="用户信息：" prop="count">
+<!--            <el-input style="width: 214px" v-model="searchList.count" placeholder="用户账号"></el-input>-->
+            <remoteCom v-model="pageList.clientIds" ref="clearInput" url="/manage/search/client/search" @tochild="tochild"></remoteCom>
           </el-form-item>
         </el-form>
       </div>
@@ -51,6 +45,9 @@
         <el-table-column label="服务单号" align="center" prop="number" :formatter="showMsg">
 <!--          <template slot-scope="scope">{{scope.row.orderBean.number}}</template>-->
         </el-table-column>
+        <el-table-column label="订单编号" align="center" prop="orderNumber" :formatter="showMsg">
+          <!--          <template slot-scope="scope">{{scope.row.orderBean.number}}</template>-->
+        </el-table-column>
         <el-table-column label="下单时间" align="center" prop="createTime" :formatter="showMsg">
 <!--          <template slot-scope="scope">{{scope.row.orderBean.createTime | formatDate}}</template>-->
         </el-table-column>
@@ -65,9 +62,6 @@
         </el-table-column>
         <el-table-column label="申请状态" align="center">
           <template slot-scope="scope">{{scope.row.type | changeMsg}}</template>
-        </el-table-column>
-        <el-table-column label="处理时间" align="center">
-          <template slot-scope="scope">{{scope.row.ordertype}}</template>
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
@@ -94,6 +88,7 @@
 <script>
   import {afterSalelist} from '@/api/order'
   import { formatDate } from '@/assets/common/data.js'
+  import remoteCom from '@/components/remoteCom'
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -101,6 +96,9 @@
   };
   export default {
     name: "asService",
+    components: {
+      remoteCom
+    },
     data() {
       return {
         activeIndex: '1',
@@ -132,7 +130,10 @@
       }
     },
     created() {
-      this.getList();
+      this.getList(1);
+    },
+    activated() {
+      this.getList(1);
     },
     filters: {
       // 时间格式自定义 只需把字符串里面的改成自己所需的格式
@@ -176,6 +177,10 @@
       }
     },
     methods: {
+      tochild(item, callback){
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`用户账号：${item.phone} / 用户名称：${item.name}`);
+      },
       showMsg(row, col) {
         switch (col.property) {
           case "number":{
@@ -213,13 +218,42 @@
               return '数据读取错误'
             }
           }
+          case "orderNumber":{
+            try {
+              return row.orderBean.number
+            }catch (e) {
+              return '数据读取错误'
+            }
+          }
         }
       },
-      getList() {
+      getList(idx) {
         afterSalelist(this.pageList).then(res => {
           if (res.result.code == 0) {
             this.orderList = res.result.result.records;
             this.total = parseInt(res.result.result.total);
+            if (idx == 0) {
+              if (res.result.result.records.length == 0) {
+                this.$message({
+                  message: "暂无数据",
+                  type: 'warning',
+                  duration: 800
+                })
+              }else {
+                this.$message({
+                  message: "查询成功",
+                  type: 'success',
+                  duration: 800
+                })
+              }
+            }
+            if (idx == 2) {
+              this.$message({
+                message: "重置成功",
+                type: 'success',
+                duration: 800
+              })
+            }
           }
         })
       },
@@ -227,16 +261,19 @@
         console.log(key, keyPath);
       },
       handleSearchList() {
-        alert("搜索事件！")
+        this.pageList.pageNum = 1;
+        this.getList(0);
       },
       handleResetSearch(formName) {
-        this.$refs[formName].resetFields();
+        this.pageList = Object.assign({}, defaultList),
+        this.$refs.clearInput.clearInput();
+        this.getList(2);
       },
       handleSizeChange() {
-        this.getList();
+        this.getList(1);
       },
       handleCurrentChange() {
-        this.getList();
+        this.getList(1);
       },
       readOrder(index, row){
         console.log(index, row);

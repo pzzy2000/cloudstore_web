@@ -6,10 +6,23 @@
           <!--基本信息--></span>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="baseinfo" ref="baseinfo" size="small" label-width="130px" :rules="rules">
+        <el-form :inline="true" :model="baseinfo" ref="baseinfo" size="small" label-width="180px" :rules="rules">
           <el-divider content-position="left"><i class="el-icon-search"></i>商品基本信息</el-divider>
           <el-form-item label="商品名称：" prop="goodsName">
             <el-input-dispatcher v-model="baseinfo.goodsName" style="width: 650px;"></el-input-dispatcher>
+          </el-form-item>
+          <br />
+          <el-form-item label="分享图片(只有1个)：" prop="sharePics">
+            <div v-if="rwDispatcherState =='read'">
+              <el-image v-for=" (item,index) in sharePics" :src="item.url" :key='index' style="width: 150px; height: 150px;margin-right: 20px;" v-model="baseinfo.sharePics">
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div>
+              </el-image>
+            </div>
+            <div v-else>
+              <single-upload v-model="sharePics" logotype="share"></single-upload>
+            </div>
           </el-form-item>
           <br />
           <el-form-item label="商品标题图片(只有1个)：" prop="goodsPics">
@@ -21,7 +34,7 @@
               </el-image>
             </div>
             <div v-else>
-              <single-upload v-model="goodsPics"></single-upload>
+              <single-upload v-model="goodsPics" logotype="1"></single-upload>
             </div>
           </el-form-item>
           <br />
@@ -184,7 +197,8 @@
           categoryTwoId: '',
           categoryThreeId: '',
           goodsPics: [],
-          goodsDetailPics: []
+          goodsDetailPics: [],
+          sharePics: []
         },
         category: {
           one: [],
@@ -204,10 +218,12 @@
         },
         goodsId: null,
         rwDispatcherState: 'write',
+        sharePics: [],
         goodsPics: [],
         goodsDetailPics:[],
         rules: {
           goodsName: [{required: true, message: '请输入商品名称', trigger: 'blur'}],
+          sharePics: [{ required: true, message: '不能为空', trigger: 'change' }],
           goodsPics: [{ required: true, message: '不能为空', trigger: 'change' }],
           goodsDetailPics: [{ required: true, message: '不能为空', trigger: 'change' }],
           categoryOneId: [{required: true, message: '请输入一级分类', trigger: ['blur', 'change']}],
@@ -422,6 +438,13 @@
                }).then(response1 => {
                  this.district.area = response1.result.result.records;
                  this.baseinfo = goodsinfo;
+                 this.sharePics = [];
+                 let obj = {};
+                 obj.uid = this.baseinfo.sharePics;
+                 obj.url = this.baseinfo.sharePicsUrl;
+                 this.sharePics.push(obj);
+                 console.log("+++++++++++++++")
+                 console.log(this.sharePics);
                  this.goodsPics = this.baseinfo.goodsPhotos;
                  this.goodsDetailPics = this.baseinfo.goodsDetailPhotos;
                });
@@ -447,6 +470,12 @@
           goodsDetailPics.push(this.goodsDetailPics[i].uid);
         }
         udpobj.goodsDetailPics = goodsDetailPics;
+        let sharePics = [];
+        for (let i = 0; i < this.sharePics.length; i++) {
+          let x = this.sharePics[i];
+          sharePics.push(this.sharePics[i].uid);
+        }
+        udpobj.sharePics = sharePics;
         udpobj.optType = "update";
         udpobj.areaId = this.baseinfo.areaId;
         udpobj.categoryOneId = this.baseinfo.categoryOneId;
@@ -463,19 +492,30 @@
         udpobj.goodsBrand = this.baseinfo.goodsBrand;
         udpobj.goodsNumber = this.baseinfo.goodsNumber
 		    udpobj.id= this.goodsId;
-        console.log(udpobj);
-        updateGood(udpobj).then(res => {
-          if(res){
-             let  reuslt  = res.result;
-             if(reuslt.code==0){
+        this.$confirm('是否更新数据', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          updateGood(udpobj).then(res => {
+            if(res){
+              let  reuslt  = res.result;
+              if(reuslt.code==0){
                 msg("更新商品数据成功");
                 this.$router.go(-1);
-             }else{
+              }else{
                 msg("更新商品数据失败["+reuslt.msg+"]");
-             }
-          }else{
-            msg("更新商品数据错误");
-          }
+              }
+            }else{
+              msg("更新商品数据错误");
+            }
+          })
+        }).catch((e) => {
+          this.$message({
+            message: '没有提交',
+            type: 'warning',
+            duration: 800
+        })
         })
       },
       resetProduct() {
@@ -483,13 +523,18 @@
       },
 
       addProduct() {
+        let sharePics = [];
+        for (let i = 0; i < this.sharePics.length; i++) {
+          let x = this.sharePics[i];
+          sharePics.push(this.sharePics[i].uid);
+        }
+        this.baseinfo.sharePics = sharePics;
         let goodsPics = [];
         for (let i = 0; i < this.goodsPics.length; i++) {
           let x = this.goodsPics[i];
           goodsPics.push(this.goodsPics[i].uid);
         }
         this.baseinfo.goodsPics = goodsPics;
-        console.log(this.baseinfo.goodtitimg)
         let goodsDetailPics = [];
         for (let i = 0; i < this.goodsDetailPics.length; i++) {
           let x = this.goodsDetailPics[i];

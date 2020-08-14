@@ -70,7 +70,6 @@
           //   //   url: this.value[i].url+"&auth="+token
           //   // });
           // }
-          console.log(this.value);
           return this.value;
         }
       }

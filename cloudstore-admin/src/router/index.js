@@ -306,7 +306,8 @@ export const asyncRouterMap = [
         path: 'settingBroke',
         name: 'settingBroke',
         component: () => import('@/views/brokerage/goodsBroke/settingBroke'),
-        meta: {title: '商品佣金设置', icon: 'product-list'}
+        meta: {title: '商品佣金设置', icon: 'product-list'},
+        hidden: true
       }]
   },
   {
@@ -342,7 +343,8 @@ export const asyncRouterMap = [
         path: 'goods',
         name: 'agent_goods',
         component: () => import('@/views/agent/goods'),
-        meta: {title: '代理商品', icon: 'product-list'}
+        meta: {title: '代理商品', icon: 'product-list'},
+       hidden: true
      },{
        path: 'addgoods',
        name: 'add_goodsInfo',
@@ -512,7 +514,7 @@ export const asyncRouterMap = [
         path: 'asservice',
         name: 'as_service',
         component: () => import('@/views/order/asService/index'),
-        meta: {title: '售后服务', icon: 'product-list'}
+        meta: {title: '售后服务', icon: 'product-list', keepAlive: true}
       },
       {
         path: 'asinfo',

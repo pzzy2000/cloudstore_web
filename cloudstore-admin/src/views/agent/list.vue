@@ -16,11 +16,8 @@
           <el-form-item label="代理商名字：">
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="代理商名字" clearable></el-input>
           </el-form-item>
-          <el-form-item label="代理商账号：">
-            <el-input style="width: 214px" v-model="listQuery.accont" placeholder="代理商账号" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="代理商电话：">
-            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="代理商电话" clearable></el-input>
+          <el-form-item label="联系电话：">
+            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="联系电话" clearable></el-input>
           </el-form-item>
           <el-form-item label="审核状态：">
             <el-select v-model="listQuery.status" placeholder="请选择审核状态" clearable>
@@ -48,8 +45,6 @@
         <el-table-column type="selection" width="60" align="center" fixed></el-table-column>
         <el-table-column label="代理商名字" align="center" fixed>
           <template slot-scope="scope">{{scope.row.name}}</template>
-        </el-table-column>
-        <el-table-column label="所属账号" align="center" :formatter="showAccess">
         </el-table-column>
         <el-table-column label="联系电话" align="center">
           <template slot-scope="scope">{{scope.row.phone}}</template>

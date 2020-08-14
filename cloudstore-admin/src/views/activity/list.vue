@@ -26,8 +26,8 @@
           <el-form-item label="开始时间：">
             <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>
           </el-form-item>
-          <el-form-item label="创建时间：">
-            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>
+          <el-form-item label="结束时间：">
+            <el-date-picker v-model="listQuery.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动结束时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="活动状态：">
             <el-select v-model="listQuery.status" placeholder="请选择是否启用" clearable>

@@ -26,8 +26,11 @@
           <el-form-item label="客户电话：">
             <el-input style="width: 214px" v-model="pageList.phone" placeholder="客户电话" clearable></el-input>
           </el-form-item>
-          <el-form-item label="创建时间：">
-            <el-date-picker v-model="pageList.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择创建时间"></el-date-picker>
+          <el-form-item label="开始时间：">
+            <el-date-picker v-model="pageList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择开始时间"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="结束时间：">
+            <el-date-picker v-model="pageList.endsTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择结束时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="是否删除：">
             <el-select v-model="pageList.isDelete" placeholder="请选择是否删除" clearable>

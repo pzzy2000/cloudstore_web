@@ -22,18 +22,19 @@
           <el-form-item label="商品货号：">
             <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号" clearable></el-input>
           </el-form-item>
-          <el-form-item label="所属供应商：">
-            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="所属供应商" clearable></el-input>
-          </el-form-item>
-<!--          <el-form-item label="商品分类：">-->
-<!--            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品分类"></el-input>-->
-<!--          </el-form-item>-->
           <el-form-item label="上架状态：">
             <el-select v-model="listQuery.shelfStatus" placeholder="请选择上架状态" clearable>
               <el-option v-for="item in publishStatusOptions" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="所属供应商：">
+            <remoteCom v-model="listQuery.supplierIds" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
+<!--            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="所属供应商" clearable></el-input>-->
+          </el-form-item>
+<!--          <el-form-item label="商品分类：">-->
+<!--            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品分类"></el-input>-->
+<!--          </el-form-item>-->
           <el-form-item label="是否删除：">
             <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
               <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
@@ -235,6 +236,7 @@
   import {
     fetchListWithChildren
   } from '@/api/productCate'
+  import remoteCom from '@/components/remoteCom'
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
@@ -247,6 +249,9 @@
   };
   export default {
     name: "productList",
+    components: {
+      remoteCom
+    },
     data() {
       return {
         editSkuInfo: {
@@ -335,6 +340,10 @@
       this.getList(1);
     },
     methods: {
+      tochild(item, callback){
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`供应商账号：${item.name} / 供应商电话：${item.phone}`);
+      },
       suppilerShop(row, column) {
         try {
           return row.supplierShopBean.shopName;
@@ -597,6 +606,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.$refs.clearInput.clearInput();
         this.category.two = [];
         this.category.three = [];
         this.getList(2)

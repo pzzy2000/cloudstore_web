@@ -30,12 +30,13 @@
     props: {
       //图片属性数组
       value: Array,
-      type:{},
+      type: {},
       //最大上传图片数量
       maxCount: {
         type: Number,
         default: 1
-      }
+      },
+      logotype: String
     },
     data() {
       return {
@@ -45,7 +46,7 @@
         dialogVisible: false,
         dialogImageUrl: null,
         useOss: false,
-        minioUploadUrl: './platform/sys/upload/entity/oss/ali/update?targetType=1'//http://106.52.184.24:18888
+        minioUploadUrl: 'http://106.52.184.24:18888/platform/sys/upload/entity/oss/ali/update?targetType=' + this.logotype//http://106.52.184.24:18888
       };
     },
     computed: {

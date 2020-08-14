@@ -84,7 +84,6 @@
     methods: {
       getList() {
         getgoodsSku({goodsId: this.$route.query.id}).then(res => {
-          console.log(res);
           this.goodsku.skuStockList = res.result.result.records;
           console.log(this.goodsku.skuStockList)
           if( this.goodsku.skuStockList.length>0){

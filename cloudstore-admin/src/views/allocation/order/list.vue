@@ -28,14 +28,18 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="代理商名字：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="代理商名字" clearable></el-input>
+          <el-form-item label="代理商信息：">
+<!--            <el-input style="width: 214px" v-model="listQuery.name" placeholder="代理商名字" clearable></el-input>-->
+            <remoteCom v-model="listQuery.agentIds" ref="clearInput" url="/manage/search/agent/search" @tochild="tochild"></remoteCom>
           </el-form-item>
-          <el-form-item label="代理商电话：">
-            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="代理商电话" clearable></el-input>
+<!--          <el-form-item label="代理商电话：">-->
+<!--            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="代理商电话" clearable></el-input>-->
+<!--          </el-form-item>-->
+          <el-form-item label="开始时间：">
+            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择开始时间"></el-date-picker>
           </el-form-item>
-          <el-form-item label="配送时间：">
-            <el-date-picker v-model="listQuery.allocationTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择配送时间"></el-date-picker>
+          <el-form-item label="结束时间：">
+            <el-date-picker v-model="listQuery.endsTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择结束时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="配送单号：">
             <el-input style="width: 214px" v-model="listQuery.allocationNo" placeholder="配送单号" clearable></el-input>
@@ -57,23 +61,23 @@
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-        <el-table-column label="代理商名字" align="center" width="200" fixed  prop="agentName" :formatter="showAllocInfo">
+        <el-table-column label="代理商名字" align="center" fixed prop="agentName" :formatter="showAllocInfo">
         </el-table-column>
-         <el-table-column label="代理商电话" align="center" width="200"  prop="agentPhone" :formatter="showAllocInfo">
+         <el-table-column label="代理商电话" align="center" prop="agentPhone" :formatter="showAllocInfo">
         </el-table-column>
-        <el-table-column label="代理商地址"  align="center"   prop="agentaddress" :formatter="showAllocInfo">
+        <el-table-column label="代理商地址"  align="center" prop="agentaddress" :formatter="showAllocInfo">
         </el-table-column>
-        <el-table-column label="配送单号" align="center" width="200">
+        <el-table-column label="配送单号" align="center">
            <template slot-scope="scope">{{scope.row.allocationNo}}</template>
         </el-table-column>
-        <el-table-column label="配送时间" width="200" align="center">
+        <el-table-column label="配送时间" align="center">
           <template slot-scope="scope">{{scope.row.allocationTime | formatDate}}</template>
         </el-table-column>
          <!--
         <el-table-column label="配送状态" align="center" prop="allocStatus" :formatter="showAllocInfo">
         </el-table-column>
         -->
-        <el-table-column label="操作" width="200px"  align="center">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="readOrder(scope.$index, scope.row)">配送详情</el-button>
 <!--
@@ -119,6 +123,7 @@
 <script>
     import { fetchAgentList  as fetchList, peisong} from '@/api/allocation'
     import { formatDate } from '@/assets/common/data.js'
+    import remoteCom from '@/components/remoteCom'
     const defaultList = {
       pageNum: 1,
       pageSize: 10,
@@ -127,6 +132,9 @@
     let that;
     export default {
       name: "list",
+      components: {
+        remoteCom
+      },
       data() {
         return {
           activeIndex: '1',
@@ -158,6 +166,10 @@
 
       },
       methods: {
+        tochild(item, callback){
+          // return `用户名称：${item.name} / 用户账号：${item.access}`;
+          callback(`代理商名字：${item.name} / 代理商电话：${item.phone}`);
+        },
         peisong(index, row) {
           peisong({allocationId: row.id}).then(res => {
             if (res.result.code == 0) {
@@ -192,7 +204,7 @@
 
             case 'agentaddress':{
              try{
-                   return  row.agentBean.cityBean.name+"/"+row.agentBean.detailAddress;
+                   return  row.agentBean.provinceBean.name+"/"+row.agentBean.cityBean.name+"/"+row.agentBean.areaBean.name+"/"+row.agentBean.townBean.name+"/"+row.agentBean.detailAddress;
              }catch(e){
               return  '数据读取错误';
              }
@@ -256,6 +268,7 @@
         },
         handleResetSearch() {
           this.listQuery = Object.assign({}, defaultList);
+          this.$refs.clearInput.clearInput();
           this.getList(2)
         },
         handleSizeChange() {

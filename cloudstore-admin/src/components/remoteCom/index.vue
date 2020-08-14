@@ -35,7 +35,6 @@
     },
     methods: {
       remoteMethod(query) {
-        console.log(query);
         if (query !== '') {
           this.loading = true;
           setTimeout(() => {
@@ -53,7 +52,6 @@
       },
       resetOpt() {
         this.$refs.select.$refs.input.blur = () => {
-          console.log(this.value);
           if (this.value.length == 0) {
             this.options = [];
           }

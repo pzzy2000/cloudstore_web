@@ -20,12 +20,13 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="130px" ref="searchList">
-          <el-form-item label="用户账号：" prop="phone">
-            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="用户账号" clearable></el-input>
+          <el-form-item label="用户信息：" prop="phone">
+            <remoteCom v-model="listQuery.clientIds" ref="clearInput" url="/manage/search/client/search" @tochild="tochild"></remoteCom>
+<!--            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="用户账号" clearable></el-input>-->
           </el-form-item>
-          <el-form-item label="用户昵称：" prop="name">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户昵称" clearable></el-input>
-          </el-form-item>
+<!--          <el-form-item label="用户昵称：" prop="name">-->
+<!--            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户昵称" clearable></el-input>-->
+<!--          </el-form-item>-->
         </el-form>
       </div>
     </el-card>
@@ -40,7 +41,7 @@
         <el-table-column label="用户账号" align="center" prop="userBean.phone" :formatter="showAcc">
 <!--          <template slot-scope="scope">{{scope.row.userBean.access}}</template>-->
         </el-table-column>
-        <el-table-column label="用户昵称" align="center" prop="userBean.name" :formatter="showName">
+        <el-table-column label="用户名称" align="center" prop="userBean.name" :formatter="showName">
 <!--          <template slot-scope="scope">{{scope.row.}}</template>-->
         </el-table-column>
 <!--        <el-table-column label="代理等级" align="center">-->
@@ -93,6 +94,7 @@
 <script>
   import {listUserBroke} from '@/api/brokerage'
   import { formatDate } from '@/assets/common/data.js'
+  import remoteCom from '@/components/remoteCom'
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -100,6 +102,9 @@
   };
   export default {
     name: "withdrawBrage",
+    components: {
+      remoteCom
+    },
     data() {
       return {
         searchList: {},
@@ -113,6 +118,10 @@
       this.getList(1);
     },
     methods: {
+      tochild(item, callback){
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`用户账号：${item.phone} / 用户名称：${item.name}`);
+      },
       getList(idx) {
         listUserBroke(this.listQuery).then(res => {
           if (res.result.code == 0) {
@@ -149,6 +158,7 @@
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultList);
+        this.$refs.clearInput.clearInput();
         this.getList(2);
       },
       readInfo(index, row) {
@@ -162,7 +172,7 @@
       },
       showAcc(row) {
         try{
-          return row.userBean.access;
+          return row.userBean.phone;
         }catch (e) {
           return "数据读取出错"
         }
