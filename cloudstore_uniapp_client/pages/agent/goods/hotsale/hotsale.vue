@@ -8,15 +8,11 @@
 				<text class="cuIcon-locationfill text-white"></text>
 				<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
 			</view>
-			<view class="search-input" @click.stop="search">
+			<view class="search-input" @click.stop="toSearch">
 				<view class="search-form round">
 					<text class="cuIcon-search"></text>
 					<text>云吞</text>
-					<!-- <input :adjust-position="false" type="text" placeholder="搜索商品" confirm-type="search" @input="inputName"></input> -->
 				</view>
-				<!-- <view class="action">
-					<button class="cu-btn bg-green shadow-blur round" @click="search">搜索</button>
-				</view> -->
 			</view>
 		</view>
 
@@ -88,9 +84,14 @@
 						<view class="detail-title">
 							<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
 						</view>
+						<view class="share-amount">
+							<template>
+							 分享最高赚 <text v-text="goods.goodsPicesBean.client"></text>元
+							</template>
+						</view>
 						<view class="detail-bottom">
 							<view class="price">
-								<text class="price-sale">¥{{goods.goodsPicesBean.salePrice}}</text>
+								<text class="price-sale price-symbol">{{goods.goodsPicesBean.salePrice}}</text>/{{goods.goodsPicesBean.unit}}
 								<text class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</text>
 							</view>
 							<view class="cart-icon">购买</view>
@@ -132,7 +133,8 @@
 					longitude:  -1,
 				},
 				longLat: '',
-				searchName: '',
+				shareAmounts: '',
+				userType: '',
 				loadingType: 'more', //加载更多状态
 				activity: {
 					nav: {},
@@ -160,7 +162,6 @@
 				}]
 			};
 		},
-
 		//加载更多
 		onReachBottom() {
 			this.pageNum = this.pageNum + 1;
@@ -174,35 +175,45 @@
 		},
 		onLoad(ops) {
 			this.loadData();
+			this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 		},
 		onShow() {
 			this.getLocation()
+			this.shareAmount()
+			uni.removeStorageSync('goodsInfo');
 		},
 		onShareAppMessage(res) {
-			if (res.from === 'button') {// 来自页面内分享按钮
-				var shareObj = {
-					title: this.goodsName,
-					imageUrl: this.imageUrl,
-					params: {
-						agentId: this.agentId,
-						goodsId: this.goodsId,
-						activityId: this.activityId,
-						agentGoodsId: this.agentGoodsId,
-						shareClientId: this.shareClientId || '-1',
-						userType: 'Client'
-					},
-					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
-				}
+			var shareObj = {
+				title: this.goodsName,
+				imageUrl: this.imageUrl,
+				params: {
+					agentId: this.agentId,
+					goodsId: this.goodsId,
+					activityId: this.activityId,
+					agentGoodsId: this.agentGoodsId,
+					shareClientId: this.shareClientId || '-1',
+					userType: 'Client'
+				},
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 			}
 			return shareObj
 		},
 		methods: {
+			shareAmount () { //处理分享出去的金额
+				let list = this.activity.show;
+				for( let i in list){
+					let goodsList = list[i].goodsList;
+					for( let j in goodsList){
+						goodsList[j].goodsPicesBean.client= Api.ishareAmount(goodsList[j].goodsPicesBean);
+					}
+				}
+			},
 			async loadData() {
 				this.getBanner();
 				this.searchActivityNavList();
 				this.searchActivityShowList();
 			},
-			async getAgentShop (res) {
+			async getAgentShop (res) { //获取最近的代理商
 				let agentId =-1;
 				let userInfo =  uni.getStorageSync('userInfo') ; 
 				if(userInfo!=null && userInfo.agent!=null){
@@ -226,7 +237,7 @@
 				}else{
 				}
 			},
-			async getLocation () {
+			async getLocation () { //用户同意获取后获取经纬度信息
 				var that = this
 				uni.getLocation({
 				    type: 'wgs84',
@@ -243,11 +254,7 @@
 					}
 				});
 			},
-			tabSelect(e) {
-				this.TabCur = e.currentTarget.dataset.id;
-				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
-			},
-			async searchActivityNavList() {
+			async searchActivityNavList() { //查询轮播图下的活动nav
 				let params = {
 					// pageNum: 1,
 					// pageSize: 20
@@ -257,7 +264,7 @@
 					this.activity.nav = data.result; //查询出来的 
 				}
 			},
-			async searchActivityShowList() {
+			async searchActivityShowList() {//查询首页显示的活动名称
 				let params = {
 					// pageNum: 1,
 					// pageSize: 20
@@ -273,7 +280,7 @@
 					this.activity.show = showActivity;
 				}
 			},
-			async searchActivityGoodsShowList(activity) {
+			async searchActivityGoodsShowList(activity) { //查询首页显示活动的商品列表
 				let params = {
 					activityId: activity.id,
 					pageNum: 1,
@@ -316,7 +323,7 @@
 			// 		this.activityShopList = data.result.records;
 			// 	}
 			// },
-			async getBanner() {
+			async getBanner() { //获取轮播图
 				let params = {
 				};
 				let data = await Api.apiCall('post', Api.agent.hot.topPiceList, params, false);
@@ -326,24 +333,11 @@
 					this.titleNViewBackground = 'rgb(203, 87, 60)';
 				}
 			},
-			dateFormat(time) {
-				if (time == null || time === '') {
-					return 'N/A';
-				}
-				let date = new Date(time);
-				return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
-			},
 			//轮播图切换修改背景色
 			swiperChange(e) {
 				const index = e.detail.current;
 				this.swiperCurrent = index;
 				this.titleNViewBackground = this.carouselList[index].background;
-			},
-			
-			navToTabPage(item) {
-				uni.navigateTo({
-					url: url
-				});
 			},
 			//详情页
 			navToDetailPage(item) {
@@ -358,20 +352,7 @@
 					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}&agentId=${this.agentId}`
 				});
 			},
-			async acceptCoupon(item) {
-				uni.showLoading({
-					title: '请稍后'
-				});
-				let params = {
-					couponId: item.id
-				};
-				let data = await Api.apiCall('post', Api.index.acceptCoupon, params);
-				if (data) {
-					this.$api.msg(data);
-				}
-				uni.hideLoading();
-			},
-			navToCategory(item) {
+			navToCategory(item) { //跳转至热门活动列表
 				let activitId = item.id;
 				let  agentId = this.agentId;
 				if (item.status) {
@@ -382,25 +363,18 @@
 					this.$api.msg('敬请期待')
 				}
 			},
-			inputName (e) {
-				this.searchName = e.detail.value
-			},
-			search() {
+			toSearch() { //跳转至搜索界面
 				uni.navigateTo({
 					url: "/pages/agent/goods/hotsale/search"
 				});
 			},
 			async shareSave (info) { //分享调用接口
-				  this.goodsId = info.goodsId
-				  this.activityId = info.activityId
-				  this.agentGoodsId = info.id
-				  this.goodsName = info.goodsPicesBean.goodsName
-				  this.imageUrl = info.goodsPicesBean.goodsDetailPhotos[0].url || info.goodsPicesBean.goodsPhotos[0].url
-					if (Api.isToken()) {
-						uni.showLoading({
-							title: '正在加载',
-							mask: false
-						});
+				this.goodsId = info.goodsId
+				this.activityId = info.activityId
+				this.agentGoodsId = info.id
+				this.goodsName = info.goodsPicesBean.goodsName
+				this.imageUrl = info.goodsPicesBean.sharePicsUrl
+				if (Api.isToken()) {
 					let params = {
 						'agentId': this.agentId,
 						'goodsId': info.goodsId,
@@ -408,9 +382,8 @@
 						'shareId': this.shareClientId || '-1',
 						'type': ''
 					} 
-					let data = await Api.apiCall('post', Api.agent.share.save, params);
+					let data = await Api.apiCall('post', Api.agent.share.save, params, true);
 					if (data) {
-						uni.hideLoading() 
 						if (data.code === 0) {
 							this.shareClientId = data.result.id
 							if (this.shareClientId) {
@@ -427,12 +400,6 @@
 			share() { //分享显示弹窗
 				this.$refs.share.toggleMask();
 			},
-		},
-		// 标题栏input搜索框点击
-		onNavigationBarSearchInputClicked: async function(e) {
-			uni.navigateTo({
-				url: '/pages/agent/goods/category/category'
-			});
 		}
 	};
 </script>
@@ -619,8 +586,7 @@
 		}
 		image {
 			width: 120upx;
-			height: 120upx;
-			margin-bottom: 14upx;
+			height: 130upx;
 			border-radius: 50%;
 		}
 	}
@@ -795,7 +761,6 @@
 	background-image: linear-gradient(180deg, #fff, #F5F5F5);
 	.goods-item {
 		width: 340upx;
-		height: 400upx;
 		padding: 18upx;
 		margin-bottom: 30upx;
 		border-radius: 10upx;
@@ -836,17 +801,28 @@
 	}
 	.detail-title {
 		color: #000000;
-		font-size: 28upx;
+		font-size: 34upx;
+	}
+	.share-amount {
+		height: 35upx;
+		line-height: 35upx;
+		border-radius: 5upx;
+		width: 160upx;
+		text-align: center;
+		background-color: #FFEFBC;
+		color: #FF8213;
+		font-size: 18upx;
+		margin-top: 10upx;
 	}
 	.detail-bottom {
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
-		height: 50upx;
-		padding-top: 10upx;
 		.price {
 			display: flex;
 			flex-wrap: wrap;
+			align-items: center;
+			font-size: 22upx;
 			.price-sale {
 				color: #FF1313 ;
 				font-size: 32upx;
@@ -861,11 +837,12 @@
 				display: flex;
 				align-items: flex-end;
 				line-height: 35upx;
+				margin-left: 10upx;
 			}
 		}
 		.cart-icon {
 			background-image: linear-gradient(#39A9FF, #2D9BEF);
-			height: 50upx;
+			height: 40upx;
 			width: 70upx;
 			display: flex;
 			align-items: center;
@@ -873,6 +850,7 @@
 			text-align: center;
 			border-radius: 10upx;
 			color: #fff;
+			font-size: 20upx;
 		}
 	}
 }

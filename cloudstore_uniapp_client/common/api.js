@@ -139,6 +139,17 @@ export default {
 	statusBarHeight () { //获取导航栏高度
 		return  uni.getSystemInfoSync().statusBarHeight
 	},
+	ishareAmount(data){ //计算分享出去的商品能挣多少钱
+		var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
+		switch (userType){
+			case 'agent':
+				return data.agent;
+			case 'leader':
+				return Number(data.agent) + Number(data.leader)
+			default:
+				 return data.client;
+		}
+	},
 	throttle(func, wait) { //节流
 		let timer = null;
 		return function () {

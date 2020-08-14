@@ -1,16 +1,6 @@
 <template>
 	<view>
 		<nav-bar backState="1000">{{afterSaleTitle}}</nav-bar>
-		<!-- <view class="" v-for="(item, index) in afterSaleList" :key= 'item.orderId'>
-			<view class="">订单号：{{item.orderId}}</view>
-			<view class="">
-				
-			</view>
-			<view class="flex justify-between">
-				<view class="">{{item.orderBean.payPrice}}</view>
-				<view class="">{{item.orderBean.createTime}}</view>
-			</view>
-		</view> -->
 		<view v-for="item in afterSaleList" class="order-item" :key= 'item.orderId' @click="toAfterSale(item)">
 			<view class="i-top">
 				<text class="order-id">订单号: {{item.orderId}}</text>
@@ -116,6 +106,7 @@
 						}
 					}
 				}
+				uni.stopPullDownRefresh();
 			},
 			toAfterSale (item) {
 				// uni.navigateTo({

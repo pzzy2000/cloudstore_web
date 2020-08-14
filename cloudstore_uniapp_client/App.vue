@@ -391,6 +391,13 @@
 		.placeholder {
 			color: #999999;
 		}
+		.price-symbol {
+			&::before {
+				content: '¥';
+				font-size: 23upx;
+				margin-bottom: 3upx;
+			}
+		}
 		@import "common/main.css";
 		@import "common/icon.css";
 </style>

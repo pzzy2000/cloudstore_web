@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<nav-bar backState="1000" fontColor="#FFF" :titleCenter="false" type="transparentFixed">商品详情</nav-bar>
+		<nav-bar backState="1000" fontColor="#FFF">商品详情</nav-bar>
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
 				<swiper-item class="swiper-item" v-for="(item, index) in swiperImgList" :key="index">
@@ -12,8 +12,7 @@
 			<text class="title">{{ goods.goodsName }}</text>
 			<view class="sub-title">{{ goods.goodsSubtitle }}</view>
 			<view class="price-box">
-				<text class="price-tip">¥</text>
-				<text class="price">{{ sku.price }}</text>
+				<text class="price price-symbol">{{ sku.price }}</text>/{{ goods.unit }}
 			</view>
 		</view>
 		<view class="c-list">
@@ -34,6 +33,12 @@
 				<text class="tit">售后服务</text>
 				<view class="con-list">
 					<text>7天无理由退换货</text>
+				</view>
+			</view>
+			<view class="c-row" v-for="(item ,index) in propertyValue" :key='index'>
+				<text class="tit">{{item.goodsPropertyParamName}}</text>
+				<view class="con-list">
+					<text class="tit">{{item.propertyValue}}</text>
 				</view>
 			</view>
 		</view>
@@ -68,10 +73,10 @@
 		
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			<navigator url="/pages/agent/goods/hotsale/hotsale" open-type='switchTab' class="p-b-btn">
+			<view class="p-b-btn" @click.stop="toIndex">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
-			</navigator>
+			</view>
 			<view class="p-b-btn" @click.stop="toggleSpec('cart')">
 				<text class="yticon icon-gouwuche "></text>
 				<text>加入购物车</text>
@@ -79,7 +84,7 @@
 			<view class="action-btn-group">
 				<button class="action-btn action-buy-btn" @click.stop="toggleSpec('buy')">立即购买</button>
 				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
-				<button class="action-btn action-share-btn" @click.stop="shareSave" >立即分享</button>
+				<button class="action-btn action-share-btn" @click.stop="shareSave" >分享赚￥{{ goods.client }}</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -129,7 +134,6 @@
 import Api from '@/common/api';
 import navBar from '@/components/zhouWei-navBar';
 import share from '@/components/share';
-import { mapState } from 'vuex';
 import uniPopup from '@/components/uni-popup/uni-popup'
 import uniPopupMessage from '@/components/uni-popup/uni-popup-message'
 import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog'
@@ -141,6 +145,57 @@ export default {
 	},
 	data() {
 		return {
+			fab: {
+				show: true,
+				left: 0,
+				right: 80,
+				bottom: 200,
+				bgColor: "#5677fc",
+				btnList: [],
+				list: [{
+					bgColor: "#16C2C2",
+					//图标/图片地址
+					imgUrl: "/static/images/fab/fab_about.png",
+					//图片高度 rpx
+					imgHeight: 64,
+					//图片宽度 rpx
+					imgWidth: 64,
+					//名称
+					text: "关于",
+					//字体大小
+					fontSize: 34,
+					//字体颜色
+					color: "#fff"
+				}, {
+					bgColor: "#64B532",
+					//图标/图片地址
+					imgUrl: "/static/images/fab/fab_share.png",
+					//图片高度 rpx
+					imgHeight: 64,
+					//图片宽度 rpx
+					imgWidth: 64,
+					//名称
+					text: "分享",
+					//字体大小
+					fontSize: 34,
+					//字体颜色
+					color: "#fff"
+				}, {
+					bgColor: "#FFA000",
+					//图标/图片地址
+					imgUrl: "/static/images/fab/fab_reward.png",
+					//图片高度 rpx
+					imgHeight: 64,
+					//图片宽度 rpx
+					imgWidth: 64,
+					//名称
+					text: "赞赏",
+					//字体大小
+					fontSize: 34,
+					//字体颜色
+					color: "#fff"
+				}]
+			},
 			specClass: 'none',
 			specSelected: [],
 			small: [],
@@ -149,6 +204,7 @@ export default {
 				price: '',
 				stock: ''
 			},
+			propertyValue: '', //商品参数
 			detailData: [],
 			goods: '',
 			shareList: [
@@ -181,20 +237,18 @@ export default {
 		};
 	},
 	onShareAppMessage(res) {
-		if (res.from === 'button') {// 来自页面内分享按钮
-			var shareObj = {
-				title: this.goodsName,
-				imageUrl: this.imageUrl,
-				params: {
-					agentId: this.agentId,
-					goodsId: this.goodsId,
-					activityId: this.activityId,
-					agentGoodsId: this.agentGoodsId,
-					shareClientId: this.shareClientId || '-1',
-					userType: 'Client'
-				},
-				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
-			}
+		var shareObj = {
+			title: this.goodsName,
+			imageUrl: this.imageUrl,
+			params: {
+				agentId: this.agentId,
+				goodsId: this.goodsId,
+				activityId: this.activityId,
+				agentGoodsId: this.agentGoodsId,
+				shareClientId: this.shareClientId || '-1',
+				userType: 'Client'
+			},
+			path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 		}
 		return shareObj
 	},
@@ -216,8 +270,10 @@ export default {
 		}
 	},
 	methods: {
+		shareAmount () { //处理分享出去的金额
+			this.goods.client= Api.ishareAmount(this.goodsList);
+		},
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
-		
 			let params = {
 				goodsId: goodsId ,
 				agentGoodsId: agentGoodsId,
@@ -227,7 +283,8 @@ export default {
 				this.goods = data.result.goodsPicesBean;
 				this.activity = data.result.activityBean;
 				this.goodsName = data.result.goodsPicesBean.goodsName
-				this.imageUrl = data.result.goodsPicesBean.goodsDetailPhotos[0].url
+				this.propertyValue = data.result.goodsPropertyValue //商品参数
+				this.imageUrl = data.result.goodsPicesBean.sharePicsUrl
 				this.skuList = data.result.goodsSku
 				//赋值默认商品价格，库存和图片
 				this.sku.price = this.skuList[0].price
@@ -500,7 +557,12 @@ export default {
 				}
 			}
 		},
-		stopPrevent() {}
+		stopPrevent() {}, //遮罩层的方法
+		toIndex () {
+			uni.switchTab({
+				url:'/pages/agent/goods/hotsale/hotsale'
+			})
+		}
 	}
 };
 </script>
@@ -555,12 +617,11 @@ export default {
 		line-height: 50upx;
 	}
 	.price-box {
-		display: flex;
-		align-items: baseline;
+		display: inline-block;
 		height: 64upx;
 		line-height: 64upx;
 		font-size: 26upx;
-		color: $uni-color-primary;
+		color: #999999;
 	}
 	.price {
 		color: #FF1313;
@@ -934,7 +995,7 @@ export default {
 .page-bottom {
 	position: fixed;
 	left: 0;
-	bottom: 0;
+	bottom: 30upx;
 	z-index: 95;
 	display: flex;
 	justify-content: space-around;
@@ -942,14 +1003,14 @@ export default {
 	width:100%;
 	height: 100upx;
 	background: rgba(255, 255, 255, 0.9);
-	box-shadow: 0 0 20upx 0 rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0 14upx 0 rgba(64,181,255, 0.2);
 	.p-b-btn {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		font-size: #333333;
-		color: 20upx;
+		color: #333333;
+		font-size: 20upx;
 		letter-spacing: 4upx;
 		height: 80upx;
 		.yticon {
@@ -976,7 +1037,6 @@ export default {
 			align-items: center;
 			justify-content: center;
 			color: #fff;
-			width: 200upx;
 			height: 72upx;
 			border-radius: 36upx;
 			font-size: 30upx;

@@ -2,10 +2,11 @@
 	<view class="content">
 		<nav-bar backState="1000">热门商品列表</nav-bar>
 		<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
+			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">{{activitName}}</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">销量排行</view>
-			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
+			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
 		</view>
 		<view class="goods-list">
 			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
@@ -15,10 +16,16 @@
 						<view class="clamp title">{{ goods.goodsPicesBean.goodsName }}</view>
 						<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
 					</view>
+					<view class="share-amount">
+						 分享最高赚 <text v-text="goods.goodsPicesBean.client"></text>元
+					</view>
 					<view class="detail-price">
 						<view class="price-main">
-							<view class="">市场价￥{{goods.goodsPicesBean.martPrice}}</view>
-							<view class="surprised">抢购价 <text class="surprised-price">￥{{goods.goodsPicesBean.salePrice}}</text></view>
+							<view class="surprised">
+								抢购价 <text class="surprised-price price-symbol">{{goods.goodsPicesBean.salePrice}}</text>
+								/{{goods.goodsPicesBean.unit}}
+								<text class="price-symbol mart-price">{{goods.goodsPicesBean.martPrice}}</text>
+							</view>
 						</view>
 						<view class="flex justify-around">
 							<button type="primary" class="price-btn bg-blue buy">购买</button>
@@ -95,7 +102,7 @@
 				categoryTwoId: '',
 				categoryThreeId: '',
 				shareList: [{
-					icon: "/static/temp/share_wechat.png",
+					icon: "/static/share_wechat.png",
 					text: "微信好友",
 					type: 1
 				}],
@@ -133,24 +140,27 @@
 			this.loadData('next');
 		},
 		onShareAppMessage(res) {
-			if (res.from === 'button') {// 来自页面内分享按钮
-				var shareObj = {
-					title: this.goodsName,
-					imageUrl: this.imageUrl,
-					params: {
-						agentId: this.agentId,
-						goodsId: this.goodsId,
-						activityId: this.activityId,
-						agentGoodsId: this.agentGoodsId,
-						shareClientId: this.shareClientId || '-1',
-						userType: 'Client'
-					},
-					path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
-				}
+			var shareObj = {
+				title: this.goodsName,
+				imageUrl: this.imageUrl,
+				params: {
+					agentId: this.agentId,
+					goodsId: this.goodsId,
+					activityId: this.activityId,
+					agentGoodsId: this.agentGoodsId,
+					shareClientId: this.shareClientId || '-1',
+					userType: 'Client'
+				},
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 			}
 			return shareObj
 		},
 		methods: {
+			shareAmount () { //处理分享出去的金额
+				for( let i in this.goodsList){
+					this.goodsList[i].goodsPicesBean.client= Api.ishareAmount(this.goodsList[i].goodsPicesBean);
+				}
+			},
 			async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
 				uni.showLoading({
 					title: '正在加载',
@@ -173,7 +183,6 @@
 				let list = await Api.apiCall('post', Api.agent.hot.hotList, params);
 				if (list) {
 					let goodsList = list.result.records;
-					console.log(goodsList)
 					if (type === 'next') {
 						if (goodsList.length === 0) {
 							this.$api.msg('没有更多了')
@@ -182,6 +191,7 @@
 					}else{
 						this.goodsList = goodsList;
 					}
+					this.shareAmount()
 					uni.hideLoading()
 					uni.stopPullDownRefresh()
 				}
@@ -282,7 +292,8 @@
 				});
 			},
 			toggleCateMask(type) { //显示分类面板
-				let timer = type === 'show' ? 10 : 300;
+				// let timer = type === 'show' ? 10 : 300;
+				let timer = type === 'show' ? 0 : 0;
 				let state = type === 'show' ? 1 : 0;
 				this.cateMaskState = 2;
 				setTimeout(() => {
@@ -303,7 +314,7 @@
 				  this.activityId = info.activityId
 				  this.agentGoodsId = info.id
 				  this.goodsName = info.goodsPicesBean.goodsName
-				  this.imageUrl = info.goodsPicesBean.goodsPhotos[0].url || info.goodsPicesBean.goodsDetailPhotos[0].url
+				  this.imageUrl = info.goodsPicesBean.sharePicsUrl
 					if (Api.isToken()) {
 						uni.showLoading({
 							title: '正在加载',
@@ -426,7 +437,7 @@
 			&:after {
 				content: '';
 				position: absolute;
-				left: 0;
+				right: 0;
 				top: 50%;
 				transform: translateY(-50%);
 				border-left: 1px solid #ddd;
@@ -445,15 +456,15 @@
 		width: 100%;
 		background: rgba(0, 0, 0, 0);
 		z-index: 95;
-		transition: 0.3s;
+		// transition: 0.3s;
 
 		.cate-content {
-			width: 45%;
+			width: 30%;
 			height: 100%;
 			background: #fff;
-			float: right;
-			transform: translateX(100%);
-			transition: 0.3s;
+			float: left;
+			// transform: translateX(100%);
+			// transition: 0.3s;
 		}
 
 		&.none {
@@ -529,6 +540,17 @@
 			justify-content: flex-start;
 			flex-wrap: wrap;
 			width: 65%;
+			.share-amount {
+				height: 35upx;
+				line-height: 35upx;
+				border-radius: 5upx;
+				width: 160upx;
+				text-align: center;
+				background-color: #FFEFBC;
+				color: #FF8213;
+				font-size: 18upx;
+				margin-top: 10upx;
+			}
 			.detail-title {
 				font-size: 16upx;
 				color: #000;
@@ -553,11 +575,17 @@
 					color: #999;
 					font-size: 24upx;
 					.surprised {
-						font-size: 30upx;
-						color: #000;
+						font-size: 22upx;
+						color: #999;
 						.surprised-price {
 							font-size: 35upx;
 							color: red;
+							margin-left: 10rpx;
+						}
+						.mart-price {
+							text-decoration: line-through;
+							margin-left: 10rpx;
+							font-size: 24upx;
 						}
 					}
 				}
