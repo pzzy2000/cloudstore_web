@@ -249,7 +249,18 @@ export const asyncRouterMap = [
           component: () => import('@/views/pms/productAttr/addspectypes'),
          meta: {title: '增加规格'},
          hidden: true
-       }]
+       }, {
+           path: 'goodsAsserverlist',
+           name: 'goods_Asserverlist',
+           component: () => import('@/views/pms/asServer/list'),
+           meta: {title: '售后服务', icon: "product-list"}
+        },{
+           path: 'goodsAsserver',
+           name: 'goods_Asserver',
+           component: () => import('@/views/pms/asServer/index'),
+           meta: {title: '售后服务详情', icon: "product-list"},
+           hidden: true
+         }]
   },
   {
     path:'/broke/rage',

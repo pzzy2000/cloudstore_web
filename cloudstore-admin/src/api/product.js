@@ -107,3 +107,10 @@ export function updateGood(params) {
     data: switchForm(params)
   })
 }
+
+export function getReturnrules() {
+  return request({
+    url: '/goods/return/rules/list',
+    method: 'POST'
+  })
+}

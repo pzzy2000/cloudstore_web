@@ -360,7 +360,7 @@
       },
       goodsCategory(row, column) {
         try {
-          if (row.categoryThreeBean !== null) {
+          if (row.categoryThreeBean !== null && row.categoryThreeBean !== undefined) {
             return row.categoryOneBean.name + "/" + row.categoryTwoBean.name + "/" + row.categoryThreeBean.name;
           } else {
             return row.categoryOneBean.name + "/" + row.categoryTwoBean.name;

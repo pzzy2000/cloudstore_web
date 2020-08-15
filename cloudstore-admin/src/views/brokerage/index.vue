@@ -23,12 +23,12 @@
           <el-form-item label="活动名称：" prop="name">
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称" clearable></el-input>
           </el-form-item>
-          <el-form-item label="开始时间：">
-            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="创建时间：">
-            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>
-          </el-form-item>
+<!--          <el-form-item label="开始时间：">-->
+<!--            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="创建时间：">-->
+<!--            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>-->
+<!--          </el-form-item>-->
           <el-form-item label="活动状态：" prop="ordertype">
             <el-select v-model="listQuery.status" placeholder="请选择" clearable>
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">

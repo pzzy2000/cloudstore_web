@@ -67,7 +67,9 @@
                   </el-table-column>
                   <el-table-column label="属性图片：" align="left" width="400">
                     <template slot-scope="scope">
-                      <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
+                      <el-form-item :prop="'skuStockList.' + scope.$index + '.photos'" :rules='rules.photos'>
+                        <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
+                      </el-form-item>
                     </template>
                   </el-table-column>
                   <el-table-column fixed="right" label="操作" width="80" align="center">
@@ -223,7 +225,8 @@
           skuCode: [
             { required:true, message:"sku编号必填", trigger:"blur" }
             // { pattern: /[\u4E00-\u9FA5]/g, message: '不能输入中文' }
-          ]
+          ],
+          photos: [{ required:true, message:"sku图片不能为空", trigger:"change" }]
         }
       }
     },

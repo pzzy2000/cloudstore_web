@@ -62,6 +62,13 @@
 <!--            </el-select-dispatcher>-->
 <!--          </el-form-item>-->
 <!--          <br />-->
+          <el-form-item label="售后服务：" prop="returnRuleId">
+            <el-select-dispatcher v-model="baseinfo.returnRuleId" placeholder="请选择售后服务" clearable>
+              <el-option v-for="(item, index) in returnOptions" :key="index" :label="item.title" :value="item.id">
+              </el-option>
+            </el-select-dispatcher>
+          </el-form-item>
+          <br />
           <el-form-item label="商品分类：" prop="categoryOneId">
             <el-select-dispatcher v-model="baseinfo.categoryOneId" :options="category1" remote placeholder="一级分类"
               :loading="loading" v-on:change="seclectCategory($event, 1)">
@@ -169,7 +176,8 @@
   import {
     getProduct,
     createProduct,
-    updateGood
+    updateGood,
+    getReturnrules
   } from '@/api/product';
 
   import SingleUpload from '@/components/Upload/singleUpload';
@@ -226,6 +234,7 @@
           sharePics: [{ required: true, message: '不能为空', trigger: 'change' }],
           goodsPics: [{ required: true, message: '不能为空', trigger: 'change' }],
           goodsDetailPics: [{ required: true, message: '不能为空', trigger: 'change' }],
+          returnRuleId: [{required: true, message: '请选择售后服务', trigger: ['blur', 'change']}],
           categoryOneId: [{required: true, message: '请输入一级分类', trigger: ['blur', 'change']}],
           categoryTwoId: [{required: true, message: '请输入二级分类', trigger: ['blur', 'change']}],
           provinceId: [{required: true, message: '请输入省', trigger: 'change'}],
@@ -241,7 +250,8 @@
             { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '整数,不超过3位，小数点后2位' }
           ],
           unit: [{required: true, message: '请输入计量单位', trigger: 'blur'}]
-        }
+        },
+        returnOptions: []
       }
     },
     beforeMount() {},
@@ -258,6 +268,11 @@
       },
     },
     methods: {
+      getReturnoptions() {
+        getReturnrules().then(res => {
+          this.returnOptions = res.result.result.records;
+        })
+      },
       showinfoBut() {
         this.button.add = "none";
         this.button.reset = "none";
@@ -302,6 +317,7 @@
         }
         this.searchRootCategory();
         this.selectRootDistrict();
+        this.getReturnoptions();
       },
       searchRootCategory() {
         this.loading = true;
@@ -477,6 +493,7 @@
         }
         udpobj.sharePics = sharePics;
         udpobj.optType = "update";
+        udpobj.returnRuleId = this.baseinfo.returnRuleId;
         udpobj.areaId = this.baseinfo.areaId;
         udpobj.categoryOneId = this.baseinfo.categoryOneId;
         // udpobj.categoryThreeId = this.baseinfo.categoryThreeId;
