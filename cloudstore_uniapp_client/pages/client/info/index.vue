@@ -201,14 +201,22 @@
 					});
 				}
 			},
-			async toExit(){
+			async toExit(url){
 				let params ={logintype:'client'};
 				let data = await Api.apiCall('post', Api.client.login.logout, params, true, true);
 				if(data){
-					this.$api.msg("系统退出成功");
-					uni.navigateTo({
-						url:"/pages/client/public/login"
-					})
+					this.$api.msg("退出成功");
+					setTimeout(function(){
+					uni.clearStorage();
+					uni.reLaunch({
+						url: url
+					});
+					},2000); 
+					
+					// uni.navigateTo({
+					// 	url:"/pages/client/public/login"
+					// })
+					
 				}
 			},
 			/**
@@ -217,10 +225,11 @@
 			 */
 			navTo(url,type) {
 				if (type === 'exit') {
-					uni.clearStorage();
-					uni.reLaunch({
-						url: url
-					});
+					
+					this.toExit(url);
+					// uni.reLaunch({
+					// 	url: url
+					// });
 				} else if (type === false) {
 					this.$api.msg('敬请期待')
 				} else {

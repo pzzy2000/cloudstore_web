@@ -20,7 +20,8 @@ export default {
 	client:{
 		login:{
 			login:"sys/manager/platform/login"	,
-			reg:"sys/manager/platform/register/client"
+			reg:"sys/manager/platform/register/client",
+			logout:"app/private/client/loginout"
 		},
 		reg: {
 			auth: 'sys/manager/platform/weixin/auth',  //传code
