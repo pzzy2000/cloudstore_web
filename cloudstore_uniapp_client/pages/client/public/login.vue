@@ -46,13 +46,8 @@
 </template>
 
 <script>
-	// import {
-	// 	mapMutations,
-	// 	mapState
-	// } from 'vuex';
 	import mallplusCopyright from '@/components/mall-copyright/mallplusCopyright.vue';
 	import Api from '@/common/api';
-	// import store from '@/store/index';
 	export default {
 		components: {
 			mallplusCopyright
@@ -146,7 +141,6 @@
 					data: params,
 					success: res => {
 						var data = res.data
-						console.log(data)
 						if(data.result.code === 0) {
 							uni.showToast({
 								title: '登录成功',

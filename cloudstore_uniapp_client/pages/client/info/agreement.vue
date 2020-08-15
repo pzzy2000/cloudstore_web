@@ -8,7 +8,7 @@
     export default {
         data() {
             return {
-                url: 'http://www.sz-guochuang.com/fl/ymg_fwxy.html'
+                url: 'https://www.sz-guochuang.com/fl/ymg_fwxy.html'
             }
         },
         onLoad(options) {

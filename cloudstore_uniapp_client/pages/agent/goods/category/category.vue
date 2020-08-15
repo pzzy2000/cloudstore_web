@@ -117,14 +117,14 @@
 			};
 		},
 		onLoad(options) {
-			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
+			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 17
 			this.goodsName = options.goodsName
 			this.agentId = uni.getStorageSync('agentId')
 		},
 		onShow () {
 			this.loadActiviList();
 			this.loadgoodsType();
-			this.loadData('initialize');
+			this.loadData();
 			this.pageNum = 1;
 		},
 		onPageScroll(e) {
@@ -191,7 +191,7 @@
 					categoryTwoId: this.categoryTwoId,
 					categoryThreeId: this.categoryThreeId,
 				};
-				let list = await Api.apiCall('post', Api.agent.goods.list, params);
+				let list = await Api.apiCall('post', Api.agent.goods.list, params,true);
 				if (list) {
 					let goodsList = list.result.records;
 					this.isGoodsList = true
@@ -377,7 +377,7 @@
 page,
 .content {
 	padding-top: 96upx;
-	padding-bottom: 40upx;
+	padding-bottom: 60upx;
 }
 .navbar {
 	position: fixed;
