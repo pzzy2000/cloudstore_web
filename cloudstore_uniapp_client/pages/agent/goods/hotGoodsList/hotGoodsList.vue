@@ -109,7 +109,7 @@
 			}
 		},
 		onLoad(options) {
-			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 27
+			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 17
 			uni.showLoading({
 				title: '正在加载',
 				mask: false

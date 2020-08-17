@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<nav-bar backState="1000" fontColor="#FFF">商品详情</nav-bar>
+		<nav-bar backState="1000" fontColor="#000" bgColor="#fff" class="nav-title">商品详情</nav-bar>
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
 				<swiper-item class="swiper-item" v-for="(item, index) in swiperImgList" :key="index">
@@ -29,26 +29,34 @@
 					<text>{{activity.name}}</text>
 				</view>
 			</view>
-			<view class="c-row">
-				<text class="tit">售后服务</text>
-				<view class="con-list">
-					<text>7天无理由退换货</text>
-				</view>
-			</view>
 			<view class="c-row" v-for="(item ,index) in propertyValue" :key='index'>
 				<text class="tit">{{item.goodsPropertyParamName}}</text>
 				<view class="con-list">
 					<text class="tit">{{item.propertyValue}}</text>
 				</view>
 			</view>
+			<view class="c-row">
+				<text class="tit">售后服务</text>
+				<view class="con-list">
+					<text>{{returnRule.title}}(详情见下文)</text>
+				</view>
+			</view>
 		</view>
 		<view class="detail-desc">
 			<view class="detail-desc">
-			   <view class="d-header"><text>图文详情</text></view>
-			   <view class="ricetext">
-				 <rich-text :nodes="goodsHtml"></rich-text>
-			   </view>
-			  </view>
+			    <view class="d-header"><text>图文详情</text></view>
+			    <view class="ricetext">
+					<rich-text :nodes="goodsHtml"></rich-text>
+			    </view>
+			</view>
+		</view>
+		<view class="detail-desc">
+			<view class="detail-desc">
+			    <view class="d-header"><text>售后说明</text></view>
+			    <view class="ricetext">
+					<rich-text :nodes="returnRule.desc"></rich-text>
+			    </view>
+			</view>
 		</view>
 		<view class="price-explain detail-desc ">
 			<view class="d-header"><text class="text">价格说明</text></view>
@@ -127,6 +135,7 @@
 		</view>
 		<!-- 分享 -->
 		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
+		<hover-menu></hover-menu>
 	</view>
 </template>
 
@@ -137,11 +146,12 @@ import share from '@/components/share';
 import uniPopup from '@/components/uni-popup/uni-popup'
 import uniPopupMessage from '@/components/uni-popup/uni-popup-message'
 import uniPopupDialog from '@/components/uni-popup/uni-popup-dialog'
+import hoverMenu from '@/components/hover-menu/hover-menu.vue'
 let userInfo = uni.getStorageSync('userInfo');
 var that = this;
 export default {
 	components: {
-		share, uniPopup, uniPopupMessage, uniPopupDialog, navBar
+		share, uniPopup, uniPopupMessage, uniPopupDialog, navBar, hoverMenu
 	},
 	data() {
 		return {
@@ -205,6 +215,7 @@ export default {
 				stock: ''
 			},
 			propertyValue: '', //商品参数
+			returnRule: '', //退货规则
 			detailData: [],
 			goods: '',
 			shareList: [
@@ -284,6 +295,7 @@ export default {
 				this.activity = data.result.activityBean;
 				this.goodsName = data.result.goodsPicesBean.goodsName
 				this.propertyValue = data.result.goodsPropertyValue //商品参数
+				this.returnRule = data.result.goodsPicesBean.returnRuleBean
 				this.imageUrl = data.result.goodsPicesBean.sharePicsUrl
 				this.skuList = data.result.goodsSku
 				//赋值默认商品价格，库存和图片
@@ -571,6 +583,9 @@ export default {
 .container {
 	background: $page-color-base;
 	padding-bottom: 160upx;
+	.nav-title {
+		box-shadow: 5upx 5upx 4upx rgb(241,241,241);
+	}
 }
 .icon-you {
 	font-size: $font-base + 2upx;

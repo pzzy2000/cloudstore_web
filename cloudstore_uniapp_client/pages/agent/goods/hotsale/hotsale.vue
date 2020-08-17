@@ -69,12 +69,12 @@
 			</view>
 		</view> -->
 		<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
-			<view   class="f-header m-t" @click="navToCategory(item)">
+			<view   class="f-header" @click="navToCategory(item)">
 				<view class="faddish-title">
 					<view class="title-main">
 						{{item.name}}
 					</view>
-					<text class='more'>查看更多 ></text>
+					<image src="/static/index-bannar-bj.png" mode="" class="title-img"></image>
 				</view>
 			</view>
 			<view class="goods-list">
@@ -113,7 +113,7 @@
 	export default {
 		components: {
 			navBar,
-			share
+			share,
 		},
 		data() {
 			return {
@@ -227,7 +227,7 @@
 					 longitude: this.agentShopInfo.longitude,
 					 agentId: agentId || '-1'
 				}
-				let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params);
+				let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params,true);
 				if (data) {
 					var tmpData = data.result.agentBean
 					this.agentShopInfo.name = tmpData.name
@@ -259,7 +259,7 @@
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params, true);
 				if (data) {
 					this.activity.nav = data.result; //查询出来的 
 				}
@@ -269,7 +269,7 @@
 					// pageNum: 1,
 					// pageSize: 20
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params, true);
 				if (data) {
 					// this.activity.show = data.result.records;
 					let showActivity = data.result.records;
@@ -286,7 +286,7 @@
 					pageNum: 1,
 					pageSize: 5
 				};
-				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params);
+				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, true);
 				if (data) {
 					activity.goodsList = data.result.records;
 				}
@@ -465,6 +465,7 @@
 			width: 100%;
 			padding:15upx 0;
 			background-color: #fff;
+			margin-bottom: 20upx;
 			.cate-section {
 				position: relative;
 				z-index: 5;
@@ -521,7 +522,6 @@
 
 	.carousel {
 		width: 94%;
-		height: 350upx;
 		margin: 0 auto;
 		.carousel-item {
 			width: 100%;
@@ -616,24 +616,36 @@
 		border-top-left-radius: 25rpx;
 		border-top-right-radius: 25rpx;
 		.faddish-title {
+			height: 120upx;
 			font-size: 30upx;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			background: #fff;
 			width: 100%;
-			height: 60upx;
 			position: relative;
-			.title-main {
-				font-size: 30upx;
-				padding: 5upx 10upx;
-				background-color: #ff6a7f;
-				border-bottom-right-radius: 10upx;
-				border-bottom-left-radius: 10upx;
+			.title-img {
+				width: 100%;
+				height: 100%;
 				position: absolute;
-				left: 20upx;
+				left: 0;
 				top: 0;
+			}
+			.title-main {
+				font-size: 45upx;
 				color: #fff;
+				text-align: center;
+				position: absolute;
+				height: 100%;
+				width: 200upx;
+				z-index: 1;
+				left: 50%;
+				margin-left: -100upx;
+				top: 50%;
+				margin-top: -25upx;
+				font-family: '微软雅黑';
+				font-weight: bold;
+				letter-spacing: 4upx;
 
 			}
 			.more {
@@ -756,9 +768,8 @@
 	justify-content: space-between;
 	flex-wrap: wrap;
 	align-content: flex-start;
-	padding: 25upx 25upx 0;
+	padding: 35upx 25upx 0;
 	background-color: #F5F5F5;
-	background-image: linear-gradient(180deg, #fff, #F5F5F5);
 	.goods-item {
 		width: 340upx;
 		padding: 18upx;

@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="container">
 		<nav-bar backState="1000">{{afterSaleTitle}}</nav-bar>
 		<form>
 			<view class="cu-form-group">
@@ -54,7 +54,7 @@
 					<view class="title">上传图片：</view>
 				</view>
 			</view>
-			<view class="cu-form-group padding-bottom-xs">
+			<view class="cu-form-group upload">
 				<tui-upload :serverUrl="serverUrl" @complete="uploadResult" @remove="uploadRemove" :value='imageList' :valueId= 'imgListId' :forbidDel='isEdit' :limit='10'></tui-upload>
 			</view>
 			<view class="padding flex flex-direction">
@@ -105,7 +105,6 @@
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params, true);
 				if (data) {
 					this.goodsDetail = data.result.details
-					console.log(data)
 					for (let tmp in this.goodsDetail) {
 						this.checkbox.push({
 							'checked': true,
@@ -128,23 +127,19 @@
 						this.orderDetailIds.splice(index, 1);
 					}
 				}
-				console.log(this.orderDetailIds)
 			},
 			textareaAInput (e) {
 				this.afterSaleInfo = e.detail.value
 			},
 			uploadResult (e) { //页面上传成功后的回调
 				this.imgListId = e.imgListId
-				console.log(this.imgListId)
 			},
 			uploadRemove (e) { //删除图片的回调
-				console.log(e)
 				let index = e.index
 				if (this.imgListId.length != 0) {
 					this.imageList.splice(index, 1)
 					this.imgListId.splice(index, 1)
 				}
-				console.log(this.imgListId)
 			},
 			async afterSaleSubmit () {
 				if (!this.orderDetailIds.length) {
@@ -166,10 +161,8 @@
 					pictures: this.imgListId.toString(), //上传的图片
 					remarks: this.afterSaleInfo
 				}
-				console.log(params)
 				let data = await Api.apiCall('post', Api.client.order.submit, params);
 				if (data) {
-					console.log(data)
 					if (data.code === 0) {
 						uni.showModal({
 							title: '提示',
@@ -193,6 +186,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.container {
+		padding-bottom: 30upx;
+	}
 	.goods-section {
 		margin-top: 16upx;
 		background: #fff;
@@ -277,5 +273,13 @@
 	}
 	.wid20 {
 		width: 20%;
+	}
+	.cu-form-group {
+		picker {
+			padding-right: 20upx;
+		}
+	}
+	.upload {
+		padding-bottom: 30upx;
 	}
 </style>
