@@ -56,13 +56,14 @@
             </el-switch>
           </template>
         </el-table-column> -->
-        <el-table-column label="设置" width="200" align="center">
+        <el-table-column label="设置" width="300" align="center">
           <template slot-scope="scope">
            <el-button
               size="mini"
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
             </el-button>
+            <el-button size="mini" @click="updateLevel(scope.row)" v-if="scope.row.level == 2 ? true : false">编辑</el-button>
             <el-button
               size="mini"
               type="danger"
@@ -110,7 +111,6 @@
     created() {
       this.resetParentId();
       this.getList();
-      console.log(this.$route.query.level)
       if (this.$route.query.level == undefined){
         this.isshow = false;
       }else{
@@ -138,6 +138,17 @@
     //   }
     // },
     methods: {
+      updateLevel(row) {
+        this.$router.push({
+          path: "/sys/goods/category/add",
+          query: {
+            parentId: this.$route.query.parentId,
+            level: 2,
+            optType: 'update',
+            id: row.id
+          }
+        })
+      },
       resetParentId(){
         this.listQuery.pageNum = 1;
         if (this.$route.query.parentId != null) {

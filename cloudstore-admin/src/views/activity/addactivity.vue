@@ -61,7 +61,7 @@
         optType: 'save',
         rwDispatcherState: 'write',
         rules: {
-          name: [
+          activityName: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
             { min: 2, max: 4, message: "长度在2到4个字之间", trigger: "blur" }
           ],

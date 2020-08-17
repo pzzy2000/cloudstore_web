@@ -2,12 +2,20 @@ import request from '@/utils/request'
 import {switchForm} from '@/api/iunits'
 
 export function fetchList(params) {
-	  return request({
-	    url: '/activity/list',
-	    method: 'POST',
-	    data: switchForm(params)
-	  })
-	}
+  return request({
+    url: '/activity/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function fetchListAll(params) {
+  return request({
+    url: '/activity/listAll',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
 
 export function fetchActivityGoodsList(params) {
 	  return request({

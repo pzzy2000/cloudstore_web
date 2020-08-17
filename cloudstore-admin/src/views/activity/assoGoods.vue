@@ -74,7 +74,7 @@
 
 <script>
   import {
-    fetchList as fetchActivityList,
+    fetchListAll as fetchActivityList,
     addActivity,
     fetchAllgoods,
     inAssogoods,
@@ -166,7 +166,7 @@
         this.loading = true;
         fetchActivityList({
           pageNum: 1,
-          pageSize: 10
+          pageSize: 100
         }).then(res => {
           this.loading = false;
           this.activityList = res.result.result.records;

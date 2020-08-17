@@ -11,42 +11,42 @@
         <el-table-column label="团长佣金" align="center">
           <template slot-scope="scope">
             <el-form-item :prop="'skuStockList.' + scope.$index + '.leader'" :rules='rules.leader'>
-              <el-input v-model.number="scope.row.leader" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+              <el-input v-model="scope.row.leader"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="代理佣金" align="center">
           <template slot-scope="scope">
             <el-form-item :prop="'skuStockList.' + scope.$index + '.agent'" :rules='rules.agent'>
-              <el-input v-model.number="scope.row.agent" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+              <el-input v-model="scope.row.agent"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="客户佣金" align="center">
           <template slot-scope="scope">
             <el-form-item :prop="'skuStockList.' + scope.$index + '.client'" :rules='rules.client'>
-              <el-input v-model.number="scope.row.client" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+              <el-input v-model="scope.row.client"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="客户分享佣金" align="center">
           <template slot-scope="scope">
             <el-form-item :prop="'skuStockList.' + scope.$index + '.sharePoints'" :rules='rules.sharePoints'>
-              <el-input v-model.number="scope.row.sharePoints" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+              <el-input v-model="scope.row.sharePoints"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="积分" align="center">
           <template slot-scope="scope">
             <el-form-item :prop="'skuStockList.' + scope.$index + '.clientPoints'" :rules='rules.clientPoints'>
-              <el-input v-model.number="scope.row.clientPoints" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+              <el-input v-model="scope.row.clientPoints"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column label="配送金额" align="center">
           <template slot-scope="scope">
             <el-form-item :prop="'skuStockList.' + scope.$index + '.delivery'" :rules='rules.delivery'>
-              <el-input v-model.number="scope.row.delivery" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+              <el-input v-model="scope.row.delivery"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
@@ -70,11 +70,29 @@
         },
         specslabel: '规格',
         rules: {
-          leader: [{ required: true, message: '请输入团长佣金', trigger: 'blur' }],
-          agent: [{ required: true, message: '请输入代理佣金', trigger: 'blur' }],
-          client: [{ required: true, message: '请输入客户佣金', trigger: 'blur' }],
-          clientShare: [{ required: true, message: '请输入客户分享佣金', trigger: 'blur' }],
-          clientPoints: [{ required: true, message: '请输入积分', trigger: 'blur' }]
+          leader: [
+            { required: true, message: '请输入团长佣金', trigger: 'blur' },
+            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,小于10，小数点后2位' }
+          ],
+          agent: [
+            { required: true, message: '请输入代理佣金', trigger: 'blur' },
+            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,或者小于10，小数点后2位' }
+          ],
+          client: [
+            { required: true, message: '请输入客户佣金', trigger: 'blur' },
+            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数，或者小于10，小数点后2位' }
+            ],
+          clientShare: [
+            { required: true, message: '请输入客户分享佣金', trigger: 'blur' },
+            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数，或者小于10，小数点后2位' }],
+          clientPoints: [
+            { required: true, message: '请输入积分', trigger: 'blur' },
+            { pattern: /^100$|^(\d|[1-9]\d)?$/, message: '整数,小于等于100' }
+          ],
+          delivery: [
+            { required: true, message: '请输入配送金额', trigger: 'blur' },
+            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,或者小于10，小数点后2位' }
+          ]
         }
       }
     },
