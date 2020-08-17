@@ -12,7 +12,10 @@
 			</view>
 		</view>
 
-		<empty v-if="tabItem.loaded === true && orderList.length === 0"></empty>
+		<view class="earning-empty" v-if='orderList.length === 0'>
+			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
+			<view class="earning-empty-text">暂无订单哦</view>
+		</view>
 		
 		<!-- 订单列表 -->
 		<view v-for="(item,index) in orderList" :key="index" class="order-item">
@@ -420,6 +423,37 @@
 
 	.uni-swiper-item{
 		height: auto;
+	}
+	.earning-empty {
+		padding-top: 100upx;
+		.earning-logo {
+			width: 300upx;
+			height: 180upx;
+			margin: 0 auto;
+			display: block;
+		}
+		.earning-empty-text {
+			color: #999999;
+			font-size: 30upx;
+			white-space: 5upx;
+			line-height: 150upx;
+			width: 100%;
+			text-align: center;
+			display: block;
+		}
+		.earning-empty-btn {
+			color: #F1F1F1;
+			background-color: #39A9FF;
+			white-space: 5upx;
+			width: 500upx;
+			height: 72upx;
+			text-align: center;
+			border: none;
+			border-radius: 36upx;
+			&:after {
+				border: none
+			}
+		}
 	}
 	.order-item{
 		display: flex;

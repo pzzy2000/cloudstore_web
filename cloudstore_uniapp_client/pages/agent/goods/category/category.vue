@@ -1,17 +1,24 @@
 <template>
 	<view class="content">
-		<nav-bar>商品分类</nav-bar>
-		<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
-			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click.stop="tabClick(0)">综合排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click.stop="tabClick(1)">销量排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click.stop="tabClick(2)">
-				<text>商品分类</text>
-				<!-- <view class="p-box">
-					<text :class="{ active: priceOrder === 1 && filterIndex === 2 }" class="yticon icon-shang"></text>
-					<text :class="{ active: priceOrder === 2 && filterIndex === 2 }" class="yticon icon-shang xia"></text>
-				</view> -->
+		<nav-bar backState="1000">商品列表</nav-bar>
+		<view class="nav-main">
+			<view class="u-search-box">
+				<view class="u-search-inner" @click="toSearch">
+					<u-icon name="search" color="#909399" :size="28"></u-icon>
+					<text class="u-search-text">搜索商品</text>
+				</view>
 			</view>
-			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
+			<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
+				<view class="nav-item" :class="{ current: filterIndex === 0 }" @click.stop="tabClick(0)">推荐</view>
+				<view class="nav-item" :class="{ current: filterIndex === 1 }" @click.stop="tabClick(1)">销量</view>
+				<view class="nav-item" :class="{ current: filterIndex === 2 }" @click.stop="tabClick(2)">
+					<text>价格</text>
+					<!-- <view class="p-box">
+						<text :class="{ active: priceOrder === 1 && filterIndex === 2 }" class="yticon icon-shang"></text>
+						<text :class="{ active: priceOrder === 2 && filterIndex === 2 }" class="yticon icon-shang xia"></text>
+					</view> -->
+				</view>
+			</view>
 		</view>
 		<view class="goods-list" v-if='isGoodsList'>
 			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item shadow" @click="navToDetailPage(goods)">
@@ -19,21 +26,13 @@
 				<view class="goods-detail">
 					<view class="detail-title clamp">{{ goods.goodsName }}</view>
 					<view class="sub-title clamp text-gray">{{ goods.goodsSubtitle }}</view>
-					<view class="share-amount">
-						 分享最高赚 <text v-text="goods.client"></text>元
-					</view>
-					<view class="activity clamp">
-						<text class="text-gray" v-if="!goods.activityBean.name">无活动</text>
-						<text class="text-gray" v-else>{{ goods.activityBean.name }}</text>
-					</view>
 					<view class="price-box">
 						<view class="price">
 							 <text class="priceSale price-symbol">{{ goods.salePrice }}</text>/{{ goods.unit }}
-							 <text class="pricemart price-symbol">{{ goods.martPrice}}</text>
 						</view>
 						<view class="flex justify-around">
-							<button class="price-btn buy">购买</button>
-							<button class="price-btn" @click.stop='shareSave(goods)'>分享</button>
+							<button class="price-btn share" @click.stop='shareSave(goods)'>分享赚<text class="price-symbol">{{goods.client}}</text></button>
+							<button class="price-btn buy">立即购买</button>
 						</view>
 					</view>
 				</view>	
@@ -217,6 +216,7 @@
 				};
 				let list = await Api.apiCall('post', Api.agent.category.list, params);
 				if (list) {
+					console.log(list.result.records)
 					for (let tmp in list.result.records) {
 						this.itemList.push({
 							text: list.result.records[tmp].name,
@@ -265,8 +265,11 @@
 					this.loadData();
 				}
 				if (index === 2) {
+					// this.filterIndex = 2
+					// this.$refs.popup.open()
 					this.filterIndex = 2
-					this.$refs.popup.open()
+					this.pageNum = 1;
+					this.loadData();
 				}
 				uni.pageScrollTo({
 					duration: 300,
@@ -369,6 +372,11 @@
 			share() { //分享显示弹窗
 				this.$refs.share.toggleMask();
 			},
+			toSearch () {
+				uni.navigateTo({
+					url: '/pages/agent/goods/hotsale/search',
+				});
+			}
 		}
 	};
 </script>
@@ -376,18 +384,21 @@
 <style lang="scss" scoped>
 page,
 .content {
-	padding-top: 96upx;
+	padding-top: 170upx;
 	padding-bottom: 60upx;
 }
-.navbar {
+.nav-main {
 	position: fixed;
 	left: 0;
-	top: 150upx;
+	top: 135upx;
+	width: 100%;
+	z-index: 10;
+}
+.navbar {
 	display: flex;
 	width: 100%;
 	height: 80upx;
 	background: #fff;
-	box-shadow: 0 2upx 10upx rgba(0, 0, 0, 0.06);
 	z-index: 10;
 	.nav-item {
 		flex: 1;
@@ -454,6 +465,35 @@ page,
 	}
 }
 
+.u-search-box {
+	padding: 20upx;
+	width: 100%;
+	background-color: #fff;
+	box-sizing: content-box;
+}
+
+.u-menu-wrap {
+	flex: 1;
+	display: flex;
+	background-color: #fff;
+}
+
+.u-search-inner {
+	background-color: #F5F5F5;
+	border-radius: 100upx;
+	display: flex;
+	height: 50upx;
+	align-items: center;
+	color: #CDCDCD;
+	font-size: 26upx;
+	justify-content: center;
+}
+
+.u-search-text {
+	font-size: 26rpx;
+	color: #cdcdcd;
+	margin-left: 10rpx;
+}
 /* 分类 */
 .cate-mask {
 	position: fixed;
@@ -511,21 +551,21 @@ page,
 .goods-list {
 	display: flex;
 	flex-wrap: wrap;
-	width: 94%;
-	margin: 0 auto;
+	width: 100%;
 	.goods-item {
 		display: flex;
 		flex-direction: column;
 		flex-flow: nowrap;
+		align-items: center;
 		width: 100%;
-		padding: 20rpx 30rpx;
+		height: 190upx;
 		background: #fff;
-		box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-		margin-bottom: 10rpx;
+		border-bottom: 1upx solid #f1f1f1;
+		padding: 15upx
 	}
 	.image-wrapper {
-		width: 200upx;
-		height:200upx;
+		width: 130upx;
+		height: 130upx;
 		border-radius: 3upx;
 		overflow: hidden;
 		background-color: #fff;
@@ -537,14 +577,13 @@ page,
 	.goods-detail {
 		display: inline-block;
 		margin-left: 20upx;
-		width: 65%;
-		font-size: 12px;
-		height: 100%;
+		width: calc(100% - 155upx);
+		height: 130upx;
 		.detail-title {
-			font-size: 30rpx;
+			font-size: 32rpx;
+			letter-spacing: 2upx;
 			color: #000;
 			width: 100%;
-			height: 20%;
 			.number {
 				color: #999;
 				font-size: 26upx;
@@ -553,10 +592,12 @@ page,
 			}
 		}
 		.sub-title {
-			height: 15%;
 			font-size: 24upx;
 			display: flex;
 			align-items: flex-end;
+			line-height: 50upx;
+			color: #999;
+			letter-spacing: 2upx;
 		}
 		.activity {
 			height: 20%;
@@ -581,7 +622,8 @@ page,
 			justify-content: space-between;
 			align-items: flex-end;
 			width: 100%;
-			height: 25%;
+			color: #999;
+			letter-spacing: 2upx;
 			.price {
 				font-size: 22upx;
 				.priceSale {
@@ -607,7 +649,34 @@ page,
 				color: #fff;
 			}
 			.buy {
+				color: #fff;
+				font-size: 20upx;
+				border-radius: 18upx;
+				background-color: blue;
+				margin: 0;
+				padding: 0;
+				height: 40upx;
+				line-height: 40upx;
+				width: 130upx;
+				background-image: linear-gradient(90deg, #6ABEFF, #3CAAFF);
+				&::after {
+					border: none;
+				}
+			}
+			.share {
+				color: #fff;
+				font-size: 20upx;
+				border-radius: 18upx;
+				margin: 0;
+				padding: 0;
+				height: 40upx;
+				line-height: 40upx;
+				width: 130upx;
 				margin-right: 10upx;
+				background-image: linear-gradient(90deg, #FECE40, #FE8E18);
+				&::after {
+					border: none;
+				}
 			}
 		}
 	}
