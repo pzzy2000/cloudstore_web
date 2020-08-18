@@ -97,8 +97,6 @@
 				"enablePullDownRefresh": false
 			}
 		},
-		
-		
 		{
 			"path": "pages/agent/goods/hotsale/hotsale",
 			"style": { //用户 首页
@@ -109,10 +107,26 @@
 		},
 		{
 			"path": "pages/agent/goods/category/category",
-			"style": { //用户 首页
-				"navigationBarTitleText": "商品分类",
+			"style": { //商品列表
+				"navigationBarTitleText": "商品列表",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/agent/goods/category/mallmenu",
+			"style": { //商品分类
+				"navigationBarTitleText": "商品分类",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+		    "path" : "pages/agent/goods/category/reclassify",
+		    "style" : { //商品二级分类
+				"navigationBarTitleText": "商品二级分类",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
 			}
 		},
 		{
@@ -262,7 +276,7 @@
 				"text": "推荐"
 			},
 			{
-				"pagePath": "pages/agent/goods/category/category",
+				"pagePath": "pages/agent/goods/category/mallmenu",
 				"iconPath": "static/tabbar/classify.png",
 				"selectedIconPath": "static/tabbar/classify-select.png",
 				"text": "分类"
