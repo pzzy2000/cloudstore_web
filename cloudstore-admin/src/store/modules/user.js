@@ -56,8 +56,8 @@ const user = {
            let  res=response.result;
            if(res.code ==0){
              commit('SET_ROLES', '1212')
-               commit('SET_NAME', '1212')
-              commit('SET_AVATAR', '1212')
+             commit('SET_NAME', '1212')
+             commit('SET_AVATAR', '1212')
            }else{
 
            }

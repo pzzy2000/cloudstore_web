@@ -1,4 +1,4 @@
-import { asyncRouterMap, constantRouterMap } from '@/router/index';
+import {asyncRouterMap, constantRouterMap} from '@/router/index';
 
 //判断是否有权限访问该菜单
 function hasPermission(menus, routeChild) {
@@ -9,14 +9,14 @@ function hasPermission(menus, routeChild) {
   // } else {
   //   return false
   // }
-  return  true;
+  return true;
 }
 
 //根据路由名称获取菜单
 function getMenu(name, menus) {
   for (let i = 0; i < menus.length; i++) {
     let menu = menus[i];
-    if (name===menu.key) {
+    if (name === menu.key) {
       return true;
     }
   }
@@ -27,7 +27,7 @@ function getMenu(name, menus) {
 function sortRouters(accessedRouters) {
   for (let i = 0; i < accessedRouters.length; i++) {
     let router = accessedRouters[i];
-    if(router.children && router.children.length > 0){
+    if (router.children && router.children.length > 0) {
       router.children.sort(compare("sort"));
     }
   }
@@ -35,8 +35,8 @@ function sortRouters(accessedRouters) {
 }
 
 //降序比较函数
-function compare(p){
-  return function(m,n){
+function compare(p) {
+  return function (m, n) {
     let a = m[p];
     let b = n[p];
     return b - a;
@@ -55,33 +55,34 @@ const permission = {
     }
   },
   actions: {
-        GenerateRoutes({ commit }, menuBeans) {
-          return new Promise(resolve => {
-            const accessedRouters = asyncRouterMap.filter(v => {
-                 if (v.children && v.children.length > 0) {
-                       v.children = v.children.filter(child => {
-                          if (hasPermission(menuBeans, child)) {
-                            return true
-                          }else{
-                            return false;
-                          }
-              })}
-
-              if(v.hidden ==true)return false;
-              if(v.children.length >0)
-              return true;
-              else{
-              return false;
+    GenerateRoutes({commit}, menuBeans) {
+      return new Promise(resolve => {
+        const accessedRouters = asyncRouterMap.filter(v => {
+          if (v.children && v.children.length > 0) {
+            v.children = v.children.filter(child => {
+              if (hasPermission(menuBeans, child)) {
+                return true
+              } else {
+                return false;
               }
+            })
+          }
 
-              });
+          if (v.hidden == true) return false;
+          if (v.children.length > 0)
+            return true;
+          else {
+            return false;
+          }
 
-            //对菜单进行排序
-            sortRouters(accessedRouters);
-            commit('SET_ROUTERS', accessedRouters);
-            resolve();
-          })
-        }
+        });
+
+        //对菜单进行排序
+        sortRouters(accessedRouters);
+        commit('SET_ROUTERS', accessedRouters);
+        resolve();
+      })
+    }
   }
 };
 

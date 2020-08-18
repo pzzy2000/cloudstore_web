@@ -1,5 +1,38 @@
 <template>
   <div>
+    <el-card class="filter-container" shadow="never" style="margin: 20px 20px 0 20px">
+      <div>
+        <i class="el-icon-search"></i>
+        <span>筛选搜索</span>
+        <el-button
+          style="float: right;margin-bottom: 10px;"
+          @click="handleSearchList"
+          type="primary"
+          size="small">
+          查询
+        </el-button>
+        <el-button
+          style="float: right;margin-right: 15px;margin-bottom: 10px;"
+          @click="handleResetSearch()"
+          size="small">
+          重置
+        </el-button>
+      </div>
+      <div style="margin-top: 15px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="130px" ref="searchList">
+          <el-form-item label="商品名称：" prop="name">
+            <el-input style="width: 214px" v-model="listQuery.goodsName" placeholder="商品名称" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="供应商信息：">
+            <remoteCom v-model="listQuery.supplierIds" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-card>
+    <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
+      <i class="el-icon-tickets"></i>
+      <span>数据列表</span>
+    </el-card>
     <div class="table-container" style="margin: 20px">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading" border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
@@ -9,52 +42,43 @@
         <el-table-column label="商品图片" align="center">
           <template slot-scope="scope">
             <el-image v-for=" (item,index) in scope.row.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">
-              <!--              <div slot="placeholder" class="image-slot">-->
-              <!--                加载中<span class="dot">...</span>-->
-              <!--              </div>-->
+              <div slot="placeholder" class="image-slot">
+                加载中<span class="dot">...</span>
+              </div>
             </el-image>
           </template>
         </el-table-column>
-<!--        <el-table-column label="商品品牌" width="150" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.goodsBrand}}</template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="商品货号" width="150" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.goodsNumber}}</template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="商品规格类别" align="center">-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="产地" width="250" align="center" :formatter="showAddress">-->
-<!--        </el-table-column>-->
         <el-table-column label="商品分类" align="center" :formatter="showMsg" prop="category">
         </el-table-column>
-<!--        <el-table-column label="销售价格/市场价" align="left">-->
-<!--          <template slot-scope="scope"> ￥{{scope.row.salePrice}} / ￥{{scope.row.martPrice}}</template>-->
-<!--        </el-table-column>-->
         <el-table-column label="所属供应商" align="center" :formatter="showMsg" prop="supplierName">
-<!--          <template slot-scope="scope">{{scope.row.supplierBean.name}}</template>-->
         </el-table-column>
         <el-table-column label="所属店铺" align="center" :formatter="showMsg" prop="supplierShop">
         </el-table-column>
         <el-table-column label="操作" align="center" width="200">
           <template slot-scope="scope">
             <el-button type="primary" @click="settingBroke(scope.row)" size="mini">设置佣金</el-button>
-<!--            <el-button size="mini" @click="handleShowProduct(scope.$index, scope.row)">查看-->
-<!--            </el-button>-->
-<!--            <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)" v-show="isshow">编辑-->
-<!--            </el-button>-->
-<!--            <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU管理-->
-<!--            </el-button>-->
-<!--            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" v-show="isshow">删除-->
-<!--            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
+    </div>
+    <div class="pagination-container">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        layout="total, sizes,prev, pager, next,jumper"
+        :page-size="listQuery.pageSize"
+        :page-sizes="[10]"
+        :current-page.sync="listQuery.pageNum"
+        :total="total">
+      </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
   import {fetchList} from '@/api/brokerage'
+  import remoteCom from '@/components/remoteCom'
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -62,17 +86,25 @@
   };
   export default {
     name: "index",
+    components: {
+      remoteCom
+    },
     data() {
       return {
         list: [],
         listLoading: true,
         listQuery: Object.assign({}, defaultList),
+        total: 0
       }
     },
     created() {
       this.getList(1);
     },
     methods: {
+      tochild(item, callback){
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`供应商账号：${item.name} / 供应商电话：${item.phone}`);
+      },
       showMsg(row, col) {
         switch (col.property) {
           case "supplierName":{
@@ -133,6 +165,24 @@
           }
         });
       },
+      handleSearchList() {
+        this.listQuery.pageNum = 1;
+        this.getList(0);
+      },
+      handleResetSearch() {
+        this.listQuery = Object.assign({}, defaultList);
+        this.$refs.clearInput.clearInput();
+        this.getList(2)
+      },
+      handleSizeChange(val) {
+        this.listQuery.pageNum = 1;
+        this.listQuery.pageSize = val;
+        this.getList(1);
+      },
+      handleCurrentChange(val) {
+        this.listQuery.pageNum = val;
+        this.getList(1);
+      }
     }
   }
 </script>

@@ -77,8 +77,11 @@
           this.addGoodsort.name = res.result.result.name;
           this.addGoodsort.order = res.result.result.sort;
           // this.categoryPhotos = res.result.result.goodsPics;
-          if (res.result.result.goodsPhotos !== undefined) {
-            this.addGoodsort.categoryPic.push(res.result.result.goodsPhotos);
+          if (res.result.result.categoryPicUrl !== undefined) {
+            let obj = {};
+            obj.url = res.result.result.categoryPicUrl;
+            obj.uid = res.result.result.categoryPic;
+            this.addGoodsort.categoryPic.push(obj);
           }
         })
       },
@@ -134,44 +137,50 @@
         })
       },
       uppdateForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            let obj = {
-              level: this.$route.query.level,
-              name: this.addGoodsort.name,
-              sort: this.addGoodsort.order,
-              optType: "update",
-              id: this.$route.query.id
-            }
-            if (this.addGoodsort.level == "二级") {
-              let categoryPic = []
-              for (let i=0; i<this.addGoodsort.categoryPic.length; i++) {
-                categoryPic.push(this.addGoodsort.categoryPic[i].uid);
+        this.$confirm('是否要更新该分类', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              let obj = {
+                level: this.$route.query.level,
+                name: this.addGoodsort.name,
+                sort: this.addGoodsort.order,
+                optType: "update",
+                id: this.$route.query.id
               }
-              obj.categoryPic = categoryPic
-            }
-            this.disabled = true;
-            this.updbtntext = "更新中...";
-            this.loadingbut = true;
-            savegoodLevel(obj).then(res => {
+              if (this.addGoodsort.level == "二级") {
+                let categoryPic = []
+                for (let i=0; i<this.addGoodsort.categoryPic.length; i++) {
+                  categoryPic.push(this.addGoodsort.categoryPic[i].uid);
+                }
+                obj.categoryPic = categoryPic
+              }
+              this.disabled = true;
+              this.updbtntext = "更新中...";
+              this.loadingbut = true;
+              savegoodLevel(obj).then(res => {
+                this.disabled = false;
+                this.updbtntext = "更新";
+                this.loadingbut = false;
+                if(res.result.code == 0) {
+                  this.$message({
+                    message: '更新成功',
+                    type: 'success',
+                    duration: 800
+                  });
+                  this.$router.back();
+                }
+              })
+            }else {
               this.disabled = false;
               this.updbtntext = "更新";
               this.loadingbut = false;
-              if(res.result.code == 0) {
-                this.$message({
-                  message: '更新成功',
-                  type: 'success',
-                  duration: 800
-                });
-                this.$router.back();
-              }
-            })
-          }else {
-            this.disabled = false;
-            this.updbtntext = "更新";
-            this.loadingbut = false;
-          }
-        })
+            }
+          })
+        }).catch(e => e)
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();

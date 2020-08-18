@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card class="filter-container" shadow="never">
       <el-form :model="activityForm" label-width="120px" size="small" ref="activityForm" :rules="rules">
-        <el-form-item label="活动名称：" prop="activityName">
+        <el-form-item label="活动名称：" prop="name">
           <el-input-dispatcher v-model="activityForm.name" placeholder="请输入活动名称" style="width: 350px" />
         </el-form-item>
         <el-form-item label="开始时间：" prop="startTime" >
@@ -11,18 +11,12 @@
         <el-form-item label="结束时间：" prop="endTime">
           <el-date-picker v-model="activityForm.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="endDatePicker" type="date" placeholder="请选择活动结束时间"></el-date-picker>
         </el-form-item>
-        <el-form-item label="活动图片：" prop="picture">
-          <SingleUpload v-model="picture"></SingleUpload>
+        <el-form-item label="活动图片(一张)：" prop="picture">
+          <SingleUpload v-model="picture" logotype="1"></SingleUpload>
         </el-form-item>
-        <!--<el-form-item label="上架/下架：" prop="endTime">-->
-          <!--<el-radio-group v-model="activityForm.radio">-->
-            <!--<el-radio :label="3">上架</el-radio>-->
-            <!--<el-radio :label="6">下架</el-radio>-->
-          <!--</el-radio-group>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="活动描述：" prop="desc">-->
-          <!--<el-input type="textarea" v-model="activityForm.desc" style="width: 500px;" rows="5" placeholder="请输入描述"></el-input>-->
-        <!--</el-form-item>-->
+        <el-form-item label="活动海报图片(一张)：" prop="activePoster">
+          <SingleUpload v-model="activePoster" logotype="1"></SingleUpload>
+        </el-form-item>
         <el-checkbox v-model="checked" style="margin-left: 120px">是否参加佣金活动</el-checkbox>
         <div style="text-align: right">
           <el-button type="primary" size="small" @click="subActname('activityForm')">提 交</el-button>
@@ -55,24 +49,27 @@
           name: '',
           startTime: '',
           endTime: '',
-          picture: []
+          picture: [],
+          activePoster: []
         },
         isshow: true,
         optType: 'save',
         rwDispatcherState: 'write',
         rules: {
-          activityName: [
+          name: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
             { min: 2, max: 4, message: "长度在2到4个字之间", trigger: "blur" }
           ],
           startTime: [{ required: true, message: '开始时间必填哦', trigger: 'blur' }],
           endTime: [{ required: true, message: '结束时间必填哦', trigger: 'blur' }],
-          picture: [{ required: true, message: '必须上传图片', trigger: 'blur' }]
+          picture: [{ required: true, message: '必须上传图片', trigger: 'blur' }],
+          activePoster: [{ required: true, message: '必须上传图片', trigger: 'blur' }]
         },
         checked: true,
         startDatePicker: this.beginDate(),
         endDatePicker: this.processDate(),
-        picture: []
+        picture: [],
+        activePoster: []
       }
     },
     created() {
@@ -94,11 +91,17 @@
           }else {
             this.checked = false;
           }
-          if (this.activityForm.picture !== null || this.activityForm.picturePice !== null) {
+          if (this.activityForm.picture !== null || this.activityForm.picture !== undefined) {
             let Picobj = {};
             Picobj.uid = this.activityForm.picture;
             Picobj.url = this.activityForm.picturePice;
             this.picture.push(Picobj);
+          }
+          if (this.activityForm.activePoster !== null || this.activityForm.activePoster !== undefined) {
+            let actPicobj = {};
+            actPicobj.uid = this.activityForm.activePoster;
+            actPicobj.url = this.activityForm.posterPice;
+            this.activePoster.push(actPicobj);
           }
         })
       },
@@ -112,6 +115,11 @@
           pic.push(this.picture[i].uid);
         }
         this.activityForm.picture = pic;
+        let activepic = []
+        for (let i=0; i< this.activePoster.length; i++){
+          activepic.push(this.activePoster[i].uid);
+        }
+        this.activityForm.activePoster = activepic;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if(this.checked){
@@ -148,9 +156,11 @@
           startTime: this.activityForm.startTime,
           endTime: this.activityForm.endTime,
           picture: this.activityForm.picture,
+          activePoster: this.activityForm.activePoster,
           addProfit: changeCheck,
           optType: this.optType
         }
+        console.log(obj);
         if (this.$route.query.id !== undefined) {
           obj.id = this.$route.query.id
           addActivity(obj).then(res => {
@@ -171,6 +181,8 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        this.picture = [];
+        this.activePoster = [];
         this.$message({
           message: '重置成功',
           type: 'success',

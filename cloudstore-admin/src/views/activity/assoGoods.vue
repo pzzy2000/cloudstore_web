@@ -180,20 +180,29 @@
       handleSearchList() {
         // let activityId = event;
         // this.activityId = activityId;
-        this.listQuery.pageNum = 1;
-        this.getList(this.listQuery);
+        if (this.listQuery.activityId == undefined) {
+          this.$message({
+            message: '请先选择活动！',
+            type: 'warning',
+            duration: 800
+          })
+        }else {
+          this.listQuery.pageNum = 1;
+          this.getList(this.listQuery);
+        }
       },
       handleResetSearch() {
+        let activityId = this.listQuery.activityId;
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.listQuery.activityId = activityId;
         this.$refs.clearInput.clearInput();
         this.$refs.clearInputone.clearInput();
-        this.list = [];
-        this.total = 0,
-        this.$message({
-          message: "重置成功",
-          type: 'success',
-          duration: 800
-        })
+        this.getList(this.listQuery);
+        // this.$message({
+        //   message: "重置成功",
+        //   type: 'success',
+        //   duration: 800
+        // })
       },
       getList(activityId) {
         this.list = [];
@@ -201,11 +210,19 @@
           console.log(response);
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
-          this.$message({
-            message: "查询成功",
-            type: 'success',
-            duration: 800
-          })
+          if (response.result.result.records.length !== 0) {
+            this.$message({
+              message: "查询成功",
+              type: 'success',
+              duration: 800
+            })
+          }else{
+            this.$message({
+              message: "暂无数据",
+              type: 'success',
+              duration: 800
+            })
+          }
         })
       },
       handleSizeChange(val) {

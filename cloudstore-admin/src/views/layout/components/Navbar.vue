@@ -47,7 +47,6 @@ export default {
     ])
   },
   created() {
-    console.log(localStorage.getItem('userAccont'))
     switch (localStorage.getItem('userType')) {
       case 'supplier': this.userType = "供应商";
         break;
@@ -65,7 +64,6 @@ export default {
     },
     logout() {
       this.setCookie('loginToken', "", -1);
-      console.log("+++++++++")
       this.setCookie('username', "", -1);
       this.setCookie('password', "", -1);
       location.reload()  //为了重新实例化vue-router对象 避免bug

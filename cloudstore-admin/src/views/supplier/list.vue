@@ -94,6 +94,7 @@
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
+    optType: 'search'
   };
   export default {
     name: "productList",
