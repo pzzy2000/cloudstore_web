@@ -1,6 +1,6 @@
 <template>
 	<view class="u-wrap">
-		<nav-bar backState="1000">商品分类</nav-bar>
+		<nav-bar backState="1000">{{title}}</nav-bar>
 		<view class="u-search-box">
 			<view class="u-search-inner" @click="toSearch">
 				<u-icon name="search" color="#909399" :size="28"></u-icon>
@@ -14,37 +14,33 @@
 					<text class="u-line-1">{{item.text}}</text>
 				</view>
 			</scroll-view>
-			<block>
-				<scroll-view scroll-y class="right-box">
+			<!-- <block> -->
+				<scroll-view scroll-y class="right-box" @scrolltolower='scrolltolower'>
 					<view class="earning-empty" v-if='goodsList.length === 0'>
 						<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
 						<view class="earning-empty-text">没有该分类下的商品</view>
 					</view>
-					<!-- <view class="page-view">
-						<view class="class-item"> -->
-							<view class="item-container">
-								<view class="goods-list" v-for="(item,index) in goodsList" :key='index' @click="navToDetailPage(item)">
-									<image class="goods-list-image" :src="item.goodsPhotos[0].url" mode=""></image>
-									<view class="goods-detail">
-										<view class="detail-title clamp">{{item.goodsName}}</view>
-										<view class="detail-subtitle clamp">{{item.goodsSubtitle}}</view>
-										<view class="detail-price">
-											<view class="price-num">
-												<text class="price-sale price-symbol">{{item.salePrice}}</text>
-												<text class="price-btn-unit">/{{item.unit || '无'}}</text>
-											</view>
-											<view class="price-btn">
-												<button class="price-share" @click.stop='shareSave(item)'>分享赚<text class="price-symbol" v-text="item.client"></text></button>
-												<button class="price-buy">立即购买</button>
-											</view>
+						<view class="item-container">
+							<view class="goods-list" v-for="(item,index) in goodsList" :key='index' @click="navToDetailPage(item)">
+								<image class="goods-list-image" :src="item.goodsPhotos[0].url" mode=""></image>
+								<view class="goods-detail">
+									<view class="detail-title clamp">{{item.goodsName}}</view>
+									<view class="detail-subtitle clamp">{{item.goodsSubtitle}}</view>
+									<view class="detail-price">
+										<view class="price-num">
+											<text class="price-sale price-symbol">{{item.salePrice}}</text>
+											<text class="price-btn-unit">/{{item.unit || '无'}}</text>
+										</view>
+										<view class="price-btn">
+											<button class="price-share" @click.stop='shareSave(item)'>分享赚<text class="price-symbol" v-text="item.client"></text></button>
+											<button class="price-buy">立即购买</button>
 										</view>
 									</view>
 								</view>
 							</view>
-						<!-- </view>
-					</view> -->
+						</view>
 				</scroll-view>
-			</block>
+			<!-- </block> -->
 		</view>
 		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 	</view>
@@ -57,6 +53,7 @@
 	export default {
 		data() {
 			return {
+				title: '',
 				scrollTop: 0, //tab标题的滚动条位置
 				current: 0, // 预设当前项的值
 				menuHeight: 0, // 左边菜单的高度
@@ -102,15 +99,19 @@
 			return shareObj
 		},
 		onLoad(option) {
-			console.log(option)
 			this.agentId = uni.getStorageSync('agentId')
 			this.itemList = JSON.parse(option.categoryList)
 			this.current = option.current
+			this.title = option.title
 			this.categoryOneId = option.categoryOneId
 			this.categoryTwoId = this.itemList[this.current].value
 			this.loadData()
 		},
 		methods: {
+			scrolltolower() {
+				this.pageNum = this.pageNum + 1;
+				this.loadData();
+			},
 			shareAmount () { //处理分享出去的金额
 				for( let i in this.goodsList){
 					this.goodsList[i].client= Api.ishareAmount(this.goodsList[i]);
@@ -128,8 +129,12 @@
 				};
 				let list = await Api.apiCall('post', Api.agent.goods.list, params,true);
 				if (list) {
-					this.goodsList = list.result.records;
-					this.shareAmount()
+					if (list.result.records.length) {
+						this.goodsList = this.goodsList.concat(list.result.records);
+						this.shareAmount()
+					} else {
+						this.$api.msg('没有更多了')
+					}
 				}
 			},
 			getImg() {
@@ -140,6 +145,8 @@
 				this.categoryTwoId = id
 				if(index == this.current) return ;
 				this.current = index;
+				this.pageNum = 1
+				this.goodsList.length = 0
 				this.loadData()
 			},
 			toSearch () {
@@ -252,16 +259,14 @@
 		justify-content: center;
 		font-size: 24upx;
 		color: #666666;
-		margin-bottom: 4upx;
+		margin-bottom: 2upx;
 
 	}
 	
 	.u-tab-item-active {
 		position: relative;
 		color: #3AAAFF;
-		font-size: 26upx;
 		background: #E4F4FF;
-		letter-spacing: 2upx;
 	}
 	
 	.u-tab-item-active::before {

@@ -49,7 +49,7 @@
 		margin-bottom: 30upx;
 	}
 	.logo-img {
-		height: 250upx;
+		height: 280upx;
 		width: 250upx;
 		margin: 0 auto;
 	}

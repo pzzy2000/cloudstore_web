@@ -2,21 +2,7 @@
 	<view class="container">
 		<nav-bar>购物车</nav-bar>
 		<!-- 空白页 -->
-		<view v-if="cartList.length === 0" class="empty">
-			<!-- <image src="/static/emptyCart.jpg" mode="aspectFit"></image> -->
-			<!-- <view v-if="hasLogin" class="empty-tips">
-				空空如也
-				<navigator class="navigator" v-if="hasLogin" url="../index/index" open-type="switchTab">随便逛逛></navigator>
-			</view> -->
-			<view class="empty-tips">
-				<view class="cart-empty">
-					<image src="/static/client/cart-icon.png" mode="" class="cart-empty-img"></image>
-					<text class="cart-empty-text">购物车还是空的</text>
-				</view>
-				<button type="default" class="cart-empty-btn" @click="toCategory">购物车还是空的哦</button>
-			</view>
-		</view>
-		<view v-else>
+		<view>
 			<view class="tui-list-item">
 				<view class="cart-list-top">
 					<image 
@@ -89,6 +75,15 @@
 				<button type="primary" class="no-border confirm-btn" @click="createOrder">结算({{checkNum}})</button>
 			</view>
 		</view>
+		<view class="empty" v-if="isCartList">
+			<view class="empty-tips">
+				<view class="cart-empty">
+					<image src="/static/client/cart-icon.png" mode="" class="cart-empty-img"></image>
+					<text class="cart-empty-text">购物车还是空的</text>
+				</view>
+				<button type="default" class="cart-empty-btn" @click="toCategory">购物车还是空的哦</button>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -115,7 +110,8 @@
 						background: '#FD3B31'
 					}
 				],
-				checkNum: 0
+				checkNum: 0,
+				isCartList: false
 			};
 		},
 		onLoad() {
@@ -162,6 +158,8 @@
 							}
 						}
 						this.calcTotal();  //计算总价
+					} else {
+						this.isCartList = true
 					}
 				}
 			},
@@ -269,12 +267,9 @@
 					}
 				}
 				this.checkNum = checkNums.length
+				this.isCartList =  this.cartList.length ? false : true
 			},
 			createOrder(){ //跳转到支付界面
-				if(this.cartList.length === 0){
-					this.$api.msg('您还未选择需要购买商品')
-					return false;
-				}
 				var ids = []
 				for (let tmp in  this.cartList) {
 					if (this.cartList[tmp].checked) {
@@ -286,6 +281,8 @@
 					uni.navigateTo({
 						url: '/pages/client/goods/buy?cartId='+id,
 					});
+				} else {
+					this.$api.msg('您还未选择需要购买商品')
 				}
 			},
 			handlerButton(e) {

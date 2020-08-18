@@ -362,7 +362,7 @@ export default {
 					let params = {
 						activityId:this.activityId
 					};
-					let data = await Api.apiCall('post', Api.agent.activity.searchInfo, params, false, false);
+					let data = await Api.apiCall('post', Api.agent.activity.searchInfo, params, true, false);
 					if (data) {
 						this.activity = data.result
 					}
@@ -391,7 +391,7 @@ export default {
 				goodsId: this.goodsId,
 				activeId: this.activityId || -1
 			}
-			let data = await Api.apiCall('post', Api.agent.goods.save, params);
+			let data = await Api.apiCall('post', Api.agent.goods.save, params, true);
 			if (data) {
 				if (data.code === 0) {
 					uni.showToast({
@@ -408,7 +408,7 @@ export default {
 			let params = {
 				goodsId: this.goodsId
 			}
-			let data = await Api.apiCall('post', Api.agent.goods.loadHtml, params,0,0);
+			let data = await Api.apiCall('post', Api.agent.goods.loadHtml, params,true,0);
 			if (data) {
 				this.goodsHtml = data.result.mobileHtml
 			}
@@ -502,7 +502,7 @@ export default {
 					'shareId': this.shareClientId || '-1',
 					'type': ''
 				} 
-				let data = await Api.apiCall('post', Api.agent.share.save, params);
+				let data = await Api.apiCall('post', Api.agent.share.save, params, true);
 				if (data) {
 					uni.hideLoading() 
 					if (data.code === 0) {
@@ -559,7 +559,7 @@ export default {
 				activityId: this.activityId || '-1',
 				shareId: this.shareClientId || '-1',
 			}
-			let data = await Api.apiCall('post', Api.client.cart.addShopCar, params);
+			let data = await Api.apiCall('post', Api.client.cart.addShopCar, params, true);
 			if (data) {
 				if (data.code === 0) {
 					this.$api.msg('加入购物车成功')

@@ -20,8 +20,8 @@
 		<view class="carousel-section">
 			<view class="titleNview-background"></view>
 			<swiper class="carousel" circular @change="swiperChange">
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPageL(item.url)">
-					<image :src="item.piceUrl" />
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item">
+					<image :src="item.piceUrl" @click="toUrl(item)"/>
 				</swiper-item>
 			</swiper>
 			<!-- 自定义swiper指示器 -->
@@ -199,6 +199,18 @@
 			return shareObj
 		},
 		methods: {
+			toUrl (item) {
+				console.log(item)
+				if (item.type === 'active') {
+					uni.navigateTo({
+						url: '/pages/agent/goods/hotsale/activityList?id='+item.relatedId,
+					});
+				} else {
+					uni.navigateTo({
+						url: '/pages/agent/goods/hotsale/webView?url='+item.url,
+					});
+				}
+			},
 			shareAmount () { //处理分享出去的金额
 				let list = this.activity.show;
 				for( let i in list){

@@ -3,7 +3,7 @@
 		<view
 			class="header"
 			:class="{ fixed: navFixed, absolute: type == 'transparent', line: navLine, colorWhite: isWhite, themeBgColor: themeBgColor }"
-			:style="{ paddingTop: statusBarHeight + 'px', backgroundImage: navBgColor, color: navFontColor, opacity: transparentValue }"
+			:style="{ paddingTop: statusBarHeight + 'px', backgroundImage: navBgColor, color: navFontColor, opacity: transparentValue, height: topStatusBarHeight + 'px'}"
 		>
 			<view class="left_box">
 				<slot name="left">
@@ -43,6 +43,7 @@
 	</view>
 </template>
 <script>
+	import Api from '@/common/api';
 // 主页页面的页面路径
 // 关联功能：打开的页面只有一个的时候右上角自动显示返回首页按钮，下面这个数组是排除显示返回首页的页面。
 // 主页使用场景：小程序分享出去的页面，用户点击开是分享页面，很多情况下是没有返回首页按钮的
@@ -141,7 +142,8 @@ export default {
 			// 是否使用
 			themeBgColor: false,
 			// 导航栏高度
-			statusBarHeight: 0
+			statusBarHeight: 0,
+			topStatusBarHeight: ''
 		};
 	},
 	computed: {
@@ -192,6 +194,7 @@ export default {
 		this.navTransparentFixedFontColor = this.transparentFixedFontColor;
 		//获取手机状态栏高度
 		this.statusBarHeight = uni.getSystemInfoSync()['statusBarHeight'];
+		this.topStatusBarHeight = Number(Api.statusBarHeight()) - this.statusBarHeight;
 		const _this = this;
 		if (this.type == 'transparentFixed') {
 			this.transparentValue = 0;

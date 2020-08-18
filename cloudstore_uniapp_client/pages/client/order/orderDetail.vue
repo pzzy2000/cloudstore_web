@@ -47,7 +47,7 @@
 		<view class="yt-list">
 			<view class="yt-list-cell">
 				<text class="cell-tit clamp">订单编号</text>
-				<text class="cell-tip">{{orderDetail.id}}</text>
+				<text class="cell-tip">{{orderDetail.number}}</text>
 			</view>
 			<view class="yt-list-cell">
 				<text class="cell-tit clamp">下单时间</text>

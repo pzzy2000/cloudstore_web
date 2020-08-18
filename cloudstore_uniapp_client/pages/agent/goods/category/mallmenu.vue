@@ -1,16 +1,10 @@
 <template>
 	<view class="u-wrap">
 		<nav-bar>商品分类</nav-bar>
-		<!-- <view class="u-search-box">
-			<view class="u-search-inner">
-				<u-icon name="search" color="#909399" :size="28"></u-icon>
-				<text class="u-search-text">搜索商品</text>
-			</view>
-		</view> -->
 		<view class="u-menu-wrap">
 			<scroll-view scroll-y scroll-with-animation class="u-tab-view menu-scroll-view" :scroll-top="scrollTop">
 				<view v-for="(item,index) in itemList" :key="index" class="u-tab-item" :class="[current==index ? 'u-tab-item-active' : '']"
-				 :data-current="index" @tap.stop="swichMenu(index, item.value)">
+				 :data-current="index" @tap.stop="swichMenu(index, item.text, item.value)">
 					<text class="u-line-1">{{item.text}}</text>
 				</view>
 			</scroll-view>
@@ -42,7 +36,7 @@
 				current: 0, // 预设当前项的值
 				menuHeight: 0, // 左边菜单的高度
 				menuItemHeight: 0, // 左边菜单item的高度
-				title: '一级分类名称',
+				title: '',
 				itemList: [],
 				categoryId: [],
 				categoryList: []
@@ -70,6 +64,7 @@
 					}
 				}
 				this.categoryId = this.itemList[0].value
+				this.title = this.itemList[0].text
 				this.typeChange(this.categoryId)
 			},
 			async typeChange(id) { //选择商品类型
@@ -84,7 +79,7 @@
 						this.categoryList.push({
 							text: list.result.records[tmp].name,
 							value: list.result.records[tmp].id,
-							pic: list.result.records[tmp].goodsPhotos.url
+							pic: list.result.records[tmp].categoryPicUrl
 						})
 					}
 				}
@@ -93,9 +88,10 @@
 				return Math.floor(Math.random() * 35);
 			},
 			// 点击左边的栏目切换
-			async swichMenu(index, id) {
+			async swichMenu(index,text, id) {
 				this.categoryId = id
 				if(index == this.current) return ;
+				this.title = text
 				this.current = index;
 				this.typeChange(id)
 			},
@@ -109,7 +105,7 @@
 				}
 				if (tmpData){
 					uni.navigateTo({
-						url:'/pages/agent/goods/category/reclassify?categoryOneId='+this.categoryId +'&current='+index+'&categoryList='+ JSON.stringify(tmpData)
+						url:'/pages/agent/goods/category/reclassify?categoryOneId='+this.categoryId +'&title='+this.title+'&current='+index+'&categoryList='+ JSON.stringify(tmpData)
 					});
 				}
 			}
@@ -166,7 +162,7 @@
 		font-size: 26rpx;
 		color: #666;
 		letter-spacing: 4upx;
-		margin-bottom: 4upx;
+		margin-bottom: 2upx;
 	}
 	
 	.u-tab-item-active {
@@ -219,12 +215,12 @@
 	}
 	
 	.thumb-box {
-		width: 33.333333%;
+		width: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
-		margin-top: 20rpx;
+		margin: 20rpx 0;
 	}
 	
 	.item-menu-image {

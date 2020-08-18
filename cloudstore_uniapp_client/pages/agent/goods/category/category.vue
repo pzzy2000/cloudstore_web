@@ -1,14 +1,14 @@
 <template>
 	<view class="content">
 		<nav-bar backState="1000">商品列表</nav-bar>
-		<view class="nav-main">
+		<view class="nav-main" :style="{ top: statusBarHeight + 'px' }">
 			<view class="u-search-box">
 				<view class="u-search-inner" @click="toSearch">
 					<u-icon name="search" color="#909399" :size="28"></u-icon>
 					<text class="u-search-text">搜索商品</text>
 				</view>
 			</view>
-			<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
+			<view class="navbar">
 				<view class="nav-item" :class="{ current: filterIndex === 0 }" @click.stop="tabClick(0)">推荐</view>
 				<view class="nav-item" :class="{ current: filterIndex === 1 }" @click.stop="tabClick(1)">销量</view>
 				<view class="nav-item" :class="{ current: filterIndex === 2 }" @click.stop="tabClick(2)">
@@ -116,11 +116,9 @@
 			};
 		},
 		onLoad(options) {
-			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 17
+			this.statusBarHeight = Number(Api.statusBarHeight())
 			this.goodsName = options.goodsName
 			this.agentId = uni.getStorageSync('agentId')
-		},
-		onShow () {
 			this.loadActiviList();
 			this.loadgoodsType();
 			this.loadData();
@@ -160,6 +158,7 @@
 				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
 			}
 			return shareObj
+			this.$refs.share.toggleMask();
 		},
 		methods: {
 			shareAmount () { //处理分享出去的金额
@@ -341,10 +340,6 @@
 				this.goodsName = info.goodsName
 				this.imageUrl = info.sharePicsUrl
 				if (Api.isToken()) {
-						uni.showLoading({
-							title: '正在加载',
-							mask: false
-						});
 					let params = {
 						// 'agentGoodsId': this.agentGoodsId,
 						'agentId': this.agentId,
@@ -353,9 +348,8 @@
 						'shareId': this.shareClientId || '-1',
 						'type': ''
 					} 
-					let data = await Api.apiCall('post', Api.agent.share.save, params);
+					let data = await Api.apiCall('post', Api.agent.share.save, params, true);
 					if (data) {
-						uni.hideLoading() 
 						if (data.code === 0) {
 							this.shareClientId = data.result.id
 							if (this.shareClientId) {
@@ -384,7 +378,7 @@
 <style lang="scss" scoped>
 page,
 .content {
-	padding-top: 170upx;
+	padding-top: 150upx;
 	padding-bottom: 60upx;
 }
 .nav-main {
@@ -469,7 +463,7 @@ page,
 	padding: 20upx;
 	width: 100%;
 	background-color: #fff;
-	box-sizing: content-box;
+	box-sizing: padding-box;
 }
 
 .u-menu-wrap {
@@ -672,7 +666,7 @@ page,
 				height: 40upx;
 				line-height: 40upx;
 				width: 130upx;
-				margin-right: 10upx;
+				margin-right: 20upx;
 				background-image: linear-gradient(90deg, #FECE40, #FE8E18);
 				&::after {
 					border: none;

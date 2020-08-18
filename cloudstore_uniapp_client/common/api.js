@@ -1,5 +1,7 @@
 import store from '../store/index';
+let timer, flag, timeout = null;
 export default {
+	
 	BASEURI: 'http://106.52.184.24:18888/platform/',
 	// BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
@@ -88,7 +90,8 @@ export default {
 			searchIndexActivitygoodsList:'app/public/activity/indexShowActivityGoodList',
 			searchInfo:'app/public/activity/get',
 			listAll:'app/public/activity/alllist',
-			getAgentDistance: 'app/public/agent/getAgentDistance'
+			getAgentDistance: 'app/public/agent/getAgentDistance',
+			activityPic: 'app/public/activity/get'
 		},
 		user: {
 			userinfo:"/agent/get",//获取用户信息
@@ -137,8 +140,19 @@ export default {
 			getAgentShop: 'agent/goods/app/getAgentShop'
 		}
 	},
-	statusBarHeight () { //获取导航栏高度
-		return  uni.getSystemInfoSync().statusBarHeight
+	statusBarHeight () { //距离头部的固定定位信息
+		let menuButtonTopHeight = uni.getMenuButtonBoundingClientRect().top //胶囊距离手机顶部的高度
+		let menuButtonHeight = uni.getMenuButtonBoundingClientRect().height //胶囊的高度
+		let statusBarHeight = uni.getSystemInfoSync().statusBarHeight //状态栏的高度
+		let menuButtonTop = Number(menuButtonTopHeight) - Number(statusBarHeight) //获取出胶囊距离状态栏的高度
+		if (uni.getSystemInfoSync().platform == 'android') {
+			//手机为安卓时：高度为状态栏高度+两倍胶囊距离状态栏高度+胶囊高度
+			return statusBarHeight + menuButtonTop *2 + menuButtonHeight
+		} else {
+			return statusBarHeight + menuButtonTop + menuButtonHeight
+		}
+		//获取状态栏的高度
+		//整个导航栏加状态栏的高度
 	},
 	ishareAmount(data){ //计算分享出去的商品能挣多少钱
 		var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
@@ -151,18 +165,44 @@ export default {
 				 return data.client;
 		}
 	},
-	throttle(func, wait) { //节流
-		let timer = null;
-		return function () {
-			var that = this;
-			var args = arguments;
-			if (!time) {
-				timer = setTimeout(function () {
-					func.apply(that, args);
-					timer = null;
+	//节流防抖函数，func 要执行的回调函数，wait 延时的时间，mmediate 是否立即执行
+	throttle(func, wait = 500, immediate = true) { //在一定时间内，只能触发一次，
+		if (immediate) {
+			if (!flag) {
+				flag = true;
+				// 如果是立即执行，则在wait毫秒内开始时执行
+				typeof func === 'function' && func();
+				timer = setTimeout(() => {
+					flag = false;
 				}, wait);
-			}	
-		};
+			}
+		} else {
+			if (!flag) {
+				flag = true
+				// 如果是非立即执行，则在wait毫秒内的结束处执行
+				timer = setTimeout(() => {
+					flag = false
+					typeof func === 'function' && func();
+				}, wait);
+			}
+		}
+	},
+	debounce(func, wait = 500, immediate = false) { //一定时间内，只有最后一次操作，再过wait毫秒后才执行函数
+		// 清除定时器
+		if (timeout !== null) clearTimeout(timeout);
+		// 立即执行，此类情况一般用不到
+		if (immediate) {
+			var callNow = !timeout;
+			timeout = setTimeout(function() {
+				timeout = null;
+			}, wait);
+			if (callNow) typeof func === 'function' && func();
+		} else {
+			// 设置定时器，当最后一次操作后，timeout不会再被清除，所以在延时wait毫秒后执行func回调方法
+			timeout = setTimeout(function() {
+				typeof func === 'function' && func();
+			}, wait);
+		}
 	},
 	apiCallbackCall(method, endpoint, data, load, isSwitch, callback) {
 		if (load) {

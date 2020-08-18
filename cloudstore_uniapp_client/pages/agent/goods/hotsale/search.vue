@@ -4,7 +4,7 @@
 		<view class="cu-bar search bg-white">
 			<view class="search-form round">
 				<text class="cuIcon-search"></text>
-				<input @focus="InputFocus" @blur="InputBlur" :value="searchValue" :adjust-position="false" type="text" placeholder="请输入商品名" confirm-type="search" @input="searchInput"></input>
+				<input @focus="InputFocus" @blur="InputBlur" :value="searchValue" :adjust-position="false" @confirm="search('')" type="text" placeholder="请输入商品名" confirm-type="search" @input="searchInput"></input>
 			</view>
 			<view class="action">
 				<button class="cu-btn search-btn" @click="search('')">搜索</button>

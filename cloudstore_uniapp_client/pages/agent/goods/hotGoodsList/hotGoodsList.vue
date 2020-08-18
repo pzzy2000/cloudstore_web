@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<nav-bar backState="1000">热门商品列表</nav-bar>
-		<view class="navbar" :style="{ top: statusBarHeight + 'rpx' }">
+		<view class="navbar" :style="{ top: statusBarHeight + 'px' }">
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">{{activitName}}</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">综合排序</view>
@@ -16,27 +16,25 @@
 						<view class="clamp title">{{ goods.goodsPicesBean.goodsName }}</view>
 						<view class="number clamp">{{goods.goodsPicesBean.goodsSubtitle}}</view>
 					</view>
-					<view class="share-amount">
-						 分享最高赚 <text v-text="goods.goodsPicesBean.client"></text>元
-					</view>
 					<view class="detail-price">
 						<view class="price-main">
 							<view class="surprised">
-								抢购价 <text class="surprised-price price-symbol">{{goods.goodsPicesBean.salePrice}}</text>
+								<text class="surprised-price price-symbol">{{goods.goodsPicesBean.salePrice}}</text>
 								/{{goods.goodsPicesBean.unit}}
-								<text class="price-symbol mart-price">{{goods.goodsPicesBean.martPrice}}</text>
 							</view>
 						</view>
 						<view class="flex justify-around">
 							<button type="primary" class="price-btn bg-blue buy">购买</button>
-							<button type="primary" class="price-btn bg-blue" @click.stop='shareSave(goods)'>分享</button>
 						</view>
 					</view>
+				</view>
+				<view class="share-amount" @click.stop='shareSave(goods)'>
+					 分享最高赚 <text class="price-symbol" v-text="goods.goodsPicesBean.client"></text>
 				</view>
 			</view>
 		</view>
 		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask"
-		 :style="[{'padding-top': statusBarHeight+'rpx'}]">
+		 :style="[{'padding-top': statusBarHeight+'px'}]">
 			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
 				<scroll-view scroll-y class="cate-list">
 					<view v-for="item in cateList" :key="item.id">
@@ -67,7 +65,7 @@
 	import navBar from '@/components/zhouWei-navBar';
 	import tuiCascadeSelection from '@/components/tui-cascade-selection/tui-cascade-selection.vue'
 	import uniPopup from '@/components/uni-popup/uni-popup'
-  import share from '@/components/share';
+	import share from '@/components/share';
 	export default {
 		components: {
 			navBar, tuiCascadeSelection, uniPopup, share
@@ -109,7 +107,7 @@
 			}
 		},
 		onLoad(options) {
-			this.statusBarHeight = Number(Api.statusBarHeight())+ 88 + 17
+			this.statusBarHeight = Number(Api.statusBarHeight())
 			uni.showLoading({
 				title: '正在加载',
 				mask: false
@@ -360,7 +358,7 @@
 	}
 
 	.content {
-		padding-top: 96upx;
+		padding-top: 85upx;
 	}
 
 	.navbar {
@@ -519,48 +517,65 @@
 			flex-direction: column;
 			flex-flow: nowrap;
 			width: 100%;
-			height: 200upx;
-			margin-bottom: 10upx;
-			box-shadow: 0 0 4upx rgba(0, 0, 0, 0.1);
+			height: 190upx;
+			margin-bottom: 8upx;
 			padding: 10upx;
 			background: #fff;
+			border-radius: 10upx;
+			align-items: center;
+			position: relative;
+		}
+		.share-amount {
+			position: absolute;
+			right: 0;
+			top: 0;
+			font-size: 20upx;
+			padding: 0 20upx;
+			margin: 0;
+			color: #fff;
+			text-align: center;
+			line-height: 40upx;
+			height: 40upx;
+			background-image: linear-gradient(-90deg, #FE8A14, #FED041);
+			border-top-left-radius: 0;
+			border-top-right-radius: 10upx;
+			border-bottom-left-radius: 10upx;
+			border-bottom-right-radius: 0;
+			&:after {
+				border: none;
+			}
 		}
 		.image-wrapper {
-			width: 200upx;
+			width: 124upx;
+			height: 124upx;
 			border-radius: 3upx;
 			overflow: hidden;
+			margin: 30upx;
 			image {
 				opacity: 1;
 			}
 		}
 		.goods-detail {
+			height: 130upx;
 			display: inline-block;
 			margin-left: 20upx;
 			display: flex;
 			justify-content: flex-start;
 			flex-wrap: wrap;
-			width: 65%;
-			.share-amount {
-				height: 35upx;
-				line-height: 35upx;
-				border-radius: 5upx;
-				width: 160upx;
-				text-align: center;
-				background-color: #FFEFBC;
-				color: #FF8213;
-				font-size: 18upx;
-				margin-top: 10upx;
-			}
+			width: 70%;
 			.detail-title {
-				font-size: 16upx;
-				color: #000;
+				font-size: 24upx;
+				color: #999;
 				width: 100%;
+				letter-spacing: 2upx;
 				.title {
-					font-size: 24upx;
+					font-size: 32upx;
+					color: #333;
+					width: 70%;
 				}
 				.number {
 					color: #999;
-					font-size: 26upx;
+					font-size: 24upx;
 					line-height: 50upx;
 					height: 50upx;
 				}
@@ -570,7 +585,6 @@
 				justify-content: space-between;
 				align-items: flex-end;
 				width: 100%;
-				padding-bottom: 20upx;
 				.price-main {
 					color: #999;
 					font-size: 24upx;

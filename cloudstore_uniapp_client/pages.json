@@ -255,6 +255,22 @@
 				"enablePullDownRefresh": false
 			}
         }
+        ,{
+            "path" : "pages/agent/goods/hotsale/activityList",
+            "style" : {
+            	"navigationBarTitleText": "",
+            	"navigationStyle": "custom",
+            	"enablePullDownRefresh": true
+            }
+        }
+        ,{
+            "path" : "pages/agent/goods/hotsale/webView",
+            "style" : {
+            	"navigationBarTitleText": "",
+            	"navigationStyle": "custom",
+            	"enablePullDownRefresh": false
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

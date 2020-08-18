@@ -81,7 +81,7 @@
 				<text class="price-tip">￥</text>
 				<text class="price">{{cartTotal}}</text>
 			</view>
-			<text class="submit" @click="buy">去支付</text>
+			<text class="submit" @click="btnBuy">去支付</text>
 		</view>
 		
 		<!-- 优惠券面板 
@@ -330,7 +330,10 @@
 					}
 				}
 			},
-			buy(index = 1){ //点击支付按钮
+			btnBuy () { //点击支付按钮
+				Api.debounce(this.buy, 3000, true);
+			},
+			buy(){ //调用支付方法
 				if (!this.addressData.id) {
 					this.$api.msg('您还未选择收货地址')
 					return;
@@ -441,7 +444,18 @@
 					fail: function(err) {
 						uni.showModal({  
 							content: "支付失败",  
-							showCancel: false  
+							showCancel: false,
+							success: res => {
+								if (res.confirm) {
+									uni.navigateTo({
+									    url: '/pages/client/order/order'
+									});
+								} else if (res.cancel) {
+									uni.navigateTo({
+									    url: '/pages/client/order/order'
+									});
+								}
+							}
 						})  
 						console.log('fail:' + JSON.stringify(err));
 					}

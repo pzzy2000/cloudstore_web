@@ -217,8 +217,12 @@
 					this.$api.msg('请选择省/市/区县');
 					return;
 				}
+				if (!data.mapText ) {
+					this.$api.msg('请选择社区');
+					return;
+				}
 				if(!data.area){
-					this.$api.msg('请填写门牌号信息');
+					this.$api.msg('请填写详细信息');
 					return;
 				}
 				this.saveaddress(data);
@@ -284,7 +288,7 @@
 					if (result.code === 0) {
 						uni.showModal({
 							title: '提示',
-							content: '添加地址成功',
+							content: '设置地址成功',
 							showCancel: false,
 							cancelText: '取消',
 							confirmText: '确定',

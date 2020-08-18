@@ -11,16 +11,11 @@
 				{{item.text}}
 			</view>
 		</view>
-
-		<view class="earning-empty" v-if='orderList.length === 0'>
-			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
-			<view class="earning-empty-text">暂无订单哦</view>
-		</view>
 		
 		<!-- 订单列表 -->
-		<view v-for="(item,index) in orderList" :key="index" class="order-item">
+		<view v-for="(item,index) in orderList" :key="index" class="order-item" v-if="orderList.length != 0">
 			<view class="i-top b-b">
-				<text class="time">订单号: {{item.id}}</text>
+				<text class="time">订单号: {{item.number}}</text>
 				<template>
 					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
@@ -118,6 +113,11 @@
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 			</template>
+		</view>
+		
+		<view class="earning-empty" v-else>
+			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
+			<view class="earning-empty-text">暂无订单哦</view>
 		</view>
 	</view>
 </template> 

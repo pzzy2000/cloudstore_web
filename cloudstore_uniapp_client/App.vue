@@ -18,7 +18,6 @@
 		onReady() {
 		},
 		onLaunch: function() {
-			console.log( uni.getSystemInfoSync() )
 			//#ifdef APP-PLUS
 				plus.runtime.getProperty(plus.runtime.appid,(wgtinfo)=>{
 					// var server = ""; //检查更新地址
