@@ -45,7 +45,8 @@
         activityForm: {
           name: '',
           picture: [],
-          type: ''
+          type: '',
+          active: ''
         },
         typeOptions: [
           {label: '活动', value: 'active'},
