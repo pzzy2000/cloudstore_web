@@ -11,7 +11,8 @@ import {
   var token = getToken(); // 要保证取到
   // alert(token);
 const uploadConfig = {
-    action:  './platform/sys/upload/entity/oss/ali/update?targetType=3',  // 必填参数 图片上传地址
+    // action:  './platform/sys/upload/entity/oss/ali/update?targetType=spjs',  // 必填参数 图片上传地址 http://106.52.184.24:18888
+    action:  './platform/sys/upload/entity/oss/ali/update?targetType=spjs',  // 必填参数 图片上传地址
     methods: 'POST',  // 必填参数 图片上传方式
     token: token,  // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
     name: 'file',  // 必填参数 文件的参数名

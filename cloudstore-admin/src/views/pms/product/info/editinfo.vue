@@ -34,7 +34,7 @@
               </el-image>
             </div>
             <div v-else>
-              <single-upload v-model="goodsPics" logotype="1"></single-upload>
+              <single-upload v-model="goodsPics" logotype="spsx"></single-upload>
             </div>
           </el-form-item>
           <br />

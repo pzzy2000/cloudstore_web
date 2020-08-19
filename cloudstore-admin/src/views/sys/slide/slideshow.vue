@@ -5,7 +5,7 @@
         <el-input v-model="activityForm.name" placeholder="请输入海报名称" style="width: 350px" />
       </el-form-item>
       <el-form-item label="上传图片：" prop="picture">
-        <SingleUpload v-model="activityForm.picture" logotype="1"></SingleUpload>
+        <SingleUpload v-model="activityForm.picture" logotype="lunbo"></SingleUpload>
       </el-form-item>
       <el-form-item label="类型：" prop="type">
         <el-select v-model="activityForm.type" placeholder="请选择类型" @change="changeShow($event)" clearable>

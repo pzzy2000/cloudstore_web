@@ -12,10 +12,10 @@
           <el-date-picker v-model="activityForm.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="endDatePicker" type="date" placeholder="请选择活动结束时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="活动图片(一张)：" prop="picture">
-          <SingleUpload v-model="picture" logotype="1"></SingleUpload>
+          <SingleUpload v-model="picture" logotype="activity"></SingleUpload>
         </el-form-item>
         <el-form-item label="活动海报图片(一张)：" prop="activePoster">
-          <SingleUpload v-model="activePoster" logotype="1"></SingleUpload>
+          <SingleUpload v-model="activePoster" logotype="haibao"></SingleUpload>
         </el-form-item>
         <el-checkbox v-model="checked" style="margin-left: 120px">是否参加佣金活动</el-checkbox>
         <div style="text-align: right">
