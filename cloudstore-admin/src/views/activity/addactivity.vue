@@ -11,10 +11,16 @@
         <el-form-item label="结束时间：" prop="endTime">
           <el-date-picker v-model="activityForm.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="endDatePicker" type="date" placeholder="请选择活动结束时间"></el-date-picker>
         </el-form-item>
+        <el-form-item label="活动类型：" prop="toType">
+          <el-select v-model="activityForm.toType" placeholder="请选择活动类型" clearable>
+            <el-option v-for="item in toTypelist" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="活动图片(一张)：" prop="picture">
           <SingleUpload v-model="picture" logotype="activity"></SingleUpload>
         </el-form-item>
-        <el-form-item label="活动海报图片(一张)：" prop="activePoster">
+        <el-form-item label="活动海报图片(一张)：" prop="activePoster" v-if="activityForm.toType == 'haibao' ? true : false">
           <SingleUpload v-model="activePoster" logotype="haibao"></SingleUpload>
         </el-form-item>
         <el-checkbox v-model="checked" style="margin-left: 120px">是否参加佣金活动</el-checkbox>
@@ -50,7 +56,8 @@
           startTime: '',
           endTime: '',
           picture: [],
-          activePoster: []
+          activePoster: [],
+          toType: ''
         },
         isshow: true,
         optType: 'save',
@@ -62,14 +69,16 @@
           ],
           startTime: [{ required: true, message: '开始时间必填哦', trigger: 'blur' }],
           endTime: [{ required: true, message: '结束时间必填哦', trigger: 'blur' }],
-          picture: [{ required: true, message: '必须上传图片', trigger: 'blur' }],
-          activePoster: [{ required: true, message: '必须上传图片', trigger: 'blur' }]
+          picture: [{ required: true, message: '必须上传图片', trigger: 'change' }],
+          activePoster: [{ required: true, message: '必须上传图片', trigger: 'change'}],
+          toType: [{ required: true, message: '活动类型不能为空', trigger: 'change' }]
         },
         checked: true,
         startDatePicker: this.beginDate(),
         endDatePicker: this.processDate(),
         picture: [],
-        activePoster: []
+        activePoster: [],
+        toTypelist: [{label: '商品列表', value: 'list'}, {label: '海报', value: 'haibao'}]
       }
     },
     created() {
@@ -91,13 +100,13 @@
           }else {
             this.checked = false;
           }
-          if (this.activityForm.picture !== null || this.activityForm.picture !== undefined) {
+          if (this.activityForm.picture !== null && this.activityForm.picture !== undefined) {
             let Picobj = {};
             Picobj.uid = this.activityForm.picture;
             Picobj.url = this.activityForm.picturePice;
             this.picture.push(Picobj);
           }
-          if (this.activityForm.activePoster !== null || this.activityForm.activePoster !== undefined) {
+          if (this.activityForm.activePoster !== null && this.activityForm.activePoster !== undefined) {
             let actPicobj = {};
             actPicobj.uid = this.activityForm.activePoster;
             actPicobj.url = this.activityForm.posterPice;
@@ -109,7 +118,6 @@
         this.$router.back();
       },
       subActname(formName) {
-        console.log(this.picture);
         let pic = []
         for (let i=0; i< this.picture.length; i++){
           pic.push(this.picture[i].uid);
@@ -119,7 +127,9 @@
         for (let i=0; i< this.activePoster.length; i++){
           activepic.push(this.activePoster[i].uid);
         }
-        this.activityForm.activePoster = activepic;
+        this.$set(this.activityForm, 'activePoster', activepic)
+        // this.activityForm.activePoster = activepic;
+        console.log(this.activityForm.activePoster);
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if(this.checked){
@@ -158,7 +168,8 @@
           picture: this.activityForm.picture,
           activePoster: this.activityForm.activePoster,
           addProfit: changeCheck,
-          optType: this.optType
+          optType: this.optType,
+          toType: this.activityForm.toType
         }
         console.log(obj);
         if (this.$route.query.id !== undefined) {
