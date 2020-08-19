@@ -11,9 +11,11 @@
 				url: ''
 			}
 		},
-		onload () {
+		onload (options) {
+			console.log(options)
 			if (options && options.url) {
 			    this.url = options.url;
+				console.log(this.url)
 			}
 		},
 		methods: {

@@ -181,7 +181,8 @@
 				cartList: [],
 				cartNum: 1,
 				cartTotal: '',
-				buyGoodsList: []
+				buyGoodsList: [],
+				buyGoodsListNum: []
 			}
 		},
 		filters:{
@@ -196,16 +197,18 @@
 		onLoad(option) {
 			var that = this;
 			this.searchDetailAddress()
-			if (option.cartId) {
+			if (option.cartId) { //购物车跳转
 				this.searchCart(option.cartId)
 				this.buyListType = 'detail'
 				this.agentId = uni.getStorageSync('agentId')
-			} else if (option.orderId){
+				this.buyGoodsListNum = (JSON.parse(option.checkList)).sort()
+				console.log(this.buyGoodsListNum)
+			} else if (option.orderId){ //订单页面跳转
 				console.log(option.orderId)
 				this.orderType = 'buyOrder'
 				this.orderId = option.orderId
 				this.searchWaitBuyDetil(this.orderId)
-			} else{
+			} else{ //直接购买单品
 				this.buyListType = 'cart'
 				this.goodsId = option.goodsId
 				this.agentId = option.agentId
@@ -495,15 +498,13 @@
 				this.addressData = data;
 				this.getAgentDistanceType()
 			},
-			//以下为购物车内容
-			async searchCart (ids) {
+			async searchCart (ids) { //查询购物车内容
 				let params = {
 					idss: ids
 				}
 				var data = await Api.apiCall('post', Api.client.cart.listShopCar, params, true)
 				if (data) {
-					var tmpData = data.result.list
-					console.log(tmpData)
+					var tmpData = data.result.list.sort()
 					for (let tmp in tmpData) {
 						this.buyGoodsList.push({
 							activityId: tmpData[tmp].activityId,
@@ -521,10 +522,17 @@
 							stock: tmpData[tmp].goodsOneSku.stock,
 						})
 					}
+					for (let i in this.buyGoodsList) {
+						for (let j in this.buyGoodsListNum) {
+							if (this.buyGoodsListNum[i].goodsSkuId === this.buyGoodsList[j].goodsSkuId) {
+								this.buyGoodsList[j].number = this.buyGoodsListNum[i].number
+							}
+						}
+					}
 					this.calcTotal()
 				}
 			},
-			async searchWaitBuyDetil (id) {
+			async searchWaitBuyDetil (id) { //查询待支付订单内容
 				let params = {
 					orderId: id
 				};
@@ -556,7 +564,6 @@
 				if (!this.isNumBtn) {
 					return false;
 				}
-				console.log(1)
 				this.buyGoodsList[data.index].number = data.number;
 				this.calcTotal();
 			},

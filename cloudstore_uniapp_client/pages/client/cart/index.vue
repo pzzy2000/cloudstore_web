@@ -134,10 +134,11 @@
 					pageSize: 10,
 					pageNum: 1
 				}
-				let data = await Api.apiCall('post', Api.client.cart.myShopCar, params)
+				let data = await Api.apiCall('post', Api.client.cart.myShopCar, params, true)
 				if (data) {
 					uni.stopPullDownRefresh();
 					var tmpData = data.result.records
+					console.log(tmpData)
 					if (tmpData.length != 0) {
 						for (let tmp in tmpData) {
 							try{
@@ -151,6 +152,7 @@
 									attr_val: tmpData[tmp].goodsSkuBean.skuValue,
 									price: tmpData[tmp].goodsSkuBean.price,
 									stock: tmpData[tmp].goodsSkuBean.stock,
+									goodsSkuId: tmpData[tmp].goodsSkuId
 								})
 							}catch(e){
 								console.log(e)
@@ -270,16 +272,21 @@
 				this.isCartList =  this.cartList.length ? false : true
 			},
 			createOrder(){ //跳转到支付界面
-				var ids = []
+			console.log(this.cartList)
+				var ids = [],checkList = []
 				for (let tmp in  this.cartList) {
 					if (this.cartList[tmp].checked) {
 						ids.push(this.cartList[tmp].id)
+						checkList.push({
+							goodsSkuId: this.cartList[tmp].goodsSkuId,
+							number: this.cartList[tmp].number,
+						})
 					}
 				}
 				var id = ids.join(',')
 				if (id) {
 					uni.navigateTo({
-						url: '/pages/client/goods/buy?cartId='+id,
+						url: '/pages/client/goods/buy?cartId='+id+'&checkList='+JSON.stringify(checkList),
 					});
 				} else {
 					this.$api.msg('您还未选择需要购买商品')

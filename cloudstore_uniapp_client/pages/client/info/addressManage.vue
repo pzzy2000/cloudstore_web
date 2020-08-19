@@ -213,8 +213,8 @@
 					this.$api.msg('请输入正确的手机号码');
 					return;
 				}
-				if(!data.addressName || data.addressName=='选择省/市/区县'){
-					this.$api.msg('请选择省/市/区县');
+				if(!this.addressData.areas.town.id){
+					this.$api.msg('请选择完整省/市/区(县)/区域');
 					return;
 				}
 				if (!data.mapText ) {

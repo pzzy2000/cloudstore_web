@@ -14,7 +14,7 @@
 					<text class="u-line-1">{{item.text}}</text>
 				</view>
 			</scroll-view>
-			<!-- <block> -->
+			<block>
 				<scroll-view scroll-y class="right-box" @scrolltolower='scrolltolower'>
 					<view class="earning-empty" v-if='goodsList.length === 0'>
 						<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
@@ -40,7 +40,7 @@
 							</view>
 						</view>
 				</scroll-view>
-			<!-- </block> -->
+			</block>
 		</view>
 		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 	</view>
@@ -212,14 +212,14 @@
 
 <style lang="scss" scoped>
 	.u-wrap {
+		// height: 100%;
+		width: 100%;
 		height: calc(100vh);
 		/* #ifdef H5 */
 		height: calc(100vh - var(--window-top));
 		/* #endif */
-		display: flex;
-		flex-direction: column;
 	}
-
+	
 	.u-search-box {
 		padding: 20upx;
 		background-color: #fff;
@@ -230,6 +230,8 @@
 		flex: 1;
 		display: flex;
 		background-color: #fff;
+		position: relative;
+		height: 100%;
 	}
 
 	.u-search-inner {
@@ -279,7 +281,10 @@
 	}
 
 	.u-tab-view {
-		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: calc(100 - 85px);
 		background-color: #fff;
 		width: 160upx;
 	}
@@ -287,6 +292,10 @@
 	.right-box {
 		background-color: #fff;
 		width: calc(100% - 165upx);
+		position: absolute;
+		left: 160upx;
+		top: 0;
+		height: 100%;
 	}
 	
 	.class-item {
@@ -357,8 +366,7 @@
 	.goods-list {
 		display: flex;
 		justify-content: flex-start;
-		margin: 15upx;
-		padding: 15rpx 0 30rpx 0;
+		padding: 30rpx 0 30rpx 15rpx;
 		border-bottom: 1upx solid #F1F1F1;
 		width: 100%;
 		.goods-list-image {
@@ -368,7 +376,7 @@
 			border-radius: 10upx;
 		}
 		.goods-detail {
-			width: 70%;
+			width: calc(100% - 150upx);
 			.detail-title {
 				width: 100%;
 				font-size: 32upx;
