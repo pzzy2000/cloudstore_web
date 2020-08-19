@@ -68,7 +68,7 @@
                   <el-table-column label="属性图片：" align="left" width="400">
                     <template slot-scope="scope">
                       <el-form-item :prop="'skuStockList.' + scope.$index + '.photos'" :rules='rules.photos'>
-                        <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px"></single-upload>
+                        <single-upload v-model="scope.row.photos" style="width: 400px;display: inline-block;margin-left: 10px" logotype="skulogo"></single-upload>
                       </el-form-item>
                     </template>
                   </el-table-column>
