@@ -8,18 +8,18 @@
         <SingleUpload v-model="activityForm.picture" logotype="lunbo"></SingleUpload>
       </el-form-item>
       <el-form-item label="类型：" prop="type">
-        <el-select v-model="activityForm.type" placeholder="请选择类型" @change="changeShow($event)" clearable>
+        <el-select v-model="activityForm.type" placeholder="请选择类型" @change="changeShow" clearable>
           <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="活动：" prop="active" v-if="isshow">
+      <el-form-item label="活动：" prop="active" v-if="activityForm.type == 'active' ? true : false">
         <el-select v-model="activityForm.active" placeholder="请选择类型" clearable>
           <el-option v-for="item in activeList" :key="item.id" :label="item.name" :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="链接：" prop="url" v-if="isview">
+      <el-form-item label="链接：" prop="url" v-if="activityForm.type == 'url' ? true : false">
         <el-input v-model="activityForm.url" style="width: 350px"></el-input>
       </el-form-item>
     </el-form>
@@ -50,7 +50,8 @@
         },
         typeOptions: [
           {label: '活动', value: 'active'},
-          {label: '链接', value: 'url'}
+          {label: '链接', value: 'url'},
+          {label: '无', value: 'none'}
         ],
         rules: {
           name: [{required: true, message: '请输入海报名称', trigger: 'blur'}],
@@ -59,8 +60,6 @@
           active: [{required: true, message: '活动不能为空', trigger: 'change'}],
           url: [{required: true, message: '链接不能为空', trigger: 'blur'}]
         },
-        isshow: false,
-        isview: false,
         activeList: [],
         toggleShow: true
       }
@@ -94,15 +93,10 @@
       },
       changeShow(event) {
         if (event == 'active') {
-          this.isshow = true;
-          this.isview = false;
           getActiveList().then(res => {
             console.log(res)
             this.activeList = res.result.result.records;
           })
-        }else {
-          this.isshow = false
-          this.isview = true;
         }
       },
       submitForm(formName) {

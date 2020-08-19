@@ -49,7 +49,9 @@
             break;
           case "url": return "链接";
             break;
-            default: "数据读取错误";
+          case "none": return "无";
+            break;
+          default: return "数据读取错误";
         }
       }
     },
