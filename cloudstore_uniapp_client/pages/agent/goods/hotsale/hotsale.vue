@@ -69,7 +69,7 @@
 			</view>
 		</view> -->
 		<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
-			<view   class="f-header" @click="navToCategory(item)">
+			<view class="f-header" @click="navToCategory(item)">
 				<view class="faddish-title">
 					<view class="title-main">
 						{{item.name}}
@@ -159,7 +159,8 @@
 					icon: "/static/share_wechat.png",
 					text: "微信好友",
 					type: 1
-				}]
+				}],
+				skeletonLoading: true
 			};
 		},
 		//加载更多
@@ -199,19 +200,8 @@
 			return shareObj
 		},
 		methods: {
-			toUrl (item) {
-				console.log(item)
-				if (item.type === 'active') {
-					uni.navigateTo({
-						url: '/pages/agent/goods/hotsale/activityList?id='+item.relatedId,
-					});
-				} else {
-					uni.navigateTo({
-						url: '/pages/agent/goods/hotsale/webView?url='+item.url,
-					});
-				}
-			},
 			shareAmount () { //处理分享出去的金额
+				this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 				let list = this.activity.show;
 				for( let i in list){
 					let goodsList = list[i].goodsList;
@@ -274,6 +264,7 @@
 				let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params, true);
 				if (data) {
 					this.activity.nav = data.result; //查询出来的 
+					this.skeletonLoading = false
 				}
 			},
 			async searchActivityShowList() {//查询首页显示的活动名称
@@ -368,11 +359,30 @@
 				let activitId = item.id;
 				let  agentId = this.agentId;
 				if (item.status) {
-					uni.navigateTo({
-						url: '/pages/agent/goods/hotGoodsList/hotGoodsList?agentId='+agentId+'&id='+activitId+'&name='+item.name
-					});
+					if (item.toType === 'haibao') {
+						uni.navigateTo({
+							url: '/pages/agent/goods/hotsale/activityList?id='+item.id,
+						});
+					} else {
+						uni.navigateTo({
+							url: '/pages/agent/goods/hotGoodsList/hotGoodsList?agentId='+agentId+'&id='+activitId+'&name='+item.name
+						});
+					}
 				} else {
 					this.$api.msg('敬请期待')
+				}
+			},
+			toUrl (item) {
+				if (item.type === 'active') {
+					uni.navigateTo({
+						url: '/pages/agent/goods/hotsale/activityList?id='+item.relatedId,
+					});
+				} else if (item.type === 'url') {
+					uni.navigateTo({
+						url: '/pages/agent/goods/hotsale/webView?url='+item.url,
+					});
+				} else {
+					return false;
 				}
 			},
 			toSearch() { //跳转至搜索界面

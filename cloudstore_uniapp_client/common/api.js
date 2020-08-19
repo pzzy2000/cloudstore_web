@@ -3,7 +3,7 @@ let timer, flag, timeout = null;
 export default {
 	
 	BASEURI: 'http://106.52.184.24:18888/platform/',
-	// BASEURI: 'https://api.sz-guochuang.com/platform/',
+	/* BASEURI: 'https://api.sz-guochuang.com/platform/', */
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -162,7 +162,7 @@ export default {
 			case 'leader':
 				return Number(data.agent) + Number(data.leader)
 			default:
-				 return data.client;
+				return data.client;
 		}
 	},
 	//节流防抖函数，func 要执行的回调函数，wait 延时的时间，mmediate 是否立即执行

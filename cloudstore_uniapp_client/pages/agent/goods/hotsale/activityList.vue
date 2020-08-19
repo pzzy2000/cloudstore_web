@@ -98,7 +98,7 @@
 					categoryTwoId: '',
 					categoryThreeId: ''
 				};
-				let list = await Api.apiCall('post', Api.agent.hot.hotList, params);
+				let list = await Api.apiCall('post', Api.agent.hot.hotList, params, true);
 				if (list) {
 					let goodsList = list.result.records;
 					if (goodsList.length === 0) {
@@ -188,8 +188,8 @@
 		flex-wrap: wrap;
 		width: 100%;
 		margin: 0 auto;
-		padding: 40upx 20upx;
-		background-image: linear-gradient(180deg, #ec5a45, #E22C49, #E22C49, #E22C49);
+		padding: 0 20upx 40upx;
+		background-image: linear-gradient(180deg, #ed6145, #E22C49, #E22C49, #E22C49);
 		.goods-item {
 			display: flex;
 			flex-direction: column;
@@ -226,7 +226,7 @@
 		.image-wrapper {
 			width: 124upx;
 			height: 124upx;
-			border-radius: 3upx;
+			border-radius: 20upx;
 			overflow: hidden;
 			margin: 30upx;
 			image {

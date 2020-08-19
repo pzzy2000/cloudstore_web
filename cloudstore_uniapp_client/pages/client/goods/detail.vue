@@ -38,7 +38,7 @@
 			<view class="c-row">
 				<text class="tit">售后服务</text>
 				<view class="con-list">
-					<text>{{returnRule.title}}(详情见下文)</text>
+					<text>{{returnRule.title || '无'}}(详情见下文)</text>
 				</view>
 			</view>
 		</view>

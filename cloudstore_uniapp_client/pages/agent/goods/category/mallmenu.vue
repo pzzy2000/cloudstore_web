@@ -8,7 +8,7 @@
 					<text class="u-line-1">{{item.text}}</text>
 				</view>
 			</scroll-view>
-			<block>
+			<block style="height: 100%;">
 				<scroll-view scroll-y class="right-box">
 					<view class="page-view">
 						<view class="class-item">

@@ -3,7 +3,7 @@
 		<view
 			class="header"
 			:class="{ fixed: navFixed, absolute: type == 'transparent', line: navLine, colorWhite: isWhite, themeBgColor: themeBgColor }"
-			:style="{ paddingTop: statusBarHeight + 'px', backgroundImage: navBgColor, color: navFontColor, opacity: transparentValue, height: topStatusBarHeight + 'px'}"
+			:style="{ paddingTop: statusBarHeight + 'px', backgroundImage: navBgColor, color: navFontColor, opacity: transparentValue}"
 		>
 			<view class="left_box">
 				<slot name="left">
