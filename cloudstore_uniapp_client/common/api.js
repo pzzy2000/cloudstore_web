@@ -21,18 +21,18 @@ export default {
 	},
 	client:{
 		login:{
-			login:"sys/manager/platform/login"	,
-			reg:"sys/manager/platform/register/client",
+			login:"app/public/platform/login"	,
+			reg:"app/public/platform/register/client",
 			logout:"app/private/client/loginout"
 		},
 		reg: {
-			auth: 'sys/manager/platform/weixin/auth',  //传code
-			getPhone: 'sys/manager/platform/weixin/getPhone', // 传手机号加密信息
-			saveClientInfo: 'sys/manager/platform/weixin/saveClientInfo' ,//再传一系列信息
-			sendCode: 'sys/manager/platform/register/client/send',//获取手机验证码
-			updatePassword: 'sys/manager/platform/updatePassword', //忘记密码
+			auth: 'app/public/platform/weixin/auth',  //传code
+			getPhone: 'app/public/platform/weixin/getPhone', // 传手机号加密信息
+			saveClientInfo: 'app/public/platform/weixin/saveClientInfo' ,//再传一系列信息
+			sendCode: 'app/public/platform/register/client/send',//获取手机验证码
+			updatePassword: 'app/public/platform/updatePassword', //忘记密码
 			editPassword: 'app/private/sys/manager/user/updatePassword' //修改密码
-		},
+		}, 
 		info:{
 			searchInfo:"app/private/client/searchClientInfo" //查询当前登录信息
 		},
@@ -95,10 +95,10 @@ export default {
 		},
 		user: {
 			userinfo:"/agent/get",//获取用户信息
-			userlogin:"sys/manager/platform/login",
-			reg:"sys/manager/platform/register/agent",
-			wxLogin: 'sys/manager/platform/login', //判断微信登录
-			savePhone: 'sys/manager/platform/weixin/login' ,//微信第一次利用手机号绑定登录
+			userlogin:"app/public/platform/login",
+			reg:"app/public/platform/register/agent",
+			wxLogin: 'app/public/platform/login', //判断微信登录
+			savePhone: 'app/public/platform/weixin/login' ,//微信第一次利用手机号绑定登录
 			agentList: 'agent/goods/app/list', //获取代理商代理的商品信息
 			dateList: 'agent/goods/app/dateList', //获取今日上新的商品
 		},
