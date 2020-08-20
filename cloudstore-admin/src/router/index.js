@@ -421,6 +421,19 @@ export const asyncRouterMap = [
         name: 'setting',
         component: () => import('@/views/sys/setting'),
         meta: {title: '系统设置', icon: 'ums-resource'},
+      },
+      {
+        path: 'manageController',
+        name: 'manage_Controller',
+        component: () => import('@/views/sys/comManager/manageController'),
+        meta: {title: '公司系统管理', icon: 'ums-resource'},
+      },
+      {
+        path: 'adduser',
+        name: 'com_adduser',
+        component: () => import('@/views/sys/comManager/adduser'),
+        meta: {title: '添加用户', icon: 'ums-resource'},
+        hidden: true
       }
     ]
   },

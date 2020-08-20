@@ -29,7 +29,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="客户分享佣金" align="center">
+        <el-table-column label="客户分享积分" align="center">
           <template slot-scope="scope">
             <el-form-item :prop="'skuStockList.' + scope.$index + '.sharePoints'" :rules='rules.sharePoints'>
               <el-input v-model="scope.row.sharePoints"></el-input>

@@ -140,8 +140,8 @@
 
         </el-form>
         <div style="text-align:center">
-          <el-button style="float: none;margin-bottom: 10px;" @click="addProduct" :style="{ display: button.add}">
-            增加
+          <el-button style="float: none;margin-bottom: 10px;" @click="addProduct" :style="{ display: button.add}" :disabled="disabled">
+            {{addtext}}
           </el-button>
           <el-button style="float: none;margin-bottom: 10px;" @click="resetProduct" :style="{ display: button.reset}">
             重置
@@ -188,7 +188,7 @@
     name: "goodBaseinfo",
     provide() {
       return {
-        rwDispatcherProvider: this
+        rwDispatcherProvider: this,
       }
     },
     components: {
@@ -243,15 +243,17 @@
           goodsSubtitle: [{required: true, message: '请输入副标题', trigger: 'blur'}],
           salePrice: [
             {required: true, message: '请输入商品售价', trigger: 'blur'},
-            { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '整数,不超过3位，小数点后2位' }
+            { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '整数,不超过3位，小数点后2位', trigger: 'blur' }
           ],
           martPrice: [
             {required: true, message: '请输入市场价', trigger: 'blur'},
-            { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '整数,不超过3位，小数点后2位' }
+            { pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '整数,不超过3位，小数点后2位', trigger: 'blur' }
           ],
           unit: [{required: true, message: '请输入计量单位', trigger: 'blur'}]
         },
-        returnOptions: []
+        returnOptions: [],
+        disabled: false,
+        addtext: "增加"
       }
     },
     beforeMount() {},
@@ -540,6 +542,8 @@
       },
 
       addProduct() {
+        this.disabled = true;
+        this.addtext = "增加中..."
         let sharePics = [];
         for (let i = 0; i < this.sharePics.length; i++) {
           let x = this.sharePics[i];
@@ -576,6 +580,8 @@
                       duration: 1000
                     });
                   this.$router.push("/sys/goods/list");
+                  this.disabled = false;
+                  this.addtext = "增加";
                 }
               });
             })
@@ -585,6 +591,8 @@
               type: 'error',
               duration: 1000
             });
+            this.disabled = false;
+            this.addtext = "增加";
             return false;
           }
         });
