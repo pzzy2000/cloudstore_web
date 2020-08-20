@@ -85,8 +85,8 @@
         <el-table-column label="商品货号" width="150" align="center">
           <template slot-scope="scope">{{scope.row.goodsNumber}}</template>
         </el-table-column>
-        <el-table-column label="商品规格类别" width="150" align="center" :formatter="propertyBean">
-        </el-table-column>
+<!--        <el-table-column label="商品规格类别" width="150" align="center" :formatter="propertyBean">-->
+<!--        </el-table-column>-->
         <el-table-column label="产地" width="250" align="center" :formatter="showAddress">
         </el-table-column>
         <el-table-column label="商品分类" width="200" align="center" :formatter="goodsCategory">
