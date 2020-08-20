@@ -252,7 +252,6 @@
 							data: params,
 							success: res => {
 								uni.hideLoading()
-								console.log(res)
 								that.openId = res.data.result.result.openid
 								that.sessionKey = res.data.result.result.session_key
 							}

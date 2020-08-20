@@ -617,12 +617,12 @@ page,
 			align-items: flex-end;
 			width: 100%;
 			color: #999;
-			letter-spacing: 2upx;
 			.price {
 				font-size: 22upx;
 				.priceSale {
 					color: red;
 					font-size: 35upx;
+					margin-right: 5upx;
 				}
 				.pricemart {
 					color: #999;
@@ -662,11 +662,11 @@ page,
 				font-size: 20upx;
 				border-radius: 18upx;
 				margin: 0;
-				padding: 0;
+				padding: 0 20upx;
 				height: 40upx;
 				line-height: 40upx;
-				width: 130upx;
 				margin-right: 20upx;
+				letter-spacing: 4upx;
 				background-image: linear-gradient(90deg, #FECE40, #FE8E18);
 				&::after {
 					border: none;

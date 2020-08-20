@@ -165,14 +165,17 @@
 		},
 		//加载更多
 		onReachBottom() {
-			this.pageNum = this.pageNum + 1;
+			// this.pageNum = this.pageNum + 1;
 		},
 		onPullDownRefresh() {
-			this.pageNum = this.pageNum + 1;
-			this.loadData();
-			setTimeout(function() {
-				uni.stopPullDownRefresh();
-			}, 2000);
+			// this.pageNum = this.pageNum + 1;
+			this.loadData()
+			this.getLocation()
+			this.shareAmount()
+			uni.stopPullDownRefresh();
+			// setTimeout(function() {
+			// 	uni.stopPullDownRefresh();
+			// }, 2000);
 		},
 		onLoad(ops) {
 			this.loadData();
@@ -231,11 +234,13 @@
 				}
 				let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params,true);
 				if (data) {
-					var tmpData = data.result.agentBean
-					this.agentShopInfo.name = tmpData.name
-					this.agentShopInfo.address = tmpData.community
-					this.agentId = data.result.agentId
-					uni.setStorageSync('agentId', this.agentId)
+					if (data.result) {
+						var tmpData = data.result.agentBean
+						this.agentShopInfo.name = tmpData.name
+						this.agentShopInfo.address = tmpData.community
+						this.agentId = data.result.agentId
+						uni.setStorageSync('agentId', this.agentId)
+					}
 				}else{
 				}
 			},

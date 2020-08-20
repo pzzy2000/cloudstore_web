@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<nav-bar backState="1000">{{afterSaleTitle}}</nav-bar>
-		<view class="earning-empty" v-if='orderList.length === 0'>
+		<view class="earning-empty" v-if='afterSaleList.length === 0'>
 			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
 			<view class="earning-empty-text">暂无售后订单</view>
 		</view>

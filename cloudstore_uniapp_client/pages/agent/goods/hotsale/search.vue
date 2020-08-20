@@ -46,7 +46,6 @@
 		},
 		onLoad () {
 			this.historyList = Array.from(uni.getStorageSync('searchHistory'))
-			console.log(this.historyList)
 		},
 		methods: {
 			InputFocus(e) {
@@ -64,6 +63,7 @@
 				}
 				if (this.searchValue.length === 0) {
 					this.$api.msg('请输入需要搜索的商品')
+					return false
 				}
 				this.historyList.push(this.searchValue)
 				uni.setStorageSync('searchHistory', this.historyList)

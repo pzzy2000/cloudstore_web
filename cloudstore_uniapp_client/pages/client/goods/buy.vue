@@ -190,7 +190,7 @@
 				try{
 					return data.provinceBean.name+" "+data.cityBean.name+" "+data.areaBean.name;
 				}catch(e){
-					return "暂无地址"
+					return "暂无地址信息"
 				}
 			}
 		},
@@ -262,7 +262,7 @@
 					if (this.transportAgentId === '-1') {
 						uni.showModal({
 							title: '提示',
-							content: '您收货地址附近没有代理配送点，请选择快递',
+							content: '您收货地址附近没有代理配送点，已自动选择为快递配送',
 							showCancel: false,
 							cancelText: '取消',
 							confirmText: '确定',
@@ -629,7 +629,7 @@
 			}
 			.mobile {
 				font-size: 24upx;
-				margin-right: 24upx;
+				// margin-right: 24upx;
 				color: #666666;
 				width: 100%;
 			}

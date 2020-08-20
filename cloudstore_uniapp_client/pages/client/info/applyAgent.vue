@@ -48,7 +48,7 @@
 				<view class="title">省市区：</view>
 				<view class="">{{agentfrom.provinceName}}</view>
 			</view>
-			<view class="cu-form-group" @click="selectMap">
+			<view class="cu-form-group" @click.stop="selectMap">
 				<view class="title">选择社区：</view>
 				<input :value="agentfrom.mapText" placeholder="请选择社区" disabled='true' style="color:#000;"></input>
 			</view>
@@ -72,9 +72,9 @@
 		<uni-popup ref="popup" type="bottom" class="popup">
 			<tui-cascade-selection
 				height="280px"
-				activeColor="#EB0909"
-				lineColor="#EB0909"
-				checkMarkColor="#EB0909"
+				activeColor="#08affe"
+				lineColor="#08affe"
+				checkMarkColor="#08affe"
 				:itemList="itemList"
 				request
 				@complete="complete"
@@ -200,7 +200,6 @@
 						success: function(res) {
 							if (res) {
 								var data = res.data.result
-								console.log(data)
 								if(data) {
 									if (data.code === 0 && data.result != null) {
 										that.agentfrom.id = data.result.id,
@@ -226,6 +225,8 @@
 										that.agentfrom.cardType = data.result.cardType
 										that.agentfrom.address = data.result.detailAddress
 										that.agentfrom.cardId = data.result.cardNo
+										that.agentfrom.longitude = data.result.longitude
+										that.agentfrom.latitude = data.result.latitude
 										try{
 											that.agentfrom.provinceId = data.result.provinceId
 											that.agentfrom.cityId = data.result.cityId
@@ -319,7 +320,6 @@
 				}
 			},
 			typePickerChange (e) { //选择代理类型
-				console.log(e)
 				this.typePickerIndex = e.detail.value
 				if (e.detail.value === 0) {
 					this.agentfrom.agentType = 'agent'
@@ -336,15 +336,10 @@
 						that.agentfrom.mapText = res.name
 						that.agentfrom.longitude = res.longitude
 						that.agentfrom.latitude = res.latitude
-				        console.log('位置名称：' + res.name);
-				        console.log('详细地址：' + res.address);
-				        console.log('纬度：' + res.latitude);
-				        console.log('经度：' + res.longitude);
 				    }
 				});
 			},
 			async addressChange (e) { //选择地址
-				console.log(e)
 				switch(e.layer) {
 					case 0:
 					this.addressName.province = e.text;
@@ -447,7 +442,7 @@
 			},
 			seletctAddress () { //打开选择地址的弹出框
 				if(this.isEdit) {
-					return false
+					return false;
 				}
 				this.$refs.popup.open()
 			},
@@ -507,6 +502,7 @@
 					latitude: this.agentfrom.latitude,
 					optType: this.agentfrom.optType
 				}
+				console.log()
 				if (this.agentfrom.optType === 'update') {
 					params.id = this.agentfrom.id
 				}
