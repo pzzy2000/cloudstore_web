@@ -54,14 +54,15 @@
         </el-table-column>
         <el-table-column label="订单状态" align="center" prop="orderStatus" :formatter="showAllocDetail">
         </el-table-column>
-        <el-table-column label="操作" width="200px"  align="center">
-                  <template slot-scope="scope">
-                    <el-button size="mini"  @click="readOrder(scope.$index, scope.row)">订单详情</el-button>
-                    <el-button size="mini"  type="primary" :disabled="scope.row.status == 'yps' ? true : false"  @click="peisong(scope.$index, scope.row)">配送</el-button>
+        <el-table-column label="操作" width="200px" align="center">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="readOrder(scope.$index, scope.row)">订单详情</el-button>
+            <el-button size="mini" type="primary" :disabled="scope.row.status == 'yps' ? true : false" @click="peisong(scope.$index, scope.row)">配送
+            </el-button>
 
-                       <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
-                  </template>
-                </el-table-column>
+            <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="pagination-container" style="margin-right: 20px">
@@ -79,8 +80,9 @@
   </div>
 </template>
 <script>
-  import {fetchDetailList as fetchList,peisong} from '@/api/allocation'
+  import {fetchDetailList as fetchList, peisong} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
+
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -114,7 +116,7 @@
     methods: {
       showAllocDetail(row, r) {
         switch (r.property) {
-          case 'orderNumber':{
+          case 'orderNumber': {
             try {
               return row.orderBean.number;
             } catch (e) {
@@ -198,17 +200,20 @@
             break;
           }
 
-          case 'allocStatus':{
+          case 'allocStatus': {
             try {
               let status = row.status;
-             switch (status) {
-               case 'dps': return "待配送";
-                 break;
-               case 'yps': return "已配送";
-                 break;
-               default: return "数据读取错误";
-                 break;
-             }
+              switch (status) {
+                case 'dps':
+                  return "待配送";
+                  break;
+                case 'yps':
+                  return "已配送";
+                  break;
+                default:
+                  return "数据读取错误";
+                  break;
+              }
 
             } catch (e) {
               return '数据读取错误';
@@ -219,28 +224,38 @@
           case 'orderStatus': {
             try {
               let status = row.orderBean.orderStatus;
-             switch (status) {
-               case 'wait': return "待支付";
-                 break;
-               case 'pay': return "支付待确认";
-                 break;
-               case 'payed': return "已支付";
-                 break;
-               case 'peisong': return "待配送";
-                 break;
-               case 'peisoged': return "已配送";
-                 break;
-               case 'complete': return "已完成";
-                 break;
-               case 'close': return "超时关闭";
-                 break;
-               case 'returns': return "退货";
-                 break;
-               case 'retud': return "已退货";
-                 break;
-               default: return "数据读取错误";
-                 break;
-             }
+              switch (status) {
+                case 'wait':
+                  return "待支付";
+                  break;
+                case 'pay':
+                  return "支付待确认";
+                  break;
+                case 'payed':
+                  return "已支付";
+                  break;
+                case 'peisong':
+                  return "待配送";
+                  break;
+                case 'peisoged':
+                  return "已配送";
+                  break;
+                case 'complete':
+                  return "已完成";
+                  break;
+                case 'close':
+                  return "超时关闭";
+                  break;
+                case 'returns':
+                  return "退货";
+                  break;
+                case 'retud':
+                  return "已退货";
+                  break;
+                default:
+                  return "数据读取错误";
+                  break;
+              }
 
             } catch (e) {
               return '数据读取错误';
@@ -257,9 +272,8 @@
               type: 'success',
               duration: 800
             })
-
             row.status = res.result.status;
-            row.orderBean.orderStatus = res.result.orderBean.orderStatus;
+            row.orderBean.orderStatus = res.result.result.orderBean.orderStatus;
           }
         })
       },
@@ -272,7 +286,7 @@
           }
         })
       },
-      readOrder(index, row){
+      readOrder(index, row) {
         this.$router.push({name: "ps_order_detail", query: {id: row.orderId}});
       },
       backPage() {
