@@ -65,10 +65,10 @@
 						this.type = data.result.agent
 						if (this.type === 'agent') {
 							this.type = '代理商'
-						} else if (this.type === null){
-							this.type = '普通会员'
-						} else {
+						} else if (this.type === 'leader'){
 							this.type = '团长'
+						} else {
+							this.type = '普通会员'
 						}
 						this.imgUrl = data.result.wxPic || this.detailUrl
 					} else {

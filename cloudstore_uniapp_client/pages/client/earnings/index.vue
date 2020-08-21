@@ -132,7 +132,7 @@
 					}
 					let data = await Api.apiCall('post', Api.finance.get, parmas)
 					if (data) {
-						if (data.code === 0 && data.result != null) {
+						if (data.code === 0 && data.result.length != 0) {
 							this.cuIconList[0].num =  data.result.profited
 							this.cuIconList[1].num =  data.result.profiting
 							this.cuIconList[2].num =  data.result.pointsed

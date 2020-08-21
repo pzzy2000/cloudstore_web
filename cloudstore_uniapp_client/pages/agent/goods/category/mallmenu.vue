@@ -56,16 +56,22 @@
 				};
 				let list = await Api.apiCall('post', Api.agent.category.list, params, true);
 				if (list) {
-					for (let tmp in list.result.records) {
-						this.itemList.push({
-							text: list.result.records[tmp].name,
-							value: list.result.records[tmp].id,
-						})
+					if (list.result.records.length != 0) {
+						for (let tmp in list.result.records) {
+							this.itemList.push({
+								text: list.result.records[tmp].name,
+								value: list.result.records[tmp].id,
+							})
+						}
+						this.categoryId = this.itemList[0].value
+						this.title = this.itemList[0].text
+						this.typeChange(this.categoryId)
+					} else {
+						this.$api.msg('暂无分类数据')
 					}
+				} else {
+					this.$api.msg('请求失败')
 				}
-				this.categoryId = this.itemList[0].value
-				this.title = this.itemList[0].text
-				this.typeChange(this.categoryId)
 			},
 			async typeChange(id) { //选择商品类型
 				this.categoryList.length = 0

@@ -20,7 +20,7 @@
 					</view>
 				</view>
 				<view class="cart-list">
-					<block v-for="(item, index) in cartList" :key="item.id">
+					<block v-for="(item, index) in cartList" :key="item.goodsSkuId">
 						<view class="cartList-item">
 							<tui-swipe-action :actions="actions" @click="deleteCartItem(index)">
 								<template v-slot:content>
@@ -42,6 +42,7 @@
 												<text class="sku">/{{item.attr_val}}</text>
 											</view>
 											<uni-number-box 
+												v-if="isNumber"
 												class="number"
 												:min="1" 
 												:max="item.stock"
@@ -61,12 +62,12 @@
 				</view>
 			</view>
 			<view class="action-section">
-				<view class="checkbox">
+				<view class="checkbox" @click="check('all')">
 					<image 
 						:src="allChecked?'/static/selected.png':'/static/select.png'" 
 						mode="aspectFit"
-						@click="check('all')"
 					></image>
+					<text class="all-select">全选</text>
 				</view>
 				<view class="total-box">
 					<text class="price-text">总价:</text>
@@ -111,7 +112,8 @@
 					}
 				],
 				checkNum: 0,
-				isCartList: false
+				isCartList: false,
+				isNumber: false
 			};
 		},
 		onLoad() {
@@ -120,6 +122,7 @@
 		onShow(){
 			this.cartList.length = 0
 			this.getCartList();
+			this.isNumber= false
 		},
 		onPullDownRefresh() { //下拉刷新
 			this.cartList.length = 0
@@ -138,7 +141,6 @@
 				if (data) {
 					uni.stopPullDownRefresh();
 					var tmpData = data.result.records
-					console.log(tmpData)
 					if (tmpData.length != 0) {
 						for (let tmp in tmpData) {
 							try{
@@ -159,6 +161,7 @@
 								continue;
 							}
 						}
+						this.isNumber = true
 						this.calcTotal();  //计算总价
 					} else {
 						this.isCartList = true
@@ -272,7 +275,6 @@
 				this.isCartList =  this.cartList.length ? false : true
 			},
 			createOrder(){ //跳转到支付界面
-			console.log(this.cartList)
 				var ids = [],checkList = []
 				for (let tmp in  this.cartList) {
 					if (this.cartList[tmp].checked) {
@@ -479,11 +481,16 @@
 		width:100%;
 		height: 100upx;
 		padding: 0 40rpx 0 80rpx;
-		background: rgba(255,255,255,.9);
-		border-radius: 16upx;
+		box-shadow: 2rpx 2rpx 5rpx 1rpx rgba(0, 0, 0, 0.3);
 		.checkbox{
 			height:36upx;
-			position:relative;
+			/* position:relative; */
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			.all-select {
+				position: absolute;
+			}
 			image{
 				width: 36upx;
 				height: 100%;
