@@ -73,7 +73,7 @@
           activePoster: [{ required: true, message: '必须上传图片', trigger: 'change'}],
           toType: [{ required: true, message: '活动类型不能为空', trigger: 'change' }]
         },
-        checked: true,
+        checked: false,
         startDatePicker: this.beginDate(),
         endDatePicker: this.processDate(),
         picture: [],

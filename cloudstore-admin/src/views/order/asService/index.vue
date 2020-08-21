@@ -65,7 +65,7 @@
         </el-table-column>
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">查看详情</el-button>
+            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">{{scope.row.type | changeShow}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -126,7 +126,8 @@
           {label: "小程序订单", value: "2"},
           {label: "微信订单", value: "3"}
         ],
-        dialogVisible: false
+        dialogVisible: false,
+        btntext: ''
       }
     },
     created() {
@@ -172,6 +173,14 @@
           case 'retud': return "已退货";
             break;
           default: return "数据读取错误";
+            break;
+        }
+      },
+      changeShow(data) {
+        switch (data) {
+          case 'returns': return "查看详情";
+            break;
+          default: return "查看详情";
             break;
         }
       }

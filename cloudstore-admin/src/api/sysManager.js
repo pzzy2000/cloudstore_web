@@ -40,3 +40,27 @@ export function deluser(params) {
     data: switchForm(params)
   })
 }
+
+export function powerList(params) {
+  return request({
+    url: '/sys/role/module/comManageList',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function isLink(params) {
+  return request({
+    url: '/com/module/relation/save',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function isUnlink(params) {
+  return request({
+    url: '/com/module/relation/remove',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

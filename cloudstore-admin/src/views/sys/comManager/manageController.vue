@@ -20,6 +20,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="manageUser(scope.row)">用户权限</el-button>
             <el-button size="mini" @click="udpLogis(scope.row)">编辑</el-button>
             <el-button type="danger" size="mini" @click="delLogis(scope.row)">删除</el-button>
           </template>
@@ -79,6 +80,9 @@
             }
           })
         }).catch(e => e)
+      },
+      manageUser(row) {
+        this.$router.push({path: '/sys/manager/userpower', query: {id: row.id}});
       }
     }
   }

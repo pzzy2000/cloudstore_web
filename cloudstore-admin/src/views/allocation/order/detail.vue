@@ -27,6 +27,13 @@
           size="small">
           重置
         </el-button>
+        <div>
+          <el-form :inline="true" :model="pageList" size="small" label-width="130px" ref="searchList">
+            <el-form-item label="订单编号：">
+              <remoteCom v-model="pageList.orderIds" ref="clearInput" url="/manage/search/order/search" @tochild="tochild"></remoteCom>
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
       <div style="margin-top: 15px">
       </div>
@@ -82,7 +89,7 @@
 <script>
   import {fetchDetailList as fetchList, peisong} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
-
+  import remoteCom from '@/components/remoteCom'
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -90,6 +97,9 @@
   };
   export default {
     name: "list",
+    components: {
+      remoteCom
+    },
     data() {
       return {
         activeIndex: '1',
@@ -114,6 +124,10 @@
 
     },
     methods: {
+      tochild(item, callback){
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`订单号：${item.number}`);
+      },
       showAllocDetail(row, r) {
         switch (r.property) {
           case 'orderNumber': {
@@ -249,6 +263,9 @@
                 case 'returns':
                   return "退货";
                   break;
+                case 'returnsing':
+                  return "正在退货";
+                  break;
                 case 'retud':
                   return "已退货";
                   break;
@@ -272,8 +289,9 @@
               type: 'success',
               duration: 800
             })
-            row.status = res.result.status;
-            row.orderBean.orderStatus = res.result.result.orderBean.orderStatus;
+            this.getList()
+            // row.status = res.result.status;
+            // row.orderBean.orderStatus = res.result.result.orderBean.orderStatus;
           }
         })
       },

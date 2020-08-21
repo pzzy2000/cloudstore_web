@@ -2,7 +2,7 @@
   <div>
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
-      <span>角色模块列表</span>
+      <span>权限列表</span>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="list" style="width:100%" v-loading="listLoading" border>
@@ -26,7 +26,7 @@
         <el-table-column prop="address" label="是否关联" align="center">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#409eff"
-              inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
+                       inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
             </el-switch>
           </template>
         </el-table-column>
@@ -48,17 +48,14 @@
 </template>
 
 <script>
-  import {fetchRoleModuleList,roleModueSaveRemove} from '@/api/role'
-  import {
-    msg
-  } from '@/api/iunits'
+  import {powerList, isLink, isUnlink} from '@/api/sysManager'
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
     optType:'search'
   };
   export default {
-    name: "module_list",
+    name: "power",
     data() {
       return {
         activeIndex: '1',
@@ -75,44 +72,12 @@
     },
     methods: {
       getList() {
-        this.pageList.roleId = this.$route.query.roleId
-        fetchRoleModuleList(this.pageList).then(res => {
+        powerList({comManagerUserId: this.$route.query.id}).then(res => {
           if (res.result.code == 0) {
             this.list = res.result.result.records;
             this.total = parseInt(res.result.result.total);
           }
         })
-      },
-      roleModueSaveRole(params,idx){
-        roleModueSaveRemove(params).then(res => {
-          // this.disabled = false;
-          if (res.result.code == 0) {
-            if(idx==0){
-              msg("删除关联模块成功");
-            }else{
-              msg("模块关联成功");
-            }
-          }
-        })
-      },
-
-      changeSwitch(idx , row){
-        // this.disabled = true;
-        let params={
-          roleId:this.$route.query.roleId,
-          moduleId:row.id
-        }
-        if (idx == 0) {  //断开
-           params.optType="update";
-           this.roleModueSaveRole(params ,idx );
-        } else { //关联
-        params.optType="save";
-        this.roleModueSaveRole(params ,idx );
-        }
-
-      },
-      handleSelect(key, keyPath) {
-        console.log(key, keyPath);
       },
       handleCurrentChange(val) {
         this.pageList.pageNum = val;
@@ -122,62 +87,42 @@
         this.pageList.pageNum = 1;
         this.pageList.pageSize = val;
         this.getList();
+      },
+      changeSwitch(e, row) {
+        if (e == 1) {//保存
+          isLink({comManagerUserId: this.$route.query.id, sysModuleId: row.id, optType: 'save'}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: "关联成功",
+                type: 'success',
+                duration: 800
+              })
+            } else {
+              setTimeout(function () {
+                row.link = 0;
+              }, 800)
+            }
+          })
+        } else {
+          isUnlink({comManagerUserId: this.$route.query.id, sysModuleId: row.id, optType: 'remove'}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: "取消关联成功",
+                type: 'success',
+                duration: 800
+              })
+            } else {
+              setTimeout(function () {
+                row.link = 1;
+              }, 800)
+            }
+          })
+        }
       }
     }
   }
 </script>
 
 <style scoped>
-  .el-menu{
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  .el-menu.el-menu-demo{
-    border: none;
-  }
-  .el-menu-item{
-    width: 150px;
-    height: 40px;
-    margin-left: 20px;
-    line-height: 40px;
-    text-align: center;
-  }
-  .el-menu .el-menu-item:hover{
-    color: #1abc9c;
-  }
-  .el-menu .el-menu-item span{
-    color: red;
-  }
-  .el-menu--horizontal>.el-menu-item.is-active{
-    border: none;
-    background-color: #1abc9c !important;
-    color: white;
-  }
-  .el-menu--horizontal>.el-menu-item.is-active span{
-    color: white;
-  }
-  .el-menu-item{
-    border-bottom-color: #e4e4e4 !important;
-    border: 1px solid #e4e4e4;
-  }
-  .el-step.is-vertical >>> .el-step__icon{
-    width: 12px !important;
-    height: 12px !important;
-  }
-  .el-step.is-vertical >>> .el-step__line{
-    display: none !important;
-  }
-  .el-step.is-vertical >>> .el-step__main{
-    padding: 0;
-  }
-  .el-step.is-vertical >>> .el-step__head.is-finish {
-    color: #c0c4cc !important;
-    border-color: #c0c4cc !important;
-  }
-  .el-step.is-vertical >>> .el-step__title.is-finish {
-    color: #c0c4cc;
-  }
-  .el-step.is-vertical >>> .el-step__description.is-finish {
-    color: #c0c4cc;
-  }
+
 </style>

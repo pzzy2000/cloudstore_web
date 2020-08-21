@@ -434,6 +434,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/sys/comManager/adduser'),
         meta: {title: '添加用户', icon: 'ums-resource'},
         hidden: true
+      },
+      {
+        path: 'userpower',
+        name: 'user_power',
+        component: () => import('@/views/sys/comManager/power'),
+        meta: {title: '用户权限', icon: 'ums-resource'},
+        hidden: true
       }
     ]
   },

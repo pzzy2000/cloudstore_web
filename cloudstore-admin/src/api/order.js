@@ -104,7 +104,7 @@ export function auditStatus(params) {
 
 export function tuikuan(params) {
   return request({
-    url: '/app/private/pay/refundAfter',
+    url: '/manage/pay/refundAfter',
     method: "POST",
     data: switchForm(params)
   })
