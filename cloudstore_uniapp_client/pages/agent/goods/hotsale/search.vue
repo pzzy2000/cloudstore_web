@@ -67,7 +67,7 @@
 				}
 				this.historyList.push(this.searchValue)
 				uni.setStorageSync('searchHistory', this.historyList)
-				uni.reLaunch({
+				uni.navigateTo({
 				    url: "/pages/agent/goods/category/category?goodsName="+this.searchValue
 				});
 			}

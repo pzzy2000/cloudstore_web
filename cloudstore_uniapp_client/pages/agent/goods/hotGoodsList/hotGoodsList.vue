@@ -5,7 +5,14 @@
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">{{activitName}}</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">综合排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">销量排行</view>
+			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">筛选</view>
+			<view class="nav-item-twoCategory" v-if="isTwoCategory">
+				<view class="twoCategory-list">
+					<view v-for="(item, index) in selectTwoCategoryList" :key="index" class="twoCategory-item" @click="selectTwoCategory(item, index)">
+						{{item.name}}
+					</view>
+				</view>
+			</view>
 			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
 		</view>
 		<view class="goods-list">
@@ -104,6 +111,9 @@
 					text: "微信好友",
 					type: 1
 				}],
+				isTwoCategory: false,
+				selectTwoCategoryArray: [],
+				selectTwoCategoryList: [],
 			}
 		},
 		onLoad(options) {
@@ -119,8 +129,12 @@
 			this.cateId = options.sid;
 			// this.loadGoodsTypeList();
 			this.loadActiviList();
-			this.loadgoodsType();
+			this.selectTwoCategoryData(this.activityId)
+			// this.loadgoodsType();
 			this.loadData();
+		},
+		onShow () {
+			this.shareAmount ()
 		},
 		onPageScroll(e) {
 			//兼容iOS端下拉时顶部漂移
@@ -194,6 +208,26 @@
 					uni.stopPullDownRefresh()
 				}
 			},
+			async selectTwoCategoryData (id) {
+				this.selectTwoCategoryList.length = 0
+				let params = {
+					ativityId: id,
+				};
+				let list = await Api.apiCall('post', Api.agent.activity.selectTwoCategory, params, true, false);
+				if (list) {
+					console.log(list)
+					if(list.code === 0) {
+						// this.selectTwoCategoryList = list.result
+						for (let tmp in list.result) {
+							this.selectTwoCategoryList.push({
+								id: list.result[tmp].categoryId,
+								name: list.result[tmp].categoryBean.name,
+								select: false
+							})
+						}
+					}
+				}
+			},
 			async loadgoodsType () { //初始化加载商品一级分类
 				let params = {
 					pageNum: '1',
@@ -214,10 +248,15 @@
 					pageNum: 1,
 					pageSize: 20
 				};
-				let list = await Api.apiCall('post', Api.agent.hot.alllist, params);
+				let list = await Api.apiCall('post', Api.agent.hot.alllist, params, true);
 				if (list) {
 					this.cateList = list.result.records
 				}
+			},
+			selectTwoCategory(item, index) {
+				this.categoryTwoId = item.id
+				this.isTwoCategory = !this.isTwoCategory
+				this.loadData()
 			},
 			async typeChange(e) { //选择商品类型
 				this.receiveData = []
@@ -258,6 +297,8 @@
 			complete(e) { //点击了商品分类的上一级分类
 			},
 			selectActivity (item) { //点击活动后加载数据
+				this.selectTwoCategoryData(item.id)
+				this.isTwoCategory = false
 				this.activitName = item.name
 				this.activityId = item.id;
 				this.categoryOneId = '';
@@ -280,8 +321,9 @@
 				}
 				if (index === 2) {
 					this.filterIndex = 2
-					this.pageNum = 1;
-					this.loadData();
+					// this.pageNum = 1;
+					// this.loadData();
+					this.isTwoCategory = !this.isTwoCategory
 					// this.$refs.popup.open()
 				}
 				uni.pageScrollTo({
@@ -381,7 +423,6 @@
 			font-size: 30upx;
 			color: $font-color-dark;
 			position: relative;
-
 			&.current {
 				color: #08affe;
 
@@ -397,7 +438,32 @@
 				}
 			}
 		}
-
+		.nav-item-twoCategory {
+			position: absolute;
+			background-color: #fff;
+			top: 85upx;
+			right: 0upx;
+			width: 100%;
+			border-radius: 15upx;
+			.twoCategory-list {
+				display: flex;
+				justify-content: flex-start;
+				flex-wrap: wrap;
+				color: #333;
+				padding: 40upx 20upx;
+				border-radius: 15upx;
+				box-shadow: 5upx 5upx 5upx #999;
+				width: 100%;
+				.twoCategory-item {
+					padding: 10upx 25upx;
+					margin: 0 15upx 15upx 0;
+					background-color: rgba(57,169,255, 0.1);
+					color: #39A9ff;
+					letter-spacing: 2upx;
+					border-radius: 15upx;
+				}
+			}
+		}
 		.p-box {
 			display: flex;
 			flex-direction: column;

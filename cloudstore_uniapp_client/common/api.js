@@ -3,7 +3,7 @@ let timer, flag, timeout = null;
 export default {
 	
 	BASEURI: 'http://106.52.184.24:18888/platform/',
-	/* BASEURI: 'https://api.sz-guochuang.com/platform/', */
+	// BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -91,7 +91,8 @@ export default {
 			searchInfo:'app/public/activity/get',
 			listAll:'app/public/activity/alllist',
 			getAgentDistance: 'app/public/agent/getAgentDistance',
-			activityPic: 'app/public/activity/get'
+			activityPic: 'app/public/activity/get',
+			selectTwoCategory: 'app/public/activity/selectTwoCategory' //热门商品页面的二级分类
 		},
 		user: {
 			userinfo:"/agent/get",//获取用户信息
@@ -160,7 +161,7 @@ export default {
 			case 'agent':
 				return data.agent;
 			case 'leader':
-				return Number(data.agent) + Number(data.leader)
+				return (Number(data.agent)*100 + Number(data.leader)*100)/100
 			default:
 				return data.client;
 		}

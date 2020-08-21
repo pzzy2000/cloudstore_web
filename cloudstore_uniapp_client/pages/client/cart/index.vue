@@ -2,7 +2,7 @@
 	<view class="container">
 		<nav-bar>购物车</nav-bar>
 		<!-- 空白页 -->
-		<view>
+		<view v-if="cartList.length">
 			<view class="tui-list-item">
 				<view class="cart-list-top">
 					<image 
