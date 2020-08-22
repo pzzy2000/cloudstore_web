@@ -12,11 +12,11 @@
         <el-table-column label="名字" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
+        <el-table-column label="访问账号" align="center">
+          <template slot-scope="scope">{{scope.row.access}}</template>
+        </el-table-column>
         <el-table-column label="手机号" align="center">
           <template slot-scope="scope">{{scope.row.phone}}</template>
-        </el-table-column>
-        <el-table-column label="密码" align="center">
-          <template slot-scope="scope">{{scope.row.password}}</template>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -34,7 +34,7 @@
   import {getUserlist, deluser} from '@/api/sysManager'
   const defaultList = {
     pageNum: 1,
-    pageSize: 10,
+    pageSize: 100,
     optType: 'search'
   }
   export default {

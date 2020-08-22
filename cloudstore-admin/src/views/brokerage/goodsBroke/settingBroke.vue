@@ -36,7 +36,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column label="积分" align="center">
+        <el-table-column label="客户购买积分" align="center">
           <template slot-scope="scope">
             <el-form-item :prop="'skuStockList.' + scope.$index + '.clientPoints'" :rules='rules.clientPoints'>
               <el-input v-model="scope.row.clientPoints"></el-input>
@@ -83,11 +83,11 @@
             { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数，或者小于10，小数点后2位' }
             ],
           clientShare: [
-            { required: true, message: '请输入客户分享佣金', trigger: 'blur' },
+            { required: true, message: '请输入客户分享积分', trigger: 'blur' },
             { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数，或者小于10，小数点后2位' }],
           clientPoints: [
-            { required: true, message: '请输入积分', trigger: 'blur' },
-            { pattern: /^100$|^(\d|[1-9]\d)?$/, message: '整数,小于等于100' }
+            { required: true, message: '请输入客户购买积分', trigger: 'blur' },
+            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,或者小于10，小数点后2位' }
           ],
           delivery: [
             { required: true, message: '请输入配送金额', trigger: 'blur' },

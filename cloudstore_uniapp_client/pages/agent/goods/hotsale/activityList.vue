@@ -89,6 +89,11 @@
 			return shareObj
 		},
 		methods: {
+			shareAmount () { //处理分享出去的金额
+				for( let i in this.goodsList){
+					this.goodsList[i].goodsPicesBean.client= Api.ishareAmount(this.goodsList[i].goodsPicesBean);
+				}
+			},
 			async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
 				var params = {
 					activityId: this.activityId,
@@ -105,6 +110,7 @@
 						this.$api.msg('没有更多了')
 					}
 					this.goodsList = this.goodsList.concat(goodsList);
+					this.shareAmount()
 					uni.stopPullDownRefresh()
 				}
 			},
@@ -189,6 +195,7 @@
 		width: 100%;
 		margin: 0 auto;
 		padding: 0 20upx 40upx;
+		min-height: 50%;
 		background-image: linear-gradient(180deg, #ed6145, #E22C49, #E22C49, #E22C49);
 		.goods-item {
 			display: flex;

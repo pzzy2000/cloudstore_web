@@ -29,7 +29,7 @@
 					<text>{{activity.name}}</text>
 				</view>
 			</view>
-			<view class="c-row" v-for="(item ,index) in propertyValue" :key='index'>
+			<view class="c-row" v-for="(item ,index) in propertyValue" :key='index' v-if='item[index]'>
 				<text class="tit">{{item.goodsPropertyParamName}}</text>
 				<view class="con-list">
 					<text class="tit">{{item.propertyValue}}</text>
@@ -92,7 +92,7 @@
 			<view class="action-btn-group">
 				<button class="action-btn action-buy-btn" @click.stop="toggleSpec('buy')">立即购买</button>
 				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
-				<button class="action-btn action-share-btn" @click.stop="shareSave" >分享赚￥{{ goods.client }}</button>
+				<button class="action-btn action-share-btn" @click.stop="shareSave">分享赚￥{{ goods.client }}</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -210,14 +210,18 @@ export default {
 			specSelected: [],
 			small: [],
 			sku: {
-				name: '',
 				price: '',
-				stock: ''
+				stock: '',
 			},
 			propertyValue: '', //商品参数
 			returnRule: '', //退货规则
 			detailData: [],
-			goods: '',
+			goods: {
+				goodsName: '',
+				goodsSubtitle: '',
+				client: '',
+				unit: ''
+			},
 			shareList: [
 				{
 				  icon: "/static/share_wechat.png",
@@ -264,7 +268,6 @@ export default {
 		return shareObj
 	},
 	onShow() {
-		  
 	},
 	onLoad(ops) {
 		this.goodsId = ops.goodsId;
@@ -282,7 +285,8 @@ export default {
 	},
 	methods: {
 		shareAmount () { //处理分享出去的金额
-			this.goods.client= Api.ishareAmount(this.goodsList);
+			this.goods.client= Api.ishareAmount(this.goods);
+			// console.log(this.goods)
 		},
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
 			let params = {
@@ -315,6 +319,7 @@ export default {
 						this.specList.push(data.result.goodsPropertyValue[index])
 					}
 				}
+				// console.log(this.specList)
 				//处理规格选择额数据
 				if (this.specList){
 					this.specList.forEach(item => {
@@ -328,6 +333,7 @@ export default {
 							}
 						}
 					})
+					console.log(this.specChildList)
 				}
 				//默认选中的规格数据
 				var specs = ''
@@ -340,6 +346,7 @@ export default {
 							break; //forEach不能使用break
 						}
 					}
+					// console.log(this.specSelected)
 				});
 				//遍历数据获取图片
 				if (data.result.goodsPicesBean.goodsDetailPhotos) {
@@ -351,6 +358,7 @@ export default {
 					}
 				}
 			}
+			this.shareAmount()
 			try{
 				this.loadMobileHtml()
 			}catch(e){
@@ -425,7 +433,10 @@ export default {
 			}
 		},
 		selectSpec(index, pid) { //选择规格
+			console.log(index, pid)
+			console.log(this.specChildList)
 			let list = this.specChildList;
+			console.log(list)
 			list.forEach(item => {
 				if (item.pid === pid) {
 					this.$set(item, 'selected', false);
