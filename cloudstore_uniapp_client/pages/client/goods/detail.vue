@@ -128,8 +128,9 @@
 						</view>
 					</view>
 				</div>
-				<view class="buyBtn" @click.stop="toBuy(buy)">
-					<button class="cu-btn bg-red">确定</button>
+				<view class="buyBtn">
+					<button class="cu-btn" v-if="isBuyBtn" @click.stop="toBuy(buy)">确定</button>
+					<button class="cu-btn zero" v-if="!isBuyBtn">暂时缺货</button>
 				</view>
 			</view>
 		</view>
@@ -248,7 +249,8 @@ export default {
 			specList: [],
 			specChildList: [],
 			userType: 'Client',
-			selectType: ''
+			selectType: '',
+			isBuyBtn: true
 		};
 	},
 	onShareAppMessage(res) {
@@ -313,14 +315,13 @@ export default {
 					console.log('sku图片出错')
 				}
 				this.goodsSkuId = this.skuList[0].id
-				//遍历商品数据展示规格
+				//遍历商品数据展示规格（可以选择的商品属性集合）
 				for (let index in data.result.goodsPropertyValue) {
 					if (data.result.goodsPropertyValue[index].propertyType == 0) {
 						this.specList.push(data.result.goodsPropertyValue[index])
 					}
 				}
-				// console.log(this.specList)
-				//处理规格选择额数据
+				//处理规格选择额数据（显示可看见的按钮）
 				if (this.specList){
 					this.specList.forEach(item => {
 						let valuesA = item.propertyValue.split(',');
@@ -333,7 +334,6 @@ export default {
 							}
 						}
 					})
-					console.log(this.specChildList)
 				}
 				//默认选中的规格数据
 				var specs = ''
@@ -346,7 +346,6 @@ export default {
 							break; //forEach不能使用break
 						}
 					}
-					// console.log(this.specSelected)
 				});
 				//遍历数据获取图片
 				if (data.result.goodsPicesBean.goodsDetailPhotos) {
@@ -377,6 +376,47 @@ export default {
 				}
 			}catch(e){
 				this.$api.msg('获取活动信息失败')
+			}
+		},
+		selectSpec(index, pid) { //选择规格
+			//将选中的属性放入
+			let list = this.specChildList;
+			list.forEach(item => {
+				if (item.pid === pid) {
+					this.$set(item, 'selected', false);
+				}
+			});
+			this.$set(list[index], 'selected', true);
+			var specs = '';
+			this.specSelected = [];
+			if (list){
+				list.forEach(item => {
+					if (item.selected === true) {
+						this.specSelected.push(item);
+						specs = item.name + ',' + specs;
+					}
+				});
+				let specArray  = [];
+				for (let data in this.specSelected) {
+					specArray.push(this.specSelected[data].name)
+				}
+				specArray.join(',')
+				for (let data in this.skuList) {
+					var skuValue =  this.skuList[data].skuValue.split(',').sort().toString()
+					if (specArray.sort().toString() === skuValue) {
+						this.goodsSkuId = this.skuList[data].id
+						this.sku.stock = this.skuList[data].stock
+						this.sku.price = this.skuList[data].price
+						this.isBuyBtn =  this.sku.stock ? true : false
+						try{
+							this.sku.imgUrl = this.skuList[data].photos[0].url
+							this.imageUrl = this.skuList[data].photos[0].url
+						}catch(e){
+							console.log('sku图片出错')
+						}
+						break;
+					}
+				}
 			}
 		},
 		toPage(url){
@@ -430,48 +470,6 @@ export default {
 				}, 250);
 			} else if (this.specClass === 'none') {
 				this.specClass = 'show';
-			}
-		},
-		selectSpec(index, pid) { //选择规格
-			console.log(index, pid)
-			console.log(this.specChildList)
-			let list = this.specChildList;
-			console.log(list)
-			list.forEach(item => {
-				if (item.pid === pid) {
-					this.$set(item, 'selected', false);
-				}
-			});
-			this.$set(list[index], 'selected', true);
-			var specs = '';
-			this.specSelected = [];
-			if (list){
-				list.forEach(item => {
-					if (item.selected === true) {
-						this.specSelected.push(item);
-						specs = item.name + ',' + specs;
-					}
-				});
-				let specArray  = [];
-				for (let data in this.specSelected) {
-					specArray.push(this.specSelected[data].name)
-				}
-				specArray.join(',')
-				for (let data in this.skuList) {
-					var skuValue =  this.skuList[data].skuValue.split(',').sort().toString()
-					if (specArray.sort().toString() === skuValue) {
-						this.goodsSkuId = this.skuList[data].id
-						this.sku.stock = this.skuList[data].stock
-						this.sku.price = this.skuList[data].price
-						try{
-							this.sku.imgUrl = this.skuList[data].photos[0].url
-							this.imageUrl = this.skuList[data].photos[0].url
-						}catch(e){
-							console.log('sku图片出错')
-						}
-						break;
-					}
-				}
 			}
 		},
 		share() { //分享显示弹窗
@@ -903,7 +901,8 @@ export default {
 			border-radius: 30upx;
 			min-width: 60upx;
 			font-size: 26upx;
-			width: 160upx;
+			min-width: 160upx;
+			padding: 0 25upx;
 			height: 60upx;
 			color: #999999;
 		}
@@ -925,6 +924,11 @@ export default {
 			font-weight: blod;
 			letter-spacing: 4upx;
 			border-radius: 30upx;
+			color: #fff;
+		}
+		.zero {
+			color: #666;
+			background: #f5f5f5;
 		}
 	}
 }

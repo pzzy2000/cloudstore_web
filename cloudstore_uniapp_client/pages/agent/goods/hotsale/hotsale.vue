@@ -349,6 +349,7 @@
 			},
 			//详情页
 			navToDetailPage(item) {
+				console.log(item)
 				//测试数据没有写id，用title代替
 				let goodsId = item.goodsId;
 				let activitId = item.activityId;
@@ -550,6 +551,7 @@
 	.carousel {
 		width: 94%;
 		margin: 0 auto;
+		height: 320upx;
 		.carousel-item {
 			width: 100%;
 			height: 100%;
