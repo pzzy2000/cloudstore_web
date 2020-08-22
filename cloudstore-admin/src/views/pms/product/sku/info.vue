@@ -31,7 +31,7 @@
             </div>
             <div>
               <el-form :rules="rules" :model="goodsku" ref="format">
-                <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border>
+                <el-table style="width: 100%;margin-top: 20px" :data="goodsku.skuStockList" border :row-class-name="tableRowClassName">
                   <el-table-column fixed v-for="(item,index) in goodsku.guige" :label="item.name" :key="item.id" align="center">
                     <template slot-scope="scope">
                       {{getProductSkuSp(scope.row,index,item)}}
@@ -227,7 +227,8 @@
             // { pattern: /[\u4E00-\u9FA5]/g, message: '不能输入中文' }
           ],
           photos: [{ required:true, message:"sku图片不能为空", trigger:"change" }]
-        }
+        },
+        warnList: []
       }
     },
     created() {
@@ -238,6 +239,19 @@
       // this.getproductAttributeCategory();
     },
     methods: {
+      tableRowClassName({row, rowIndex}) {
+        // console.log(row, rowIndex);
+        let codeArr = [];
+        for (let i=0; i<this.goodsku.skuStockList.length; i++) {
+          codeArr.push(this.goodsku.skuStockList[i].skuCode);
+        }
+        for (let i=0; i<this.warnList.length; i++) {
+          console.log(rowIndex, codeArr.indexOf(this.warnList[i]))
+          if (rowIndex == codeArr.indexOf(this.warnList[i])) {
+            return 'warn-row';
+          }
+        }
+      },
       updateGoodsProperties(formName){
          // let Arr = this.goodsku.skuStockList;
          // let resultArr = [];
@@ -274,6 +288,7 @@
       },
 
       updateGoodsProperties1() {
+        this.warnList = [];
         if (this.goodsku.mobileHtml !== null && this.goodsku.mobileHtml !== '') {
           let good_sku = this.goodsku;
           let data = {};
@@ -298,6 +313,9 @@
               // let list = response.result.result;
               // this.goodsku.goods = list;
               // this.getproductAttributeCategory();
+            } else {
+              let arr = response.result.msg.split(",");
+              this.warnList = arr;
             }
           });
         }else{
@@ -584,5 +602,9 @@
   .el-table >>> .el-form-item__error{
     position: static;
     text-align: left;
+  }
+
+  .el-table >>> .warn-row {
+    background-color: red;
   }
 </style>
