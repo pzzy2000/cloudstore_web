@@ -239,20 +239,20 @@
     },
     methods: {
       updateGoodsProperties(formName){
-         let Arr = this.goodsku.skuStockList;
-         let resultArr = [];
-         for (let i=0; i<Arr.length; i++){
-           resultArr.push(Arr[i].skuCode);
-         }
-         console.log(resultArr);
-         for (let i=0; i<resultArr.length; i++) {
-           for (let j=i+1; j<resultArr.length; j++) {
-             if (resultArr[i].toLowerCase() == resultArr[j].toLowerCase()) {
-               this.$message.error("SKU编号不能重复!");
-               return;
-             }
-           }
-         }
+         // let Arr = this.goodsku.skuStockList;
+         // let resultArr = [];
+         // for (let i=0; i<Arr.length; i++){
+         //   resultArr.push(Arr[i].skuCode);
+         // }
+         // console.log(resultArr);
+         // // for (let i=0; i<resultArr.length; i++) {
+         // //   for (let j=i+1; j<resultArr.length; j++) {
+         // //     if (resultArr[i].toLowerCase() == resultArr[j].toLowerCase()) {
+         // //       this.$message.error("SKU编号不能重复!");
+         // //       return;
+         // //     }
+         // //   }
+         // // }
          this.$confirm('是否更新此商品的整个信息?', '提示', {
            confirmButtonText: '确定',
            cancelButtonText: '取消',
