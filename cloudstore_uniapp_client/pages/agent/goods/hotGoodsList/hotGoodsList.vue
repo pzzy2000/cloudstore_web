@@ -1,19 +1,25 @@
 <template>
-	<view class="content">
-		<nav-bar backState="1000">热门商品列表</nav-bar>
+	<view class="content" :class="isTwoCategory ? '.content-shade-box': ''">
+		<nav-bar backState="1000">{{activitName}}</nav-bar>
+		<view class="content-shade" @click="tabClick(2)" v-if="isTwoCategory"></view>
 		<view class="navbar" :style="{ top: statusBarHeight + 'px' }">
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">{{activitName}}</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">综合排序</view>
 			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">筛选</view>
+			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
 			<view class="nav-item-twoCategory" v-if="isTwoCategory">
 				<view class="twoCategory-list">
-					<view v-for="(item, index) in selectTwoCategoryList" :key="index" class="twoCategory-item" @click="selectTwoCategory(item, index)">
+					<view class="twoCategory-title">活动类别</view>
+					<view v-for="(item, index) in selectTwoCategoryList" :key="index" class="twoCategory-item" :class="item.select? 'twoCategory-item-select' : '' "  @click="selectTwoCategory(item, index)">
 						{{item.name}}
 					</view>
 				</view>
+				<view class="twoCategory-btn">
+					<button class="reset" @click="twoCategoryReset">重置</button>
+					<button class="submit" @click="twoCategorySubmit">确定</button>
+				</view>
 			</view>
-			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
 		</view>
 		<view class="goods-list">
 			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
@@ -146,6 +152,7 @@
 		},
 		onPullDownRefresh() { //下拉刷新
 			this.loadData('initialize');
+			this.twoCategoryReset()
 		},
 		onReachBottom() { //加载更多
 			this.pageNum = this.pageNum + 1;
@@ -189,7 +196,7 @@
 					pageNum: this.pageNum,
 					pageSize: '10',
 					categoryOneId: this.categoryOneId,
-					categoryTwoId: this.categoryTwoId,
+					categoryTwoIds_: this.categoryTwoId,
 					categoryThreeId: this.categoryThreeId
 				};
 				let list = await Api.apiCall('post', Api.agent.hot.hotList, params);
@@ -215,7 +222,6 @@
 				};
 				let list = await Api.apiCall('post', Api.agent.activity.selectTwoCategory, params, true, false);
 				if (list) {
-					console.log(list)
 					if(list.code === 0) {
 						// this.selectTwoCategoryList = list.result
 						for (let tmp in list.result) {
@@ -253,8 +259,23 @@
 					this.cateList = list.result.records
 				}
 			},
-			selectTwoCategory(item, index) {
-				this.categoryTwoId = item.id
+			selectTwoCategory(item, index) { //点击活动分类的类别
+				this.selectTwoCategoryList[index].select = this.selectTwoCategoryList[index].select ? false : true
+				var index = this.selectTwoCategoryArray.indexOf(item.id);
+				if (index > -1) {
+					this.selectTwoCategoryArray.splice(index, 1);
+				} else {
+					this.selectTwoCategoryArray.push(item.id)
+				}
+			},
+			twoCategoryReset () { //重置活动分类
+				this.selectTwoCategoryArray.length = 0
+				for (let tmp in this.selectTwoCategoryList) {
+					this.selectTwoCategoryList[tmp].select = false
+				}
+			},
+			twoCategorySubmit () {//点击确定筛选活动分类
+				this.categoryTwoId = this.selectTwoCategoryArray.join()
 				this.isTwoCategory = !this.isTwoCategory
 				this.loadData()
 			},
@@ -299,6 +320,8 @@
 			selectActivity (item) { //点击活动后加载数据
 				this.selectTwoCategoryData(item.id)
 				this.isTwoCategory = false
+				this.selectTwoCategoryArray.length = 0
+				this.categoryTwoId = ''
 				this.activitName = item.name
 				this.activityId = item.id;
 				this.categoryOneId = '';
@@ -312,11 +335,13 @@
 				if (index === 0) {
 					this.filterIndex = 0
 					this.pageNum = 1;
+					this.isTwoCategory = false
 					this.loadData();
 				}
 				if (index === 1) {
 					this.filterIndex = 1
 					this.pageNum = 1;
+					this.isTwoCategory = false
 					this.loadData();
 				}
 				if (index === 2) {
@@ -398,11 +423,24 @@
 	page,
 	.content {
 	}
-
+	.content-shade-box {
+		overflow:hidden;
+		height:100%
+	}
 	.content {
 		padding-top: 85upx;
+		width: 100%;
+		height: 100%;
+		position: relative;
 	}
-
+	.content-shade {
+		background-color: rgba(0,0,0,0.2);
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		z-index: 1;
+		overflow: hidden;
+	}
 	.navbar {
 		position: fixed;
 		left: 0;
@@ -413,7 +451,64 @@
 		background: #fff;
 		box-shadow: 0 2upx 10upx rgba(0, 0, 0, 0.06);
 		z-index: 10;
-
+		.nav-item-twoCategory {
+			position: absolute;
+			background-color: #fff;
+			top: 82upx;
+			right: 0upx;
+			width: 100%;
+			.twoCategory-title {
+				color: #999999;
+				width: 100%;
+				font-size: 22upx;
+				line-height: 50upx;
+				letter-spacing: 2upx;
+			}
+			.twoCategory-list {
+				display: flex;
+				justify-content: flex-start;
+				flex-wrap: wrap;
+				color: #333;
+				padding: 40upx 26upx;
+				width: 100%;
+				.twoCategory-item {
+					font-size: 26upx;
+					padding: 10upx 25upx;
+					margin: 15rpx 15rpx 15rpx 0;
+					background-color: #F5F5F5;
+					color: #666666;
+					letter-spacing: 2upx;
+					border-radius: 10upx;
+				}
+				.twoCategory-item-select {
+					background-color: #DDEFFF;
+					color: #49A2F2;
+				}
+			}
+			.twoCategory-btn {
+				display: flex;
+				border-top: 1upx solid #f5f5f5;
+				font-size: 32upx;
+				align-items: center;
+				text-align: center;
+				button {
+					&::after {
+						border: none;
+					}
+				}
+				.reset {
+					border-right: 1upx solid #f5f5f5;
+					color: #666;
+					background-color: #fff;
+					width: 30%;
+				}
+				.submit {
+					color: #39a9ff;
+					background-color: #fff;
+					width: 70%;
+				}
+			}
+		}
 		.nav-item {
 			flex: 1;
 			display: flex;
@@ -435,32 +530,6 @@
 					width: 120upx;
 					height: 0;
 					border-bottom: 4upx solid #08affe;
-				}
-			}
-		}
-		.nav-item-twoCategory {
-			position: absolute;
-			background-color: #fff;
-			top: 85upx;
-			right: 0upx;
-			width: 100%;
-			border-radius: 15upx;
-			.twoCategory-list {
-				display: flex;
-				justify-content: flex-start;
-				flex-wrap: wrap;
-				color: #333;
-				padding: 40upx 20upx;
-				border-radius: 15upx;
-				box-shadow: 5upx 5upx 5upx #999;
-				width: 100%;
-				.twoCategory-item {
-					padding: 10upx 25upx;
-					margin: 0 15upx 15upx 0;
-					background-color: rgba(57,169,255, 0.1);
-					color: #39A9ff;
-					letter-spacing: 2upx;
-					border-radius: 15upx;
 				}
 			}
 		}

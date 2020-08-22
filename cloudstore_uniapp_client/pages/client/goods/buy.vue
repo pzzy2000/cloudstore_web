@@ -416,6 +416,10 @@
 				})
 			},
 			payMent(res) { //调起微信支付
+				uni.showLoading({
+					title:'正在支付',
+					icon: 'none'
+				})
 				var that = this;
 				let vxBuyInfo = res.result;
 				//微信支付
@@ -429,6 +433,7 @@
 					paySign: vxBuyInfo.paySign, //签名，具体签名方案参见 微信小程序支付文档
 					success: function(res) {
 						if (res.errMsg === 'requestPayment:ok') {
+							uni.hideLoading();
 							that.paySuccess(that.orderId)
 							uni.showModal({
 								title: '提示',
@@ -445,6 +450,7 @@
 						}
 					},
 					fail: function(err) {
+						uni.hideLoading();
 						uni.showModal({  
 							content: "支付失败",  
 							showCancel: false,

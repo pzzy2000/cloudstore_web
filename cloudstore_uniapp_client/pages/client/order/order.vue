@@ -14,7 +14,7 @@
 		
 		<!-- 订单列表 -->
 		<view v-for="(item,index) in orderList" :key="index" class="order-item" v-if="orderList.length != 0">
-			<view class="i-top b-b">
+			<view class="i-top">
 				<text class="time">订单号: {{item.number}}</text>
 				<template>
 					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
@@ -115,7 +115,7 @@
 			</template>
 		</view>
 		
-		<view class="earning-empty" v-else>
+		<view class="earning-empty" v-if="!orderList.length">
 			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
 			<view class="earning-empty-text">暂无订单哦</view>
 		</view>

@@ -31,7 +31,7 @@
 					<view class="" v-else-if="item.status === 2">审核拒绝</view>
 				</view>
 			</view>
-			<view class="i-top b-b">
+			<view class="i-top">
 				<text class="time">订单时间: {{item.orderBean.createTime}}</text>
 			</view>
 			<!-- <template> -->
