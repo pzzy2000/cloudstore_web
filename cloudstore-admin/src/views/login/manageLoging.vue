@@ -36,6 +36,12 @@
           </span>
           </el-input>
         </el-form-item>
+        <el-form-item>
+          <el-select v-model="loginForm['bean.logintype']" placeholder="请选择身份" clearable style="width: 100%">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item style="text-align: center">
           <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
             登录
@@ -95,7 +101,7 @@
         loginForm: {
           'bean.access': '',
           'bean.password': '',
-          'bean.logintype': 'platform',
+          'bean.logintype': '',
           'bean.action': 'password'
         },
         loginRules: {
@@ -106,7 +112,8 @@
         pwdType: 'password',
         // login_center_bg,
         dialogVisible:false,
-        supportDialogVisible:false
+        supportDialogVisible:false,
+        options: [{value: 'platform', label: '管理员'}, {value: 'manager', label: '平台用户'}]
       }
     },
     created() {

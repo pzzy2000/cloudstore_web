@@ -52,7 +52,9 @@ export default {
         break;
       case 'agent': this.userType = "代理商";
         break;
-      case 'platform': this.userType = "平台";
+      case 'platform': this.userType = "管理员";
+        break;
+      case 'manager': this.userType = "平台用户";
         break;
     }
     this.userAccont = localStorage.getItem('userAccont');

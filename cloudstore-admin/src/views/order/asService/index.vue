@@ -31,6 +31,9 @@
 <!--            <el-input style="width: 214px" v-model="searchList.count" placeholder="用户账号"></el-input>-->
             <remoteCom v-model="pageList.clientIds" ref="clearInput" url="/manage/search/client/search" @tochild="tochild"></remoteCom>
           </el-form-item>
+          <el-form-item label="订单信息：" prop="count">
+            <remoteCom v-model="pageList.orderId" ref="clearInputTwo" url="/manage/search/order/search" @tochild="tochildTwo"></remoteCom>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -190,6 +193,10 @@
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`用户账号：${item.phone} / 用户名称：${item.name}`);
       },
+      tochildTwo(item, callback){
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`订单编号：${item.number}`);
+      },
       showMsg(row, col) {
         switch (col.property) {
           case "number":{
@@ -201,7 +208,7 @@
           }
           case "userphone":{
             try {
-              return row.orderBean.clientAddressBean.phone
+              return row.clientBean.phone
             }catch (e) {
               return '数据读取错误'
             }
