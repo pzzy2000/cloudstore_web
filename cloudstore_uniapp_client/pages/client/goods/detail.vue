@@ -1,6 +1,7 @@
 <template>
 	<view class="container">
 		<nav-bar backState="1000" fontColor="#000" bgColor="#fff" class="nav-title">商品详情</nav-bar>
+		<!-- <text class="number-tip">该商品已售空我们会尽快补货哦，明天再来吧~</text> -->
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
 				<swiper-item class="swiper-item" v-for="(item, index) in swiperImgList" :key="index">
@@ -53,7 +54,7 @@
 		<view class="detail-desc">
 			<view class="detail-desc">
 			    <view class="d-header"><text>售后说明</text></view>
-			    <view class="ricetext">
+			    <view class="ricetext returnRule">
 					<rich-text :nodes="returnRule.desc"></rich-text>
 			    </view>
 			</view>
@@ -599,6 +600,19 @@ export default {
 .icon-you {
 	font-size: $font-base + 2upx;
 	color: #888;
+}
+.number-tip {
+	position: fixed;
+	top: 135upx;
+	z-index: 2;
+	width: 100%;
+	height: 70upx;
+	line-height: 70upx;
+	text-align: center;
+	background-color: #3BA9FF;
+	color: #fff;
+	font-size: 28upx;
+	letter-spacing: 2upx;
 }
 .carousel {
 	height: 722upx;
@@ -1195,9 +1209,13 @@ export default {
   }
  }
  .ricetext {
-  width: 100%;
+  margin: 0 auto;
   text-align: justify;
   font-size: 17upx;
+ }
+ .returnRule {
+	width: 100%;
+	overflow: hidden;
  }
 }
 .price-explain {

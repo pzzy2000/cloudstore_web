@@ -2,8 +2,8 @@
 	<view>
 		<nav-bar backState="1000" fontColor="#000" bgColor="#fff" class="nav-title">活动详情</nav-bar>
 		<view class="activity-main">
-			<image :src="navImg" mode="" class="activity-img"></image>
-			<view class="goods-list">
+			<image :src="navImg" mode="widthFix" class="activity-img"></image>
+			<view class="goods-list" v-if="goodsList.length">
 				<view v-for="(goods, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
 					<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 					<view class="goods-detail">
@@ -178,25 +178,24 @@
 
 <style lang="scss" scoped>
 	.activity-main {
-		position: relative;
 		height: 100%;
 		width: 100%;
 	}
 	.activity-img {
 		width: 100%;
-		height: 1000upx;
+		position: relative;
 	}
 	/* 商品列表 */
 	.goods-list {
 		position: absolute;
-		top: 700upx;
 		display: flex;
 		flex-wrap: wrap;
 		width: 100%;
-		margin: 0 auto;
 		padding: 0 20upx 40upx;
 		min-height: 50%;
-		background-image: linear-gradient(180deg, #ed6145, #E22C49, #E22C49, #E22C49);
+		margin-top: -80upx;
+		background-color: #bf151e;
+		// background-image: linear-gradient(180deg, #ed6145, #E22C49, #E22C49, #E22C49);
 		.goods-item {
 			display: flex;
 			flex-direction: column;

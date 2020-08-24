@@ -13,7 +13,7 @@ export default {
 		search: 'esProduct/search', //综合搜索、筛选、排序
 	},
 	areas:{
-		province:'sys/dict/list',
+		province:'app/public/sys/dict/list',
 	},
 	finance: {
 		get: 'app/private/finance/get',
@@ -154,6 +154,9 @@ export default {
 		}
 		//获取状态栏的高度
 		//整个导航栏加状态栏的高度
+	},
+	getSystemInfoSync () {
+		return uni.getSystemInfoSync()
 	},
 	ishareAmount(data){ //计算分享出去的商品能挣多少钱
 		var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
