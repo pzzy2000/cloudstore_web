@@ -37,11 +37,11 @@ service.interceptors.response.use(
     const res = response.data
     // if (res.result.code !== 200)
     if (res.result.code !== 0) {
-      Message({
-        message: res.result.msg,
-        type: 'error',
-        duration: 3 * 1000
-      })
+      // Message({
+      //   message: res.result.msg,
+      //   type: 'error',
+      //   duration: 3 * 1000
+      // })
 
       // 401:未登录;
       if (res.result.code == -2) {
@@ -68,11 +68,11 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 3 * 1000
-    })
+    // Message({
+    //   message: error.message,
+    //   type: 'error',
+    //   duration: 3 * 1000
+    // })
     return Promise.reject(error)
   }
 )
