@@ -19,7 +19,7 @@
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<view class="titleNview-background"></view>
-			<swiper class="carousel" circular @change="swiperChange">
+			<swiper class="carousel" circular @change="swiperChange" :style="{ height:carouselHeight+'px' }">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item">
 					<image :src="item.piceUrl" @click="toUrl(item)"/>
 				</swiper-item>
@@ -117,6 +117,8 @@
 		},
 		data() {
 			return {
+				screenWidth: '',
+				carouselHeight: '',
 				TabCur: 0,
 				scrollLeft: 0,
 				agentId: '',
@@ -182,6 +184,8 @@
 			this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 		},
 		onShow() {
+			this.screenWidth = Api.getSystemInfoSync().screenWidth * 0.94
+			this.carouselHeight = parseInt(parseInt(this.screenWidth) / 1.8)
 			this.getLocation()
 			this.shareAmount()
 			uni.removeStorageSync('goodsInfo');
@@ -349,7 +353,6 @@
 			},
 			//详情页
 			navToDetailPage(item) {
-				console.log(item)
 				//测试数据没有写id，用title代替
 				let goodsId = item.goodsId;
 				let activitId = item.activityId;

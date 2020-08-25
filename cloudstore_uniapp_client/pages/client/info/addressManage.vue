@@ -233,7 +233,6 @@
 			  }
 			  let addressinfo = await Api.apiCall('post',Api.client.address.getClientAddressById,params, true) 
 			  if (addressinfo) {
-				  console.log(addressinfo.result)
 				this.addressData.id = addressinfo.result.id
 			    this.addressData.name = addressinfo.result.name,
 			    this.addressData.phone = addressinfo.result.phone

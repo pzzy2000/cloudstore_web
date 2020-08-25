@@ -39,7 +39,6 @@
 			navBar
 		},
 		onLoad(option){
-			console.log(option.source);
 			this.source = option.source;
 			this.searchAddressList();
 		},
@@ -74,7 +73,6 @@
 				}
 			},
 			addAddress(type, id){
-				console.log(type,id)
 				uni.navigateTo({
 					url: '/pages/client/info/addressManage?type='+type+'&id='+id
 				});
@@ -85,7 +83,6 @@
 				};
 				let list = await Api.apiCall('post', Api.client.address.deleteAddress, params);
 				if (list) {
-					console.log(list)
 					if (list.code === 0) {
 						this.$api.msg('删除成功');
 						this.searchAddressList()

@@ -14,7 +14,7 @@
 						<view class="class-item">
 							<view class="item-container">
 								<view class="thumb-box" v-for="(item2, index1) in categoryList" :key="index1" @click="toReclassify(item2,index1)">
-									<image class="item-menu-image" :src="item2.pic" mode=""></image>
+									<image class="item-menu-image" :src="item2.pic" mode="aspectFit" :fade-show="false" lazy-load="false"></image>
 									<view class="item-menu-name">{{item2.text}}</view>
 								</view>
 							</view>

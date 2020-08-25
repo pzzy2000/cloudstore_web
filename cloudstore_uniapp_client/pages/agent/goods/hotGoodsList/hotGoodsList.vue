@@ -6,7 +6,7 @@
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 			<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">{{activitName}}</view>
 			<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">综合排序</view>
-			<view class="nav-item" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">筛选</view>
+			<view class="nav-item cuIcon-filter" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">筛选</view>
 			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
 			<view class="nav-item-twoCategory" v-if="isTwoCategory">
 				<view class="twoCategory-list">
@@ -269,12 +269,16 @@
 				}
 			},
 			twoCategoryReset () { //重置活动分类
+				this.pageNum = 1
 				this.selectTwoCategoryArray.length = 0
 				for (let tmp in this.selectTwoCategoryList) {
 					this.selectTwoCategoryList[tmp].select = false
 				}
+				this.isTwoCategory = false
+				this.loadData('initialize')
 			},
 			twoCategorySubmit () {//点击确定筛选活动分类
+				this.pageNum = 1
 				this.categoryTwoId = this.selectTwoCategoryArray.join()
 				this.isTwoCategory = !this.isTwoCategory
 				this.loadData()
