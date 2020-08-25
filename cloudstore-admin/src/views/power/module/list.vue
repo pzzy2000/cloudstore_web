@@ -7,26 +7,14 @@
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="list" style="width:100%" v-loading="listLoading" border>
         <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
-        <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
-
-        <el-table-column label="模块名字" align="center" fixed>
+        <el-table-column type="selection" width="60px" align="center"></el-table-column>
+        <el-table-column label="模块名字" align="center" width="400">
           <template slot-scope="scope">{{scope.row.module}}</template>
         </el-table-column>
-
-        <el-table-column label="功能" align="center" fixed>
-          <template slot-scope="scope">{{scope.row.name}}</template>
-        </el-table-column>
-        <el-table-column label="模块KEY" align="center">
-          <template slot-scope="scope">{{scope.row.key}}</template>
-        </el-table-column>
-        <el-table-column label="aiaxurl" align="center">
-          <template slot-scope="scope">{{scope.row.ajaxul}}</template>
-        </el-table-column>
-        <el-table-column label="url" align="url">
-          <template slot-scope="scope">{{scope.row.url}}</template>
-        </el-table-column>
-        <el-table-column label="模块所属类型" align="center">
-          <template slot-scope="scope">{{scope.row.moduleType}}</template>
+        <el-table-column label="功能" align="center">
+          <template slot-scope="scope">
+            <span v-for="(item, i) in scope.row.opts" :key="i">{{item.name}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -66,9 +54,6 @@
           total: 1
         }
       },
-      beforeCreate() {
-        that = this;
-      },
       created() {
         this.getList();
       },
@@ -107,18 +92,6 @@
           this.pageList.pageNum = 1;
           this.pageList.pageSize = val;
           this.getList();
-        },
-        readOrder(index, row){
-          let obj = this.orderList[index];
-          console.log(obj)
-          this.$router.push({name: "read_order", params: {id: row.id, obj: obj}});
-        },
-        handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then(() => {
-              done();
-            })
-            .catch(() => {});
         }
       }
     }

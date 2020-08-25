@@ -36,7 +36,7 @@
 <!--            <el-input style="width: 214px" v-model="listQuery.phone" placeholder="代理商电话" clearable></el-input>-->
 <!--          </el-form-item>-->
           <el-form-item label="开始时间：">
-            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择开始时间"></el-date-picker>
+            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable type="date" placeholder="请选择开始时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="结束时间：">
             <el-date-picker v-model="listQuery.endsTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择结束时间"></el-date-picker>
@@ -263,6 +263,10 @@
           console.log(key, keyPath);
         },
         handleSearchList() {
+          if (this.listQuery.endsTime !== '' && this.listQuery.endsTime !== undefined) {
+            let str = this.listQuery.endsTime.substr(0, 10);
+            this.listQuery.endsTime = str + ' 23:59:59';
+          }
           this.listQuery.pageNum = 1;
           this.getList(0);
         },

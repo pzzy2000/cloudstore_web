@@ -137,6 +137,7 @@
             //   return;
             // }
             this.loading = true;
+            console.log(this.$store.dispatch``)
             this.$store.dispatch('Login', this.loginForm).then(() => {
               this.loading = false;
               setCookie("username",'xxooxx',15);

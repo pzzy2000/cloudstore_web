@@ -72,26 +72,27 @@
         rules: {
           leader: [
             { required: true, message: '请输入团长佣金', trigger: 'blur' },
-            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,小于10，小数点后2位' }
+            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+            // { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,小于10，小数点后2位' }
           ],
           agent: [
             { required: true, message: '请输入代理佣金', trigger: 'blur' },
-            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,或者小于10，小数点后2位' }
+            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ],
           client: [
             { required: true, message: '请输入客户佣金', trigger: 'blur' },
-            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数，或者小于10，小数点后2位' }
-            ],
+            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+          ],
           clientShare: [
             { required: true, message: '请输入客户分享积分', trigger: 'blur' },
-            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数，或者小于10，小数点后2位' }],
+            { pattern: /^[0-9]{0,4}$|^[0-9]{0,4}(\.[0-9]{1,2})?$/, message: '小于10000，小数点后2位的整数或小数' }],
           clientPoints: [
             { required: true, message: '请输入客户购买积分', trigger: 'blur' },
-            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,或者小于10，小数点后2位' }
+            { pattern: /^[0-9]{0,4}$|^[0-9]{0,4}(\.[0-9]{1,2})?$/, message: '小于10000，小数点后2位的整数或小数' }
           ],
           delivery: [
             { required: true, message: '请输入配送金额', trigger: 'blur' },
-            { pattern: /^[0-9]{0,1}$|^[0-9]{0,1}(\.[0-9]{1,2})?$/, message: '整数,或者小于10，小数点后2位' }
+            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ]
         }
       }

@@ -27,7 +27,7 @@
             <el-input style="width: 214px" v-model="pageList.phone" placeholder="客户电话" clearable></el-input>
           </el-form-item>
           <el-form-item label="开始时间：">
-            <el-date-picker v-model="pageList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择开始时间"></el-date-picker>
+            <el-date-picker v-model="pageList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable type="date" placeholder="请选择开始时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="结束时间：">
             <el-date-picker v-model="pageList.endsTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择结束时间"></el-date-picker>
@@ -173,6 +173,10 @@
         this.getList(1);
       },
       handleSearchList() {
+        if (this.pageList.endsTime !== '' && this.pageList.endsTime !== undefined) {
+          let str = this.pageList.endsTime.substr(0, 10);
+          this.pageList.endsTime = str + ' 23:59:59';
+        }
         this.pageList.pageNum = 1;
         this.getList(0);
       },

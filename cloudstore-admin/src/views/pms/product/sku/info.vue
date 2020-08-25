@@ -296,7 +296,6 @@
         }).then(() => {
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              console.log("++++++++++++++")
               this.updateGoodsProperties1();
             } else {
               this.$message({
@@ -340,7 +339,7 @@
               let arr = response.result.msg.split(",");
               this.warnList = arr;
               this.$message({
-                message: response.result.msg + '重复了',
+                message: 'SKU编号[' + response.result.msg + ']重复了',
                 type: 'error',
                 duration: 2000
               })

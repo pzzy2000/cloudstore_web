@@ -37,7 +37,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="结束时间：" prop="code">
-            <el-date-picker v-model="pageList.endsTime" sformat="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" type="date" :picker-options="endDatePicker" placeholder="选择日期" clearable>
+            <el-date-picker v-model="pageList.endsTime" sformat="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" :picker-options="endDatePicker" placeholder="选择日期" clearable>
             </el-date-picker>
           </el-form-item>
           <el-form-item label="订单状态：" prop="orderstatus">
@@ -290,6 +290,10 @@
         //   this.pageList.endTime = this.pageList.endTime + ' ' + "23:59:59";
         // }
         // console.log(this.pageList);
+        if (this.pageList.endsTime !== '' && this.pageList.endsTime !== undefined) {
+          let str = this.pageList.endsTime.substr(0, 10);
+          this.pageList.endsTime = str + ' 23:59:59';
+        }
         this.pageList.pageNum = 1;
         this.getList(0);
       },

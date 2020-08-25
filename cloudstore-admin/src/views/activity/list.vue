@@ -24,7 +24,7 @@
             <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称" clearable></el-input>
           </el-form-item>
           <el-form-item label="开始时间：">
-            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>
+            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>
           </el-form-item>
           <el-form-item label="结束时间：">
             <el-date-picker v-model="listQuery.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动结束时间"></el-date-picker>
@@ -238,6 +238,10 @@
         });
       },
       handleSearchList() {
+        if (this.listQuery.endTime !== '' && this.listQuery.endTime !== undefined) {
+          let str = this.listQuery.endTime.substr(0, 10);
+          this.listQuery.endTime = str + ' 23:59:59';
+        }
         if (this.listQuery.isDelete == '') {
           delete this.listQuery.isDelete;
         }

@@ -13,34 +13,48 @@
           <el-table-column label="团长佣金" align="center">
             <template slot-scope="scope">
               <el-form-item :prop="'skuStockList.' + scope.$index + '.leader'" :rules='rules.leader'>
-                <el-input v-model.number="scope.row.leader" oninput="value=value.replace(/[^\d]/g,'')" @blur="warnMsg(scope.$index, scope.row)"></el-input>
+                <el-input v-model="scope.row.leader"></el-input>
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column label="代理佣金" align="center">
             <template slot-scope="scope">
               <el-form-item :prop="'skuStockList.' + scope.$index + '.agent'" :rules='rules.agent'>
-                <el-input v-model.number="scope.row.agent" oninput="value=value.replace(/[^\d]/g,'')" @blur="warnMsg(scope.$index, scope.row)"></el-input>
+                <el-input v-model="scope.row.agent"></el-input>
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column label="客户佣金" align="center">
             <template slot-scope="scope">
               <el-form-item :prop="'skuStockList.' + scope.$index + '.client'" :rules='rules.client'>
-                <el-input v-model.number="scope.row.client" oninput="value=value.replace(/[^\d]/g,'')" @blur="warnMsg(scope.$index, scope.row)"></el-input>
+                <el-input v-model="scope.row.client"></el-input>
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column label="积分" align="center">
+          <el-table-column label="客户分享积分" align="center">
+            <template slot-scope="scope">
+              <el-form-item :prop="'skuStockList.' + scope.$index + '.sharePoints'" :rules='rules.sharePoints'>
+                <el-input v-model="scope.row.sharePoints"></el-input>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column label="客户购买积分" align="center">
             <template slot-scope="scope">
               <el-form-item :prop="'skuStockList.' + scope.$index + '.clientPoints'" :rules='rules.clientPoints'>
-                <el-input v-model.number="scope.row.clientPoints" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                <el-input v-model="scope.row.clientPoints"></el-input>
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column>
-            <template slot-scope="scope"><span style="color: #ca0400">{{scope.row.warnMsg}}</span></template>
+          <el-table-column label="配送金额" align="center">
+            <template slot-scope="scope">
+              <el-form-item :prop="'skuStockList.' + scope.$index + '.delivery'" :rules='rules.delivery'>
+                <el-input v-model="scope.row.delivery"></el-input>
+              </el-form-item>
+            </template>
           </el-table-column>
+<!--          <el-table-column>-->
+<!--            <template slot-scope="scope"><span style="color: #ca0400">{{scope.row.warnMsg}}</span></template>-->
+<!--          </el-table-column>-->
         </el-table>
       </div>
     </el-form>
@@ -97,10 +111,29 @@
         productAttributeCategoryOptions: {
         },
         rules: {
-          leader: [{ required: true, message: '请输入团长佣金', trigger: 'blur' }],
-          agent: [{ required: true, message: '请输入代理佣金', trigger: 'blur' }],
-          client: [{ required: true, message: '请输入客户佣金', trigger: 'blur' }],
-          clientPoints: [{ required: true, message: '请输入积分', trigger: 'blur' }]
+          leader: [
+            { required: true, message: '请输入团长佣金', trigger: 'blur' },
+            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+          ],
+          agent: [
+            { required: true, message: '请输入代理佣金', trigger: 'blur' },
+            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+          ],
+          client: [
+            { required: true, message: '请输入客户佣金', trigger: 'blur' },
+            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+          ],
+          clientShare: [
+            { required: true, message: '请输入客户分享积分', trigger: 'blur' },
+            { pattern: /^[0-9]{0,4}$|^[0-9]{0,4}(\.[0-9]{1,2})?$/, message: '小于10000，小数点后2位的整数或小数' }],
+          clientPoints: [
+            { required: true, message: '请输入客户购买积分', trigger: 'blur' },
+            { pattern: /^[0-9]{0,4}$|^[0-9]{0,4}(\.[0-9]{1,2})?$/, message: '小于10000，小数点后2位的整数或小数' }
+          ],
+          delivery: [
+            { required: true, message: '请输入配送金额', trigger: 'blur' },
+            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+          ]
         }
       }
     },
@@ -110,24 +143,25 @@
     },
     methods: {
       updateGoodsProperties(formName) {
-        console.log(this.goodsku.skuStockList);
-        let onoff = true;
-        let arr = []
-        for (let i=0; i<this.goodsku.skuStockList.length; i++) {
-          if (this.goodsku.skuStockList[i].warnMsg !== '' && this.goodsku.skuStockList[i].warnMsg !== undefined) {
-            arr.push(i);
-          }
-        }
-        console.log(arr)
-        if (arr.length !== 0){
-          onoff = false;
-          arr = []
-        }else{
-          onoff = true;
-          arr = []
-        }
+        // console.log(this.goodsku.skuStockList);
+        // let onoff = true;
+        // let arr = []
+        // for (let i=0; i<this.goodsku.skuStockList.length; i++) {
+        //   if (this.goodsku.skuStockList[i].warnMsg !== '' && this.goodsku.skuStockList[i].warnMsg !== undefined) {
+        //     arr.push(i);
+        //   }
+        // }
+        // console.log(arr)
+        // if (arr.length !== 0){
+        //   onoff = false;
+        //   arr = []
+        // }else{
+        //   onoff = true;
+        //   arr = []
+        // }
         this.$refs[formName].validate((valid) => {
-          if (valid && onoff) {
+          // if (valid && onoff) {
+          if (valid) {
             this.$confirm('确定要提交吗?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
@@ -186,25 +220,25 @@
         });
 
       },
-      warnMsg(index, row) {
-        let num;
-        // this.goodsku.skuStockList[index].warnMsg == "不能超过30哦";
-        if (this.goodsku.skuStockList[index].leader == '') {
-          num = this.goodsku.skuStockList[index].agent + this.goodsku.skuStockList[index].client;
-        }else if (this.goodsku.skuStockList[index].agent == '') {
-          num = this.goodsku.skuStockList[index].leader + this.goodsku.skuStockList[index].client
-        }else if (this.goodsku.skuStockList[index].client == '') {
-          num = this.goodsku.skuStockList[index].leader + this.goodsku.skuStockList[index].agent
-        }else {
-          num = this.goodsku.skuStockList[index].leader + this.goodsku.skuStockList[index].agent + this.goodsku.skuStockList[index].client;
-        }
-        if (num > 30){
-          this.$set(this.goodsku.skuStockList[index], 'warnMsg', '佣金总和不能超过30哦!');
-        }else{
-          this.$set(this.goodsku.skuStockList[index], 'warnMsg', '');
-        }
-        // this.$forceUpdate();
-      },
+      // warnMsg(index, row) {
+      //   let num;
+      //   // this.goodsku.skuStockList[index].warnMsg == "不能超过30哦";
+      //   if (this.goodsku.skuStockList[index].leader == '') {
+      //     num = this.goodsku.skuStockList[index].agent + this.goodsku.skuStockList[index].client;
+      //   }else if (this.goodsku.skuStockList[index].agent == '') {
+      //     num = this.goodsku.skuStockList[index].leader + this.goodsku.skuStockList[index].client
+      //   }else if (this.goodsku.skuStockList[index].client == '') {
+      //     num = this.goodsku.skuStockList[index].leader + this.goodsku.skuStockList[index].agent
+      //   }else {
+      //     num = this.goodsku.skuStockList[index].leader + this.goodsku.skuStockList[index].agent + this.goodsku.skuStockList[index].client;
+      //   }
+      //   if (num > 30){
+      //     this.$set(this.goodsku.skuStockList[index], 'warnMsg', '佣金总和不能超过30哦!');
+      //   }else{
+      //     this.$set(this.goodsku.skuStockList[index], 'warnMsg', '');
+      //   }
+      //   // this.$forceUpdate();
+      // },
       backPage() {
         this.$router.back();
       }

@@ -32,13 +32,13 @@ export function fetchActivityGoodsList(params) {
   	  })
   	}
 
-	export function addActivity(params) {
-	  return request({
-	    url: '/activity/save',
-	    method: 'POST',
-	    data: switchForm(params)
-	  })
-	}
+export function addActivity(params) {
+  return request({
+    url: '/activity/save',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
 
 export function fetchAllgoods(params) {
 	  return request({
