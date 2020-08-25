@@ -64,3 +64,11 @@ export function isUnlink(params) {
     data: switchForm(params)
   })
 }
+
+export function saveChecked(params) {
+  return request({
+    url: 'com/module/relation/save',
+    method: "POST",
+    data: params
+  })
+}

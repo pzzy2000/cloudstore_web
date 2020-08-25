@@ -58,7 +58,7 @@
         list: [],
         listLoading: false,
         pageList: {},
-        total: 1,
+        // total: 1,
         disabled: false,
         checkList: []
       }
@@ -73,7 +73,7 @@
         fetchRoleModuleList(this.pageList).then(res => {
           if (res.result.code == 0) {
             this.list = res.result.result.records;
-            this.total = parseInt(res.result.result.total);
+            // this.total = parseInt(res.result.result.total);
             for (let i=0; i<this.list.length; i++) {
               for (let j=0; j<this.list[i].opts.length; j++) {
                 if (this.list[i].opts[j].select == 1) {
@@ -116,15 +116,15 @@
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
       },
-      handleCurrentChange(val) {
-        this.pageList.pageNum = val;
-        this.getList();
-      },
-      handleSizeChange(val) {
-        this.pageList.pageNum = 1;
-        this.pageList.pageSize = val;
-        this.getList();
-      },
+      // handleCurrentChange(val) {
+      //   this.pageList.pageNum = val;
+      //   this.getList();
+      // },
+      // handleSizeChange(val) {
+      //   this.pageList.pageNum = 1;
+      //   this.pageList.pageSize = val;
+      //   this.getList();
+      // },
       submit() {
         this.$confirm('是否提交?', '提示', {
           confirmButtonText: '确定',
