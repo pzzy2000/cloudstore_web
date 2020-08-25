@@ -11,7 +11,10 @@
 			</view>
 		</view>
 		<view class="tag-List">
-			<view class="tag-title">历史记录</view>
+			<view class="tag-tit">
+				<view class="tag-record">历史记录</view>
+				<view class="empty-record" @click='record'>清空记录</view>
+			</view>
 			<view class="tag-List-content">
 				<view class="tag-text" v-for="(item,index) in historyList" :key='index' @click.stop="search(item)">
 					{{item}}
@@ -70,6 +73,26 @@
 				uni.navigateTo({
 				    url: "/pages/agent/goods/category/category?goodsName="+this.searchValue
 				});
+			},
+			record () {
+				if (this.historyList.length != 0) {
+					uni.showModal({
+						title: '提示',
+						content: '确认删除搜索历史',
+						showCancel: true,
+						cancelText: '取消',
+						confirmText: '确定',
+						success: res => {
+							if(res.confirm) {
+								uni.removeStorageSync('searchHistory')
+								this.historyList = []
+							}else if (res.cancel) {
+							}
+						},
+					});
+				} else {
+					this.$api.msg('您还没有搜索记录哦')
+				}
 			}
 		}
 	}
@@ -93,8 +116,22 @@
 		margin: 0;
 	}
 	.tag-List {
-		padding: 30upx 30upx 0;
+		padding: 30upx 50upx  0  30upx;
 		width: 100%;
+		.tag-tit {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20upx;
+			.tag-record {
+				color: #666666;
+				font-size: 26upx;
+			}
+			.empty-record {
+				font-size: 20upx;
+				color: #ff0000;
+			}
+		}
 		.tag-title {
 			margin-bottom: 20upx;
 			color: #666666;

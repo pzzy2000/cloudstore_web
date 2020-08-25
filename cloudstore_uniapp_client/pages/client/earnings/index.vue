@@ -15,7 +15,7 @@
 			</view>
 		</view>
 		<view class="earning-empty" v-if='financetDataList.length === 0'>
-			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
+			<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
 			<view class="earning-empty-text">您还没有任何收益记录哦！</view>
 				<button type="default" class="earning-empty-btn" @click="toCategory">我要下单赚收益</button>
 		</view>
@@ -197,7 +197,7 @@
 				},
 				toCategory(){
 					uni.switchTab({
-						url: '/pages/agent/goods/category/category'
+						url: '/pages/agent/goods/category/mallmenu'
 					})
 				}
 			}

@@ -21,7 +21,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="goods-list">
+		<!-- 商品列表 -->
+		<view class="goods-list" v-if='goodsList.length != 0'>
 			<view v-for="(goods, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
 				<view class="image-wrapper"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
 				<view class="goods-detail">
@@ -46,6 +47,11 @@
 				</view>
 			</view>
 		</view>
+		<!-- 没有商品的显示 -->
+		<view class="earning-empty" v-else>
+			<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
+			<view class="earning-empty-text">暂无活动的商品哦！</view>
+		</view>
 		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask"
 		 :style="[{'padding-top': statusBarHeight+'px'}]">
 			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
@@ -69,7 +75,7 @@
 				@change="typeChange"
 			></tui-cascade-selection>
 		</uni-popup>
-    <share ref="share" :contentHeight="580" :shareList="shareList"></share>
+		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 	</view>
 </template>
 
@@ -199,7 +205,7 @@
 					categoryTwoIds_: this.categoryTwoId,
 					categoryThreeId: this.categoryThreeId
 				};
-				let list = await Api.apiCall('post', Api.agent.hot.hotList, params);
+				let list = await Api.apiCall('post', Api.agent.hot.hotList, params, true);
 				if (list) {
 					let goodsList = list.result.records;
 					if (type === 'next') {
@@ -239,7 +245,7 @@
 					pageNum: '1',
 					parentId: 0
 				};
-				let list = await Api.apiCall('post', Api.agent.category.list, params);
+				let list = await Api.apiCall('post', Api.agent.category.list, params, true);
 				if (list) {
 					for (let tmp in list.result.records) {
 						this.itemList.push({
@@ -303,7 +309,7 @@
 					pageNum: '1',
 					parentId: e.value
 				};
-				let list = await Api.apiCall('post', Api.agent.category.list, params);
+				let list = await Api.apiCall('post', Api.agent.category.list, params, true);
 				if (list) {
 					if (list.code === 0 && list.result.total != 0) {
 						for (let tmp in list.result.records) {
@@ -397,7 +403,7 @@
 						'shareId': this.shareClientId || '-1',
 						'type': ''
 					} 
-					let data = await Api.apiCall('post', Api.agent.share.save, params);
+					let data = await Api.apiCall('post', Api.agent.share.save, params, true);
 					if (data) {
 						uni.hideLoading() 
 						if (data.code === 0) {
@@ -756,6 +762,24 @@
 					margin-right: 10upx;
 				}
 			}
+		}
+	}
+	.earning-empty {
+		padding-top: 100upx;
+		.earning-logo {
+			width: 300upx;
+			height: 180upx;
+			margin: 0 auto;
+			display: block;
+		}
+		.earning-empty-text {
+			color: #999999;
+			font-size: 30upx;
+			white-space: 5upx;
+			line-height: 150upx;
+			width: 100%;
+			text-align: center;
+			display: block;
 		}
 	}
 </style>

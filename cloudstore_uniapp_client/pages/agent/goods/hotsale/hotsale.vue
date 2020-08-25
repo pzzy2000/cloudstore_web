@@ -19,7 +19,7 @@
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<view class="titleNview-background"></view>
-			<swiper class="carousel" circular @change="swiperChange" :style="{ height:carouselHeight+'px' }">
+			<swiper class="carousel" circular :autoplay='true' :interval="3000" @change="swiperChange" :style="{ height:carouselHeight+'px' }">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item">
 					<image :src="item.piceUrl" @click="toUrl(item)"/>
 				</swiper-item>
@@ -92,7 +92,7 @@
 						<view class="detail-bottom">
 							<view class="price">
 								<text class="price-sale price-symbol">{{goods.goodsPicesBean.salePrice}}</text>/{{goods.goodsPicesBean.unit}}
-								<text class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</text>
+								<view class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</view>
 							</view>
 							<view class="cart-icon">购买</view>
 						</view>
@@ -803,7 +803,8 @@
 	padding: 35upx 25upx 0;
 	background-color: #F5F5F5;
 	.goods-item {
-		width: 340upx;
+		// width: 340upx;
+		width: 48%;
 		padding: 18upx;
 		margin-bottom: 30upx;
 		border-radius: 10upx;
@@ -832,18 +833,17 @@
 		}
 	}
 	.detail-img {
-		width:230upx ;
+		width:270upx ;
 		height: 240upx;
 		margin: 0 auto;
 		display: block;
-		margin-bottom: 36upx;
 		image {
 			height: 100%;
 			width: 100%;
 		}
 	}
 	.detail-title {
-		color: #000000;
+		color: #333;
 		font-size: 34upx;
 	}
 	.share-amount {
@@ -869,18 +869,17 @@
 			.price-sale {
 				color: #FF1313 ;
 				font-size: 32upx;
-				margin-right: 5upx;
 				display: flex;
 				align-items: flex-end;
 			}
 			.price-bazaar {
 				color: #BABABA;
-				font-size: 22upx;
+				font-size: 24upx;
 				text-decoration: line-through;
 				display: flex;
 				align-items: flex-end;
-				line-height: 35upx;
 				margin-left: 10upx;
+				margin-top: 5upx;
 			}
 		}
 		.cart-icon {

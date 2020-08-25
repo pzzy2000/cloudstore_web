@@ -10,13 +10,19 @@
 			</view>
 			<view class="navbar">
 				<view class="nav-item" :class="{ current: filterIndex === 0 }" @click.stop="tabClick(0)">推荐</view>
-				<view class="nav-item" :class="{ current: filterIndex === 1 }" @click.stop="tabClick(1)">销量</view>
+				<view class="nav-item" :class="{ current: filterIndex === 1 }" @click.stop="tabClick(1)">
+					<text>销量</text>
+					<view class="p-box">
+						<text :class="{ active: quantityOrder === 1 && filterIndex === 1 }" class="yticon icon-shang"></text>
+						<text :class="{ active: quantityOrder === 2 && filterIndex === 1 }" class="yticon icon-shang xia"></text>
+					</view>
+				</view>
 				<view class="nav-item" :class="{ current: filterIndex === 2 }" @click.stop="tabClick(2)">
 					<text>价格</text>
-					<!-- <view class="p-box">
+					<view class="p-box">
 						<text :class="{ active: priceOrder === 1 && filterIndex === 2 }" class="yticon icon-shang"></text>
 						<text :class="{ active: priceOrder === 2 && filterIndex === 2 }" class="yticon icon-shang xia"></text>
-					</view> -->
+					</view>
 				</view>
 			</view>
 		</view>
@@ -37,6 +43,10 @@
 					</view>
 				</view>	
 			</view>
+		</view>
+		<view class="earning-empty" v-if='goodsList.length === 0'>
+			<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
+			<view class="earning-empty-text">暂无搜索的商品哦！</view>
 		</view>
 		<!-- 分类筛选组件 -->
 		<view class="cate-mask" :class="cateMaskState === 0 ? 'none' : cateMaskState === 1 ? 'show' : ''" @click="toggleCateMask" :style="[{'padding-top': statusBarHeight+'rpx'}]">
@@ -94,7 +104,8 @@
 				loadingType: 'more', //加载更多状态
 				filterIndex: 0,
 				pageNum: 1,
-				priceOrder: 0, //1 价格从低到高 2价格从高到低
+				priceOrder: 1, //1 价格从低到高 2价格从高到低
+				quantityOrder: 1, //1 销量从底到高 2.销量从高到低
 				goodsList: {
 					activityBean: {
 						name: '不参与活动'
@@ -163,14 +174,11 @@
 		methods: {
 			shareAmount () { //处理分享出去的金额
 				for( let i in this.goodsList){
-					this.goodsList.client= Api.ishareAmount(this.goodsList);
+					this.goodsList[i].client= Api.ishareAmount(this.goodsList[i]);
 				}
+				console.log(this.goodsList)
 			},
 			async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
-				uni.showLoading({
-					title: '正在加载',
-					mask: false
-				});
 				if (type === 'initialize') {
 					this.goodsName = ''
 					this.activityId = ''
@@ -179,30 +187,62 @@
 					this.categoryThreeId = ''
 					this.receiveData = []
 					this.pageNum = 1;
+					var params = {
+						goodsName: this.goodsName || '',
+						activityId: this.activityId,
+						pageNum: this.pageNum,
+						pageSize: '10',
+						categoryOneId: this.categoryOneId,
+						categoryTwoId: this.categoryTwoId,
+						categoryThreeId: this.categoryThreeId,
+					};
+				} else if (type === 'price') {
+					var params = {
+						goodsName: this.goodsName || '',
+						activityId: this.activityId,
+						pageNum: this.pageNum,
+						pageSize: '10',
+						categoryOneId: this.categoryOneId,
+						categoryTwoId: this.categoryTwoId,
+						categoryThreeId: this.categoryThreeId,
+						dir: 'price',
+						sort: 'desc'
+					};
+				} else if (type === 'quantity'){
+					var params = {
+						goodsName: this.goodsName || '',
+						activityId: this.activityId,
+						pageNum: this.pageNum,
+						pageSize: '10',
+						categoryOneId: this.categoryOneId,
+						categoryTwoId: this.categoryTwoId,
+						categoryThreeId: this.categoryThreeId,
+						dir: 'quantity',
+						sort: 'desc'
+					};
+				} else {
+					var params = {
+						goodsName: this.goodsName || '',
+						activityId: this.activityId,
+						pageNum: this.pageNum,
+						pageSize: '10',
+						categoryOneId: this.categoryOneId,
+						categoryTwoId: this.categoryTwoId,
+						categoryThreeId: this.categoryThreeId,
+					};
 				}
-				var params = {
-					goodsName: this.goodsName || '',
-					activityId: this.activityId,
-					pageNum: this.pageNum,
-					pageSize: '10',
-					categoryOneId: this.categoryOneId,
-					categoryTwoId: this.categoryTwoId,
-					categoryThreeId: this.categoryThreeId,
-				};
 				let list = await Api.apiCall('post', Api.agent.goods.list, params,true);
 				if (list) {
 					let goodsList = list.result.records;
 					this.isGoodsList = true
 					if (type === 'next') {
 						if (goodsList.length === 0) {
-							uni.hideLoading()
 							this.$api.msg('没有更多了')
+							this.pageNum = this.pageNum - 1 
 						}
 						this.goodsList = this.goodsList.concat(goodsList);
-						uni.hideLoading()
 					}else{
 						this.goodsList = goodsList;
-						uni.hideLoading()
 					}
 					this.shareAmount()
 					uni.stopPullDownRefresh()
@@ -215,7 +255,6 @@
 				};
 				let list = await Api.apiCall('post', Api.agent.category.list, params);
 				if (list) {
-					console.log(list.result.records)
 					for (let tmp in list.result.records) {
 						this.itemList.push({
 							text: list.result.records[tmp].name,
@@ -261,14 +300,16 @@
 				if (index === 1) {
 					this.filterIndex = 1
 					this.pageNum = 1;
-					this.loadData();
+					this.quantityOrder = this.quantityOrder === 1 ? 2 : 1
+					this.loadData('quantity');
 				}
 				if (index === 2) {
 					// this.filterIndex = 2
 					// this.$refs.popup.open()
 					this.filterIndex = 2
 					this.pageNum = 1;
-					this.loadData();
+					this.priceOrder = this.priceOrder === 1 ? 2 : 1 
+					this.loadData('price');
 				}
 				uni.pageScrollTo({
 					duration: 300,
@@ -431,7 +472,7 @@ page,
 			font-size: 26upx;
 			color: #888;
 			&.active {
-				color: $base-color;
+				color: #08affe;
 			}
 		}
 		.xia {
@@ -666,13 +707,32 @@ page,
 				height: 40upx;
 				line-height: 40upx;
 				margin-right: 20upx;
-				letter-spacing: 4upx;
+				letter-spacing: 2upx;
+				width: 180upx;
 				background-image: linear-gradient(90deg, #FECE40, #FE8E18);
 				&::after {
 					border: none;
 				}
 			}
 		}
+	}
+}
+.earning-empty {
+	padding-top: 100upx;
+	.earning-logo {
+		width: 300upx;
+		height: 180upx;
+		margin: 0 auto;
+		display: block;
+	}
+	.earning-empty-text {
+		color: #999999;
+		font-size: 30upx;
+		white-space: 5upx;
+		line-height: 150upx;
+		width: 100%;
+		text-align: center;
+		display: block;
 	}
 }
 </style>

@@ -153,7 +153,7 @@
 						'shareId': this.shareClientId || '-1',
 						'type': ''
 					} 
-					let data = await Api.apiCall('post', Api.agent.share.save, params);
+					let data = await Api.apiCall('post', Api.agent.share.save, params, true);
 					if (data) {
 						uni.hideLoading() 
 						if (data.code === 0) {
