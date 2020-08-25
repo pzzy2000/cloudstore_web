@@ -323,7 +323,7 @@ export default {
 		if (isSwitch) {
 			for (let key in data) {
 				let key_ = key;
-				if (key_ == 'pageNum' || key_ === 'pageSize') {
+				if (key_ == 'pageNum' || key_ === 'pageSize' || key_ === 'dir' || key_ === 'sort') {
 					key_ = 'commSearchBean.' + key_;
 				} else if (key_ == 'optType') {
 					key_ = key_;

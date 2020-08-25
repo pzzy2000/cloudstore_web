@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<nav-bar backState="1000" fontColor="#000" bgColor="#fff" class="nav-title">商品详情</nav-bar>
-		<!-- <text class="number-tip">该商品已售空我们会尽快补货哦，明天再来吧~</text> -->
+		<text class="number-tip" v-if="!isBuyBtn">该商品已售空我们会尽快补货哦，明天再来吧~</text>
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
 				<swiper-item class="swiper-item" v-for="(item, index) in swiperImgList" :key="index">
@@ -308,6 +308,7 @@ export default {
 				//赋值默认商品价格，库存和图片
 				this.sku.price = this.skuList[0].price
 				this.sku.stock = this.skuList[0].stock
+				this.isBuyBtn =  this.sku.stock ? true : false
 				try{
 					if (this.skuList[0].photos[0]) {
 						this.sku.imgUrl = this.skuList[0].photos[0].url
@@ -603,7 +604,7 @@ export default {
 }
 .number-tip {
 	position: fixed;
-	top: 135upx;
+	bottom: 128upx;
 	z-index: 2;
 	width: 100%;
 	height: 70upx;

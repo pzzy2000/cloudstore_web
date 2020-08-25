@@ -36,7 +36,7 @@
 										</view>
 										<view class="item-right">
 											<text class="clamp title">{{item.title}}</text>
-											<text class="attr">{{item.subTitle}}</text>
+											<text class="attr clamp">{{item.subTitle}}</text>
 											<view class="price-detail">
 												<text class="price price-symbol">{{item.price}}</text>
 												<text class="sku">/{{item.attr_val}}</text>
@@ -44,7 +44,7 @@
 											<uni-number-box 
 												v-if="isNumber"
 												class="number"
-												:min="1" 
+												:min="1"
 												:max="item.stock"
 												:value="item.number>item.stock?item.stock:item.number"
 												:isMax="item.number>=item.stock?true:false"
