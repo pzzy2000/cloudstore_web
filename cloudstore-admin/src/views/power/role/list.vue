@@ -65,10 +65,12 @@
       },
       methods: {
         getList() {
+          this.listLoading = true;
           fetchList(this.pageList).then(res => {
             if (res.result.code == 0) {
               this.list = res.result.result.records;
               this.total = parseInt(res.result.result.total);
+              this.listLoading = false
             }
           })
         },

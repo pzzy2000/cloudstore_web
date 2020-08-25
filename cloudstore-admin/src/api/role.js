@@ -92,3 +92,11 @@ export function allocResource(data) {
     data:data
   })
 }
+
+export function saveChecked(params) {
+  return request({
+    url: '/sys/role/module/save',
+    method: "POST",
+    data: params
+  })
+}

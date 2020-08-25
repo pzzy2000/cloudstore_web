@@ -16,7 +16,7 @@
           <el-input v-model="addGoodsort.order" placeholder="排个序吧" style="width: 350px" oninput="value=value.replace(/\D/g, '')"></el-input>
         </el-form-item>
         <el-form-item label="分类图片(一张就好)" prop="categoryPic" v-if="addGoodsort.level == '二级' ? true : false">
-          <SingleUpload v-model="addGoodsort.categoryPic" logotype="1"></SingleUpload>
+          <SingleUpload v-model="addGoodsort.categoryPic" logotype="ejfl"></SingleUpload>
         </el-form-item>
         <el-form-item style="float: right">
           <el-button type="primary" @click="submitForm('addGoodsort')" size="small" :loading="loadingbut" :disabled="disabled" v-if="isshow == 'update' ? false : true">{{subbtntext}}</el-button>
@@ -115,19 +115,29 @@
         // let _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            savegoodLevel(obj).then(res => {
-              console.log(res);
-              if(res.result.code == 0) {
-                this.$message({
-                  message: '添加成功',
-                  type: 'success',
-                  duration: 800
-                });
-                this.$router.back();
-                this.loadingbut = false;
-                this.subbtntext = '添加';
-                this.disabled = false;
-              }
+            this.$confirm('是否提交', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              savegoodLevel(obj).then(res => {
+                console.log(res);
+                if(res.result.code == 0) {
+                  this.$message({
+                    message: '添加成功',
+                    type: 'success',
+                    duration: 800
+                  });
+                  this.$router.back();
+                  this.loadingbut = false;
+                  this.subbtntext = '添加';
+                  this.disabled = false;
+                }
+              })
+            }).catch(e => {
+              this.loadingbut = false;
+              this.subbtntext = '添加';
+              this.disabled = false;
             })
           }else {
             this.loadingbut = false;
@@ -137,30 +147,30 @@
         })
       },
       uppdateForm(formName) {
-        this.$confirm('是否要更新该分类', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              let obj = {
-                level: this.$route.query.level,
-                name: this.addGoodsort.name,
-                sort: this.addGoodsort.order,
-                optType: "update",
-                id: this.$route.query.id
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let obj = {
+              level: this.$route.query.level,
+              name: this.addGoodsort.name,
+              sort: this.addGoodsort.order,
+              optType: "update",
+              id: this.$route.query.id
+            }
+            if (this.addGoodsort.level == "二级") {
+              let categoryPic = []
+              for (let i=0; i<this.addGoodsort.categoryPic.length; i++) {
+                categoryPic.push(this.addGoodsort.categoryPic[i].uid);
               }
-              if (this.addGoodsort.level == "二级") {
-                let categoryPic = []
-                for (let i=0; i<this.addGoodsort.categoryPic.length; i++) {
-                  categoryPic.push(this.addGoodsort.categoryPic[i].uid);
-                }
-                obj.categoryPic = categoryPic
-              }
-              this.disabled = true;
-              this.updbtntext = "更新中...";
-              this.loadingbut = true;
+              obj.categoryPic = categoryPic
+            }
+            this.disabled = true;
+            this.updbtntext = "更新中...";
+            this.loadingbut = true;
+            this.$confirm('是否要更新该分类', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
               savegoodLevel(obj).then(res => {
                 this.disabled = false;
                 this.updbtntext = "更新";
@@ -174,13 +184,17 @@
                   this.$router.back();
                 }
               })
-            }else {
+            }).catch(e => {
               this.disabled = false;
               this.updbtntext = "更新";
               this.loadingbut = false;
-            }
-          })
-        }).catch(e => e)
+            })
+          }else {
+            this.disabled = false;
+            this.updbtntext = "更新";
+            this.loadingbut = false;
+          }
+        })
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();

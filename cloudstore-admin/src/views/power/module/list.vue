@@ -13,34 +13,34 @@
         </el-table-column>
         <el-table-column label="功能" align="center">
           <template slot-scope="scope">
-            <span v-for="(item, i) in scope.row.opts" :key="i">{{item.name}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span v-for="item in scope.row.opts" :key="item.id">{{item.name}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <div class="pagination-container" style="margin-right: 20px">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        layout="total, sizes,prev, pager, next,jumper"
-        :page-size="pageList.pageSize"
-        :page-sizes="[10]"
-        :current-page.sync="pageList.pageNum"
-        :total="total">
-      </el-pagination>
-    </div>
+<!--    <div class="pagination-container" style="margin-right: 20px">-->
+<!--      <el-pagination-->
+<!--        background-->
+<!--        @size-change="handleSizeChange"-->
+<!--        @current-change="handleCurrentChange"-->
+<!--        layout="total, sizes,prev, pager, next,jumper"-->
+<!--        :page-size="pageList.pageSize"-->
+<!--        :page-sizes="[10]"-->
+<!--        :current-page.sync="pageList.pageNum"-->
+<!--        :total="total">-->
+<!--      </el-pagination>-->
+<!--    </div>-->
   </div>
 </template>
 
 <script>
     import {fetchList} from '@/api/module'
     import { formatDate } from '@/assets/common/data.js'
-    const defaultList = {
-      pageNum: 1,
-      pageSize: 10,
-      optType:'search'
-    };
+    // const defaultList = {
+    //   pageNum: 1,
+    //   pageSize: 10,
+    //   optType:'search'
+    // };
     let that;
     export default {
       name: "module_list",
@@ -50,8 +50,7 @@
           searchList: {},
           list: [],
           listLoading: false,
-          pageList: Object.assign({}, defaultList),
-          total: 1
+          pageList: {}
         }
       },
       created() {
@@ -65,7 +64,7 @@
       },
       methods: {
         getList() {
-          fetchList(this.pageList).then(res => {
+          fetchList().then(res => {
             if (res.result.code == 0) {
               this.list = res.result.result.records;
               this.total = parseInt(res.result.result.total);
