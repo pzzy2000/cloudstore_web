@@ -55,6 +55,7 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button type="primary" @click="exportExcel" size="mini" style="float: right">导出</el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
@@ -113,6 +114,7 @@
 
 <script>
   import {fetchList} from '@/api/order'
+  import {exportMethod} from '@/api/exportMethod'
   import { formatDate } from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
   const defaultList = {
@@ -233,6 +235,14 @@
         console.log(item)
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`用户名称：${item.name} / 用户账号：${item.access}`);
+      },
+      exportExcel() {
+        let obj = {
+          url: 'http://106.52.184.24:18888/platform/order/allocation/exportExcel',
+          method: 'POST',
+          fileName: '订单表格'
+        }
+        exportMethod(obj);
       },
       getList(idx) {
         fetchList(this.pageList).then(res => {

@@ -114,3 +114,11 @@ export function getReturnrules() {
     method: 'POST'
   })
 }
+
+export function qrcode(params) {
+  return request({
+    url: '/goods/qrCode',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

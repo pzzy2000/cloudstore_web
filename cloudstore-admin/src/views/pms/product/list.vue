@@ -153,7 +153,8 @@
               </el-button> -->
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" v-show="isshow">删除
             </el-button>
-
+            <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -221,7 +222,7 @@
     updateNewStatus,
     updateRecommendStatus,
     updatePublishStatus,
-    upOrdown
+    upOrdown,
   } from '@/api/product'
   import {
     fetchList as fetchSkuStockList,
@@ -343,6 +344,9 @@
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`供应商账号：${item.name} / 供应商电话：${item.phone}`);
+      },
+      qrcode(index, row) {
+        this.$router.push({path: '/sys/goods/qrcode', query: {id: row.id}})
       },
       suppilerShop(row, column) {
         try {

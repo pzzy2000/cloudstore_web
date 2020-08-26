@@ -62,6 +62,7 @@ import {switchForm,saveSupplier} from '@/api/iunits'
 //     params:params
 //   })
 // }
+
 export function fetchList(params) {
   return request({
     url: '/order/list',
@@ -107,5 +108,12 @@ export function tuikuan(params) {
     url: '/manage/pay/refundAfter',
     method: "POST",
     data: switchForm(params)
+  })
+}
+
+export function exportExcel() {
+  return request({
+    url: 'order/allocation/exportExcel',
+    method: 'get'
   })
 }

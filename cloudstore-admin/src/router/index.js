@@ -146,6 +146,13 @@ export const asyncRouterMap = [
       meta: {title: '商品列表', icon: 'product-list', keepAlive: true}
     },
       {
+        path: 'qrcode',
+        name: 'qrcode',
+        component: () => import('@/views/pms/product/qrCode'),
+        meta: {title: '二维码', icon: 'product-add'},
+        hidden: true
+      },
+      {
         path: 'add',
         name: 'add_goods',
         component: () => import('@/views/pms/product/info/editinfo'),

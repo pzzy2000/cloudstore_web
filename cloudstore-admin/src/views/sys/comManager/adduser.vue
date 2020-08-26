@@ -11,9 +11,9 @@
         <el-form-item label="电话：" prop="phone" >
           <el-input v-model="userForm.phone" placeholder="请输入电话" style="width: 350px" />
         </el-form-item>
-        <el-form-item label="密码：" prop="password">
-          <el-input v-model="userForm.password" placeholder="请输入密码" style="width: 350px" />
-        </el-form-item>
+<!--        <el-form-item label="密码：" prop="password">-->
+<!--          <el-input v-model="userForm.password" placeholder="请输入密码" style="width: 350px" />-->
+<!--        </el-form-item>-->
         <div style="text-align: center">
           <el-button type="primary" size="small" @click="subForm('userForm')">提 交</el-button>
           <el-button size="small" @click="resetForm('userForm')">重 置</el-button>
@@ -33,7 +33,6 @@
         userForm: {
           name: '',
           phone: '',
-          password: '',
           access:''
         },
         rules: {
@@ -42,8 +41,7 @@
           phone: [
             { required: true, message: '请输入电话', trigger: 'blur' },
             { pattern: /^1(3|4|5|7|8)\d{9}$/, message: '格式不对', trigger: 'blur'}
-          ],
-          password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+          ]
         }
       }
     },
