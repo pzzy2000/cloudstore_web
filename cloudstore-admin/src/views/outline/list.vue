@@ -53,7 +53,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right" @click="addactivity" v-if="power.activity_add == 1 ? true : false">添加活动</el-button>
+      <el-button size="mini" style="float: right" @click="addactivity">添加活动</el-button>
       <!--
       <el-button
         class="btn-add"
@@ -65,17 +65,17 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productTable"
-        :data="list"
-        style="width:100%"
-        @selection-change="handleSelectionChange"
-        v-loading="listLoading"
-        border>
+                :data="list"
+                style="width:100%"
+                @selection-change="handleSelectionChange"
+                v-loading="listLoading"
+                border>
         <el-table-column type="selection" width="60px" align="center" fixed ></el-table-column>
         <el-table-column label="活动图片" align="center" fixed>
           <template slot-scope="scope"><el-image :src="scope.row.picturePice" style="width: 35px; height: 35px; border-radius: 50%"></el-image></template>
         </el-table-column>
         <el-table-column label="活动名称" align="center" fixed>
-           <template slot-scope="scope">{{scope.row.name}}</template>
+          <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="开始时间" align="center" width="160">
           <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
@@ -89,23 +89,9 @@
         <el-table-column label="是否参加佣金" align="center">
           <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
         </el-table-column>
-        <el-table-column label="是否显示在首页" align="center">
-          <template slot-scope="scope">
-            <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="changeSwitch(scope.row)">
-            </el-switch>
-<!--            <div v-else>{{scope.row.activityBean.name}}</div>-->
-<!--            v-if="!scope.row.activityBean.name"-->
-          </template>
-        </el-table-column>
         <el-table-column label="是否启用" align="center">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="onoffAct(scope.row)">
-            </el-switch>
-          </template>
-        </el-table-column>
-        <el-table-column label="是否显示在导航栏" align="center" width="150">
-          <template slot-scope="scope">
-            <el-switch v-model="scope.row.navigateIndex" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="showInnavigate(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
@@ -114,40 +100,40 @@
         <el-table-column label="操作" width="270" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button size="mini" @click="updateAct(scope.row)" v-if="power.activity_update == 1 ? true : false">修改活动</el-button>
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false" v-if="power.activity_delete == 1 ? true : false">删除</el-button>
+            <el-button size="mini" @click="updateAct(scope.row)">修改活动</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="pagination-container">
-     <div class="pagination-container">
-       <el-pagination
-         background
-         @size-change="handleSizeChange"
-         @current-change="handleCurrentChange"
-         layout="total, sizes,prev, pager, next,jumper"
-         :page-size="listQuery.pageSize"
-         :page-sizes="[10]"
-         :current-page.sync="listQuery.pageNum"
-         :total="total">
-       </el-pagination>
-     </div>
+      <div class="pagination-container">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          layout="total, sizes,prev, pager, next,jumper"
+          :page-size="listQuery.pageSize"
+          :page-sizes="[10]"
+          :current-page.sync="listQuery.pageNum"
+          :total="total">
+        </el-pagination>
+      </div>
     </div>
 
   </div>
 </template>
 <script>
-   import { fetchList, changeShowidx, delActivity, showInnavigate, onoffAct } from '@/api/activity'
-   import {msg}  from '@/api/iunits'
-   import { formatDate } from '@/assets/common/data.js'
+  import { fetchList, changeShowidx, delActivity, showInnavigate, onoffAct } from '@/api/activity'
+  import {msg}  from '@/api/iunits'
+  import { formatDate } from '@/assets/common/data.js'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
     optType:'search'
   };
   export default {
-    name: "trackinglist",
+    name: "list",
     data() {
       return {
         operateType: null,
@@ -156,16 +142,20 @@
         total: 0,
         listLoading: true,
         multipleSelection: [],
+        isshow: false,
         statusList: [{label: "已开启", value: '1'}, {label: "未开启", value: '0'}],
         brokerageList: [{label: "已参加", value: '1'}, {label: "未参加", value: '0'}],
-        delList: [{label: "已删除", value: '1'}, {label: "正常", value: '0'}],
-        power: ''
+        delList: [{label: "已删除", value: '1'}, {label: "正常", value: '0'}]
       }
     },
     created() {
       this.getList(1);
-      this.power = JSON.parse(localStorage.getItem('opt'));
-      console.log(this.power);
+      switch (localStorage.getItem('userType')){
+        case 'platform': this.isshow = true;
+          break;
+        case 'supplier': this.isshow = false;
+          break;
+      }
     },
     watch: {
       // selectProductCateValue: function (newValue) {
@@ -305,13 +295,13 @@
       },
       addactivity() {
         this.$router.push({
-          path: "/sys/activity/addact"
+          path: "/outline/activity/addact"
           // query: {rds: "write"}
         })
       },
       associatedGood(row) {
         this.$router.push({
-          path: "/sys/activity/assogoods",
+          path: "/outline/activity/assoGoods",
           query: {id: row.id, status: row.status}
         })
       },

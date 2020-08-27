@@ -28,12 +28,12 @@
               </el-option>
             </el-select>
           </el-form-item>
-<!--          <el-form-item prop="categoryThreeId">-->
-<!--            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>-->
-<!--              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">-->
-<!--              </el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
+          <!--          <el-form-item prop="categoryThreeId">-->
+          <!--            <el-select v-model="listQuery.categoryThreeId" remote v-on:change="seclectCategory($event, 3)" placeholder="三级分类" :loading="loading" clearable>-->
+          <!--              <el-option v-for="item in category.three" :key="item.id" :label="item.name" :value="item.id">-->
+          <!--              </el-option>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
           <el-form-item label="供应商：">
             <remoteCom v-model="listQuery.supplierIds_" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
           </el-form-item>
@@ -47,7 +47,7 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
-        border>
+                border>
         <el-table-column type="selection" width="60px" align="center"></el-table-column>
         <el-table-column label="商品名称" align="center" :formatter="goodsinfo" column-key='goodsName' fixed="">
         </el-table-column>
@@ -69,7 +69,7 @@
         <el-table-column label="供应商店铺" align="center" fixed :formatter="goodsinfo" column-key="supplierShopBean">
         </el-table-column>
 
-        <el-table-column label="操作" align="center" width="160">
+        <el-table-column label="操作" align="center" width="240">
           <template slot-scope="scope">
             <el-button size="mini" @click="settingactPrice(scope.row)">设置活动价格</el-button>
             <el-button type="danger" size="mini" @click="handeldel(scope.row)" v-if="status == 1 ? false : true">删除</el-button>
@@ -80,7 +80,7 @@
     <div class="pagination-container">
       <div class="pagination-container">
         <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper"
-          :page-size="listQuery.pageSize" :page-sizes="[10]" :current-page.sync="listQuery.pageNum" :total="total">
+                       :page-size="listQuery.pageSize" :page-sizes="[10]" :current-page.sync="listQuery.pageNum" :total="total">
         </el-pagination>
       </div>
     </div>
@@ -184,46 +184,46 @@
         let goods = row.goodsPicesBean;
         switch (column.columnKey) {
           case 'goodsName':
-            {
-              return goods.goodsName;
-            }
+          {
+            return goods.goodsName;
+          }
           case 'category':
-            {
-              try {
-                if (goods.categoryThreeBean !== null) {
-                  return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
-                } else {
-                  return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name;
-                }
-                // return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
-              } catch (e) {
-                return '数据读取错误';
+          {
+            try {
+              if (goods.categoryThreeBean !== null) {
+                return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
+              } else {
+                return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name;
               }
+              // return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
+            } catch (e) {
+              return '数据读取错误';
             }
+          }
           case 'pics':
-            {
-              try {
-                return '￥' + goods.salePrice + '/' + goods.martPrice;
-              } catch (e) {
-                return '数据读取错误';
-              }
+          {
+            try {
+              return '￥' + goods.salePrice + '/' + goods.martPrice;
+            } catch (e) {
+              return '数据读取错误';
             }
+          }
           case 'supplierBean':
-            {
-              try {
-                return goods.supplierBean.name;
-              } catch (e) {
-                return '数据读取错误';
-              }
+          {
+            try {
+              return goods.supplierBean.name;
+            } catch (e) {
+              return '数据读取错误';
             }
+          }
           case 'supplierShopBean':
-            {
-              try {
-                return goods.supplierShopBean.shopName;
-              } catch (e) {
-                return '数据读取错误';
-              }
+          {
+            try {
+              return goods.supplierShopBean.shopName;
+            } catch (e) {
+              return '数据读取错误';
             }
+          }
         }
       },
       searchRootCategory() {

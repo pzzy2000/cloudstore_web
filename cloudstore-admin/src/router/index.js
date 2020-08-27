@@ -80,12 +80,12 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/sys/activity/list',
     name: 'activity',
-    meta: {title: '活动管理', icon: 'product-list'},
+    meta: {title: '线上活动', icon: 'product-list'},
     children: [{
       path: 'list',
       name: 'activity_list',
       component: () => import('@/views/activity/list'),
-      meta: {title: '活动列表', icon: 'product-list', keepAlive: true}
+      meta: {title: '线上活动列表', icon: 'product-list', keepAlive: true}
     }, {
       path: 'addact',
       name: 'add_activity',
@@ -105,6 +105,46 @@ export const asyncRouterMap = [
         component: () => import('@/views/activity/assoGoods'),
         meta: {title: '申请活动', icon: 'product-list'}
       }]
+  },
+  {
+    path: '/outline/activity',
+    component: Layout,
+    redirect: '/outline/activity/list',
+    name: 'outlineact',
+    meta: {title: '线下活动', icon: 'product-list'},
+    children: [
+      {
+        path: 'list',
+        name: 'outline_list',
+        component: () => import('@/views/outline/list'),
+        meta: {title: '线下活动列表', icon: 'product-list'}
+      },
+      {
+        path: 'addact',
+        name: 'outline_addact',
+        component: () => import('@/views/outline/addact'),
+        meta: {title: '添加线下活动', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'assoGoods',
+        name: 'outline_assoGoods',
+        component: () => import('@/views/outline/assoGoods'),
+        meta: {title: '添加活动商品', icon: 'product-list'}
+      },
+      {
+        path: 'actGoodslist',
+        name: 'outline_goodslist',
+        component: () => import('@/views/outline/actGoodslist'),
+        meta: {title: '活动商品列表', icon: 'product-list'}
+      },
+      {
+        path: 'settingParams',
+        name: 'outline_setparams',
+        component: () => import('@/views/outline/settingParams'),
+        meta: {title: '设置参数', icon: 'product-list'}
+      }
+    ]
   },
   {
     path: '/sys/supplier',
