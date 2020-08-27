@@ -24,7 +24,7 @@
 			<input class="input" type="text" v-model="addressData.area" placeholder="详细地址" placeholder-class="placeholder" />
 		</view>
 		
-		<view class="row default-row" v-if="isDetail">
+		<view class="row default-row">
 			<text class="tit">设为默认</text>
 			<switch :checked="addressData.status" color="#fa436a" @change="detailChange" />
 		</view>
@@ -89,9 +89,8 @@
 					longitude: '',
 					latitude: '',
 					default: false,
-					status: '',
+					status: 0,
 				},
-				isDetail: false,
 				optType: 'save'
 			}
 		},
@@ -99,7 +98,6 @@
 			this.getAddressData()
 			if(option.type==='edit'){
 				this.title = '编辑收货地址'
-				this.isDetail = true
 				this.optType = 'update'
 				this.getAddressDetail(option.id)
 				this.addressId = option.id
@@ -276,7 +274,8 @@
 					community: data.mapText,
 					longitude: data.longitude,
 					latitude: data.latitude,
-					optType: this.optType
+					optType: this.optType,
+					status: data.status
 				};
 				if (this.optType === 'update') {
 					params.id = data.id

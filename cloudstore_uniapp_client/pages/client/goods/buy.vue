@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="container">
 		<nav-bar backState="1000">支付</nav-bar>
 		<!-- 地址 -->
 		<navigator url="/pages/client/info/address?source=1" class="address-section">
@@ -294,7 +294,7 @@
 					if(data.result.length != 0)
 					    this.setAddress(data.result)
 					} else {
-						this.$api.msg('您还没填收货地址哦')
+						this.$api.msg('您还没有收货地址哦')
 					}
 			},
 			async getGoodsData (goodsId,agentId,goodsSkuId,activityId) { //加载商品数据
@@ -592,7 +592,9 @@
 		background: $page-color-base;
 		padding-bottom: 100upx;
 	}
-	
+	.container {
+		padding-bottom: 150upx;
+	}
 	.address-section {
 		padding: 30upx 0;
 		margin-top: 30upx;

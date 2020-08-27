@@ -98,6 +98,7 @@
 				</view>
 				<!-- 已完成 -->
 				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'complete'">
+					<text class="state">订单完成时间：{{item.endTime}}</text>
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 退货-->
@@ -117,7 +118,7 @@
 		
 		<view class="earning-empty" v-if="!orderList.length">
 			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
-			<view class="earning-empty-text">暂无订单哦</view>
+			<view class="earning-empty-text">暂无{{navTitle}}订单哦</view>
 		</view>
 	</view>
 </template> 
@@ -134,6 +135,7 @@
 		},
 		data() {
 			return {
+				navTitle: '',
 				tabCurrentIndex: 0,
 				orderStatus: '',
 				orderList: [],
@@ -278,6 +280,7 @@
 			},
 			//顶部tab点击
 			tabClick(item){
+				this.navTitle =item.text
 				this.orderStatus = item.type
 				this.pageNum = 1
 				this.orderList =[]
@@ -776,6 +779,12 @@
 		.cu-btn {
 			background-image: linear-gradient(#39A9FF, #2D9BEF);
 			color: #fff;
+		}
+		.state {
+			color: #49B1FD;
+			font-size: 24upx;
+			float: left;
+			line-height: 60upx;
 		}
 	}
 </style>

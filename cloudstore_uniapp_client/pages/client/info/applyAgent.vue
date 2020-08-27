@@ -129,7 +129,7 @@
 				index: 0,
 				typePicker: ['代理', '团长'],
 				typePickerIndex: 0,
-				upImgUrl: Api.BASEURI +'sys/upload/entity/image/update',
+				upImgUrl: Api.BASEURI+Api.upImgUrl.imgUrl,
 				category: 'image',
 				imgListId: [],
 				imageList: [],
@@ -139,7 +139,7 @@
 				itemList: [],
 				receiveData: [],
 				isUpload: false,
-				serverUrl: Api.BASEURI +'sys/upload/entity/image/update' //上传地址
+				serverUrl: Api.BASEURI+Api.upImgUrl.imgUrl //上传地址
 			}
 		},
 		components:{

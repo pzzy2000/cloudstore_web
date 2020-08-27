@@ -270,6 +270,7 @@
 					this.filterIndex = 1
 					this.pageNum = 1;
 					this.quantityOrder = this.quantityOrder === 1 ? 2 : 1
+					this.dirVal = 'sale_quantity'
 					this.sortVal = this.sortVal === 'desc' ? 'asc' : 'desc'
 					this.loadData();
 				}

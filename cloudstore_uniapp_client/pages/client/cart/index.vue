@@ -178,7 +178,7 @@
 			},
 			toCategory(){
 				uni.switchTab({
-					url: '/pages/agent/goods/category/category'
+					url: '/pages/agent/goods/category/mallmenu'
 				})
 			},
 			 //选中状态处理

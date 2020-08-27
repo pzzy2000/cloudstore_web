@@ -47,8 +47,12 @@
 		components: {
 			navBar
 		},
-		onLoad () {
-			this.historyList = Array.from(uni.getStorageSync('searchHistory'))
+		onShow () {
+			var tmp = Array.from(uni.getStorageSync('searchHistory'))
+			this.historyList = Array.from(new Set(tmp)).slice(0,10)
+		},
+		onHide() {
+			this.searchValue = ""
 		},
 		methods: {
 			InputFocus(e) {
@@ -63,13 +67,14 @@
 			search (name) {
 				if (name) {
 					this.searchValue = name
+				} else {
+					this.historyList.splice(0, 0, this.searchValue)
 				}
 				if (this.searchValue.length === 0) {
 					this.$api.msg('请输入需要搜索的商品')
 					return false
 				}
-				this.historyList.push(this.searchValue)
-				uni.setStorageSync('searchHistory', this.historyList)
+				uni.setStorageSync('searchHistory', Array.from(new Set(this.historyList)).slice(0,10))
 				uni.navigateTo({
 				    url: "/pages/agent/goods/category/category?goodsName="+this.searchValue
 				});

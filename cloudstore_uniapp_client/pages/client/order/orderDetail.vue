@@ -17,7 +17,7 @@
 					<text class="state" v-else-if="orderDetail.orderStatus === 'close'">超时关闭</text>
 				</template>
 			</view>
-			<text>感谢您对丫咪购的信任，期待再次次光临</text>
+			<text>感谢您对丫咪购的信任，期待再次光临</text>
 		</view>
 		<view class="goods-section">
 			<!-- <view class="g-header b-b">
@@ -68,6 +68,10 @@
 			<view class="yt-list-cell desc-cell pickAddress" v-if="isPickAddress">
 				<text class="cell-tit">自提地址</text>
 				<textarea :value="pickAddress" class="textarea" disabled="true" style="line-height: 20upx;"></textarea>
+			</view>
+			<view class="yt-list-cell" v-if="isPickAddress">
+				<text class="cell-tit clamp">联系电话</text>
+				<text class="cell-tip">{{PickPhone}}</text>
 			</view>
 		</view>
 	</view>
@@ -130,6 +134,7 @@
 				agentShopName:'',
 				isPickAddress: false,
 				pickAddress: '',
+				PickPhone: '',
 				clientInfo: {
 					name: '',
 					address: ''
@@ -169,6 +174,7 @@
 					//获取自提点地址和配送方式
 					if (data.result.orderBean.transportType === 20) { 
 						this.isPickAddress = true
+						this.PickPhone = transportAgent.phone
 						this.pickAddress = transportAgent.provinceBean.name+transportAgent.cityBean.name+transportAgent.areaBean.name+transportAgent.townBean.name+transportAgent.community+transportAgent.detailAddress
 					}
 					switch (data.result.orderBean.transportType) {
