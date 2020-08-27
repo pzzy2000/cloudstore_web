@@ -27,7 +27,7 @@
 					<text class="subtitle clamp">{{item.subtitle}}</text>
 					<view class="price-box">
 						<view class="">
-							<text class="price">￥{{item.price}}</text>
+							<text class="price price-symbol">{{item.price}}</text>
 							<text class="sku">/{{item.attr_val}} </text>
 						</view>
 						<view class="">
@@ -291,8 +291,10 @@
 				};
 				let data = await Api.apiCall('post', Api.client.address.detail, params, false, false);
 				if (data) {
-					if(data.result)
+					if(data.result.length != 0)
 					    this.setAddress(data.result)
+					} else {
+						this.$api.msg('您还没填收货地址哦')
 					}
 			},
 			async getGoodsData (goodsId,agentId,goodsSkuId,activityId) { //加载商品数据
@@ -739,7 +741,6 @@
 					.price {
 						color: #FF1313;
 						font-size: 32upx;
-						letter-spacing: 4upx;
 					}
 					.sku {
 						color: #999;

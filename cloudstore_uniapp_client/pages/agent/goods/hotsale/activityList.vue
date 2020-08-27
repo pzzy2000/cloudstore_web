@@ -188,11 +188,12 @@
 	/* 商品列表 */
 	.goods-list {
 		position: absolute;
-		display: flex;
+		// display: flex;
 		flex-wrap: wrap;
 		width: 100%;
+		min-height: 40%;
 		padding: 0 20upx 40upx;
-		min-height: 50%;
+		// min-height: 50%;
 		margin-top: -80upx;
 		background-color: #bf151e;
 		// background-image: linear-gradient(180deg, #ed6145, #E22C49, #E22C49, #E22C49);

@@ -26,10 +26,10 @@
 			<view class="order-list-content" v-for="(item, index) in goodsDetail" :key='index'>
 				<image :src="item.goodsSkuBean.photos[0].url || item.goodsPicesBean.goodsDetailPhotos[0].url" mode="aspectFill" class="image-wrapper"></image>
 				<view class="goods-detail">
-					<view class="detail-title clamp">{{item.goodsPicesBean.goodsName}} <text class="detail-title-price">￥{{item.price}}</text></view>
+					<view class="detail-title clamp">{{item.goodsPicesBean.goodsName}} <text class="detail-title-price price-symbol">{{item.price}}</text></view>
 					<view class="detail-subtitle">{{item.goodsPicesBean.goodsSubtitle}}</view>
 					<view class="detail-price">
-						<view class="price-num">￥{{item.payPrice}} <text class="price-sku">/{{item.goodsSkuBean.skuValue}}</text> </view>
+						<view class="price-num price-symbol">{{item.payPrice}} <text class="price-sku">/{{item.goodsSkuBean.skuValue}}</text> </view>
 						<text>× {{item.quantity}}</text>
 					</view>
 				</view>
@@ -38,8 +38,8 @@
 				<view>
 					实付金额
 				</view>
-				<text class="order-payPrice-num">
-					￥{{orderDetail.payPrice}}
+				<text class="order-payPrice-num price-symbol">
+					{{orderDetail.payPrice}}
 				</text>
 			</view>
 		</view>
@@ -267,7 +267,7 @@
 		margin: 0 20upx;
 		.order-list-content {
 			height: 230upx;
-			padding: 40upx;
+			padding: 30upx;
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;
@@ -277,7 +277,7 @@
 				height: 124upx;
 			}
 			.goods-detail {
-				margin-left: 30upx;
+				margin-left: 40upx;
 				width: 75%;
 				line-height: 50upx;
 				.detail-title {
@@ -289,7 +289,6 @@
 					.detail-title-price {
 						color:#FF1313;
 						font-size: 26upx;
-						letter-spacing: 4upx;
 					}
 				}
 				.detail-subtitle {
