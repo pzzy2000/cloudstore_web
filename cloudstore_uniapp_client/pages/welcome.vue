@@ -1,8 +1,8 @@
 <template>
 	<view class="container">
-		<image src="/static/welcome-bg.png" mode="" class="welcome-bg"></image>
+		<image src="/static/welcome-bg.png" mode="scaleToFill" class="welcome-bg"></image>
 		<view class="welcome-main">
-			<image src="/static/welcome-logo.png" mode="" class="welcome-logo"></image>
+			<image src="/static/welcome-logo.png" mode="widthFix" class="welcome-logo"></image>
 		</view>
 	     <!-- <mallplusCopyright></mallplusCopyright> -->
 	</view>
@@ -38,6 +38,7 @@
 		},
 		onLoad(ops) {
 			// this.getLocation()
+			console.log('测试版本:'+ ops)
 			this.token = uni.getStorageSync('token')
 			this.agentId = ops.agentId
 			this.activityId = ops.activityId
@@ -45,6 +46,9 @@
 			this.agentGoodsId = ops.agentGoodsId
 			this.shareClientId = ops.shareClientId
 			uni.setStorageSync('goodsInfo', ops)
+		},
+		onHide () {
+			this.goodsId = ""
 		},
 		methods: {
 			async getAgentInfo(timeout) {

@@ -17,7 +17,7 @@
 			<view class="i-top">
 				<text class="time">订单号: {{item.number}}</text>
 				<template>
-					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
+					<text class="state" v-if="item.orderStatus === 'wait'">关闭时间：{{item.endTime}}</text>
 					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
 					<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
@@ -36,7 +36,7 @@
 					<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
 					<text class="subtitle clamp">{{order.goodsPicesBean.goodsSubtitle}}</text>
 					<view class="detail-price">
-						<view class="price-num">￥{{order.goodsSkuBean.price}} <text class="price-sku">/{{order.goodsSkuBean.skuValue}}</text> </view>
+						<view class="price-num price-symbol">{{order.goodsSkuBean.price}} <text class="price-sku">/{{order.goodsSkuBean.skuValue}}</text> </view>
 						<text>× {{order.quantity}}</text>
 					</view>
 					<!-- <view class="attr-box">
@@ -98,6 +98,7 @@
 				</view>
 				<!-- 已完成 -->
 				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'complete'">
+					<text class="state">订单完成时间：{{item.endTime}}</text>
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 退货-->
@@ -117,7 +118,7 @@
 		
 		<view class="earning-empty" v-if="!orderList.length">
 			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
-			<view class="earning-empty-text">暂无订单哦</view>
+			<view class="earning-empty-text">暂无{{navTitle}}订单哦</view>
 		</view>
 	</view>
 </template> 
@@ -134,6 +135,7 @@
 		},
 		data() {
 			return {
+				navTitle: '',
 				tabCurrentIndex: 0,
 				orderStatus: '',
 				orderList: [],
@@ -278,6 +280,7 @@
 			},
 			//顶部tab点击
 			tabClick(item){
+				this.navTitle =item.text
 				this.orderStatus = item.type
 				this.pageNum = 1
 				this.orderList =[]
@@ -776,6 +779,12 @@
 		.cu-btn {
 			background-image: linear-gradient(#39A9FF, #2D9BEF);
 			color: #fff;
+		}
+		.state {
+			color: #49B1FD;
+			font-size: 24upx;
+			float: left;
+			line-height: 60upx;
 		}
 	}
 </style>

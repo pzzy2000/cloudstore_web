@@ -3,7 +3,7 @@
 	"pages": [
 		{
 			"path": "pages/welcome",
-			"style": {
+			"style": { //欢迎界面
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"app-plus": {
@@ -36,14 +36,6 @@
 			}
 		}, 
 		{
-			"path": "pages/client/recommend/index",
-			"style": { //用户 首页
-				"navigationBarTitleText": "推荐",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
 			"path": "pages/client/info/index",
 			"style": { //我的信息
 				"navigationBarTitleText": "我的信息",
@@ -60,7 +52,7 @@
 			}
 		}, {
 			"path": "pages/client/cart/index",
-			"style": { //用户 首页
+			"style": { //购物车界面
 				"navigationBarTitleText": "我的购物车",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
@@ -68,7 +60,7 @@
 		},
 		{
 			"path": "pages/client/goods/detail",
-			"style": { //用户 首页
+			"style": { //商品详情界面
 				"navigationBarTitleText": "商品详情",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -76,8 +68,16 @@
 		},
 		{
 			"path": "pages/client/goods/buy",
-			"style": { //用户 首页
+			"style": { //用户支付界面
 				"navigationBarTitleText": "购买商品",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+		    "path" : "pages/client/goods/buySuccess",
+		    "style" : { //支付成功界面
+				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
@@ -155,7 +155,7 @@
 		},
         {
             "path" : "pages/client/info/applyAgent",
-            "style" : {
+            "style" : { //申请代理界面
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
@@ -163,45 +163,29 @@
         }
 		,{
 		    "path" : "pages/client/info/privacy",
-		    "style" : {
+		    "style" : { //用户隐私协议界面
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
 		},{
 		    "path" : "pages/client/info/agreement",
-		    "style" : {
+		    "style" : { //用户服务协议界面
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
 		},{
 		    "path" : "pages/client/info/about",
-		    "style" : {
+		    "style" : { //关于我们界面
 				"navigationBarTitleText": "关于我们",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
 		}
         ,{
-            "path" : "pages/client/recommend/agentGoodsList/agentGoodsList",
-            "style" : {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true
-			}
-        }
-        ,{
             "path" : "pages/client/public/goodDetail",
-            "style" : {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
-			}
-        }
-        ,{
-            "path" : "pages/client/goods/buySuccess",
-            "style" : {
+            "style" : { //商品详情界面
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -209,7 +193,7 @@
         }
         ,{
             "path" : "pages/client/public/forgetPwd",
-            "style" : {
+            "style" : { //忘记密码
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -217,7 +201,7 @@
         }
         ,{
             "path" : "pages/client/info/editPwd",
-			"style" : {
+			"style" : { //编辑密码
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -225,7 +209,7 @@
         }
         ,{
             "path" : "pages/client/info/showInfo",
-            "style" : {
+            "style" : { //个人信息
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -233,7 +217,7 @@
         }
         ,{
             "path" : "pages/client/order/afterSale",
-            "style" : {
+            "style" : {//售后界面
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -241,7 +225,7 @@
         }
         ,{
             "path" : "pages/client/order/afterSaleList",
-            "style" : {
+            "style" : {//售后列表
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
@@ -249,7 +233,7 @@
         }
         ,{
             "path" : "pages/agent/goods/hotsale/search",
-            "style" : {
+            "style" : { //搜索界面
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
@@ -257,7 +241,7 @@
         }
         ,{
             "path" : "pages/agent/goods/hotsale/activityList",
-            "style" : {
+            "style" : { //活动列表
             	"navigationBarTitleText": "",
             	"navigationStyle": "custom",
             	"enablePullDownRefresh": true
@@ -265,11 +249,19 @@
         }
         ,{
             "path" : "pages/agent/goods/hotsale/webView",
-            "style" : {
+            "style" : { //小程序跳转出去的界面
             	"navigationBarTitleText": "",
             	"navigationStyle": "custom",
             	"enablePullDownRefresh": false
             }
+        }
+        ,{
+            "path" : "pages/client/belowTheLine/goods",
+            "style" : { //线下活动商品详情
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
         }
     ],
 	"globalStyle": {

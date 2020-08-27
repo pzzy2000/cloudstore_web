@@ -133,8 +133,8 @@
 				user:{
 					relationId: '',
 					userType: '',
-					agentType: '游客',
-					name: null || '游客',
+					agentType: '普通会员',
+					name: null || '普通会员',
 					url: '/static/log.png',
 					detailUrl: '/static/log.png'
 				}

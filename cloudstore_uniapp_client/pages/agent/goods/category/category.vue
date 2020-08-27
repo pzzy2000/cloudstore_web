@@ -106,6 +106,8 @@
 				pageNum: 1,
 				priceOrder: 1, //1 价格从低到高 2价格从高到低
 				quantityOrder: 1, //1 销量从底到高 2.销量从高到低
+				dirVal: '',//价格排序值
+				sortVal: 'asc', //升序（desc），降序（asc）值
 				goodsList: {
 					activityBean: {
 						name: '不参与活动'
@@ -186,51 +188,18 @@
 					this.categoryTwoId = ''
 					this.categoryThreeId = ''
 					this.receiveData = []
-					this.pageNum = 1;
-					var params = {
-						goodsName: this.goodsName || '',
-						activityId: this.activityId,
-						pageNum: this.pageNum,
-						pageSize: '10',
-						categoryOneId: this.categoryOneId,
-						categoryTwoId: this.categoryTwoId,
-						categoryThreeId: this.categoryThreeId,
-					};
-				} else if (type === 'price') {
-					var params = {
-						goodsName: this.goodsName || '',
-						activityId: this.activityId,
-						pageNum: this.pageNum,
-						pageSize: '10',
-						categoryOneId: this.categoryOneId,
-						categoryTwoId: this.categoryTwoId,
-						categoryThreeId: this.categoryThreeId,
-						dir: 'price',
-						sort: 'desc'
-					};
-				} else if (type === 'quantity'){
-					var params = {
-						goodsName: this.goodsName || '',
-						activityId: this.activityId,
-						pageNum: this.pageNum,
-						pageSize: '10',
-						categoryOneId: this.categoryOneId,
-						categoryTwoId: this.categoryTwoId,
-						categoryThreeId: this.categoryThreeId,
-						dir: 'quantity',
-						sort: 'desc'
-					};
-				} else {
-					var params = {
-						goodsName: this.goodsName || '',
-						activityId: this.activityId,
-						pageNum: this.pageNum,
-						pageSize: '10',
-						categoryOneId: this.categoryOneId,
-						categoryTwoId: this.categoryTwoId,
-						categoryThreeId: this.categoryThreeId,
-					};
-				}
+				} 
+				var params = {
+					goodsName: this.goodsName || '',
+					activityId: this.activityId,
+					pageNum: this.pageNum,
+					pageSize: '10',
+					categoryOneId: this.categoryOneId,
+					categoryTwoId: this.categoryTwoId,
+					categoryThreeId: this.categoryThreeId,
+					dir: this.dirVal,
+					sort: this.sortVal
+				};
 				let list = await Api.apiCall('post', Api.agent.goods.list, params,true);
 				if (list) {
 					let goodsList = list.result.records;
@@ -301,7 +270,9 @@
 					this.filterIndex = 1
 					this.pageNum = 1;
 					this.quantityOrder = this.quantityOrder === 1 ? 2 : 1
-					this.loadData('quantity');
+					this.dirVal = 'sale_quantity'
+					this.sortVal = this.sortVal === 'desc' ? 'asc' : 'desc'
+					this.loadData();
 				}
 				if (index === 2) {
 					// this.filterIndex = 2
@@ -309,7 +280,9 @@
 					this.filterIndex = 2
 					this.pageNum = 1;
 					this.priceOrder = this.priceOrder === 1 ? 2 : 1 
-					this.loadData('price');
+					this.dirVal = 'salePrice'
+					this.sortVal = this.sortVal === 'desc' ? 'asc' : 'desc'
+					this.loadData();
 				}
 				uni.pageScrollTo({
 					duration: 300,

@@ -67,6 +67,7 @@
 <script>
 	import Api from '@/common/api.js'
 	import navBar from '@/components/zhouWei-navBar';
+	import tuiUpload from '@/components/tui-upload/tui-upload'
 	export default {
 		data() {
 			return {
@@ -79,7 +80,7 @@
 				pickerValue: 'returns',
 				imgListId: [],
 				imageList: [],
-				serverUrl: Api.BASEURI +'sys/upload/entity/image/update', //上传地址
+				serverUrl: Api.BASEURI+Api.upImgUrl.imgUrl, //上传地址
 				goodsDetail: '',
 				agentShopName: '',
 				orderDetailIds: [],
@@ -87,7 +88,7 @@
 			}
 		},
 		components: {
-			navBar
+			navBar, tuiUpload
 		},
 		onLoad(ops) {
 			this.orderId = ops.id
@@ -133,6 +134,7 @@
 			},
 			uploadResult (e) { //页面上传成功后的回调
 				this.imgListId = e.imgListId
+				console.log(e)
 			},
 			uploadRemove (e) { //删除图片的回调
 				let index = e.index
