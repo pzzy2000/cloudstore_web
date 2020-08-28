@@ -289,7 +289,6 @@
 				.detail-title {
 					color: #333;
 					font-size: 32upx;
-					letter-spacing: 4upx;
 					display: flex;
 					justify-content: space-between;
 					.detail-title-price {

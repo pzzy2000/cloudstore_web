@@ -262,6 +262,30 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
+        },
+		{
+		    "path" : "pages/agent/info/index",
+		    "style" : { //团长页面
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+            "path" : "pages/agent/info/order/index",
+            "style" : { //团长管理订单页面
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+        },
+		{
+            "path" : "pages/agent/info/order/orderDetail",
+            "style" : { //团长管理订单详情页面
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
         }
     ],
 	"globalStyle": {

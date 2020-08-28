@@ -1,0 +1,195 @@
+<template>
+	<view>
+		<nav-bar backState="1000">配送管理</nav-bar>
+		<scroll-view scroll-x class="bg-white nav">
+			<view class="flex text-center">
+				<view class="cu-item flex-sub" :class="index==TabCur?'text-blue cur':''" v-for="(item,index) in tabList" :key="index" @tap="tabSelect" :data-id="index">
+					{{item.name}}
+				</view>
+			</view>
+		</scroll-view>
+		<view class="agent-order-main">
+			<view class="order-item" v-for="item in orderList" :key="item.ordersId">
+				<view class="order-item-top">
+					<text class="order-item-time">下单时间：{{item.ordersBean.createTime}}</text>
+					<template>
+						<text class="text-orange" v-if="item.ordersBean.orderStatus === 'wait'">待支付</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'pay'">支付待确认</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'payed'">已支付</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'peisong'">待配送</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'refunding'">退款中</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'refunded'">已退款</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'peisoged'">已配送</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'complete'">已完成</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'returnsing'">退货中</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'returns'">已退货</text>
+						<text class="text-orange" v-else-if="item.ordersBean.orderStatus === 'close'">超时关闭</text>
+					</template>
+				</view>
+				<view class="order-item-content">
+					<view class="order-item-info">
+						<image src="/static/log.png" mode="" class="order-item-img"></image>
+						<view class="info-main">
+							<view class="info-name">
+								<text class="name">{{item.ordersBean.clientAddressBean.name}}</text>
+								<text class="phone">{{item.ordersBean.clientAddressBean.phone}}</text>
+							</view>
+							<text class="info-address">{{item.ordersBean.clientAddressBean.provinceBean.name}}{{item.ordersBean.clientAddressBean.cityBean.name}}{{item.ordersBean.clientAddressBean.areaBean.name}}{{item.ordersBean.clientAddressBean.detailAddress}}</text>
+						</view>
+					</view>
+					<button @click="toDetail(item.ordersId)">查看</button>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import Api from '@/common/api';
+	import navBar from '@/components/zhouWei-navBar';
+	export default {
+		data() {
+			return {
+				TabCur: 0,
+				tabList: [
+					{
+						id: 1,
+						name: '全部'
+					},
+					{
+						id: 2,
+						name: '待配送'
+					},
+					{
+						id: 3,
+						name: '已配送'
+					}
+				],
+				pageNum: 1,
+				orderList: [],
+				url: '/static/log.png',
+			}
+		},
+		components: {
+			navBar
+		},
+		onLoad () {
+			this.getOrderList()
+		},
+		onReachBottom() {
+			this.pageNum ++;
+			this.getOrderList()
+			// this.pageNum = this.pageNum + 1;
+		},
+		onPullDownRefresh() {
+			this.pageNum  = 1;
+			this.getOrderList()
+		},
+		methods: {
+			async getOrderList () {
+				let parmas = {
+					pageNum: this.pageNum,
+					pageSize: 10,
+					status: 'dps'
+				}
+				let data = await Api.apiCall('post',Api.agent.agentOrder.list,parmas)
+				if (data) {
+					if (data.result.records.length != 0) {
+						this.orderList = this.orderList.concat(data.result.records)
+					} else {
+						this.$api.msg('没有更多了')
+						this.pageNum--
+					}
+				}
+			},
+			tabSelect(e) {
+				this.TabCur = e.currentTarget.dataset.id
+				console.log(this.TabCur)
+			},
+			toDetail(id) {
+				uni.navigateTo({
+					url: '/pages/agent/info/order/orderDetail?orderId='+id
+				});
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	.agent-order-main {
+		width: 100%;
+		background-color: #f5f5f5;
+		.order-item{
+			width: 100%;
+			padding: 0 30upx;
+			background-color: #fff;
+			margin-top: 20upx;
+			height: 200upx;
+			.order-item-top{
+				display: flex;
+				line-height: 70upx;
+				height: 70upx;
+				color: #FE961C;
+				font-size: 24upx;
+				justify-content: space-between;
+				border-bottom: 1upx solid #EEEEEE;
+				.order-item-time {
+					color: #999999;
+					font-size: 24upx;
+				}
+			}
+			.order-item-content {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				padding: 10upx 0;
+				.order-item-info {
+					height: 100%;
+					display: flex;
+					flex-wrap: wrap;
+					width: calc(100% - 145upx);
+					.order-item-img {
+						width: 100upx;
+						height: 100upx;
+						border-radius: 50%;
+						margin-right: 20upx;
+					}
+					.info-main {
+						height: 100%;
+						.info-name {
+							.name {
+								color: #333;
+								font-size: 24upx;
+								margin-right: 20upx;
+								line-height: 50upx;
+							}
+							.phone {
+								color: #000;
+								font-size: 18upx;
+							}
+						}
+						.info-address {
+							font-size: 24upx;
+							color: #666666;
+						}
+					}
+				}
+				button {
+					width: 145upx;
+					height: 45upx;
+					line-height: 45upx;
+					text-align: center;
+					background-image: linear-gradient(#68BDFF,#49B1FE);
+					border-radius: 20upx;
+					color: #fff;
+					font-size: 24upx;
+					margin: 0;
+					padding: 0;
+					&::after {
+						border: none;
+					}
+				}
+			}
+		}
+	}
+</style>

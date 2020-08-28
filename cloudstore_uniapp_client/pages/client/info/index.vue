@@ -156,7 +156,7 @@
 			getuserinfo(){
 				let userInfo = uni.getStorageSync('userInfo');
 				if (userInfo) {
-					this.user.name = userInfo.name || '游客'
+					this.user.name = userInfo.name || '普通会员'
 					this.user.url = userInfo.wxPic;
 					this.user.relationId = userInfo.relationId
 					if (!userInfo.wxPic) {
@@ -177,6 +177,8 @@
 					case 'leader':
 						this.user.agentType = '团长'
 					break;
+					default:
+						this.user.agentType = '普通会员'
 				}
 			},
 			toNav(url){

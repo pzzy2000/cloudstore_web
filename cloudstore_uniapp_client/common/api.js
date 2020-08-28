@@ -2,8 +2,8 @@ import store from '../store/index';
 let timer, flag, timeout = null;
 export default {
 	
-	// BASEURI: 'http://106.52.184.24:18888/platform/',
-	BASEURI: 'https://api.sz-guochuang.com/platform/',
+	BASEURI: 'http://106.52.184.24:18888/platform/',
+	// BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -142,6 +142,9 @@ export default {
 		},
 		agentInfo: {
 			getAgentShop: 'agent/goods/app/getAgentShop'
+		},
+		agentOrder: {
+			list: 'app/private/order/delivery/list'
 		}
 	},
 	statusBarHeight () { //距离头部的固定定位信息
