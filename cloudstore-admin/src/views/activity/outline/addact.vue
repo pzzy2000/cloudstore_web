@@ -12,18 +12,18 @@
         <el-form-item label="结束时间：" prop="endTime">
           <el-date-picker v-model="activityForm.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="endDatePicker" type="date" placeholder="请选择活动结束时间"></el-date-picker>
         </el-form-item>
-<!--        <el-form-item label="活动类型：" prop="toType">-->
-<!--          <el-select v-model="activityForm.toType" placeholder="请选择活动类型" clearable>-->
-<!--            <el-option v-for="item in toTypelist" :key="item.value" :label="item.label" :value="item.value">-->
-<!--            </el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
+        <el-form-item label="活动类型：" prop="toType">
+          <el-select v-model="activityForm.toType" placeholder="请选择活动类型" clearable>
+            <el-option v-for="item in toTypelist" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="活动图片(一张)：" prop="picture">
           <SingleUpload v-model="picture" logotype="activity"></SingleUpload>
         </el-form-item>
-<!--        <el-form-item label="活动海报图片(一张)：" prop="activePoster" v-if="activityForm.toType == 'haibao' ? true : false">-->
-<!--          <SingleUpload v-model="activePoster" logotype="haibao"></SingleUpload>-->
-<!--        </el-form-item>-->
+        <el-form-item label="活动海报图片(一张)：" prop="activePoster" v-if="activityForm.toType == 'haibao' ? true : false">
+          <SingleUpload v-model="activePoster" logotype="haibao"></SingleUpload>
+        </el-form-item>
         <el-checkbox v-model="checked" style="margin-left: 120px">是否参加佣金活动</el-checkbox>
         <div style="text-align: right">
           <el-button type="primary" size="small" @click="subActname('activityForm')">提 交</el-button>
@@ -41,7 +41,7 @@
   import SingleUpload from '@/components/Upload/singleUpload';
   import { formatDate } from '@/assets/common/data.js'
   export default {
-    name: "addact",
+    name: "addactivity",
     provide() {
       return {
         rwDispatcherProvider: this
@@ -58,7 +58,7 @@
           endTime: '',
           picture: [],
           activePoster: [],
-          // toType: ''
+          toType: ''
         },
         isshow: true,
         optType: 'save',
@@ -72,14 +72,14 @@
           endTime: [{ required: true, message: '结束时间必填哦', trigger: 'blur' }],
           picture: [{ required: true, message: '必须上传图片', trigger: 'change' }],
           activePoster: [{ required: true, message: '必须上传图片', trigger: 'change'}],
-          // toType: [{ required: true, message: '活动类型不能为空', trigger: 'change' }]
+          toType: [{ required: true, message: '活动类型不能为空', trigger: 'change' }]
         },
         checked: false,
         startDatePicker: this.beginDate(),
         endDatePicker: this.processDate(),
         picture: [],
         activePoster: [],
-        // toTypelist: [{label: '商品列表', value: 'list'}, {label: '海报', value: 'haibao'}]
+        toTypelist: [{label: '商品列表', value: 'list'}, {label: '海报', value: 'haibao'}]
       }
     },
     created() {
@@ -170,9 +170,9 @@
           activePoster: this.activityForm.activePoster,
           addProfit: changeCheck,
           optType: this.optType,
-          toType: this.activityForm.toType
+          toType: this.activityForm.toType,
+          type: 1
         }
-        console.log(obj);
         if (this.$route.query.id !== undefined) {
           obj.id = this.$route.query.id
           addActivity(obj).then(res => {

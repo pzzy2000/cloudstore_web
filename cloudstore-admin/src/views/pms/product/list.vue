@@ -65,7 +65,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button class="btn-add" @click="handleAddProduct()" size="mini" v-show="isshow">
+      <el-button class="btn-add" @click="handleAddProduct()" size="mini">
         添加
       </el-button>
     </el-card>
@@ -143,7 +143,7 @@
 
             <el-button size="mini" @click="handleShowProduct(scope.$index, scope.row)">查看
             </el-button>
-            <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)" v-show="isshow">编辑
+            <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)">编辑
             </el-button>
             <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU管理
             </el-button>
@@ -151,9 +151,7 @@
                 size="mini"
                 @click="handleShowLog(scope.$index, scope.row)">日志
               </el-button> -->
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" v-show="isshow">删除
-            </el-button>
-            <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
             </el-button>
           </template>
         </el-table-column>
@@ -302,18 +300,11 @@
         }, {
           value: 0,
           label: '未审核'
-        }],
-        isshow: false
+        }]
       }
     },
     created() {
       this.getList(1);
-      switch (localStorage.getItem('userType')){
-        case 'platform': this.isshow = false;
-          break;
-        case 'supplier': this.isshow = true;
-          break;
-      }
       this.searchRootCategory();
       //this.getBrandList();
       //this.getProductCateList();
@@ -344,9 +335,6 @@
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`供应商账号：${item.name} / 供应商电话：${item.phone}`);
-      },
-      qrcode(index, row) {
-        this.$router.push({path: '/sys/goods/qrcode', query: {id: row.id}})
       },
       suppilerShop(row, column) {
         try {
@@ -657,7 +645,6 @@
       },
 
       handlePublishStatusChange($event, row) {
-        console.log($event);
         if (row.shelfStatus == 0){//下架
           upOrdown({goodsId: row.id}).then(res => {
             if(res.result.code == 0){

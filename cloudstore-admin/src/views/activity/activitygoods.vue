@@ -43,7 +43,8 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button type="primary" size="mini" @click="backPage" style="float: right">返回</el-button>
+      <el-button type="primary" size="mini" @click="backPage" style="float: right">申请活动</el-button>
+      <el-button size="mini" @click="returnPage" style="float: right; margin-right: 20px">返回</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
@@ -68,7 +69,6 @@
         </el-table-column>
         <el-table-column label="供应商店铺" align="center" fixed :formatter="goodsinfo" column-key="supplierShopBean">
         </el-table-column>
-
         <el-table-column label="操作" align="center" width="160">
           <template slot-scope="scope">
             <el-button size="mini" @click="settingactPrice(scope.row)">设置活动价格</el-button>
@@ -150,6 +150,9 @@
       settingactPrice(row) {
         this.$router.push({path: '/sys/activity/actprice', query: {id: row.id}})
       },
+      returnPage() {
+        this.$router.go(-1);
+      },
       getList(idx) {
         this.listLoading = true;
         fetchActivityGoodsList(this.listQuery).then(response => {
@@ -190,7 +193,7 @@
           case 'category':
             {
               try {
-                if (goods.categoryThreeBean !== null) {
+                if (goods.categoryThreeBean !== undefined) {
                   return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
                 } else {
                   return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name;
@@ -293,7 +296,7 @@
 
       },
       backPage() {
-        this.$router.back();
+        this.$router.push('/sys/activity/apply');
       },
       seclectCategory(event, item) {
         switch (item) {

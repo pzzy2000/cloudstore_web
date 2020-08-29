@@ -4,7 +4,7 @@
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
       <el-button size="mini" style="float: right" @click="backPage" v-show="isshow">返回</el-button>
-      <el-button type="primary" size="mini" style="float: right; margin-right: 20px" @click="addlevel" v-show="isview">添加</el-button>
+      <el-button type="primary" size="mini" style="float: right; margin-right: 20px" @click="addlevel">添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productCateTable" style="width: 100%" :data="list" v-loading="listLoading" border>
@@ -29,8 +29,7 @@
             <el-button
               size="mini"
               type="danger"
-              @click="handleDeletethislevel(scope.$index, scope.row)"
-              v-if="isview">删除
+              @click="handleDeletethislevel(scope.$index, scope.row)">删除
             </el-button>
           </template>
         </el-table-column>
@@ -66,8 +65,7 @@
           pageSize: 10,
           parentId: 0,
         },
-        isshow: true,
-        isview: true
+        isshow: true
       }
     },
     created() {
@@ -77,14 +75,6 @@
         this.isshow = false;
       } else {
         this.isshow = true;
-      }
-      switch (localStorage.getItem('userType')) {
-        case 'platform':
-          this.isview = true;
-          break;
-        case 'supplier':
-          this.isview = false;
-          break;
       }
     },
     activated() {
@@ -104,7 +94,7 @@
     methods: {
       updateLevel(row) {
         this.$router.push({
-          path: "/sys/goods/category/add",
+          path: "/sys/goods/category/edit",
           query: {
             parentId: this.$route.query.parentId,
             level: 2,

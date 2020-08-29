@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
           let result = res.result;
           let code = result.code;
           let loginuser = result.result.loginUser;
-          let menuBeans = result.result.sysModule;
+          let menuBeans = result.result.opt;
           let str = JSON.stringify(result.result.opt);
           localStorage.setItem('opt', str);
           store.dispatch('GenerateRoutes', menuBeans).then(() => { // 生成可访问的路由表

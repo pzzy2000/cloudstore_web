@@ -80,7 +80,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/sys/activity/list',
     name: 'activity',
-    meta: {title: '线上活动', icon: 'product-list'},
+    meta: {title: '活动管理', icon: 'product-list'},
     children: [{
       path: 'list',
       name: 'activity_list',
@@ -88,61 +88,64 @@ export const asyncRouterMap = [
       meta: {title: '线上活动列表', icon: 'product-list', keepAlive: true}
     }, {
       path: 'addact',
-      name: 'add_activity',
+      name: 'activity_add',
       component: () => import('@/views/activity/addactivity'),
-      meta: {title: '添加活动', icon: 'product-list'},
+      meta: {title: '添加线上活动', icon: 'product-list'},
       hidden: true
     }, {
       path: 'assogoods',
       name: 'asso_goods',
       component: () => import('@/views/activity/activitygoods'),
-      meta: {title: '活动商品', icon: 'product-list'},
+      meta: {title: '线上活动商品', icon: 'product-list'},
+      hidden: true
+    },
+    {
+      path: 'apply',
+      name: 'activity_apply',
+      component: () => import('@/views/activity/assoGoods'),
+      meta: {title: '线上申请活动', icon: 'product-list'},
       hidden: true
     },
       {
-        path: 'apply',
-        name: 'activity_apply',
-        component: () => import('@/views/activity/assoGoods'),
-        meta: {title: '申请活动', icon: 'product-list'}
-      }]
-  },
-  {
-    path: '/outline/activity',
-    component: Layout,
-    redirect: '/outline/activity/list',
-    name: 'outlineact',
-    meta: {title: '线下活动', icon: 'product-list'},
-    children: [
-      {
-        path: 'list',
+        path: 'outlinelist',
         name: 'outline_list',
-        component: () => import('@/views/outline/list'),
+        component: () => import('@/views/activity/outline/list'),
         meta: {title: '线下活动列表', icon: 'product-list'}
       },
       {
-        path: 'addact',
+        path: 'outlineaddact',
         name: 'outline_addact',
-        component: () => import('@/views/outline/addact'),
+        component: () => import('@/views/activity/outline/addact'),
         meta: {title: '添加线下活动', icon: 'product-list'},
         hidden: true
       },
       {
-        path: 'assoGoods',
+        path: 'outlineassoGoods',
         name: 'outline_assoGoods',
-        component: () => import('@/views/outline/assoGoods'),
-        meta: {title: '添加活动商品', icon: 'product-list'}
+        component: () => import('@/views/activity/outline/assoGoods'),
+        meta: {title: '线下活动商品', icon: 'product-list'},
+        hidden: true
       },
       {
-        path: 'actGoodslist',
+        path: 'outlineactGoodslist',
         name: 'outline_goodslist',
-        component: () => import('@/views/outline/actGoodslist'),
-        meta: {title: '活动商品列表', icon: 'product-list'}
+        component: () => import('@/views/activity/outline/actGoodslist'),
+        meta: {title: '线下商品列表', icon: 'product-list'},
+        hidden: true
       },
       {
-        path: 'settingParams',
+        path: 'outlinesetParams',
         name: 'outline_setparams',
-        component: () => import('@/views/outline/settingParams'),
-        meta: {title: '设置参数', icon: 'product-list'}
+        component: () => import('@/views/activity/outline/settingParams'),
+        meta: {title: '设置线下参数', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'qrcode',
+        name: 'outline_qrcode',
+        component: () => import('@/views/activity/outline/qrCode'),
+        meta: {title: '生成二维码', icon: 'product-list'},
+        hidden: true
       }
     ]
   },
@@ -186,17 +189,11 @@ export const asyncRouterMap = [
       meta: {title: '商品列表', icon: 'product-list', keepAlive: true}
     },
       {
-        path: 'qrcode',
-        name: 'qrcode',
-        component: () => import('@/views/pms/product/qrCode'),
-        meta: {title: '二维码', icon: 'product-add'},
-        hidden: true
-      },
-      {
         path: 'add',
-        name: 'add_goods',
+        name: 'goods_add',
         component: () => import('@/views/pms/product/info/editinfo'),
         meta: {title: '添加商品', icon: 'product-add'},
+        hidden: true
       },
       {
         path: 'info',
@@ -206,7 +203,7 @@ export const asyncRouterMap = [
         hidden: true
       }, {
         path: 'edit',
-        name: 'edit_goods',
+        name: 'goods_edit',
         component: () => import('@/views/pms/product/info/editinfo'),
         meta: {title: '编辑商品', icon: 'product-add'},
         hidden: true
@@ -217,13 +214,14 @@ export const asyncRouterMap = [
         component: () => import('@/views/pms/product/sku/info'),
         meta: {title: 'SKU管理', icon: 'product-list'},
         hidden: true
-      }, {
-        path: 'sku/info',
-        name: 'sku_info',
-        component: () => import('@/views/pms/product/sku/info'),
-        meta: {title: 'SKU管理', icon: 'product-list'},
-        hidden: true
       },
+      // {
+      //   path: 'sku/info',
+      //   name: 'sku_info',
+      //   component: () => import('@/views/pms/product/sku/info'),
+      //   meta: {title: 'SKU管理', icon: 'product-list'},
+      //   hidden: true
+      // },
       {
         path: 'category/list',
         name: 'category_list',
@@ -244,6 +242,13 @@ export const asyncRouterMap = [
         hidden: true
       },
       {
+        path: 'category/edit',
+        name: 'category_edit',
+        component: () => import('@/views/pms/productCate/addlevel'),
+        meta: {title: '编辑分类', icon: 'product-list'},
+        hidden: true
+      },
+      {
         path: 'property/list',
         name: 'property_list',
         component: () => import('@/views/pms/productAttr/index'),
@@ -258,7 +263,7 @@ export const asyncRouterMap = [
         path: 'property/update',
         name: 'property_update',
         component: () => import('@/views/pms/productAttr/addspecification'),
-        meta: {title: '添加商品规格', icon: 'product-list'},
+        meta: {title: '更新商品规格', icon: 'product-list'},
         hidden: true
       }, {
         path: 'property/specs/list',
@@ -294,18 +299,33 @@ export const asyncRouterMap = [
         path: 'property/param/update',
         name: 'goods_param_update',
         component: () => import('@/views/pms/productAttr/addspectypes'),
-        meta: {title: '增加规格'},
+        meta: {title: '更新规格'},
         hidden: true
       }, {
         path: 'goodsAsserverlist',
         name: 'goods_Asserverlist',
         component: () => import('@/views/pms/asServer/list'),
         meta: {title: '售后服务', icon: "product-list"}
-      }, {
-        path: 'goodsAsserver',
-        name: 'goods_Asserver',
+      },
+      {
+        path: 'goodsAsserver/info',
+        name: 'goods_Asserver_info',
         component: () => import('@/views/pms/asServer/index'),
         meta: {title: '售后服务详情', icon: "product-list"},
+        hidden: true
+      },
+      {
+        path: 'goodsAsserver/add',
+        name: 'goods_Asserver_add',
+        component: () => import('@/views/pms/asServer/index'),
+        meta: {title: '添加售后服务', icon: "product-list"},
+        hidden: true
+      },
+      {
+        path: 'goodsAsserver/update',
+        name: 'goods_Asserver_update',
+        component: () => import('@/views/pms/asServer/index'),
+        meta: {title: '更新售后服务', icon: "product-list"},
         hidden: true
       }]
   },
@@ -319,7 +339,7 @@ export const asyncRouterMap = [
       path: 'index',
       name: 'broke_rage',
       component: () => import('@/views/brokerage/index'),
-      meta: {title: '佣金活动列表', icon: 'product-list', keepAlive: true}
+      meta: {title: '线上活动佣金列表', icon: 'product-list', keepAlive: true}
     },
       {
         path: 'brokegoods',
@@ -337,7 +357,7 @@ export const asyncRouterMap = [
       },
       {
         path: 'defbro',
-        name: 'default_broke',
+        name: 'broke_default',
         component: () => import('@/views/brokerage/defBroke'),
         meta: {title: '默认佣金', icon: 'product-list'}
       },
@@ -356,13 +376,13 @@ export const asyncRouterMap = [
       },
       {
         path: 'goodsBroke',
-        name: 'goodsBroke',
+        name: 'broke_goodsdef',
         component: () => import('@/views/brokerage/goodsBroke/index'),
         meta: {title: '商品默认佣金', icon: 'product-list'}
       },
       {
         path: 'settingBroke',
-        name: 'settingBroke',
+        name: 'broke_setting',
         component: () => import('@/views/brokerage/goodsBroke/settingBroke'),
         meta: {title: '商品佣金设置', icon: 'product-list'},
         hidden: true

@@ -5,7 +5,8 @@ function hasPermission(menus, routeChild) {
   // if (routeChild.name) {
   //   let currMenu = getMenu(routeChild.name, menus);
   //   //routeChild.hidden = !currMenu;
-  //    return  currMenu;
+  //   console.log(currMenu);
+  //    return currMenu;
   // } else {
   //   return false
   // }
@@ -14,9 +15,14 @@ function hasPermission(menus, routeChild) {
 
 //根据路由名称获取菜单
 function getMenu(name, menus) {
-  for (let i = 0; i < menus.length; i++) {
-    let menu = menus[i];
-    if (name === menu.key) {
+  // for (let i = 0; i < menus.length; i++) {
+  //   let menu = menus[i];
+  //   if (name === menu.key) {
+  //     return true;
+  //   }
+  // }
+  for (let i in menus) {
+    if (name == i) {
       return true;
     }
   }

@@ -43,19 +43,20 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button type="primary" size="mini" @click="backPage" style="float: right">返回</el-button>
+      <el-button size="mini" @click="backPage" style="float: right">返回</el-button>
+      <el-button type="primary" size="mini" @click="associatedGood" style="float: right; margin-right: 20px">关联商品</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60px" align="center"></el-table-column>
-        <el-table-column label="商品名称" align="center" :formatter="goodsinfo" column-key='goodsName' fixed="">
+        <el-table-column label="商品名称" align="center" :formatter="goodsinfo" prop='goodsName'>
         </el-table-column>
-        <el-table-column label="商品分类" align="center" fixed :formatter="goodsinfo" column-key="category">
+        <el-table-column label="商品分类" align="center" :formatter="goodsinfo" prop="category">
         </el-table-column>
-        <el-table-column label="销售价/市场价" align="center" fixed :formatter="goodsinfo" column-key="pics">
+        <el-table-column label="SKU编号" align="center" :formatter="goodsinfo" prop="skuCode">
         </el-table-column>
-        <el-table-column label="商品图片" align="center"  column-key="goodsPhotos">
+        <!--<el-table-column label="商品图片" align="center">
           <template slot-scope="scope">
             <el-image v-for=" (item,index) in scope.row.goodsPicesBean.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">
               <div slot="placeholder" class="image-slot">
@@ -63,16 +64,21 @@
               </div>
             </el-image>
           </template>
+        </el-table-column>-->
+        <el-table-column label="规格" align="center" :formatter="goodsinfo" prop="guige">
         </el-table-column>
-        <el-table-column label="供应商" align="center" fixed :formatter="goodsinfo" column-key="supplierBean">
+        <el-table-column label="活动价格(-1为未设置)" align="center" prop="offlinePrice" :formatter="goodsinfo">
         </el-table-column>
-        <el-table-column label="供应商店铺" align="center" fixed :formatter="goodsinfo" column-key="supplierShopBean">
+        <el-table-column label="团长佣金(-1为未设置)" align="center" :formatter="goodsinfo" prop="supplierShopBea">
         </el-table-column>
-
-        <el-table-column label="操作" align="center" width="240">
+        <el-table-column label="客户购买积分(-1为未设置)" width="200" align="center" :formatter="goodsinfo" prop="supplierShopan">
+        </el-table-column>
+        <el-table-column label="操作" align="center" width="400">
           <template slot-scope="scope">
-            <el-button size="mini" @click="settingactPrice(scope.row)">设置活动价格</el-button>
-            <el-button type="danger" size="mini" @click="handeldel(scope.row)" v-if="status == 1 ? false : true">删除</el-button>
+            <el-button size="mini" @click="readInfo(scope.row)">查看详情</el-button>
+            <el-button type="primary" size="mini" @click="settingactPrice(scope.row)">设置参数</el-button>
+            <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码</el-button>
+            <el-button type="danger" size="mini" @click="handeldel(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -88,7 +94,7 @@
   </div>
 </template>
 <script>
-  import {fetchActivityGoodsList, delActivityGoodsList, fetchListWithChildren} from '@/api/activity'
+  import {fetchActivityGoodsLists, delActivityGoodsList, fetchListWithChildren, outAssogoods} from '@/api/activity'
   import {msg} from '@/api/iunits'
   import remoteCom from '@/components/remoteCom'
   const defaultListQuery = {
@@ -148,14 +154,20 @@
         callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
       },
       settingactPrice(row) {
-        this.$router.push({path: '/sys/activity/actprice', query: {id: row.id}})
+        this.$router.push({path: '/sys/activity/outlinesetParams', query: {id: row.skuId, activityId: this.$route.query.id, activityGoodsId: row.activityGoodsId, offlinePrice: row.offlinePrice}})
+      },
+      qrcode(index, row) {
+        this.$router.push({path: '/sys/activity/qrcode', query: {id: row.id}})
       },
       getList(idx) {
         this.listLoading = true;
-        fetchActivityGoodsList(this.listQuery).then(response => {
+        this.listQuery.joins = 1;
+        fetchActivityGoodsLists(this.listQuery).then(response => {
+          if (response.result.code == 0) {
+            this.list = response.result.result.records;
+            this.total = parseInt(response.result.result.total);
+          }
           this.listLoading = false;
-          this.list = response.result.result.records;
-          this.total = parseInt(response.result.result.total);
           if (idx == 0) {
             if (response.result.result.records.length == 0) {
               this.$message({
@@ -181,16 +193,15 @@
         });
       },
       goodsinfo(row, column) {
-        let goods = row.goodsPicesBean;
-        switch (column.columnKey) {
-          case 'goodsName':
-          {
+        let goods = row.goodsBean;
+        switch (column.property) {
+          case 'goodsName': {
             return goods.goodsName;
           }
           case 'category':
           {
             try {
-              if (goods.categoryThreeBean !== null) {
+              if (goods.categoryThreeBean !== undefined) {
                 return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
               } else {
                 return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name;
@@ -200,28 +211,28 @@
               return '数据读取错误';
             }
           }
-          case 'pics':
+          case 'skuCode':
           {
             try {
-              return '￥' + goods.salePrice + '/' + goods.martPrice;
+              return row.skuCode;
             } catch (e) {
               return '数据读取错误';
             }
           }
-          case 'supplierBean':
+          case 'guige':
           {
             try {
-              return goods.supplierBean.name;
+              return row.skuKey + ':' + row.skuValue;
             } catch (e) {
               return '数据读取错误';
             }
           }
-          case 'supplierShopBean':
+          case 'offlinePrice':
           {
-            try {
-              return goods.supplierShopBean.shopName;
-            } catch (e) {
-              return '数据读取错误';
+            if (row.offlinePrice !== undefined) {
+              return row.offlinePrice;
+            } else {
+              return '-1';
             }
           }
         }
@@ -262,19 +273,11 @@
         this.listQuery.pageSize = val;
         this.getList(1);
       },
-      addactivity() {
-        this.$router.push({
-          path: "/sys/activity/addact"
-          // query: {rds: "write"}
-        })
-      },
       associatedGood(row) {
+        let id = this.$route.query.id;
         this.$router.push({
-          path: "/sys/activity/assogoods",
-          query: {
-            name: row.name,
-            activityid: row.id
-          }
+          path: "/sys/activity/outlineactGoodslist",
+          query: {activityid: id}
         })
       },
       handeldel(row) {
@@ -283,12 +286,18 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let ids = [];
-          ids.push(row.id);
-          delActivityGoodsList({ids:ids}).then(response => {
-            msg("删除活动商品成功");
-            this.getList(1);
-          });
+          outAssogoods({
+            ids: row.activityGoodsId
+          }).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: '申请退出活动成功',
+                type: 'success',
+                duration: 800
+              })
+              this.getList(1);
+            }
+          })
         });
 
       },
@@ -323,7 +332,7 @@
           }
         }
         // this.$forceUpdate();
-      },
+      }
     }
   }
 </script>
