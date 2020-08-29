@@ -65,16 +65,22 @@
 						<text class="text-block text">个人资料</text>
 					</view>
 				</view>
-				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.relationId > 0">
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.userType == 'client'">
+					<view class="content">
+						<text class="cuIcon-vip"></text>
+						<text class="text-block text">申请代理</text>
+					</view>
+				</view>
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.userType == 'agent'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
 						<text class="text-block text">代理资料</text>
 					</view>
 				</view>
-				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-else>
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/agent/info/index')" v-if="user.userType == 'leader'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
-						<text class="text-block text">申请代理</text>
+						<text class="text-block text">团长入口</text>
 					</view>
 				</view>
 				<view class="cu-item arrow">
@@ -162,7 +168,7 @@
 					if (!userInfo.wxPic) {
 						this.user.url = this.user.detailUrl
 					}
-					this.user.userType = userInfo.userType
+					this.user.userType = 'client'
 					this.isUserType(userInfo.agent)
 				}
 			},
@@ -170,16 +176,21 @@
 				switch (type) {
 					case null:
 						this.user.agentType = '普通会员'
+						this.user.userType = 'client'
 					break;
 					case 'agent':
 						this.user.agentType = '代理'
+						this.user.userType = 'agent'
 					break;
 					case 'leader':
 						this.user.agentType = '团长'
+						this.user.userType = 'leader'
 					break;
 					default:
 						this.user.agentType = '普通会员'
+						this.user.userType = 'client'
 				}
+				console.log(this.user.userType)
 			},
 			toNav(url){
 				uni.navigateTo({

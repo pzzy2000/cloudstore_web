@@ -9,7 +9,7 @@
 			</view>
 		</scroll-view>
 		<view class="agent-order-main">
-			<view class="order-item" v-for="item in orderList" :key="item.ordersId">
+			<view class="order-item" v-for="item in orderList" :key="item.ordersId" @click="toDetail(item.ordersId, item.allocationDetailId)">
 				<view class="order-item-top">
 					<text class="order-item-time">下单时间：{{item.ordersBean.createTime}}</text>
 					<template>
@@ -28,7 +28,7 @@
 				</view>
 				<view class="order-item-content">
 					<view class="order-item-info">
-						<image src="/static/log.png" mode="" class="order-item-img"></image>
+						<image src="/static/logo.png" mode="" class="order-item-img"></image>
 						<view class="info-main">
 							<view class="info-name">
 								<text class="name">{{item.ordersBean.clientAddressBean.name}}</text>
@@ -37,7 +37,10 @@
 							<text class="info-address">{{item.ordersBean.clientAddressBean.provinceBean.name}}{{item.ordersBean.clientAddressBean.cityBean.name}}{{item.ordersBean.clientAddressBean.areaBean.name}}{{item.ordersBean.clientAddressBean.detailAddress}}</text>
 						</view>
 					</view>
-					<button @click="toDetail(item.ordersId)">查看</button>
+					<button>查看</button>
+				</view>
+				<view class="order-item-bottom">
+					<text class=".order-item-id">订单编号：{{item.ordersId}}</text>
 				</view>
 			</view>
 		</view>
@@ -73,7 +76,7 @@
 		components: {
 			navBar
 		},
-		onLoad () {
+		onShow () {
 			this.getOrderList()
 		},
 		onReachBottom() {
@@ -104,12 +107,11 @@
 			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id
-				console.log(this.TabCur)
 			},
-			toDetail(id) {
+			toDetail(orderId, allocationDetailId) {
 				uni.navigateTo({
-					url: '/pages/agent/info/order/orderDetail?orderId='+id
-				});
+					url: '/pages/agent/info/order/orderDetail?orderId='+orderId+'&allocationDetailId='+allocationDetailId
+				})
 			}
 		}
 	}
@@ -124,7 +126,6 @@
 			padding: 0 30upx;
 			background-color: #fff;
 			margin-top: 20upx;
-			height: 200upx;
 			.order-item-top{
 				display: flex;
 				line-height: 70upx;
@@ -188,6 +189,19 @@
 					&::after {
 						border: none;
 					}
+				}
+			}
+			.order-item-bottom {
+				display: flex;
+				line-height: 70upx;
+				height: 70upx;
+				color: #FE961C;
+				font-size: 24upx;
+				justify-content: space-between;
+				border-top: 1upx solid #eee;
+				.order-item-id {
+					color: #999999;
+					font-size: 24upx;
 				}
 			}
 		}

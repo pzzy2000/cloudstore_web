@@ -5,22 +5,21 @@
 		<view class="order-item">
 			<view class="i-top">
 				<text>订单时间: {{orderList.orderBean.createTime}}</text>
-				<view class="price-box">
+				<!-- <view class="price-box">
 					<text class="num">总价:</text>
 					<text class="price">{{orderList.orderBean.payPrice}}</text>
-				</view>
+				</view> -->
 			</view>
-			<view v-for="(order, index1) in orderList.details" :key="index1">
-				<text></text>
+			<view v-for="(order, index1) in orderList.details" :key="index1" class="order-list">
+				<!-- <checkbox class='round order-check blue' :class="checked?'checked':''" :checked="checked?true:false" value="B"></checkbox> -->
+				<checkbox class='round order-check blue' value="B" @click="orderSelect(index1)" v-if="order.status === 'WaitDeliver'"></checkbox>
 				<view class="goods-box-single">
 					<image class="goods-img" :src="order.goodsSkuBean.photos[0].url || order.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 					<view class="right">
 						<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
-						<text class="subtitle clamp">{{order.goodsPicesBean.goodsSubtitle}}</text>
-						<view class="detail-price">
-							<view class="price-num price-symbol">{{order.goodsSkuBean.price}} <text class="price-sku">/{{order.goodsSkuBean.skuValue}}</text> </view>
-							<text>× {{order.quantity}}</text>
-						</view>
+						<text class="subtitle clamp">规格：{{order.goodsSkuBean.skuValue}}</text>
+						<text class="subtitle clamp">单价：{{order.goodsSkuBean.price}}</text>
+						<text class="subtitle clamp">数量：{{order.quantity}}</text>
 					</view>
 					<view class="flex align-center">
 						<view class="status" v-if="order.status === 'WaitDeliver'">待发货</view>
@@ -36,7 +35,8 @@
 			</view>
 			<view class="order-item-bottom">
 				<view class="order-price">共{{orderList.details.length}}件，总价： <text class="price-symbol price-num">{{orderList.orderBean.payPrice}}</text> </view>
-				<button class="delivery">确认配送</button>
+				<button class="delivery" @click="delivery">确认配送</button>
+				<!-- <button class="delivery" @click="delivery" v-if="orderSelectList.length != 0">确认配送</button> -->
 			</view>
 		</view>
 	</view>
@@ -50,7 +50,9 @@
 			return {
 				pageNum: 1,
 				orderId: '',
-				orderList: []
+				allocationDetailId: '',
+				orderList: [],
+				orderSelectList: []
 			}
 		},
 		components: {
@@ -66,8 +68,8 @@
 		},
 		onLoad(ops) {
 			this.orderId = ops.orderId
+			this.allocationDetailId = ops.allocationDetailId
 			this.getOrderData(ops.orderId)
-			console.log(ops)
 		},
 		methods: {
 			async getOrderData (id) {
@@ -76,8 +78,34 @@
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params,true);
 				if (data) {
-					console.log(data)
 					this.orderList = data.result
+				}
+			},
+			orderSelect (index) {
+				var indexVal = this.orderSelectList.indexOf(this.orderList.details[index].id)
+				if(indexVal > -1) {
+					this.orderSelectList.splice(indexVal, 1)
+				} else {
+					this.orderSelectList.push(this.orderList.details[index].id)
+				}
+			},
+			async delivery () {
+				console.log(this.orderSelectList)
+				if (this.orderSelectList.length === 0) {
+					this.$api.msg('暂无选中的配送商品')
+					return false;
+				}
+				let  params  = {
+					allocationDetailId: this.allocationDetailId,
+					orderDetailId: []
+				}
+				for (let tmp in this.orderSelectList) {
+					params.orderDetailId.push(this.orderSelectList[tmp])
+				}
+				let data = await Api.apiCallbackCall('post', Api.agent.agentOrder.delivery, params,true,false);
+				if (data) {
+					this.$api.msg('配送成功')
+					this.getOrderData(this.orderId)
 				}
 			}
 		}
@@ -97,8 +125,9 @@
 			align-items: center;
 			justify-content: space-between;
 			height: 80upx;
-			font-size: 22upx;
+			font-size: 24upx;
 			color: #999999;
+			border-bottom: 1upx solid #eee;
 			.time {
 				color: #333333;
 				font-size: 24upx;
@@ -137,6 +166,18 @@
 				}
 			}
 		}
+		.order-list {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			width: 100%;
+			.order-check {
+				position: absolute;
+				left: 25upx;
+				z-index: 2;
+				transform: scale(0.8);
+			}
+		}
 		/* 多条商品 */
 		.goods-box{
 			height: 160upx;
@@ -157,11 +198,13 @@
 		/* 单条商品 */
 		.goods-box-single{
 			display: flex;
-			padding: 20upx 0;
+			padding: 20upx 0 20upx 50upx;
+			width: 100%;
 			.goods-img{
 				display: block;
-				width: 172upx;
-				height: 172upx;
+				width: 140upx;
+				height: 140upx;
+				border-radius: 10upx;
 			}
 			.right{
 				flex: 1;
@@ -172,13 +215,9 @@
 				.title{
 					font-size: 32upx;
 					color: #333333;
-					line-height: 1;
-					letter-spacing: 4upx;
-					line-height: 50upx;
 				}
 				.subtitle {
 					color: #999999;
-					line-height: 50upx;
 					font-size: 24upx;
 				}
 				.detail-price {

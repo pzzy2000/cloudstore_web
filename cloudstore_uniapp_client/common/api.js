@@ -144,7 +144,8 @@ export default {
 			getAgentShop: 'agent/goods/app/getAgentShop'
 		},
 		agentOrder: {
-			list: 'app/private/order/delivery/list'
+			list: 'app/private/order/delivery/list',
+			delivery: 'app/private/order/delivery/order'
 		}
 	},
 	statusBarHeight () { //距离头部的固定定位信息

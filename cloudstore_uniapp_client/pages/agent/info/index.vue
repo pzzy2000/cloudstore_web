@@ -18,7 +18,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="exit-btn">
+		<view class="exit-btn" @click="toUrl('/pages/client/info/index', 'tab')">
 			退出
 		</view>
 	</view>
@@ -86,12 +86,19 @@
 			navBar
 		},
 		methods: {
-			toUrl (url) {
-				console.log(url)
+			toUrl (url, type) {
 				if(url) {
-					uni.navigateTo({
-						url: url
-					})
+					if (type) {
+						uni.switchTab({
+						    url: url
+						});
+					} else {
+						uni.navigateTo({
+							url: url
+						})
+					}
+				} else {
+					return false;
 				}
 			}
 		}
