@@ -4,7 +4,7 @@
 		<!-- 订单列表 -->
 		<view class="order-item">
 			<view class="i-top">
-				<text>订单时间: {{orderList.orderBean.createTime}}</text>
+				<text>订单时间: {{orderList.orderBean.createTime || '加载中'}}</text>
 				<!-- <view class="price-box">
 					<text class="num">总价:</text>
 					<text class="price">{{orderList.orderBean.payPrice}}</text>
@@ -16,10 +16,10 @@
 				<view class="goods-box-single">
 					<image class="goods-img" :src="order.goodsSkuBean.photos[0].url || order.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
 					<view class="right">
-						<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
-						<text class="subtitle clamp">规格：{{order.goodsSkuBean.skuValue}}</text>
-						<text class="subtitle clamp">单价：{{order.goodsSkuBean.price}}</text>
-						<text class="subtitle clamp">数量：{{order.quantity}}</text>
+						<text class="title clamp">{{order.goodsPicesBean.goodsName || '加载中'}}</text>
+						<text class="subtitle clamp">规格：{{order.goodsSkuBean.skuValue || '加载中'}}</text>
+						<text class="subtitle clamp">单价：{{order.goodsSkuBean.price || '加载中'}}</text>
+						<text class="subtitle clamp">数量：{{order.quantity || '加载中'}}</text>
 					</view>
 					<view class="flex align-center">
 						<view class="status" v-if="order.status === 'WaitDeliver'">待发货</view>
@@ -34,8 +34,8 @@
 				</view>
 			</view>
 			<view class="order-item-bottom">
-				<view class="order-price">共{{orderList.details.length}}件，总价： <text class="price-symbol price-num">{{orderList.orderBean.payPrice}}</text> </view>
-				<button class="delivery" @click="delivery">确认配送</button>
+				<view class="order-price">共{{orderList.details.length || '加载中'}}件，总价： <text class="price-symbol price-num">{{orderList.orderBean.payPrice || '加载中'}}</text> </view>
+				<button class="delivery" @click="isDelivery">确认配送</button>
 				<!-- <button class="delivery" @click="delivery" v-if="orderSelectList.length != 0">确认配送</button> -->
 			</view>
 		</view>
@@ -89,12 +89,26 @@
 					this.orderSelectList.push(this.orderList.details[index].id)
 				}
 			},
-			async delivery () {
-				console.log(this.orderSelectList)
+			async isDelivery () {
 				if (this.orderSelectList.length === 0) {
 					this.$api.msg('暂无选中的配送商品')
 					return false;
 				}
+				uni.showModal({
+					title: '提示',
+					content: '是否确认配送？',
+					showCancel: true,
+					cancelText: '取消',
+					confirmText: '确定',
+					success: res => {
+						if(res.confirm) {
+							this.delivery()
+						} else if (res.cancel){
+						}
+					},
+				});
+			},
+			async delivery () {
 				let  params  = {
 					allocationDetailId: this.allocationDetailId,
 					orderDetailId: []
@@ -102,10 +116,14 @@
 				for (let tmp in this.orderSelectList) {
 					params.orderDetailId.push(this.orderSelectList[tmp])
 				}
-				let data = await Api.apiCallbackCall('post', Api.agent.agentOrder.delivery, params,true,false);
+				let data = await Api.apiCallbackCall('post', Api.agent.agentOrder.delivery, params,true,false)
 				if (data) {
-					this.$api.msg('配送成功')
-					this.getOrderData(this.orderId)
+					if (data.code === 0) {
+						this.$api.msg('配送成功')
+						this.getOrderData(this.orderId)
+					} else {
+						this.$api.msg(data.msg)
+					}
 				}
 			}
 		}

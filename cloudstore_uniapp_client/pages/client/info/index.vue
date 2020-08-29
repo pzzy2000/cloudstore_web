@@ -141,8 +141,8 @@
 					userType: '',
 					agentType: '普通会员',
 					name: null || '普通会员',
-					url: '/static/log.png',
-					detailUrl: '/static/log.png'
+					url: '/static/logo.png',
+					detailUrl: '/static/logo.png'
 				}
 			};
 		},

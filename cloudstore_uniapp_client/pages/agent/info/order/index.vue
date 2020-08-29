@@ -3,7 +3,7 @@
 		<nav-bar backState="1000">配送管理</nav-bar>
 		<scroll-view scroll-x class="bg-white nav">
 			<view class="flex text-center">
-				<view class="cu-item flex-sub" :class="index==TabCur?'text-blue cur':''" v-for="(item,index) in tabList" :key="index" @tap="tabSelect" :data-id="index">
+				<view class="cu-item flex-sub" :class="index==TabCur?'text-blue cur':''" v-for="(item,index) in tabList" :key="index" @tap="tabSelect(item)" :data-id="index">
 					{{item.name}}
 				</view>
 			</view>
@@ -56,21 +56,25 @@
 				TabCur: 0,
 				tabList: [
 					{
+						id: 0,
+						name: '全部',
+						type: ''
+					},
+					{
 						id: 1,
-						name: '全部'
+						name: '待配送',
+						type: 'dps'
 					},
 					{
 						id: 2,
-						name: '待配送'
-					},
-					{
-						id: 3,
-						name: '已配送'
+						name: '已配送',
+						type: 'yps'
 					}
 				],
 				pageNum: 1,
 				orderList: [],
-				url: '/static/log.png',
+				orderType: '',
+				url: '/static/logo.png',
 			}
 		},
 		components: {
@@ -78,6 +82,8 @@
 		},
 		onShow () {
 			this.getOrderList()
+			this.orderList.length = 0
+			this.pageNum = 1
 		},
 		onReachBottom() {
 			this.pageNum ++;
@@ -85,6 +91,7 @@
 			// this.pageNum = this.pageNum + 1;
 		},
 		onPullDownRefresh() {
+			this.orderList.length = 0
 			this.pageNum  = 1;
 			this.getOrderList()
 		},
@@ -93,9 +100,9 @@
 				let parmas = {
 					pageNum: this.pageNum,
 					pageSize: 10,
-					status: 'dps'
+					status: this.orderType
 				}
-				let data = await Api.apiCall('post',Api.agent.agentOrder.list,parmas)
+				let data = await Api.apiCall('post', Api.agent.agentOrder.list, parmas, true)
 				if (data) {
 					if (data.result.records.length != 0) {
 						this.orderList = this.orderList.concat(data.result.records)
@@ -104,9 +111,14 @@
 						this.pageNum--
 					}
 				}
+				uni.stopPullDownRefresh();
 			},
-			tabSelect(e) {
-				this.TabCur = e.currentTarget.dataset.id
+			tabSelect(item) {
+				this.TabCur = item.id
+				this.orderType = item.type
+				this.pageNum  = 1;
+				this.orderList.length = 0
+				this.getOrderList()
 			},
 			toDetail(orderId, allocationDetailId) {
 				uni.navigateTo({

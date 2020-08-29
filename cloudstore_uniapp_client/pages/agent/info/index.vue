@@ -4,11 +4,9 @@
 			<image class="bg" src="/static/index-top-bg.png"></image>
 			<view class="user-info-box">
 				<view class="member-top-c">
-					<template>
-						<view class="" style="display: flex;align-items: center;" >
-							<image class="portrait" mode="aspectFill" :src="user.url">{{user.name}}</image>
-						</view>
-					</template>
+					<view class="" style="display: flex;align-items: center;" >
+						<image class="portrait" mode="aspectFill" :src="user.url">{{user.name}}(团长)</image>
+					</view>
 				</view>
 			</view>
 			<view class="agent-main">
@@ -35,8 +33,8 @@
 					userType: '',
 					agentType: '普通会员',
 					name: null || '普通会员',
-					url: '/static/log.png',
-					detailUrl: '/static/log.png'
+					url: '/static/logo.png',
+					detailUrl: '/static/logo.png'
 				},
 				agentList:[
 					{
@@ -46,37 +44,37 @@
 					},
 					{
 						name: '敬请期待',
-						icon: 'cuIcon-loading2',
+						icon: 'cuIcon-refund',
 						url: ''
 					},
 					{
 						name: '敬请期待',
-						icon: 'cuIcon-loading2',
+						icon: 'cuIcon-refund',
 						url: ''
 					},
 					{
 						name: '敬请期待',
-						icon: 'cuIcon-loading2',
+						icon: 'cuIcon-refund',
 						url: ''
 					},
 					{
 						name: '敬请期待',
-						icon: 'cuIcon-loading2',
+						icon: 'cuIcon-refund',
 						url: ''
 					},
 					{
 						name: '敬请期待',
-						icon: 'cuIcon-loading2',
+						icon: 'cuIcon-refund',
 						url: ''
 					},
 					{
 						name: '敬请期待',
-						icon: 'cuIcon-loading2',
+						icon: 'cuIcon-refund',
 						url: ''
 					},
 					{
 						name: '敬请期待',
-						icon: 'cuIcon-loading2',
+						icon: 'cuIcon-refund',
 						url: ''
 					}
 				]
@@ -85,8 +83,21 @@
 		components: {
 			navBar
 		},
+		onLoad () {
+			this.getuserinfo()
+		},
 		methods: {
-			toUrl (url, type) {
+			getuserinfo(){ // 获取微信用户信息
+				let userInfo = uni.getStorageSync('userInfo');
+				if (userInfo) {
+					this.user.name = userInfo.name || '普通会员'
+					this.user.url = userInfo.wxPic;
+					if (!userInfo.wxPic) {
+						this.user.url = this.user.detailUrl
+					}
+				}
+			},
+			toUrl (url, type) { //页面跳转
 				if(url) {
 					if (type) {
 						uni.switchTab({
@@ -98,6 +109,7 @@
 						})
 					}
 				} else {
+					this.$api.msg('敬请期待')
 					return false;
 				}
 			}
@@ -155,13 +167,14 @@
 		position: absolute;
 		.agent-main-list {
 			text-align: center;
-			font-size: 26upx;
+			font-size: 30upx;
 			width: 25%;
 			display: flex;
+			color: #212121;
 			flex-wrap: wrap;
 			align-items: center;
 			justify-content: center;
-			padding: 20upx;
+			padding: 20upx 10upx;
 			.list-icon {
 				width: 100%;
 				font-size: 60upx;

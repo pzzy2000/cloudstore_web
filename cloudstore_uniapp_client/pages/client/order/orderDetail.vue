@@ -281,6 +281,7 @@
 			.image-wrapper {
 				width: 124upx;
 				height: 124upx;
+				border-radius: 10upx;
 			}
 			.goods-detail {
 				margin-left: 40upx;
