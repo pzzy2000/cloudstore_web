@@ -10,7 +10,7 @@
 					<button class="cu-btn round index" @click="toPages('index')">返回首页</button>
 					<button class="cu-btn round order" @click="toPages('order')">查看订单</button>
 				</view>
-				<view class="below-the-line">
+				<view class="below-the-line" v-if="belowTheLine">
 					<view class="below-the-line-main">
 						<view class="theLine-title">您已成功购买</view>
 						<view class="theLine-content">
@@ -48,7 +48,9 @@
 	import navBar from '@/components/zhouWei-navBar';
 	export default { 
 		data() {
-			return {}
+			return {
+				belowTheLine: false
+			}
 		},
 		components: {
 			navBar
