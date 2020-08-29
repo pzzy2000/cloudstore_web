@@ -17,7 +17,7 @@
 			<view class="i-top">
 				<text class="time">订单号: {{item.number}}</text>
 				<template>
-					<text class="state" v-if="item.orderStatus === 'wait'">关闭时间：{{item.endTime}}</text>
+					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
 					<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
@@ -98,7 +98,6 @@
 				</view>
 				<!-- 已完成 -->
 				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'complete'">
-					<text class="state">订单完成时间：{{item.endTime}}</text>
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
 				<!-- 退货-->
