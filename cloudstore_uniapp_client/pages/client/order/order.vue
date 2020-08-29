@@ -525,6 +525,7 @@
 				display: block;
 				width: 100%;
 				height: 100%;
+				border-radius: 10upx;
 			}
 		}
 		/* 单条商品 */
@@ -535,6 +536,7 @@
 				display: block;
 				width: 172upx;
 				height: 172upx;
+				border-radius: 10upx;
 			}
 			.right{
 				flex: 1;

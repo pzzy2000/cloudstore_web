@@ -41,7 +41,7 @@
 					<text class="cuIcon-sponsor text-blue" style="font-size: 60upx;"></text>
 					<text class="text">提现</text>
 				</view>
-				<view class="order-item" @click="navTo('/pages/client/order/afterSaleList')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo('/pages/client/order/afterSaleList', 'afterSale')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-yishouhuo text-blue"></text>
 					<text class="text">售后</text>
 				</view>
@@ -65,16 +65,22 @@
 						<text class="text-block text">个人资料</text>
 					</view>
 				</view>
-				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.relationId > 0">
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.userType == 'client'">
+					<view class="content">
+						<text class="cuIcon-vip"></text>
+						<text class="text-block text">申请代理</text>
+					</view>
+				</view>
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.userType == 'agent'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
 						<text class="text-block text">代理资料</text>
 					</view>
 				</view>
-				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-else>
+				<view class="cu-item arrow"  @click="toapplyAgent('/pages/agent/info/index')" v-if="user.userType == 'leader'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
-						<text class="text-block text">申请代理</text>
+						<text class="text-block text">代理入口</text>
 					</view>
 				</view>
 				<view class="cu-item arrow">
@@ -135,8 +141,8 @@
 					userType: '',
 					agentType: '普通会员',
 					name: null || '普通会员',
-					url: '/static/log.png',
-					detailUrl: '/static/log.png'
+					url: '/static/logo.png',
+					detailUrl: '/static/logo.png'
 				}
 			};
 		},
@@ -156,13 +162,13 @@
 			getuserinfo(){
 				let userInfo = uni.getStorageSync('userInfo');
 				if (userInfo) {
-					this.user.name = userInfo.name || '游客'
+					this.user.name = userInfo.name || '普通会员'
 					this.user.url = userInfo.wxPic;
 					this.user.relationId = userInfo.relationId
 					if (!userInfo.wxPic) {
 						this.user.url = this.user.detailUrl
 					}
-					this.user.userType = userInfo.userType
+					this.user.userType = 'client'
 					this.isUserType(userInfo.agent)
 				}
 			},
@@ -170,14 +176,21 @@
 				switch (type) {
 					case null:
 						this.user.agentType = '普通会员'
+						this.user.userType = 'client'
 					break;
 					case 'agent':
 						this.user.agentType = '代理'
+						this.user.userType = 'agent'
 					break;
 					case 'leader':
 						this.user.agentType = '团长'
+						this.user.userType = 'leader'
 					break;
+					default:
+						this.user.agentType = '普通会员'
+						this.user.userType = 'client'
 				}
+				console.log(this.user.userType)
 			},
 			toNav(url){
 				uni.navigateTo({
@@ -237,6 +250,7 @@
 						url: url
 					});
 				}
+				//this.$api.msg('提现功能于9月30日开发')
 			},
 			/**
 			 *  会员卡下拉和回弹

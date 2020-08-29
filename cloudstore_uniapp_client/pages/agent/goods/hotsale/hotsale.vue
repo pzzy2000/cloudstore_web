@@ -232,7 +232,7 @@
 					agentId = (agentId!="undefined" && agentId !=null && agentId!='') ? agentId : '-1'
 				}
 				let params = {
-					 latitude: this.agentShopInfo.longitude,
+					 latitude: this.agentShopInfo.latitude,
 					 longitude: this.agentShopInfo.longitude,
 					 agentId: agentId || '-1'
 				}

@@ -2,8 +2,8 @@ import store from '../store/index';
 let timer, flag, timeout = null;
 export default {
 	
-	// BASEURI: 'http://106.52.184.24:18888/platform/',
-	BASEURI: 'https://api.sz-guochuang.com/platform/',
+	BASEURI: 'http://106.52.184.24:18888/platform/',
+	// BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -142,6 +142,10 @@ export default {
 		},
 		agentInfo: {
 			getAgentShop: 'agent/goods/app/getAgentShop'
+		},
+		agentOrder: {
+			list: 'app/private/order/delivery/list',
+			delivery: 'app/private/order/delivery/order'
 		}
 	},
 	statusBarHeight () { //距离头部的固定定位信息
@@ -165,11 +169,11 @@ export default {
 		var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 		switch (userType){
 			case 'agent':
-				return data.agent;
+				return data.agent.toFixed(2);
 			case 'leader':
-				return (Number(data.agent)*100 + Number(data.leader)*100)/100
+				return ((Number(data.agent)*1000 + Number(data.leader)*1000)/1000).toFixed(2)
 			default:
-				return data.client;
+				return data.client.toFixed(2);
 		}
 	},
 	//节流防抖函数，func 要执行的回调函数，wait 延时的时间，mmediate 是否立即执行

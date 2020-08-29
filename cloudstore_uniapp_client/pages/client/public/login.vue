@@ -272,15 +272,15 @@
 					this.vxLogin()
 				}else{
 					uni.showModal({
-						title: '注册提示',
-						content: '微信授权手机号码失败，请使用手机号码注册',
+						title: '提示',
+						content: '微授权手机号码失败,您也可以使用账户密码登录',
 						showCancel: false,
 						cancelText: '取消',
 						confirmText: '确定',
 						success: res => {
-							uni.navigateTo({
-								url: '/pages/client/public/reg',
-							});
+							// uni.navigateTo({
+							// 	url: '/pages/client/public/reg',
+							// });
 						},
 					});
 				}
