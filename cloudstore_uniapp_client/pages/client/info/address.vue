@@ -3,18 +3,16 @@
 		<nav-bar backState="1000">选择地址</nav-bar>
 		<view class="list b-b" v-for="(item, index) in addressList" :key="index" @click="checkAddress(item)">
 			<view class="wrapper">
-				<view class="address-box">
-					<text v-if="item.status ==1 " class="tag text-blue">默认</text>
-				</view>
 				<view class="u-box">
-					<view class="">
+					<view class="address-info">
 						<text class="address">{{item|address}}</text><br/>
-						<text class="name">{{item.detailAddress}} </text><br/>
-						<text class="name">{{item.name}} {{item.phone}} </text>
+						<text class="name">{{item.community}}&nbsp;&nbsp;{{item.detailAddress}} </text>
+						<view class="info">
+							<text v-if="item.status ==1 " class="tag text-white default">默认</text>
+							<text class="name">{{item.name}} {{item.phone}} </text>
+						</view>
 					</view>
-					<view class="">
-						<text class="address text-red" v-if='isDelete' @click.stop="deleteAddress(item.id)">删除</text>
-					</view>
+					<text class="address text-red" v-if='isDelete' @click.stop="deleteAddress(item.id)">删除</text>
 				</view>
 			</view>
 			<text class="yticon icon-bianji" @click.stop="addAddress('edit', item.id)"></text>
@@ -133,19 +131,52 @@
 			line-height: 1;
 		}
 		.address{
-			font-size: 30upx;
-			color: $font-color-dark;
+			font-size: 26upx;
+			color: #333;
+			.name {
+				color: #666;
+			}
 		}
 	}
 	.u-box{
 		font-size: 28upx;
-		color: $font-color-light;
-		margin-top: 16upx;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		.address-info {
+			width: 85%;
+			display: block;
+		}
+		.address{
+			font-size: 26upx;
+			color: #333;
+			line-height: 40rpx;
+		}
 		.name{
 			margin-right: 30upx;
+			font-size: 26upx;
+			line-height: 40rpx;
+			color: #666;
+		}
+		.info {
+			display: flex;
+			align-items: center;
+			color: #999;
+			font-size: 24upx;
+			.default {
+				margin-right: 10upx;
+				background-image: linear-gradient(90deg,#feca3d,#fe8e16);
+				border-radius: 4upx;
+				height: 35upx;
+				line-height: 35upx;
+				text-align: center;
+				width: 60upx;
+				font-size: 18upx;
+			}
+			.name {
+				color: #999;
+				font-size: 24upx;
+			}
 		}
 	}
 	.icon-bianji{

@@ -81,6 +81,10 @@ export default {
 			deleteShopCar: 'app/private/shopCar/deleteShopCar',//删除购物车商品
 			myShopCar: 'app/private/shopCar/myShopCar', //我的购物车列表
 			listShopCar: 'app/private/shopCar/listShopCar' //购物车结算列表
+		},
+		belowTheLine: {
+			getActivityGoodsById: "app/public/activity/getActivityGoodsById",
+			createOffLineOrder: "app/private/order/createOffLineOrder"
 		}
 	},
 	agent:{

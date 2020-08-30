@@ -27,18 +27,31 @@
 				agentGoodsId: "",
 				shareClientId: "",
 				userType: 'Client',
-				token: ''
+				token: '',
+				base64Array: [],
+				codeArray: [],
+				actionType: '',
+				activityGoodsId: ''//判断是不是线下活动
 			}
 		},
 		onShow() {
 			var that = this;
 			const timeout = setTimeout(function() {
-				that.getAgentInfo(timeout);
+				if (that.actionType === 'xianxia') {
+					console.log(1)
+					uni.navigateTo({
+						url: '/pages/client/belowTheLine/goods?activityGoodsId='+that.activityGoodsId
+					});
+				} else {
+					that.getAgentInfo(timeout);
+				}
 			},2000)
 		},
 		onLoad(ops) {
-			// this.getLocation()
-			console.log('测试版本:'+ ops)
+			// ops.actionType = 'xianxia'
+			// ops.activityGoodsId = '7959350568732856320'
+			// this.actionType = ops.actionType
+			// this.activityGoodsId = ops.activityGoodsId
 			this.token = uni.getStorageSync('token')
 			this.agentId = ops.agentId
 			this.activityId = ops.activityId
@@ -70,6 +83,26 @@
 						})
 					}
 				}
+			},
+			encodeUrl (uId) {
+				var arr1=[];
+				var arr =uId.slice(1,uId.length).split('&');
+				arr.forEach(function(val){
+				      //删除=前面的数据再放进arr
+				    arr1.push(val.substr(val.indexOf('=')+1));
+				})
+				return arr1;
+				// console.log(arr1)
+			},
+			base64_decode (str) { // 解码，配合decodeURIComponent使用
+			    return decodeURIComponent(atob(str).split('').map(function (c) {
+					return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+				}).join(''));
+			},
+			decode(base64){
+				// var b = new Buffer(base64, 'base64')
+				// return b.toString();
+				 return new Buffer(base64, 'base64').toString();
 			}
 		}
 	};

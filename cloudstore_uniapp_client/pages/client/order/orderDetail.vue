@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="container">
 		<nav-bar backState="1000">订单详情</nav-bar>
 		<view class="orde-detail-status">
 			<view class="orde-detail-title">订单
@@ -26,7 +26,10 @@
 			<view class="order-list-content" v-for="(item, index) in goodsDetail" :key='index'>
 				<image :src="item.goodsSkuBean.photos[0].url || item.goodsPicesBean.goodsDetailPhotos[0].url" mode="aspectFill" class="image-wrapper"></image>
 				<view class="goods-detail">
-					<view class="detail-title clamp">{{item.goodsPicesBean.goodsName}} <text class="detail-title-price price-symbol">{{item.price}}</text></view>
+					<view class="detail-title">
+						<text class="clamp">{{item.goodsPicesBean.goodsName}} </text>	
+						<text class="detail-title-price price-symbol">{{item.price}}</text>
+					</view>
 					<view class="detail-subtitle">{{item.goodsPicesBean.goodsSubtitle}}</view>
 					<view class="detail-price">
 						<view class="price-num price-symbol">{{item.payPrice}} <text class="price-sku">/{{item.goodsSkuBean.skuValue}}</text> </view>
@@ -273,6 +276,9 @@
 		background: #F5F5F5;
 		padding-bottom: 100upx;
 	}
+	.container {
+		padding-bottom: 50upx;
+	}
 	.orde-detail-status {
 		margin: 50upx 20upx 0;
 		font-size: 24upx;
@@ -289,8 +295,7 @@
 		border-radius: 15upx;
 		margin: 0 20upx;
 		.order-list-content {
-			height: 230upx;
-			padding: 30upx;
+			padding:15upx 30upx;
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;

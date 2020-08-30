@@ -481,6 +481,7 @@
 		width:100%;
 		height: 100upx;
 		padding: 0 40rpx 0 80rpx;
+		background-color: #fff;
 		box-shadow: 2rpx 2rpx 5rpx 1rpx rgba(0, 0, 0, 0.3);
 		.checkbox{
 			height:36upx;

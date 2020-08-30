@@ -432,6 +432,8 @@ export default {
 
 .tui-bottom-line {
 	position: relative;
+	border-top-right-radius: 40upx !important;
+	border-top-left-radius: 40upx !important;
 }
 
 .tui-bottom-line::after {
@@ -460,14 +462,16 @@ export default {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	position: relative;
+	display: flex;
+	align-items: center;
+	height: 100%;
 }
 
 .tui-font-bold {
-	font-weight: bold;
 }
 
 .tui-active-line {
-	width: 60rpx;
+	width: 80rpx;
 	height: 6rpx;
 	border-radius: 4rpx;
 	position: absolute;
@@ -502,7 +506,6 @@ export default {
 }
 
 .tui-font-bold {
-	font-weight: bold;
 }
 
 .tui-cell-sub_title {

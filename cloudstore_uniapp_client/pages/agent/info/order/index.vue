@@ -184,7 +184,7 @@
 							}
 							.phone {
 								color: #000;
-								font-size: 18upx;
+								font-size: 24upx;
 							}
 						}
 						.info-address {
@@ -198,7 +198,7 @@
 					height: 45upx;
 					line-height: 45upx;
 					text-align: center;
-					background-image: linear-gradient(#68BDFF,#49B1FE);
+					background-image: linear-gradient(180deg,#68BDFF,#49B1FE);
 					border-radius: 20upx;
 					color: #fff;
 					font-size: 24upx;

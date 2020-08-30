@@ -64,6 +64,7 @@
 		onLoad(option) {
 			// 7772965679403110400\
 			// option.id = '7772965679403110400'
+			this.agentId = option.agentId
 			this.activityId = option.id
 			this.loadData()
 			this.activityPic()

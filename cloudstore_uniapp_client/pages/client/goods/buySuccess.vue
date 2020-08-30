@@ -6,38 +6,40 @@
 				<image src="/static/img_recharge_success.png" class="tui-icon"></image>
 				<view class="tui-title">支付成功</view>
 				<view class="tui-sub-title">感谢您的购买!</view>
-				<view class="tui-btn-box">
+				<view class="tui-btn-box" v-if="!belowTheLine">
 					<button class="cu-btn round index" @click="toPages('index')">返回首页</button>
 					<button class="cu-btn round order" @click="toPages('order')">查看订单</button>
 				</view>
-				<view class="below-the-line" v-if="belowTheLine">
-					<view class="below-the-line-main">
-						<view class="theLine-title">您已成功购买</view>
-						<view class="theLine-content">
-							<image src="/static/logo.png" mode="" class="theLine-content-img"></image>
-							<view class="theLine-content-detail">
-								<view class="content-detail-sku">
-									<view class="detail-sku-title">麒麟西瓜 6kg/个</view>
-									<text class="detail-sku">4kg以上/中杯/12ML</text>
-									<view class="detail-sku-price">
-										<view class="sku-price-left">
-											<text class="sku-price-num price-symbol">36.6</text>
-											<text class="sku-price-unit">/个</text>
+				<view class="below-the-line-box" v-if="belowTheLine">
+					<view class="below-the-line">
+						<view class="below-the-line-main">
+							<view class="theLine-title">您已成功购买:</view>
+							<view class="theLine-content" v-for="item in orderDetailList" :key='item.id'>
+								<image :src="item.goodsSkuBean.photos[0].url" mode="" class="theLine-content-img"></image>
+								<view class="theLine-content-detail">
+									<!-- <view class="content-detail-sku">
+										<view class="detail-sku-title clamp">{{item.goodsPicesBean.goodsName}}</view>
+										<text class="detail-sku">{{item.goodsSkuBean.skuValues}}</text>
+										<view class="detail-sku-price">
+											<view class="sku-price-left">
+												<text class="sku-price-num price-symbol">{{price}}</text>
+												<text class="sku-price-unit">/{{item.goodsPicesBean.unit}}</text>
+											</view>
+											<view class="sku-price-right">
+												×1
+											</view>
 										</view>
-										<view class="sku-price-right">
-											×1
-										</view>
-									</view>
-								</view>
-								<view class="content-detail-price">
-									<view>36.6</view>
-									<view class="content-detail-prt">136.6</view>
+									</view> -->
+									<!-- <view class="content-detail-price">
+										<text class="price-symbol">36.6</text>
+										<text class="content-detail-prt price-symbol">136.6</text>
+									</view> -->
 								</view>
 							</view>
+							<view class="theLine-bottom">快去领取吧!</view>
 						</view>
-						<view class="theLine-bottom">快去领取吧!</view>
-						<button class="theLine-btn">确认领取</button>
 					</view>
+					<button class="theLine-btn bg-blue text-white" @click="confirmReceive">确认领取</button>
 				</view>
 			</view>
 		</view>
@@ -45,17 +47,41 @@
 </template>
 
 <script>
+	import Api from '@/common/api';
 	import navBar from '@/components/zhouWei-navBar';
 	export default { 
 		data() {
 			return {
-				belowTheLine: false
+				belowTheLine: false,
+				orderList: '',
+				orderinfo: '',
+				price: '',
+				orderId: ''
 			}
 		},
 		components: {
 			navBar
 		},
+		onLoad(ops) {
+			ops.orderId = '7960376677893148673'
+			if (ops.orderId) {
+				this.orderId = ops.orderId
+				this.getOrderInfo(ops.orderId)
+				this.price = ops.price
+			}
+		},
 		methods: {
+			async getOrderInfo (id) {
+				let params = {
+					orderId: id
+				};
+				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params);
+				if (data) {
+					this.orderDetailList = data.result.details
+					this.belowTheLine = true
+					console.log(this.orderDetailList)
+				}
+			},
 			toPages(page) {
 				if (page === 'index') {
 					uni.switchTab({
@@ -66,12 +92,34 @@
 						url: '/pages/client/order/order',
 					});
 				}
-					// uni.switchTab({
-					// 	url: "/pages/client/recommend/index"
-					// })
-					// uni.navigateTo({
-					// 	url: '/pages/client/order/order',
-					// });
+			},
+			confirmReceive () {
+				uni.showModal({
+					title: '收货确认',
+					content: '您确定领取商品吗？',
+					showCancel: true,
+					cancelText: '取消',
+					confirmText: '确定',
+					success: res => {
+						if (res.confirm) {
+							this.setConfirmOrder()
+						} else if (res.cancel) {
+						}
+					},
+				});
+			},
+			async setConfirmOrder () { //调用确认收货接口
+				let parmas = {
+					id: this.orderId
+				}
+				let data = await Api.apiCall('post',Api.client.order.confirmOrder,parmas,true)
+				if (data) {
+					if (data.code ===0) {
+						this.$api.msg('领取商品成功')
+					} else {
+						this.$api.msg(code.msg)
+					}
+				}
 			}
 		}
 	}
@@ -79,20 +127,19 @@
 
 <style lang="scss" scoped>
 	.container {
-		background: #fff;
+		background: #f5f5f5;
 		height: 100%;
 		width: 100%;
 	}
 	.tui-content {
-		padding: 0 35upx;
 		box-sizing: border-box;
-		background: #fff;
+		background: #f5f5f5;
 		height: 100%;
 		width: 100%;
 	}
 
 	.tui-form {
-		background: #fff;
+		background: #f5f5f5;
 		margin-top: 50upx;
 		position: relative;
 		z-index: 10;
@@ -167,16 +214,20 @@
 		color: #888;
 		line-height: 40upx;
 	}
+	.below-the-line-box {
+		width: 100%;
+		margin-top: 30upx;
+	}
 	.below-the-line {
 		width: 100%;
 		background-color: #fff;
 		.below-the-line-main {
 			width: 100%;
-			padding: 30upx;
+			padding: 0 30upx;
 			.theLine-title {
 				font-size: 24upx;
 				color: #666;
-				line-height: 80upx;
+				line-height: 100upx;
 			}
 			.theLine-content {
 				width: 100%;
@@ -185,12 +236,14 @@
 				.theLine-content-img {
 					width: 150upx;
 					height: 150upx;
+					margin-right: 20upx;
 				}
 				.theLine-content-detail {
 					display: flex;
 					flex-wrap: wrap;
-					width: calc(100% - 150upx);
+					width: calc(100% - 170upx);
 					.content-detail-sku {
+						min-width: 80%;
 						.detail-sku-title {
 							color: #333;
 							font-size: 32upx;
@@ -200,15 +253,17 @@
 						.detail-sku {
 							font-size: 26upx;
 							color: #999;
+							line-height: 70upx;
 						}
 						.detail-sku-price {
 							color: #999;
 							font-size: 26upx;
+							display: flex;
 							.sku-price-left {
+								margin-right: 100upx;
 								.sku-price-num {
 									color: ff1313;
 									font-size: 32upx;
-									margin-right: 100upx;
 								}
 							}
 							.sku-price-right {
@@ -219,18 +274,42 @@
 					}
 				}
 				.content-detail-price {
-					display: flex;
-					flex-wrap: wrap;
+					// display: flex;
+					// flex-wrap: wrap;
 					font-size: 26upx;
-					view {
+					width: 100upx;
+					text {
+						text-align: right;
 						display: inline-block;
+						width: 100%;
+						color: #FF1313;
+						letter-spacing: 2upx;
 					}
 					.content-detail-prt {
 						color: #999;
-						text-decoration: underline;
+						text-decoration: line-through;
 					}
 				}
 			}
+			.theLine-bottom {
+				text-align: right;
+				color: #000;
+				font-size: 30upx;
+				font-weight: bold;
+				line-height: 80upx;
+			}
+		}
+	}
+	.theLine-btn {
+		width: 300upx;
+		height: 70upx;
+		line-height: 70upx;
+		text-align: center;
+		border-radius: 35upx;
+		margin-top: 30upx;
+		font-size: 30upx;
+		&::after {
+			border: none;
 		}
 	}
 </style>

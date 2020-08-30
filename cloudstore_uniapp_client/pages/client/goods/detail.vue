@@ -96,48 +96,6 @@
 				<button class="action-btn action-share-btn" @click.stop="shareSave">分享赚￥{{ goods.client }}</button>
 			</view>
 		</view>
-		<!-- 规格-模态层弹窗 -->
-		<view class="popup spec" :class="specClass" @touchmove.stop.prevent="stopPrevent" @click="toggleSpec">
-			<!-- 遮罩层 -->
-			<view class="mask"></view>
-			<view class="layer attr-content" @click.stop="stopPrevent">
-				<div class='sku-detail'>
-					<view class="a-t">
-						<image :src="sku.imgUrl"></image>
-						<view class="right">
-							<text class="price">¥ <text class="price-num">{{ sku.price }}</text></text>
-							<text class="stock">库存：{{ sku.stock }}件</text>
-							<view class="selected">
-								已选：
-								<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
-							</view>
-						</view>
-					</view>
-					<view v-for="(item, index) in specList" :key="index" class="attr-list">
-						<text>{{ item.goodsPropertyParamName }}</text>
-						<view class="item-list">
-							<text
-								v-for="(childItem, childIndex) in specChildList"
-								v-if="childItem.pid === item.id"
-								:key="childIndex"
-								class="tit"
-								:class="{ selected: childItem.selected }"
-								@click="selectSpec(childIndex, childItem.pid)"
-							>
-								{{ childItem.name }}
-							</text>
-						</view>
-					</view>
-				</div>
-				<view class="buyBtn">
-					<button class="cu-btn" v-if="isBuyBtn" @click.stop="toBuy(buy)">确定</button>
-					<button class="cu-btn zero" v-if="!isBuyBtn">暂时缺货</button>
-				</view>
-			</view>
-		</view>
-		<!-- 分享 -->
-		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
-		<hover-menu></hover-menu>
 	</view>
 </template>
 
