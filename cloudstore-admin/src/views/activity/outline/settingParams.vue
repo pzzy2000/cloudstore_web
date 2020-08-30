@@ -37,7 +37,7 @@
     <br/>
     <div style="width: 100%;text-align:center">
       <br /> <br /> <br /> <br />
-      <el-button style="margin-bottom: 10px;" @click="updateGoodsProperties('brokeRules')" size="small">
+      <el-button style="margin-bottom: 10px;" type="primary" @click="updateGoodsProperties('brokeRules')" size="small">
         提 交
       </el-button>
       <el-button @click="backPage" size="small">返 回</el-button>

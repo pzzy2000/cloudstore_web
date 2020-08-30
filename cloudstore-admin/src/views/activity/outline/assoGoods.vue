@@ -67,18 +67,18 @@
         </el-table-column>-->
         <el-table-column label="规格" align="center" :formatter="goodsinfo" prop="guige">
         </el-table-column>
-        <el-table-column label="活动价格(-1为未设置)" align="center" prop="offlinePrice" :formatter="goodsinfo">
+        <el-table-column label="活动价格(-1为未设置)" align="center" prop="offlinePrice">
         </el-table-column>
-        <el-table-column label="团长佣金(-1为未设置)" align="center" :formatter="goodsinfo" prop="supplierShopBea">
+        <el-table-column label="团长佣金(-1为未设置)" align="center" prop="leader">
         </el-table-column>
-        <el-table-column label="客户购买积分(-1为未设置)" width="200" align="center" :formatter="goodsinfo" prop="supplierShopan">
+        <el-table-column label="客户购买积分(-1为未设置)" width="200" align="center" prop="clientPoints">
         </el-table-column>
         <el-table-column label="操作" align="center" width="400">
           <template slot-scope="scope">
-            <el-button size="mini" @click="readInfo(scope.row)">查看详情</el-button>
+<!--            <el-button size="mini" @click="readInfo(scope.row)">查看详情</el-button>-->
             <el-button type="primary" size="mini" @click="settingactPrice(scope.row)">设置参数</el-button>
             <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码</el-button>
-            <el-button type="danger" size="mini" @click="handeldel(scope.row)">删除</el-button>
+            <el-button type="danger" size="mini" @click="handeldel(scope.row)">取消关联</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -157,8 +157,17 @@
         this.$router.push({path: '/sys/activity/outlinesetParams', query: {id: row.skuId, activityId: this.$route.query.id, activityGoodsId: row.activityGoodsId, offlinePrice: row.offlinePrice}})
       },
       qrcode(index, row) {
-        this.$router.push({path: '/sys/activity/qrcode', query: {id: row.id}})
+        if (row.clientPoints == -1 || row.leader == -1 || row.offlinePrice == -1) {
+          this.$message({
+            message: '请设置该商品Sku的相关参数',
+            type: 'error',
+            duration: 1000
+          })
+        } else {
+          this.$router.push({path: '/sys/activity/qrcode', query: {id: row.activityGoodsId}})
+        }
       },
+      readInfo() {},
       getList(idx) {
         this.listLoading = true;
         this.listQuery.joins = 1;
@@ -222,17 +231,9 @@
           case 'guige':
           {
             try {
-              return row.skuKey + ':' + row.skuValue;
+              return row.skuKey + ' ' + ':' + ' ' + row.skuValue;
             } catch (e) {
               return '数据读取错误';
-            }
-          }
-          case 'offlinePrice':
-          {
-            if (row.offlinePrice !== undefined) {
-              return row.offlinePrice;
-            } else {
-              return '-1';
             }
           }
         }
@@ -281,7 +282,7 @@
         })
       },
       handeldel(row) {
-        this.$confirm('是否要进行删除操作?', '提示', {
+        this.$confirm('是否要取消关联?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

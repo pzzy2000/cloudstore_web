@@ -1,17 +1,14 @@
 <template>
   <div>
     <vue-qr :text="goodQrcode" :size="200"></vue-qr>
-    <div style="text-align: center; margin-top: 50px">
-      <el-button @click="backPage">返回</el-button>
-    </div>
   </div>
 </template>
 
 <script>
   import vueQr from 'vue-qr'
-  import {qrcode} from '@/api/product'
   import axios from 'axios'
-  import {getToken} from "../../../utils/auth";
+  import {getToken} from "../../../utils/auth"
+  import {switchForm} from '@/api/iunits'
   export default {
     name: "qrCode",
     components: {
@@ -23,15 +20,16 @@
       }
     },
     created() {
-      this.qrcode('二维码');
+      this.qrcode({activityGoodsId: this.$route.query.id}, '二维码');
     },
     methods: {
-      qrcode(shopname) {
+      qrcode(params, shopname) {
         axios({
           headers: {
             'auth': getToken()
           },
           method: 'POST',
+          data: switchForm(params),
           url: 'http://106.52.184.24:18888/platform/goods/qrCode',
           responseType: "arraybuffer" //此处必须设置，不然会报已损坏
         }).then(function(res) {
@@ -52,10 +50,8 @@
           alink.click();
           // console.log(data)
           // this.imgdwn = data; // data即为图片地址
+          this.$router.go(-1);
         });
-      },
-      backPage() {
-        this.$router.back();
       }
     }
   }

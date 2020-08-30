@@ -177,7 +177,7 @@
              break;
            case 'returns': return "退货";
              break;
-           case 'retud': return "已退货";
+           case 'refunded': return "已退货";
              break;
            default: return "数据读取错误";
              break;

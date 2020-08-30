@@ -603,7 +603,7 @@ export const asyncRouterMap = [
       },
       {
         path: 'readorder',
-        name: 'read_order',
+        name: 'order_read',
         component: () => import('@/views/order/orderlist/readorder'),
         meta: {title: '查看订单', icon: 'product-list'},
         hidden: true

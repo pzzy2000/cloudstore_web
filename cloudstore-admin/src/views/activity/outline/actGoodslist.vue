@@ -226,7 +226,6 @@
         fetchActivityGoodsLists(this.listQuery).then(response => {
           if (response.result.code == 0) {
             this.list = response.result.result.records;
-            console.log(this.list);
             this.total = parseInt(response.result.result.total);
           }
           this.listLoading = false;
