@@ -1,7 +1,9 @@
 <template>
   <div>
     <vue-qr :text="goodQrcode" :size="200"></vue-qr>
-    <el-button @click="backPage">返回</el-button>
+    <div style="text-align: center; margin-top: 50px">
+      <el-button @click="backPage">返回</el-button>
+    </div>
   </div>
 </template>
 

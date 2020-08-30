@@ -18,12 +18,21 @@ export function fetchListAll(params) {
 }
 
 export function fetchActivityGoodsList(params) {
-	  return request({
-	    url: '/activity/goods/list',
-	    method: 'POST',
-	    data: switchForm(params)
-	  })
-	}
+  return request({
+    url: '/activity/goods/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function fetchActivityGoodsLists(params) {
+  return request({
+    url: '/activity/goods/searchGoodsActivityOnLine',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
   export function delActivityGoodsList(params) {
   	  return request({
   	    url: '/activity/goods/delete',
@@ -116,5 +125,21 @@ export function getoneAct(params) {
     url: '/activity/get',
     method: 'POST',
     data: switchForm(params)
+  })
+}
+
+export function getoneSKU(params) {
+  return request({
+    url: '/finance/profit/goods/list',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function updateSetting(params) {
+  return request({
+    url: '/finance/profit/goods/updateOffline',
+    method: 'POST',
+    data: params
   })
 }

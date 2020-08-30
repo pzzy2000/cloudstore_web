@@ -89,12 +89,12 @@
         <el-table-column label="是否参加佣金" align="center">
           <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
         </el-table-column>
-        <el-table-column label="是否启用" align="center">
-          <template slot-scope="scope">
-            <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="onoffAct(scope.row)">
-            </el-switch>
-          </template>
-        </el-table-column>
+<!--        <el-table-column label="是否启用" align="center">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="onoffAct(scope.row)">-->
+<!--            </el-switch>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
         <el-table-column label="是否删除" align="center" :formatter="changeStatus">
         </el-table-column>
         <el-table-column label="操作" width="270" align="center">
@@ -194,8 +194,8 @@
     methods: {
       getList(idx) {
         this.listLoading = true;
+        this.listQuery.type = 1;
         fetchList(this.listQuery).then(response => {
-          console.log(response);
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
@@ -295,13 +295,13 @@
       },
       addactivity() {
         this.$router.push({
-          path: "/outline/activity/addact"
+          path: "/sys/activity/outlineaddact"
           // query: {rds: "write"}
         })
       },
       associatedGood(row) {
         this.$router.push({
-          path: "/outline/activity/assoGoods",
+          path: "/sys/activity/outlineassoGoods",
           query: {id: row.id, status: row.status}
         })
       },

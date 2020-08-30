@@ -8,6 +8,9 @@
         <el-button style="float: right;margin-right: 15px;margin-bottom: 10px;" @click="handleResetSearch()" size="small">
           重置
         </el-button>
+        <el-button style="float: right;margin-right: 5px;margin-bottom: 10px;" @click="backPage()" size="small">
+          返回
+        </el-button>
       </div>
       <div>
         <i class="el-icon-search"></i>
@@ -52,13 +55,15 @@
         <el-table-column label="供应商店铺" align="center" :formatter="goodsinfo" column-key="supplierShopBean">
         </el-table-column>
         <el-table-column prop="address" label="是否关联" align="center" width="100">
-          <template slot-scope="scope" v-if="scope.row.joins == 1">
-            <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#409eff"
-              inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
-            </el-switch>
-          </template>
-          <template slot-scope="scope" v-else>
+          <template slot-scope="scope" >
+            <div v-if="scope.row.joins == 1">
+              <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#409eff"
+                         inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
+              </el-switch>
+            </div>
+            <div v-else>
               {{scope.row.activityBean.name}}
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -114,12 +119,20 @@
       this.activityList();
       // this.getList();
     },
+    filters: {
+      showMsg(data) {
+        return data;
+      }
+    },
     methods: {
       tochild(item, callback){
         callback(`商品名称：${item.goodsName}`);
       },
       dbTochild(item, callback){
         callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
+      },
+      backPage() {
+        this.$router.back();
       },
       goodsinfo(row, column) {
         let goods = row.goodsPicesBean;
@@ -129,7 +142,7 @@
           }
           case 'category': {
             try {
-              if (goods.categoryThreeBean !== null) {
+              if (goods.categoryThreeBean !== undefined) {
                 return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name + "/" + goods.categoryThreeBean.name;
               } else {
                 return goods.categoryOneBean.name + "/" + goods.categoryTwoBean.name;

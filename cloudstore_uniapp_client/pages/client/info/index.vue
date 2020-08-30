@@ -41,7 +41,7 @@
 					<text class="cuIcon-sponsor text-blue" style="font-size: 60upx;"></text>
 					<text class="text">提现</text>
 				</view>
-				<view class="order-item" @click="navTo('/pages/client/order/afterSaleList')" hover-class="common-hover" :hover-stay-time="50">
+				<view class="order-item" @click="navTo('/pages/client/order/afterSaleList', 'afterSale')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-yishouhuo text-blue"></text>
 					<text class="text">售后</text>
 				</view>
@@ -80,7 +80,7 @@
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/agent/info/index')" v-if="user.userType == 'leader'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
-						<text class="text-block text">团长入口</text>
+						<text class="text-block text">代理入口</text>
 					</view>
 				</view>
 				<view class="cu-item arrow">
@@ -250,6 +250,7 @@
 						url: url
 					});
 				}
+				//this.$api.msg('提现功能于9月30日开发')
 			},
 			/**
 			 *  会员卡下拉和回弹

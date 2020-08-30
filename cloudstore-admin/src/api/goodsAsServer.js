@@ -31,3 +31,11 @@ export function updateRule(params) {
     data: switchForm(params)
   })
 }
+
+export function deleteRule(params) {
+  return request({
+    url: '/goods/return/rules/delete',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

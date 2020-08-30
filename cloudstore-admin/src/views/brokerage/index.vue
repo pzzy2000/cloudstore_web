@@ -49,6 +49,9 @@
         <el-table-column label="活动名称" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
+        <el-table-column label="活动类型" align="center">
+          <template slot-scope="scope">{{scope.row.type | changeMsg}}</template>
+        </el-table-column>
         <el-table-column label="开始时间" align="center">
           <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
         </el-table-column>
@@ -66,7 +69,7 @@
 <!--        </el-table-column>-->
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">商品佣金</el-button>
+            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)" :disabled="scope.row.type == 1 ? true : false">商品佣金</el-button>
 <!--            <el-button size="mini" @click="read(scope.row)">查看</el-button>-->
           </template>
         </el-table-column>
@@ -130,6 +133,15 @@
             break;
           default: return "数据读取出错";
             break;
+        }
+      },
+      changeMsg(data) {
+        switch (data) {
+          case 0: return "线上活动";
+            break;
+          case 1: return '线下活动';
+            break;
+          default: return "数据读取出错";
         }
       }
     },

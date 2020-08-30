@@ -96,15 +96,15 @@
         </el-form>
         <div style="text-align: center">
           <el-button style="margin-bottom: 10px;" @click="shownUpdateSbutton(true)" :style="{ display: shownUpdateSubelButton}"
-            size="small" v-if="isshow">
+            size="small">
             更新
           </el-button>
           <el-button style="margin-bottom: 10px;" @click="shownUpdateSbutton(false)" :style="{ display: shownUpdateButton}"
-            size="small" v-if="isshow">
+            size="small">
             取消
           </el-button>
           <el-button style="margin-bottom: 10px" :style="{ display: shownUpdateButton}"
-            @click="savebaseinfo('blicenseOne', 'blicenseTwo')" type="primary" size="small" v-if="isshow">
+            @click="savebaseinfo('blicenseOne', 'blicenseTwo')" type="primary" size="small">
             提交
           </el-button>
           <el-button @click="backPage" size="small">返回</el-button>
@@ -295,7 +295,6 @@
         shownUpdateButton: "none",
         shownUpdateSubelButton: "",
         supplierId: typeof(this.$route.query.supplierId) == 'undefined' ? null : this.$route.query.supplierId,
-        isshow: false,
         showViewer: false,
         srcList: []
       }
@@ -308,12 +307,6 @@
       // this.baseinfo.name="www";
       this.blicense.startTime = "2012-02-12"
       this.loadInfo();
-      switch (localStorage.getItem('userType')){
-        case 'platform': this.isshow = false;
-          break;
-        case 'supplier': this.isshow = true;
-          break;
-      }
     },
     methods: {
       shownUpdateSbutton(action) {

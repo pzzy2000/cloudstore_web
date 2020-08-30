@@ -53,15 +53,8 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right" @click="addactivity" v-if="power.activity_add == 1 ? true : false">添加活动</el-button>
-      <!--
-      <el-button
-        class="btn-add"
-        @click="handleAddProduct()"
-        size="mini">
-        添加
-      </el-button>
-      -->
+      <el-button size="mini" style="float: right" @click="addactivity">添加活动</el-button>
+<!--      v-if="power.activity_add == 1 ? true : false"-->
     </el-card>
     <div class="table-container">
       <el-table ref="productTable"
@@ -114,8 +107,10 @@
         <el-table-column label="操作" width="270" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button size="mini" @click="updateAct(scope.row)" v-if="power.activity_update == 1 ? true : false">修改活动</el-button>
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false" v-if="power.activity_delete == 1 ? true : false">删除</el-button>
+            <el-button size="mini" @click="updateAct(scope.row)">修改活动</el-button>
+<!--            v-if="powershowing(power.activity_update)"-->
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false">删除</el-button>
+<!--            v-if="powershowing(power.activity_delete)"-->
           </template>
         </el-table-column>
       </el-table>
@@ -141,7 +136,8 @@
    import { fetchList, changeShowidx, delActivity, showInnavigate, onoffAct } from '@/api/activity'
    import {msg}  from '@/api/iunits'
    import { formatDate } from '@/assets/common/data.js'
-  const defaultListQuery = {
+   import {powershow} from "@/utils/power";
+   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
     optType:'search'
@@ -164,8 +160,7 @@
     },
     created() {
       this.getList(1);
-      this.power = JSON.parse(localStorage.getItem('opt'));
-      console.log(this.power);
+      // this.power = JSON.parse(localStorage.getItem('opt'));
     },
     watch: {
       // selectProductCateValue: function (newValue) {
@@ -202,6 +197,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList(idx) {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {

@@ -42,6 +42,23 @@
 					{{orderDetail.payPrice}}
 				</text>
 			</view>
+			<view class="order-payPrice" v-if="orderDetail.orderStatus === 'peisoged'">
+				<view>
+					订单完成时间:
+				</view>
+				<text class="order-payPrice-num">
+					{{orderDetail.endTime}}
+				</text>
+			</view>
+			<view class="order-payPrice" v-if="orderDetail.orderStatus === 'wait'">
+				<view>
+					订单关闭时间:
+				</view>
+				<text class="order-payPrice-num">
+					{{orderDetail.endTime}}
+				</text>
+			</view>
+					
 		</view>
 		<!-- 金额明细 -->
 		<view class="yt-list">

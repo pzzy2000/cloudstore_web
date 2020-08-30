@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<nav-bar backState="1000">我的收益</nav-bar>
+		<nav-bar backState="1000">订单详情</nav-bar>
 		<!-- 订单列表 -->
 		<view class="order-item">
 			<view class="i-top">
@@ -59,12 +59,10 @@
 			navBar
 		},
 		onReachBottom() {
-			this.pageNum ++;
-			this.getOrderData()
+			this.getOrderData(this.orderId)
 		},
 		onPullDownRefresh() {
-			this.pageNum  = 1;
-			this.getOrderData()
+			this.getOrderData(this.orderId)
 		},
 		onLoad(ops) {
 			this.orderId = ops.orderId
@@ -73,6 +71,7 @@
 		},
 		methods: {
 			async getOrderData (id) {
+				this.orderList.length = 0
 				let params = {
 					orderId: id
 				};
@@ -80,6 +79,7 @@
 				if (data) {
 					this.orderList = data.result
 				}
+				uni.stopPullDownRefresh();
 			},
 			orderSelect (index) {
 				var indexVal = this.orderSelectList.indexOf(this.orderList.details[index].id)
@@ -116,15 +116,18 @@
 				for (let tmp in this.orderSelectList) {
 					params.orderDetailId.push(this.orderSelectList[tmp])
 				}
-				let data = await Api.apiCallbackCall('post', Api.agent.agentOrder.delivery, params,true,false)
-				if (data) {
-					if (data.code === 0) {
-						this.$api.msg('配送成功')
-						this.getOrderData(this.orderId)
-					} else {
-						this.$api.msg(data.msg)
+				var that = this
+				let data = await Api.apiCallbackCall('post', Api.agent.agentOrder.delivery, params,true,false,function(data){
+					console.log(data)
+					if (data) {
+						if (data.code === 0) {
+							that.orderSelectList.length = 0
+							that.getOrderData(that.orderId)
+						} else {
+							that.$api.msg(data.msg)
+						}
 					}
-				}
+				})
 			}
 		}
 	}

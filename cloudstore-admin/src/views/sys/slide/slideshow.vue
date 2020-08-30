@@ -94,7 +94,6 @@
       changeShow(event) {
         if (event == 'active') {
           getActiveList().then(res => {
-            console.log(res)
             this.activeList = res.result.result.records;
           })
         }
@@ -113,7 +112,7 @@
             for (let i=0; i<this.activityForm.picture.length; i++) {
               pics.push(this.activityForm.picture[i].uid);
             }
-            if (this.isshow) {
+            if (this.activityForm.type == 'active') {
               obj.name = this.activityForm.name;
               obj.pice = pics;
               obj.type = this.activityForm.type;

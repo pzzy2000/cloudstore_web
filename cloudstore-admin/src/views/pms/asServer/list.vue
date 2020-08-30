@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import {getAslist} from '@/api/goodsAsServer'
+  import {getAslist, deleteRule} from '@/api/goodsAsServer'
   export default {
     name: "list",
     data() {
@@ -45,15 +45,25 @@
         })
       },
       addrules() {
-        this.$router.push({path: '/sys/goods/goodsAsserver', query: {optType: 'save'}});
+        this.$router.push({path: '/sys/goods/goodsAsserver/add', query: {optType: 'save'}});
       },
       rulesInfo(row) {
-        this.$router.push({path: '/sys/goods/goodsAsserver', query: {id: row.id, optType: 'read'}})
+        this.$router.push({path: '/sys/goods/goodsAsserver/info', query: {id: row.id, optType: 'read'}})
       },
       handeldelRules(row) {
+        deleteRule({ids: row.id}).then(res => {
+          if (res.result.code == 0) {
+            this.$message({
+              message: '删除成功',
+              type: 'success',
+              duration: 800
+            })
+            this.getList();
+          }
+        })
       },
       updateInfo(row) {
-        this.$router.push({path: '/sys/goods/goodsAsserver', query: {id: row.id, optType: 'update'}})
+        this.$router.push({path: '/sys/goods/goodsAsserver/update', query: {id: row.id, optType: 'update'}})
       }
     }
   }
