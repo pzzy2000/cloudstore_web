@@ -73,11 +73,11 @@
         </el-table-column>
         <el-table-column label="客户购买积分(-1为未设置)" width="200" align="center" prop="clientPoints">
         </el-table-column>
-        <el-table-column label="操作" align="center" width="400">
+        <el-table-column label="操作" align="center" width="200">
           <template slot-scope="scope">
 <!--            <el-button size="mini" @click="readInfo(scope.row)">查看详情</el-button>-->
             <el-button type="primary" size="mini" @click="settingactPrice(scope.row)">设置参数</el-button>
-            <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码</el-button>
+<!--            <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码</el-button>-->
             <el-button type="danger" size="mini" @click="handeldel(scope.row)">取消关联</el-button>
           </template>
         </el-table-column>

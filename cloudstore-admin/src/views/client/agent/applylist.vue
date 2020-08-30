@@ -188,7 +188,7 @@
       },
       showAddress(row, column) {
         try {
-          return row.provinceBean.name + row.cityBean.name + row.areaBean.name + row.villageBean.name + row.townBean.name;
+          return row.provinceBean.name + row.cityBean.name + row.areaBean.name + row.townBean.name;
         } catch (e) {
           return '数据读取错误';
         }
