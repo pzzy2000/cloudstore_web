@@ -17,8 +17,8 @@
 <!--        <el-button size="mini">修改收货人信息</el-button>-->
 <!--        <el-button size="mini">修改费用信息</el-button>-->
 <!--        <el-button size="mini">发送站内信息</el-button>-->
-        <el-button size="mini">关闭订单</el-button>
-        <el-button size="mini">备注订单</el-button>
+<!--         <el-button size="mini">关闭订单</el-button>-->
+         <el-button type="primary" size="mini">配送</el-button>
         <el-button size="mini" @click="backPage">返回</el-button>
       </div>
     </div>
@@ -83,8 +83,8 @@
     <el-table :data="baseInfo.orderDetailsBean" border style="width: 96%; margin-left: 2%">
       <el-table-column prop="goodsName" label="商品名称" align="center" :formatter="showgoods">
       </el-table-column>
-<!--      <el-table-column prop="goodsId" label="商品名称" align="center">-->
-<!--      </el-table-column>-->
+      <el-table-column prop="goodssku" label="商品SKU编号" align="center" :formatter="showgoods"></el-table-column>
+      <el-table-column prop="goodsmodule" label="商品规格" align="center" :formatter="showgoods"></el-table-column>
       <el-table-column prop="price" label="单价" align="center" :formatter="showgoods">
       </el-table-column>
       <el-table-column prop="quantity" label="数量" align="center" :formatter="showgoods">
@@ -96,6 +96,10 @@
       <el-table-column prop="agentShopBean" label="代理店铺" align="center" :formatter="showgoods">
       </el-table-column>
       <el-table-column prop="supplierShopBean" label="供应商" align="center" :formatter="showgoods">
+      </el-table-column>
+      <el-table-column prop="status" label="配送状态" align="center" :formatter="showgoods">
+      </el-table-column>
+      <el-table-column prop="deliveryType" label="配送类型" align="center" :formatter="showgoods">
       </el-table-column>
     </el-table>
 <!--    <el-card shadow="never" style="margin: 0 20px">-->
@@ -203,9 +207,57 @@
         let property = index.property;
         let goods =row.goodsBean;
         switch (property) {
+          case 'status':{
+              switch (row.status) {
+                case 'WaitDeliver': return "待发货";
+                  break;
+                case 'peisoged': return "已配送";
+                  break;
+                case 'returnsing': return "退货中";
+                  break;
+                case 'refunding': return "退款中";
+                  break;
+                case 'refunded': return "以退款";
+                  break;
+                case 'returns': return "退货成功";
+                  break;
+                case 'returnsfail': return "退货拒绝";
+                  break;
+                case 'delivered': return "已收货";
+                  break;
+                default: return "数据读取错误";
+                  break;
+              }
+          }
+          case 'deliveryType':{
+            switch (row.deliveryType) {
+                 case 'agent': return "团长发货";
+                   break;
+                 case 'store': return "仓库发货";
+                   break;
+                 default: return null;
+                   break;
+              }
+
+          }
           case 'goodsName' :{
             return goods.goodsName;
           }
+          case 'goodssku' :{
+            try{
+               return row.goodsSkuBean.skuCode;
+            }catch(e){
+              return '数据读取错误';
+            }
+          }
+          case 'goodsmodule' :{
+            try{
+               return row.goodsSkuBean.skuKey +"/"+row.goodsSkuBean.skuValue ;
+            }catch(e){
+              return '数据读取错误';
+            }
+          }
+
           case 'price' :{
             return row.price;
           }
