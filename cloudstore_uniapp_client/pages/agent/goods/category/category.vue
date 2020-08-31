@@ -37,7 +37,7 @@
 							 <text class="priceSale price-symbol">{{ goods.salePrice }}</text>/{{ goods.unit }}
 						</view>
 						<view class="flex justify-around">
-							<button class="price-btn share" @click.stop='shareSave(goods)'>分享赚<text class="price-symbol">{{goods.client}}</text></button>
+							<button class="price-btn share" @click.stop='shareSave(goods)'><text>{{goods.client}}</text></button>
 							<button class="price-btn buy">立即购买</button>
 						</view>
 					</view>

@@ -200,14 +200,20 @@
 					if (data.code === 0) {
 						uni.setStorageSync('userInfo', data.result);
 						uni.setStorageSync('token', data.result.token);
-						if (this.goodsId) {
+						if (this.actionType === 'belowTheLine') {
 							uni.navigateTo({
-								url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
+								url: '/pages/client/belowTheLine/goods?activityGoodsId='+this.activityGoodsId
 							});
 						} else {
-							uni.switchTab({
-								url: '/pages/agent/goods/hotsale/hotsale'
-							});
+							if (this.goodsId) {
+								uni.navigateTo({
+									url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
+								});
+							} else {
+								uni.switchTab({
+									url: '/pages/agent/goods/hotsale/hotsale'
+								});
+							}
 						}
 					} else {
 						this.$api.msg(data.msg)

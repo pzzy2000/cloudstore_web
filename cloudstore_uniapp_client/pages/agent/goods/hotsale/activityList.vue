@@ -24,7 +24,7 @@
 						</view>
 					</view>
 					<view class="share-amount" @click.stop='shareSave(goods)'>
-						 分享最高赚 <text class="price-symbol" v-text="goods.goodsPicesBean.client"></text>
+						 <text v-text="goods.goodsPicesBean.client"></text>
 					</view>
 				</view>
 			</view>

@@ -28,9 +28,16 @@
 				<view class="goods-detail">
 					<view class="detail-title">
 						<text class="clamp">{{item.goodsPicesBean.goodsName}} </text>	
-						<text class="detail-title-price price-symbol">{{item.price}}</text>
+						<text class="detail-title-price price-symbol">{{item.price || "加载中"}}</text>
 					</view>
-					<view class="detail-subtitle">{{item.goodsPicesBean.goodsSubtitle}}</view>
+					<view class="detail-subtitle">
+						<text class="clamp">{{item.goodsPicesBean.goodsSubtitle}}</text>
+						<view class="deliveryType" v-if="item.deliveryType">
+							配送方：
+							<text v-if="item.deliveryType === 'agent'">代理</text>
+							<text v-if="item.deliveryType === 'store'">仓库</text>
+						</view>
+					</view>
 					<view class="detail-price">
 						<view class="price-num price-symbol">{{item.payPrice}} <text class="price-sku">/{{item.goodsSkuBean.skuValue}}</text> </view>
 						<text>× {{item.quantity}}</text>
@@ -45,12 +52,12 @@
 					{{orderDetail.payPrice}}
 				</text>
 			</view>
-			<view class="order-payPrice" v-if="orderDetail.orderStatus === 'peisoged'">
+			<view class="order-payPrice" v-if="orderDetail.orderStatus === 'complete'">
 				<view>
 					订单完成时间:
 				</view>
 				<text class="order-payPrice-num">
-					{{orderDetail.endTime}}
+					{{orderDetail.endTime || '暂无订单完成时间'}}
 				</text>
 			</view>
 			<view class="order-payPrice" v-if="orderDetail.orderStatus === 'wait'">
@@ -58,7 +65,7 @@
 					订单关闭时间:
 				</view>
 				<text class="order-payPrice-num">
-					{{orderDetail.endTime}}
+					{{orderDetail.endTime || '暂无订单关闭时间'}} 
 				</text>
 			</view>
 					
@@ -73,17 +80,18 @@
 				<text class="cell-tit clamp">下单时间</text>
 				<text class="cell-tip">{{orderDetail.createTime}}</text>
 			</view>
-			<view class="yt-list-cell">
-				<text class="cell-tit clamp">配送方式</text>
+			<view class="yt-list-cell" v-if="transportType">
+				<text class="cell-tit clamp">收货方式</text>
 				<text class="cell-tip">{{transportType}}</text>
 			</view>
-			<view class="yt-list-cell">
+			<view class="yt-list-cell" v-if="clientInfo.name">
 				<text class="cell-tit clamp">收货人</text>
 				<text class="cell-tip">{{clientInfo.name}}</text>
 			</view>
-			<view class="yt-list-cell">
+			<view class="yt-list-cell pickAddress" v-if="clientInfo.address">
 				<text class="cell-tit clamp">收货地址</text>
-				<text class="cell-tip">{{clientInfo.address}}</text>
+				<textarea :value="clientInfo.address" class="textarea" disabled="true" style="line-height: 20upx;"></textarea>
+				<!-- <text class="cell-tip">{{clientInfo.address}}</text> -->
 			</view>
 			<view class="yt-list-cell desc-cell pickAddress" v-if="isPickAddress">
 				<text class="cell-tit">自提地址</text>
@@ -181,7 +189,7 @@
 				let params = { 
 					orderId: id
 				};
-				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params);
+				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params, true);
 				if (data) {
 					console.log(data)
 					var transportAgent = data.result.orderBean.transportAgentBean
@@ -189,8 +197,13 @@
 					this.goodsDetail = data.result.details
 					this.orderDetail = data.result.orderBean
 					//获取收货地址
-					this.clientInfo.name = data.result.orderBean.clientAddressBean.name
-					this.clientInfo.address = clientInfo.provinceBean.name+clientInfo.cityBean.name+clientInfo.areaBean.name+clientInfo.detailAddress
+					try{
+						this.clientInfo.name = data.result.orderBean.clientAddressBean.name
+						this.clientInfo.address = clientInfo.provinceBean.name+clientInfo.cityBean.name+clientInfo.areaBean.name+clientInfo.community+clientInfo.detailAddress
+					}catch(e){
+						this.clientInfo.name = ''
+						this.clientInfo.address = ''
+					}
 					//获取自提点地址和配送方式
 					if (data.result.orderBean.transportType === 20) { 
 						this.isPickAddress = true
@@ -322,7 +335,14 @@
 				.detail-subtitle {
 					color: #999999;
 					font-size: 24upx;
-					letter-spacing: 4upx;
+					letter-spacing: 2upx;
+					display: flex;
+					justify-content: space-between;
+					.deliveryType {
+						display: flex;
+						color: #333;
+						letter-spacing: 0;
+					}
 				}
 				.detail-price {
 					color: #333333;

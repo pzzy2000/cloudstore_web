@@ -46,28 +46,6 @@
 				</view>
 			</view>
 		</view>
-		<!-- 热门活动列表 -->
-		<!-- <view class="cu-item" v-for="(item,index) in activity.show" :key="index" @click="searchActivityGoodsShowList(item)">
-			<view class="cu-item-title">{{item.name}}</view>
-		</view>
-		<view class="goods-list">
-			<view v-for="(goods, index) in activityShopList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
-				<image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="" class="detail-img"></image>
-				<view class="detail-title clamp">
-					{{goods.goodsPicesBean.goodsName}}
-				</view>
-				<view class="detail-bottom">
-					<view class="price">
-						<text class="price-sale">¥{{goods.goodsPicesBean.salePrice}}</text>
-						<text class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</text>
-					</view>
-					<view class="cart-icon">
-						<text class="cuIcon-cart text-white"></text>
-					</view>
-				</view>
-				<button class="detail-share" @click.stop="shareSave(goods)">分享</button>
-			</view>
-		</view> -->
 		<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
 			<view class="f-header" @click="navToCategory(item)">
 				<view class="faddish-title">
@@ -84,15 +62,17 @@
 						<view class="detail-title">
 							<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
 						</view>
-						<view class="share-amount">
-							<template>
-							 分享最高赚 <text v-text="goods.goodsPicesBean.client"></text>元
-							</template>
-						</view>
-						<view class="detail-bottom">
+						<view class="price-box">
 							<view class="price">
 								<text class="price-sale price-symbol">{{goods.goodsPicesBean.salePrice}}</text>/{{goods.goodsPicesBean.unit}}
-								<view class="price-bazaar">{{goods.goodsPicesBean.martPrice}}</view>
+							</view>
+							<view class="share-amount">
+								<text v-text="goods.goodsPicesBean.client"></text>元
+							</view>
+						</view>
+						<view class="detail-bottom">
+							<view class="price-bazaar">
+								<text class="price-bazaar-text">销售价:</text>{{goods.goodsPicesBean.martPrice}}
 							</view>
 							<view class="cart-icon">购买</view>
 						</view>
@@ -211,6 +191,7 @@
 			shareAmount () { //处理分享出去的金额
 				this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 				let list = this.activity.show;
+				console.log(list)
 				for( let i in list){
 					let goodsList = list[i].goodsList;
 					for( let j in goodsList){
@@ -303,40 +284,10 @@
 				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, true);
 				if (data) {
 					activity.goodsList = data.result.records;
+					this.shareAmount()
+					// console.log(activity.goodsList)
 				}
 			},
-			// async searchActivityNavList() {
-			// 	let params = {
-			// 	};
-			// 	let data = await Api.apiCall('post', Api.agent.activity.searchActivityNavList, params, true);
-			// 	if (data) {
-			// 		this.activity.nav = data.result; //查询出来的 
-			// 	}
-			// },
-			// async searchActivityShowList() {
-			// 	let params = {
-			// 	};
-			// 	let data = await Api.apiCall('post', Api.agent.activity.searchActivityShowList, params, false);
-			// 	if (data) {
-			// 		let showActivity = data.result.records;
-			// 		for (let i = 0; i < showActivity.length; i++) {
-			// 			showActivity[i].goodsList = [];
-			// 		}
-			// 		this.activity.show = showActivity;
-			// 		this.searchActivityGoodsShowList(this.activity.show[0])
-			// 	}
-			// },
-			// async searchActivityGoodsShowList(item) {
-			// 	let params = {
-			// 		activityId: item.id,
-			// 		pageNum: 1,
-			// 		pageSize: 6
-			// 	};
-			// 	let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, false);
-			// 	if (data) {
-			// 		this.activityShopList = data.result.records;
-			// 	}
-			// },
 			async getBanner() { //获取轮播图
 				let params = {
 				};
@@ -848,21 +799,8 @@
 		color: #333;
 		font-size: 34upx;
 	}
-	.share-amount {
-		height: 35upx;
-		line-height: 35upx;
-		border-radius: 5upx;
-		width: 160upx;
-		text-align: center;
-		background-color: #FFEFBC;
-		color: #FF8213;
-		font-size: 18upx;
-		margin-top: 10upx;
-	}
-	.detail-bottom {
+	.price-box {
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-end;
 		.price {
 			display: flex;
 			flex-wrap: wrap;
@@ -874,14 +812,33 @@
 				display: flex;
 				align-items: flex-end;
 			}
-			.price-bazaar {
-				color: #BABABA;
-				font-size: 24upx;
-				text-decoration: line-through;
-				display: flex;
-				align-items: flex-end;
-				margin-left: 10upx;
-				margin-top: 5upx;
+		}
+		.share-amount {
+			height: 35upx;
+			line-height: 35upx;
+			border-radius: 5upx;
+			padding: 0 10upx;
+			text-align: left;
+			background-color: #FFEFBC;
+			color: #FF8213;
+			font-size: 18upx;
+			margin-left: 15upx;
+		}
+	}
+	.detail-bottom {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		.price-bazaar {
+			line-height: 35upx;
+			display: flex;
+			color: #BABABA;
+			font-size: 26upx;
+			text-decoration: line-through;
+			display: flex;
+			align-items: flex-end;
+			.price-bazaar-text {
+				font-size: 20upx;
 			}
 		}
 		.cart-icon {
