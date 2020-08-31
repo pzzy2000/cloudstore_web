@@ -34,7 +34,7 @@
 							<checkbox style="transform:scale(0.5)" class='round blue checked' :class="checkbox[1].checked?'checked':''" :checked="checkbox[1].checked?true:false" value="B"></checkbox>
 						登录前请阅读
 						<text @click.stop="toPrivacy('/pages/client/info/privacy')" class="text-blue">丫咪购隐私协议</text>
-						<text @click.stop="toPrivacy('/pages/client/info/agreement')" class="text-blue">,丫咪购服务私协议</text>
+						<text @click.stop="toPrivacy('/pages/client/info/agreement')" class="text-blue">,丫咪购服务协议</text>
 					</checkbox-group>
 				</view>
 			</view>

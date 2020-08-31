@@ -64,6 +64,7 @@
 				agentId: '',
 				goodsId: "",
 				activityId: '',
+				activityGoodsId: '',
 				agentGoodsId: "",
 				shareClientId: "",
 				userType: 'Client',
@@ -71,12 +72,15 @@
 				vxPhoneInfo: '',
 				openId: '',
 				sessionKey: '',
-				phoneDetail: ''
+				phoneDetail: '',
+				actionType: ''
 			};
 		},
 		onLoad() {
 			// this.sysInfo = this.$db.get('sysInfo');
 			this.goodsInfo =  uni.getStorageSync('goodsInfo')
+			this.actionType = this.goodsInfo.actionType
+			this.activityGoodsId = this.goodsInfo.agentGoodsId
 			this.agentId = this.goodsInfo.agentId
 			this.goodsId = this.goodsInfo.goodsId
 			this.activityId = this.goodsInfo.activityId
@@ -211,14 +215,20 @@
 				}
 			},
 			toPages () {
-				if (this.goodsId) {
+				if (this.actionType === 'belowTheLine') {
 					uni.navigateTo({
-						url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
+						url: '/pages/client/belowTheLine/goods?activityGoodsId='+this.activityGoodsId
 					});
 				} else {
-					uni.switchTab({
-						url: '/pages/agent/goods/hotsale/hotsale'
-					});
+					if (this.goodsId) {
+						uni.navigateTo({
+							url: '/pages/client/goods/detail?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
+						});
+					} else {
+						uni.switchTab({
+							url: '/pages/agent/goods/hotsale/hotsale'
+						});
+					}
 				}
 			},
 			toForget () { //忘记密码

@@ -6,7 +6,7 @@
 			<view class="nav-title">丫咪购</view>
 			<view class="content">
 				<text class="cuIcon-locationfill text-white"></text>
-				<text class="text-white">附近代理点：{{agentShopInfo.address}}</text>
+				<text class="text-white">附近代理点：{{agentShopInfo.address}}({{agentShopInfo.distance}}km)</text>
 			</view>
 			<view class="search-input" @click.stop="toSearch">
 				<view class="search-form round">
@@ -133,6 +133,7 @@
 					address: '',
 					latitude:  -1,
 					longitude:  -1,
+					distance: ''
 				},
 				longLat: '',
 				shareAmounts: '',
@@ -242,6 +243,7 @@
 						var tmpData = data.result.agentBean
 						this.agentShopInfo.name = tmpData.name
 						this.agentShopInfo.address = tmpData.community
+						this.agentShopInfo.distance = data.result.distance.toFixed(2)
 						this.agentId = data.result.agentId
 						uni.setStorageSync('agentId', this.agentId)
 					}
@@ -370,7 +372,7 @@
 				if (item.status) {
 					if (item.toType === 'haibao') {
 						uni.navigateTo({
-							url: '/pages/agent/goods/hotsale/activityList?id='+item.id,
+							url: '/pages/agent/goods/hotsale/activityList?id='+item.id+'&agentId='+agentId,
 						});
 					} else {
 						uni.navigateTo({
@@ -384,7 +386,7 @@
 			toUrl (item) {
 				if (item.type === 'active') {
 					uni.navigateTo({
-						url: '/pages/agent/goods/hotsale/activityList?id='+item.relatedId,
+						url: '/pages/agent/goods/hotsale/activityList?id='+item.relatedId+'&agentId='+this.agentId,
 					});
 				} else if (item.type === 'url') {
 					uni.navigateTo({

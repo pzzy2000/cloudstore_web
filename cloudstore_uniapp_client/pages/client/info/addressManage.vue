@@ -2,25 +2,25 @@
 	<view class="content">
 		<nav-bar backState="1000">{{title}}</nav-bar>
 		<view class="row b-b">
-			<text class="tit">联系人</text>
+			<text class="tit">联系人:</text>
 			<input class="input" type="text" v-model="addressData.name" placeholder="收货人姓名" placeholder-class="placeholder" />
 		</view>
 		<view class="row b-b">
-			<text class="tit">手机号</text>
+			<text class="tit">手机号:</text>
 			<input class="input" type="number" v-model="addressData.phone" placeholder="收货人手机号码" placeholder-class="placeholder" />
 		</view>
 		<view class="row b-b">
-			<text class="tit">地址</text>
+			<text class="tit">地址:</text>
 			<text @click="seletctAddress" class="input">
 				{{addressData.addressName}}
 			</text>
 		</view>
 		<view class="row b-b cu-form-group" @click="selectMap">
-			<view class="title">选择社区</view>
-			<input :value="addressData.mapText" placeholder="请选择社区" disabled='true' style="color:#000;"></input>
+			<view class="title">选择社区:</view>
+			<input :value="addressData.mapText" placeholder="请选择社区" disabled='true' style="color:#000;font-size: 24upx;"></input>
 		</view>
 		<view class="row b-b"> 
-			<text class="tit">详细地址</text>
+			<text class="tit">详细地址:</text>
 			<input class="input" type="text" v-model="addressData.area" placeholder="详细地址" placeholder-class="placeholder" />
 		</view>
 		
@@ -309,7 +309,6 @@
 		background: $page-color-base;
 		padding-top: 16upx;
 	}
-
 	.row{
 		display: flex;
 		align-items: center;
@@ -321,12 +320,15 @@
 		.tit{
 			flex-shrink: 0;
 			width: 140upx;
-			font-size: 30upx;
+			font-size: 26upx;
 			color: $font-color-dark;
+		}
+		.title {
+			font-size: 26upx;
 		}
 		.input{
 			flex: 1;
-			font-size: 30upx;
+			font-size: 24upx;
 			color: $font-color-dark;
 		}
 		.icon-shouhuodizhi{
