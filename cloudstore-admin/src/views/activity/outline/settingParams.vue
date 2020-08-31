@@ -165,7 +165,7 @@
           }
           if(this.goodsku.skuStockList.length>0){
             try{
-              this.specslabel='规格['+skuStockListt[0].skuKey+"]"; //skuStockListt[0].skuKey;
+              this.specslabel='规格[' + this.goodsku.skuStockList[0].goodsSkuBean.skuKey + "]";
             }catch(e){
               this.specslabel="规格数据出错";
             }

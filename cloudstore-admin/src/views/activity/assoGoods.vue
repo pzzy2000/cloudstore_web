@@ -16,13 +16,13 @@
         <i class="el-icon-search"></i>
         <span>活动申请</span>
         <el-form :inline="true" :model="listQuery" ref="activityFrom" size="small" label-width="120px" style="margin-top: 20px">
-          <el-form-item label="活动：">
-            <el-select v-model="listQuery.activityId" remote placeholder="活动" :loading="loading" v-on:change="seclectactivity($event, 1)">
-<!--              v-on:change="seclectactivity($event, 1)"-->
-              <el-option v-for="item in activityList" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
+<!--          <el-form-item label="活动：">-->
+<!--            <el-select v-model="listQuery.activityId" remote placeholder="活动" :loading="loading" v-on:change="seclectactivity($event, 1)">-->
+<!--&lt;!&ndash;              v-on:change="seclectactivity($event, 1)"&ndash;&gt;-->
+<!--              <el-option v-for="item in activityList" :key="item.id" :label="item.name" :value="item.id">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
           <el-form-item label="商品信息：">
             <remoteCom v-model="listQuery.goodsIds_" ref="clearInput" url="/manage/search/goods/search" @tochild="tochild"></remoteCom>
           </el-form-item>
@@ -116,7 +116,8 @@
       }
     },
     created() {
-      this.activityList();
+      // this.activityList();
+      this.seclectactivity();
       // this.getList();
     },
     filters: {
@@ -175,19 +176,18 @@
           }
         }
       },
-      activityList() {
-        this.loading = true;
-        fetchActivityList({
-          pageNum: 1,
-          pageSize: 100
-        }).then(res => {
-          this.loading = false;
-          this.activityList = res.result.result.records;
-        });
-      },
-      seclectactivity(event) {
-        let activityId = event;
-        this.activityId = activityId;
+      // activityList() {
+      //   this.loading = true;
+      //   fetchActivityList({
+      //     pageNum: 1,
+      //     pageSize: 100
+      //   }).then(res => {
+      //     this.loading = false;
+      //     this.activityList = res.result.result.records;
+      //   });
+      // },
+      seclectactivity() {
+        this.activityId = this.$route.query.id;
         this.getList(this.activityId);
       },
       handleSearchList() {
@@ -219,23 +219,18 @@
       },
       getList(activityId) {
         this.list = [];
+        this.listLoading = true;
         fetchAllgoods(this.listQuery).then(response => {
-          console.log(response);
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
-          if (response.result.result.records.length !== 0) {
-            this.$message({
-              message: "查询成功",
-              type: 'success',
-              duration: 800
-            })
-          }else{
+          if (response.result.result.records.length == 0) {
             this.$message({
               message: "暂无数据",
               type: 'success',
               duration: 800
             })
           }
+          this.listLoading = false;
         })
       },
       handleSizeChange(val) {

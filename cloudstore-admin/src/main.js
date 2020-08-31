@@ -20,6 +20,7 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 
+// Vue.prototype.qrCode = QRCode
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
 Vue.use(ElementUIRWDispatcher)

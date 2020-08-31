@@ -71,8 +71,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="160">
           <template slot-scope="scope">
-            <el-button size="mini" @click="settingactPrice(scope.row)">设置活动价格</el-button>
-            <el-button type="danger" size="mini" @click="handeldel(scope.row)" v-if="status == 1 ? false : true">删除</el-button>
+            <el-button type="danger" size="mini" @click="handeldel(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -113,13 +112,11 @@
           one: [],
           two: [],
           three: []
-        },
-        status: 0
+        }
       }
     },
     created() {
       this.listQuery.activityId = this.$route.query.id;
-      this.status = this.$route.query.status;
       this.getList(1);
       this.searchRootCategory();
     },
@@ -147,9 +144,6 @@
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
       },
-      settingactPrice(row) {
-        this.$router.push({path: '/sys/activity/actprice', query: {id: row.id}})
-      },
       returnPage() {
         this.$router.go(-1);
       },
@@ -159,6 +153,7 @@
           this.listLoading = false;
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
+          console.log(this.list);
           if (idx == 0) {
             if (response.result.result.records.length == 0) {
               this.$message({
@@ -178,6 +173,12 @@
             this.$message({
               message: "重置成功",
               type: 'success',
+              duration: 800
+            })
+          } else {
+            this.$message({
+              message: "暂无数据",
+              type: 'warning',
               duration: 800
             })
           }
@@ -265,21 +266,6 @@
         this.listQuery.pageSize = val;
         this.getList(1);
       },
-      addactivity() {
-        this.$router.push({
-          path: "/sys/activity/addact"
-          // query: {rds: "write"}
-        })
-      },
-      associatedGood(row) {
-        this.$router.push({
-          path: "/sys/activity/assogoods",
-          query: {
-            name: row.name,
-            activityid: row.id
-          }
-        })
-      },
       handeldel(row) {
         this.$confirm('是否要进行删除操作?', '提示', {
           confirmButtonText: '确定',
@@ -296,7 +282,7 @@
 
       },
       backPage() {
-        this.$router.push('/sys/activity/apply');
+        this.$router.push({path: '/sys/activity/apply', query: {id: this.$route.query.id}});
       },
       seclectCategory(event, item) {
         switch (item) {

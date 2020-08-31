@@ -19,7 +19,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="text-align: center; margin-top: 20px">
+      <div style="text-align: center; margin: 20px 0">
         <el-button type="primary" @click="submit" size="small">提交</el-button>
         <el-button @click="backPage" size="small" style="margin-left: 20px">返回</el-button>
       </div>

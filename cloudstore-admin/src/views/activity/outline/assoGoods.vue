@@ -67,17 +67,17 @@
         </el-table-column>-->
         <el-table-column label="规格" align="center" :formatter="goodsinfo" prop="guige">
         </el-table-column>
-        <el-table-column label="活动价格(-1为未设置)" align="center" prop="offlinePrice">
+        <el-table-column label="活动价格" align="center" prop="offlinePrice" :formatter="nosetting">
         </el-table-column>
-        <el-table-column label="团长佣金(-1为未设置)" align="center" prop="leader">
+        <el-table-column label="团长佣金" align="center" prop="leader" :formatter="nosetting">
         </el-table-column>
-        <el-table-column label="客户购买积分(-1为未设置)" width="200" align="center" prop="clientPoints">
+        <el-table-column label="客户购买积分" align="center" prop="clientPoints" :formatter="nosetting">
         </el-table-column>
-        <el-table-column label="操作" align="center" width="200">
+        <el-table-column label="操作" align="center" width="320">
           <template slot-scope="scope">
 <!--            <el-button size="mini" @click="readInfo(scope.row)">查看详情</el-button>-->
             <el-button type="primary" size="mini" @click="settingactPrice(scope.row)">设置参数</el-button>
-<!--            <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码</el-button>-->
+            <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码</el-button>
             <el-button type="danger" size="mini" @click="handeldel(scope.row)">取消关联</el-button>
           </template>
         </el-table-column>
@@ -159,12 +159,49 @@
       qrcode(index, row) {
         if (row.clientPoints == -1 || row.leader == -1 || row.offlinePrice == -1) {
           this.$message({
-            message: '请设置该商品Sku的相关参数',
+            message: '请设置该商品的Sku的相关参数',
             type: 'error',
             duration: 1000
           })
         } else {
           this.$router.push({path: '/sys/activity/qrcode', query: {id: row.activityGoodsId}})
+        }
+      },
+      nosetting(row, col) {
+        switch (col.property) {
+          case "offlinePrice": {
+            try {
+              if (row.offlinePrice == -1) {
+                return "未设置";
+              } else {
+                return row.offlinePrice;
+              }
+            }catch (e) {
+              return "数据读取出错";
+            }
+          }
+          case "leader": {
+            try {
+              if (row.leader == -1) {
+                return "未设置";
+              } else {
+                return row.leader;
+              }
+            }catch (e) {
+              return "数据读取出错";
+            }
+          }
+          case "clientPoints": {
+            try {
+              if (row.clientPoints == -1) {
+                return "未设置";
+              } else {
+                return row.clientPoints;
+              }
+            }catch (e) {
+              return "数据读取出错";
+            }
+          }
         }
       },
       readInfo() {},

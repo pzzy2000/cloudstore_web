@@ -95,3 +95,11 @@ export function saveSetting(params) {
     data: params
   })
 }
+
+export function settingDef(params) {
+  return request({
+    url: '/finance/profit/defaults/save',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

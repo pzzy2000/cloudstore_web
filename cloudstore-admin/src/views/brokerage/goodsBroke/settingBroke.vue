@@ -104,7 +104,6 @@
       getList() {
         getgoodsSku({goodsId: this.$route.query.id}).then(res => {
           this.goodsku.skuStockList = res.result.result.records;
-          console.log(this.goodsku.skuStockList)
           if( this.goodsku.skuStockList.length>0){
             try{
               this.specslabel='规格['+this.goodsku.skuStockList[0].goodsSkuBean.skuKey+"]"; //skuStockListt[0].skuKey;

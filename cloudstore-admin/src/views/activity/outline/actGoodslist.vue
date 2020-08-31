@@ -319,6 +319,7 @@
           activityId: this.$route.query.activityid,
           goodsId: row.goodsId,
           goodsSkuId: row.skuId,
+          offlinePrice: -1,
           optType: "save"
         }).then(res => {
           if (res.result.code == 0) {
