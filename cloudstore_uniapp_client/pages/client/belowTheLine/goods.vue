@@ -1,6 +1,11 @@
 <template>
 	<view class="container">
-		<nav-bar backState="1000" fontColor="#000" bgColor="#fff" class="nav-title">商品详情</nav-bar>
+		<!-- <nav-bar backState="1000" fontColor="#000" bgColor="#fff" class="nav-title">商品详情</nav-bar> -->
+		<nav-bar fontColor="#000"  bgColor="#fff" title="商品详情" :titleCenter="true">
+			<view class="icon_setUp" slot="left">
+				<text class="cuIcon-home" @click.stop="toHome"></text>
+			</view>
+		</nav-bar>
 		<text class="number-tip" v-if="!isBuyBtn">该商品已售空我们会尽快补货哦，明天再来吧~</text>
 		<view class="carousel">
 			<swiper indicator-dots circular="true" duration="400">
@@ -17,10 +22,10 @@
 			</view>
 		</view>
 		<view class="c-list">
-			<view class="c-row" v-if="specList && specList.length > 0">
+			<view class="c-row" v-if="specSelected.length > 0">
 				<text class="tit">产品规格</text>
 				<view class="con">
-					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
+					<text class="selected-text">{{ specSelected }}</text>
 				</view>
 				<!-- <text class="yticon icon-you"></text> -->
 			</view>
@@ -125,9 +130,6 @@
 				</view>
 			</view>
 		</view>
-		<!-- 分享 -->
-		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
-		<hover-menu></hover-menu>
 	</view>
 </template>
 
@@ -288,6 +290,7 @@ export default {
 				this.skuList = tmp.goodsSkuBean
 				this.sku.price = tmp.price
 				this.sku.stock = tmp.stock
+				this.specSelected = tmp.goodsSkuBean.skuValue
 			}
 		},
 		shareAmount () { //处理分享出去的金额
@@ -458,8 +461,12 @@ export default {
 			if (data) {
 				console.log(data)
 			}
+		},
+		toHome () {
+			uni.switchTab({
+				url:"/pages/agent/goods/hotsale/hotsale"
+			})
 		}
-		
 	}
 };
 </script>
@@ -470,6 +477,12 @@ export default {
 	padding-bottom: 160upx;
 	.nav-title {
 		box-shadow: 5upx 5upx 4upx rgb(241,241,241);
+	}
+}
+.icon_setUp {
+	margin-left: 20upx;
+	.cuIcon-home {
+		font-size: 40upx;
 	}
 }
 .icon-you {

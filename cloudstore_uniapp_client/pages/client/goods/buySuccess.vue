@@ -17,7 +17,7 @@
 							<view class="theLine-content" v-for="item in orderDetailList" :key='item.id'>
 								<image :src="item.goodsSkuBean.photos[0].url" mode="" class="theLine-content-img"></image>
 								<view class="theLine-content-detail">
-									<!-- <view class="content-detail-sku">
+									<view class="content-detail-sku">
 										<view class="detail-sku-title clamp">{{item.goodsPicesBean.goodsName}}</view>
 										<text class="detail-sku">{{item.goodsSkuBean.skuValues}}</text>
 										<view class="detail-sku-price">
@@ -29,7 +29,7 @@
 												×1
 											</view>
 										</view>
-									</view> -->
+									</view>
 									<!-- <view class="content-detail-price">
 										<text class="price-symbol">36.6</text>
 										<text class="content-detail-prt price-symbol">136.6</text>
@@ -53,7 +53,7 @@
 		data() {
 			return {
 				belowTheLine: false,
-				orderList: '',
+				orderDetailList: '',
 				orderinfo: '',
 				price: '',
 				orderId: ''
@@ -63,7 +63,8 @@
 			navBar
 		},
 		onLoad(ops) {
-			ops.orderId = '7960376677893148673'
+			// ops.orderId = '7960376677893148673'
+			// ops.price = 17
 			if (ops.orderId) {
 				this.orderId = ops.orderId
 				this.getOrderInfo(ops.orderId)
@@ -114,8 +115,19 @@
 				}
 				let data = await Api.apiCall('post',Api.client.order.confirmOrder,parmas,true)
 				if (data) {
+					console.log(data)
 					if (data.code ===0) {
-						this.$api.msg('领取商品成功')
+						if (data.result.id === this.orderId) {
+							this.$api.msg('领取商品成功')
+							let timer = setTimeout(() => {
+								clearTimeout(timer);
+								uni.navigateTo({
+									url: '/pages/client/order/order',
+								});
+							}, 1000);
+						} else {
+							this.$api.msg('订单id不匹配')
+						}
 					} else {
 						this.$api.msg(code.msg)
 					}
@@ -237,6 +249,7 @@
 					width: 150upx;
 					height: 150upx;
 					margin-right: 20upx;
+					border-radius: 15upx;
 				}
 				.theLine-content-detail {
 					display: flex;

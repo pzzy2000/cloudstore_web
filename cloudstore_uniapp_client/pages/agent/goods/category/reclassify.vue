@@ -32,7 +32,7 @@
 											<text class="price-btn-unit">/{{item.unit || '无'}}</text>
 										</view>
 										<view class="price-btn">
-											<button class="price-share" @click.stop='shareSave(item)'>分享赚<text class="price-symbol" v-text="item.client"></text></button>
+											<button class="price-share" @click.stop='shareSave(item)'><text v-text="item.client"></text></button>
 											<button class="price-buy">立即购买</button>
 										</view>
 									</view>

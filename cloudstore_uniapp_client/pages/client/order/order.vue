@@ -36,7 +36,7 @@
 					<text class="title clamp">{{order.goodsPicesBean.goodsName}}</text>
 					<text class="subtitle clamp">{{order.goodsPicesBean.goodsSubtitle}}</text>
 					<view class="detail-price">
-						<view class="price-num price-symbol">{{order.goodsSkuBean.price}} <text class="price-sku">/{{order.goodsSkuBean.skuValue}}</text> </view>
+						<view class="price-num price-symbol">{{order.price}} <text class="price-sku">/{{order.goodsSkuBean.skuValue}}</text> </view>
 						<text>× {{order.quantity}}</text>
 					</view>
 					<!-- <view class="attr-box">
@@ -47,7 +47,11 @@
 				</view>
 				<view class="flex align-center">
 					<view class="status" v-if="order.status === 'WaitDeliver'">待发货</view>
-					<view class="status" v-else-if="order.status === 'peisoged'">已配送</view>
+					<view class="status" v-else-if="order.status === 'peisoged'">
+						<text v-if="order.deliveryType === 'agent'">代理</text>
+						<text v-if="order.deliveryType === 'store'">仓库</text>
+						已配送
+					</view>
 					<view class="status" v-else-if="order.status === 'returnsing'">退货中</view>
 					<view class="status" v-else-if="order.status === 'refunding'">退款中</view>
 					<view class="status" v-else-if="order.status === 'refunded'">已退款</view>
@@ -86,7 +90,7 @@
 				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'peisoged'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 					<button class="cu-btn round" @click.stop="confirmOrder(item)">确认收货</button>
-					<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)">申请售后</button>
+					<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)" v-if="item.type != 1">申请售后</button>
 				</view>
 				<!-- 退款中 -->
 				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'refunding'">

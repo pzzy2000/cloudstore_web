@@ -32,7 +32,7 @@
 												lazy-load 
 												@load="onImageLoad('cartList', index)" 
 												@error="onImageError('cartList', index)"></image>
-											<view class="yticon icon-xuanzhong2 checkbox" :class="{checked: item.checked}" @click="check('item', index)"></view>
+											<view class="yticon icon-xuanzhong2 checkbox" :class="{checked: item.checked}" @click="check('item', index)" v-show="item.stock"></view>
 										</view>
 										<view class="item-right">
 											<text class="clamp title">{{item.title}}</text>
@@ -43,6 +43,7 @@
 											</view>
 											<uni-number-box 
 												v-if="isNumber"
+												v-show="item.stock"
 												class="number"
 												:min="1"
 												:max="item.stock"
@@ -52,6 +53,7 @@
 												:index="index"
 												@eventChange="numberChange"
 											></uni-number-box>
+											<text class="stockout" v-show="!item.stock">暂时无货</text>
 										</view>
 										<!-- <text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text> -->
 									</view>
@@ -455,6 +457,15 @@
 					letter-spacing: 5upx;
 				}
 			}
+			.stockout {
+				height: 40upx;
+				width: 132upx;
+				font-size: 20upx;
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				text-align: center;
+			}
 		}
 		.del-btn{
 			padding:4upx 10upx;
@@ -475,7 +486,7 @@
 		position:fixed;
 		left: 0;
 		bottom:0;
-		z-index: 95;
+		z-index: 9999;
 		display: flex;
 		align-items: center;
 		width:100%;
@@ -545,7 +556,7 @@
 			border-radius: 36upx;
 			width: 176upx;
 			height: 74upx;
-			height: 74upx;
+			line-height: 74upx;
 			text-align: center;
 			font-size: 28upx;
 			background: #39A9FF;
@@ -560,7 +571,7 @@
 	.number {
 		height: 40upx;
 		width: 132upx;
-		font-size: 20uxp;
+		font-size: 20upx;
 		position: absolute;
 		bottom: 0;
 		right: 0;

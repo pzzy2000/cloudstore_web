@@ -14,6 +14,7 @@
 			<view class="sub-title">{{ goods.goodsSubtitle }}</view>
 			<view class="price-box">
 				<text class="price price-symbol">{{ sku.price }}</text>/{{ goods.unit }}
+				<text class="martPrice">销售价:{{goods.martPrice}}</text>
 			</view>
 		</view>
 		<view class="c-list">
@@ -60,6 +61,17 @@
 			</view>
 		</view>
 		<view class="price-explain detail-desc ">
+			<view class="d-header"><text class="text">佣金说明</text></view>
+			<view class="price-explain-main">
+				<text class="explain-main-text">
+					丫咪购商的分享佣金分为“最高可得佣金”和“实际可得佣金”两种概念。“最高可得佣金”为商品详情页中展示的“分享最高赚¥***元”、“分享赚¥***”，是指用户分享商品最高可能得到的佣金。“实际可得佣金”是指用户通过分享商品实际获得的佣金，具体以丫咪购微信小程序的“收益”界面中显示的金额为准。
+				</text>
+				<text class="explain-main-text">
+					请您注意：商品界面中显示的“分享最高赚¥***元”、“分享赚¥***”并不等同于您实际可获得佣金，也不视为我们向您作出的承诺。
+				</text>
+			</view>
+		</view>
+		<view class="price-explain detail-desc ">
 			<view class="d-header"><text class="text">价格说明</text></view>
 			<view class="price-explain-main">
 				<view class="explain-main-title">
@@ -93,9 +105,51 @@
 			<view class="action-btn-group">
 				<button class="action-btn action-buy-btn" @click.stop="toggleSpec('buy')">立即购买</button>
 				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
-				<button class="action-btn action-share-btn" @click.stop="shareSave">分享赚￥{{ goods.client }}</button>
+				<button class="action-btn action-share-btn" @click.stop="shareSave">{{ goods.client }}</button>
 			</view>
 		</view>
+		<!-- 规格-模态层弹窗 -->
+		<view class="popup spec" :class="specClass" @touchmove.stop.prevent="stopPrevent" @click="toggleSpec">
+			<!-- 遮罩层 -->
+			<view class="mask"></view>
+			<view class="layer attr-content" @click.stop="stopPrevent">
+				<div class='sku-detail'>
+					<view class="a-t">
+						<image :src="sku.imgUrl"></image>
+						<view class="right">
+							<text class="price">¥ <text class="price-num">{{ sku.price }}</text></text>
+							<text class="stock">库存：{{ sku.stock }}件</text>
+							<view class="selected">
+								已选：
+								<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
+							</view>
+						</view>
+					</view>
+					<view v-for="(item, index) in specList" :key="index" class="attr-list">
+						<text>{{ item.goodsPropertyParamName }}</text>
+						<view class="item-list">
+							<text
+								v-for="(childItem, childIndex) in specChildList"
+								v-if="childItem.pid === item.id"
+								:key="childIndex"
+								class="tit"
+								:class="{ selected: childItem.selected }"
+								@click="selectSpec(childIndex, childItem.pid)"
+							>
+								{{ childItem.name }}
+							</text>
+						</view>
+					</view>
+				</div>
+				<view class="buyBtn">
+					<button class="cu-btn" v-if="isBuyBtn" @click.stop="toBuy(buy)">确定</button>
+					<button class="cu-btn zero" v-if="!isBuyBtn">暂时缺货</button>
+				</view>
+			</view>
+		</view>
+		<!-- 分享 -->
+		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
+		<hover-menu></hover-menu>
 	</view>
 </template>
 
@@ -619,6 +673,10 @@ export default {
 		line-height: 64upx;
 		font-size: 26upx;
 		color: #999999;
+		.martPrice {
+			margin-left: 15upx;
+			text-decoration: line-through;
+		}
 	}
 	.price {
 		color: #FF1313;

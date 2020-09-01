@@ -31,14 +31,14 @@
 				base64Array: [],
 				codeArray: [],
 				actionType: '',
-				activityGoodsId: ''//判断是不是线下活动
+				activityGoodsId: '',//判断是不是线下活动
+				url: ''
 			}
 		},
 		onShow() {
 			var that = this;
 			const timeout = setTimeout(function() {
-				if (that.actionType === 'xianxia') {
-					console.log(1)
+				if (that.actionType === 'xxsp') {
 					uni.navigateTo({
 						url: '/pages/client/belowTheLine/goods?activityGoodsId='+that.activityGoodsId
 					});
@@ -48,17 +48,23 @@
 			},2000)
 		},
 		onLoad(ops) {
-			// ops.actionType = 'xianxia'
+			console.log(ops)
+			// ops.q = "https%3A%2F%2Fwww.sz-guochuang.com%2Finto%3Faction%3DoffLine%26id%3D7959350568732856320"
+			// ops.action = 'xxsp'
 			// ops.activityGoodsId = '7959350568732856320'
-			// this.actionType = ops.actionType
-			// this.activityGoodsId = ops.activityGoodsId
-			this.token = uni.getStorageSync('token')
-			this.agentId = ops.agentId
-			this.activityId = ops.activityId
-			this.goodsId = ops.goodsId
-			this.agentGoodsId = ops.agentGoodsId
-			this.shareClientId = ops.shareClientId
-			uni.setStorageSync('goodsInfo', ops)
+			if (ops.q) {
+				this.url = decodeURIComponent(ops.q)
+				this.actionType = 'xxsp'
+				this.activityGoodsId = this.getQuery('activityGoodsId',this.url)
+			} else {
+				this.token = uni.getStorageSync('token')
+				this.agentId = ops.agentId
+				this.activityId = ops.activityId
+				this.goodsId = ops.goodsId
+				this.agentGoodsId = ops.agentGoodsId
+				this.shareClientId = ops.shareClientId
+				uni.setStorageSync('goodsInfo', ops)
+			}
 		},
 		onHide () {
 			this.goodsId = ""
@@ -84,25 +90,13 @@
 					}
 				}
 			},
-			encodeUrl (uId) {
-				var arr1=[];
-				var arr =uId.slice(1,uId.length).split('&');
-				arr.forEach(function(val){
-				      //删除=前面的数据再放进arr
-				    arr1.push(val.substr(val.indexOf('=')+1));
-				})
-				return arr1;
-				// console.log(arr1)
-			},
-			base64_decode (str) { // 解码，配合decodeURIComponent使用
-			    return decodeURIComponent(atob(str).split('').map(function (c) {
-					return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-				}).join(''));
-			},
-			decode(base64){
-				// var b = new Buffer(base64, 'base64')
-				// return b.toString();
-				 return new Buffer(base64, 'base64').toString();
+			getQuery(key,url) {
+			    var reg = new RegExp('(^|&)' + key + '=([^&]*)(&|$)', 'i');
+				var r = url.substr(1).match(reg);
+				if (r != null) {
+					return unescape(r[2]);
+				}
+				return null;
 			}
 		}
 	};
