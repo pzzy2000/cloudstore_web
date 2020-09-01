@@ -55,7 +55,7 @@
 			if (ops.q) {
 				this.url = decodeURIComponent(ops.q)
 				this.actionType = 'xxsp'
-				this.activityGoodsId = this.getQuery('activityGoodsId',this.url)
+				this.activityGoodsId = this.getQuery('id',this.url)
 			} else {
 				this.token = uni.getStorageSync('token')
 				this.agentId = ops.agentId

@@ -14,7 +14,7 @@
 			<view class="sub-title">{{ goods.goodsSubtitle }}</view>
 			<view class="price-box">
 				<text class="price price-symbol">{{ sku.price }}</text>/{{ goods.unit }}
-				<text class="martPrice">销售价:{{goods.martPrice}}</text>
+				<text class="martPrice">销售价:{{goods.martPrice || ''}}</text>
 			</view>
 		</view>
 		<view class="c-list">
@@ -105,7 +105,7 @@
 			<view class="action-btn-group">
 				<button class="action-btn action-buy-btn" @click.stop="toggleSpec('buy')">立即购买</button>
 				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
-				<button class="action-btn action-share-btn" @click.stop="shareSave">{{ goods.client }}</button>
+				<button class="action-btn action-share-btn" @click.stop="shareSave">{{ isType() + goods.client || '00.00'}}</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -299,6 +299,17 @@ export default {
 		}
 	},
 	methods: {
+		isType() {
+			var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
+			switch (userType){
+				case 'agent':
+					return '最高赚￥';
+				case 'leader':
+					return '最高赚￥';
+				default:
+					return '分享赚￥';
+			}
+		},
 		shareAmount () { //处理分享出去的金额
 			this.goods.client= Api.ishareAmount(this.goods);
 			// console.log(this.goods)

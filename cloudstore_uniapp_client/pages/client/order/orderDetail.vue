@@ -28,7 +28,7 @@
 				<view class="goods-detail">
 					<view class="detail-title">
 						<text class="clamp">{{item.goodsPicesBean.goodsName}} </text>	
-						<text class="detail-title-price price-symbol">{{item.price || "加载中"}}</text>
+						<text class="detail-title-price price-symbol">{{item.price || ''}}</text>
 					</view>
 					<view class="detail-subtitle">
 						<text class="clamp">{{item.goodsPicesBean.goodsSubtitle}}</text>
@@ -177,7 +177,7 @@
 			this.price = option.price
 			this.totalPrice = option.price
 			this.getOrderData(option.orderId)
-			this.searchClientAddress()
+			// this.searchClientAddress()
 		},
 		onShow () {
 		},
@@ -191,7 +191,6 @@
 				};
 				let data = await Api.apiCall('post', Api.client.order.getClientOrderDetail, params, true);
 				if (data) {
-					console.log(data)
 					var transportAgent = data.result.orderBean.transportAgentBean
 					var clientInfo = data.result.orderBean.clientAddressBean
 					this.goodsDetail = data.result.details
@@ -199,7 +198,7 @@
 					//获取收货地址
 					try{
 						this.clientInfo.name = data.result.orderBean.clientAddressBean.name
-						this.clientInfo.address = clientInfo.provinceBean.name+clientInfo.cityBean.name+clientInfo.areaBean.name+clientInfo.community+clientInfo.detailAddress
+						this.clientInfo.address = clientInfo.provinceBean.name+clientInfo.cityBean.name+ clientInfo.areaBean.name + (clientInfo.community || '' ) +clientInfo.detailAddress
 					}catch(e){
 						this.clientInfo.name = ''
 						this.clientInfo.address = ''
@@ -223,21 +222,22 @@
 					}
 				}
 			},
-			async searchClientAddress () { //查询收货地址
-				let params = {
-					pageNum: '1',
-					pageSize: '10'
-				} 
-				let data = await Api.apiCall('post', Api.agent.address.searchClientAddress, params)
-				if (data) {
-					let tmpData = data.result
-					this.addressData.id = tmpData.id
-					this.addressData.name = tmpData.name
-					this.addressData.address = tmpData.provinceBean.name + tmpData.cityBean.name + tmpData.areaBean.name
-					this.addressData.phone = tmpData.phone
-					this.addressData.area = tmpData.detailAddress
-				}
-			},
+			// async searchClientAddress () { //查询收货地址
+			// 	let params = {
+			// 		pageNum: '1',
+			// 		pageSize: '10'
+			// 	} 
+			// 	let data = await Api.apiCall('post', Api.agent.address.searchClientAddress, params)
+			// 	if (data) {
+			// 		let tmpData = data.result
+			// 		console.log(tmpData)
+			// 		this.addressData.id = tmpData.id
+			// 		this.addressData.name = tmpData.name
+			// 		this.addressData.address = tmpData.provinceBean.name + tmpData.cityBean.name + tmpData.areaBean.name
+			// 		this.addressData.phone = tmpData.phone
+			// 		this.addressData.area = tmpData.detailAddress
+			// 	}
+			// },
 			radioChange: function(evt) { //选择支付方式
 				for (let i = 0; i < this.items.length; i++) {
 					if (this.items[i].value === evt.target.value) {

@@ -197,7 +197,7 @@
 				},
 				toCategory(){
 					uni.switchTab({
-						url: '/pages/agent/goods/category/mallmenu'
+						url: '/pages/agent/goods/hotsale/hotsale'
 					})
 				}
 			}

@@ -19,6 +19,7 @@
 			<view class="sub-title">{{ goods.goodsSubtitle }}</view>
 			<view class="price-box">
 				<text class="price price-symbol">{{ offlinePrice }}</text>/{{ goods.unit }}
+				<text class="price-mart">销售价:{{ goodsSku.price }}</text>
 			</view>
 		</view>
 		<view class="c-list">
@@ -216,6 +217,9 @@ export default {
 				client: '',
 				unit: ''
 			},
+			goodsSku: {
+				price: ''
+			},
 			shareList: [
 				{
 				  icon: "/static/share_wechat.png",
@@ -277,11 +281,11 @@ export default {
 			}
 			let data = await Api.apiCall('post', Api.client.belowTheLine.getActivityGoodsById, params, true);
 			if (data) {
-				console.log(data)
 				var tmp = data.result
 				this.goodsId = tmp.goodsId;
 				this.agentId = '-1'
 				this.goodsSkuId = tmp.goodsSkuId;
+				this.goodsSku = tmp.goodsSkuBean
 				this.activityId = tmp.activityId
 				this.getGoodsDetail(this.goodsId,this.activityGoodsId);
 				this.shareClientId = '-1'
@@ -295,7 +299,6 @@ export default {
 		},
 		shareAmount () { //处理分享出去的金额
 			this.goods.client= Api.ishareAmount(this.goods);
-			// console.log(this.goods)
 		},
 		async getGoodsDetail (goodsId,agentGoodsId) { //获取商品详情
 			let params = {
@@ -387,7 +390,6 @@ export default {
 						let  vxCode = loginRes.code;
 						Api.apiCallbackCall("POST", Api.client.belowTheLine.createOffLineOrder, params, true, false, function(data){
 							if (data) {
-								console.log(data)
 								let re =data.result;
 								let params = {
 									'code': vxCode,
@@ -396,7 +398,6 @@ export default {
 								that.orderId = re.id
 								Api.apiCallbackCall("POST", Api.client.buy.prePay, params, true, true, function(da_ta){
 								if (da_ta) {
-									console.log(da_ta)
 									that.payMent(da_ta)
 									}
 								});
@@ -543,11 +544,16 @@ export default {
 		line-height: 50upx;
 	}
 	.price-box {
-		display: inline-block;
+		display: flex;
 		height: 64upx;
 		line-height: 64upx;
 		font-size: 26upx;
 		color: #999999;
+		.price-mart {
+			text-decoration: line-through;
+			display: inline-block;
+			margin-left: 20upx;
+		}
 	}
 	.price {
 		color: #FF1313;

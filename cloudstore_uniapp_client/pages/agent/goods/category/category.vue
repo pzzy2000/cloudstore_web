@@ -37,7 +37,7 @@
 							 <text class="priceSale price-symbol">{{ goods.salePrice }}</text>/{{ goods.unit }}
 						</view>
 						<view class="flex justify-around">
-							<button class="price-btn share" @click.stop='shareSave(goods)'><text>{{goods.client}}</text></button>
+							<button class="price-btn share" @click.stop='shareSave(goods)'><text>{{isType()+goods.client}}</text></button>
 							<button class="price-btn buy">立即购买</button>
 						</view>
 					</view>
@@ -174,11 +174,21 @@
 			this.$refs.share.toggleMask();
 		},
 		methods: {
+			isType() {
+				var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
+				switch (userType){
+					case 'agent':
+						return '最高赚￥';
+					case 'leader':
+						return '最高赚￥';
+					default:
+						return '分享赚￥';
+				}
+			},
 			shareAmount () { //处理分享出去的金额
 				for( let i in this.goodsList){
 					this.goodsList[i].client= Api.ishareAmount(this.goodsList[i]);
 				}
-				console.log(this.goodsList)
 			},
 			async loadData(type) { //初始化加载商品数据，包括下拉和下拉刷新
 				if (type === 'initialize') {
