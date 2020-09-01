@@ -1,5 +1,8 @@
 <template> 
   <div class="app-container">
+    <div style="border: 1px solid #EBEEF5; padding: 20px; margin-bottom: 20px; font-size: 16px">
+      <i class="el-icon-open"></i>当前活动：<span style="color: #f06d44;">{{name}}（{{addProfit}}）</span>
+    </div>
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -65,9 +68,9 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="供应商" align="center" fixed :formatter="goodsinfo" column-key="supplierBean">
+        <el-table-column label="供应商" align="center" :formatter="goodsinfo" column-key="supplierBean">
         </el-table-column>
-        <el-table-column label="供应商店铺" align="center" fixed :formatter="goodsinfo" column-key="supplierShopBean">
+        <el-table-column label="供应商店铺" align="center" :formatter="goodsinfo" column-key="supplierShopBean">
         </el-table-column>
         <el-table-column label="操作" align="center" width="160">
           <template slot-scope="scope">
@@ -112,11 +115,19 @@
           one: [],
           two: [],
           three: []
-        }
+        },
+        name: '',
+        addProfit: ''
       }
     },
     created() {
       this.listQuery.activityId = this.$route.query.id;
+      this.name = this.$route.query.name;
+      if (this.$route.query.status == 1) {
+        this.addProfit = '已参加佣金活动';
+      } else {
+        this.addProfit = '未参加佣金活动';
+      }
       this.getList(1);
       this.searchRootCategory();
     },

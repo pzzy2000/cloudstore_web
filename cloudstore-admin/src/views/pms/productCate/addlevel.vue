@@ -15,7 +15,7 @@
         <el-form-item label="排序" prop="order">
           <el-input v-model="addGoodsort.order" placeholder="排个序吧" style="width: 350px" oninput="value=value.replace(/\D/g, '')"></el-input>
         </el-form-item>
-        <el-form-item label="分类图片(一张就好)" prop="categoryPic" v-if="addGoodsort.level == '二级' ? true : false">
+        <el-form-item label="分类图片(一张就好)" prop="categoryPic">
           <SingleUpload v-model="addGoodsort.categoryPic" logotype="ejfl"></SingleUpload>
         </el-form-item>
         <el-form-item style="float: right">
@@ -102,13 +102,11 @@
           optType: "save",
           parentId: parentId
         }
-        if (this.addGoodsort.level == "二级") {
-          let categoryPic = []
-          for (let i=0; i<this.addGoodsort.categoryPic.length; i++) {
-            categoryPic.push(this.addGoodsort.categoryPic[i].uid);
-          }
-          obj.categoryPic = categoryPic
+        let categoryPic = []
+        for (let i=0; i<this.addGoodsort.categoryPic.length; i++) {
+          categoryPic.push(this.addGoodsort.categoryPic[i].uid);
         }
+        obj.categoryPic = categoryPic
         this.loadingbut = true;
         this.subbtntext = '添加中...';
         this.disabled = true;
@@ -156,13 +154,11 @@
               optType: "update",
               id: this.$route.query.id
             }
-            if (this.addGoodsort.level == "二级") {
-              let categoryPic = []
-              for (let i=0; i<this.addGoodsort.categoryPic.length; i++) {
-                categoryPic.push(this.addGoodsort.categoryPic[i].uid);
-              }
-              obj.categoryPic = categoryPic
+            let categoryPic = []
+            for (let i=0; i<this.addGoodsort.categoryPic.length; i++) {
+              categoryPic.push(this.addGoodsort.categoryPic[i].uid);
             }
+            obj.categoryPic = categoryPic
             this.disabled = true;
             this.updbtntext = "更新中...";
             this.loadingbut = true;

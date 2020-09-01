@@ -164,22 +164,22 @@
           console.log(res);
           this.listLoading = false;
           res.result.result.title = "默认";
-          res.result.result.leader = res.result.result.leader*100;
-          res.result.result.agent = res.result.result.agent*100;
-          res.result.result.client = res.result.result.client*100;
-          res.result.result.delivery = res.result.result.delivery*100;
-          res.result.result.sharePoints = res.result.result.sharePoints*100;
-          res.result.result.clientPoints = res.result.result.clientPoints*100;
+          res.result.result.leader = parseInt(res.result.result.leader*100);
+          res.result.result.agent = parseInt(res.result.result.agent*100);
+          res.result.result.client = parseInt(res.result.result.client*100);
+          res.result.result.delivery = parseInt(res.result.result.delivery*100);
+          res.result.result.sharePoints = parseInt(res.result.result.sharePoints*100);
+          res.result.result.clientPoints = parseInt(res.result.result.clientPoints*100);
           this.defList.orderList.push(res.result.result);
           let obj = {
             title: "最大值"
           }
-          obj.leader = this.defList.orderList[0].maxLeader*100;
-          obj.agent = this.defList.orderList[0].maxAgent*100;
-          obj.client = this.defList.orderList[0].maxClient*100;
-          obj.delivery = this.defList.orderList[0].maxDelivery*100;
-          obj.sharePoints = this.defList.orderList[0].maxSharePoints*100;
-          obj.clientPoints = this.defList.orderList[0].maxClientPoints*100;
+          obj.leader = parseInt(this.defList.orderList[0].maxLeader*100);
+          obj.agent = parseInt(this.defList.orderList[0].maxAgent*100);
+          obj.client = parseInt(this.defList.orderList[0].maxClient*100);
+          obj.delivery = parseInt(this.defList.orderList[0].maxDelivery*100);
+          obj.sharePoints = parseInt(this.defList.orderList[0].maxSharePoints*100);
+          obj.clientPoints = parseInt(this.defList.orderList[0].maxClientPoints*100);
           this.defList.orderList.push(obj);
         })
       }

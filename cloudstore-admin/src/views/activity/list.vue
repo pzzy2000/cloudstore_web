@@ -309,7 +309,7 @@
       associatedGood(row) {
         this.$router.push({
           path: "/sys/activity/assogoods",
-          query: {id: row.id}
+          query: {id: row.id, name: row.name, status: row.addProfit}
         })
       },
       handeldelGoods(row) {

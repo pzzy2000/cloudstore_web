@@ -8,6 +8,11 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productCateTable" style="width: 100%" :data="list" v-loading="listLoading" border>
+        <el-table-column label="分类图片" align="center">
+          <template slot-scope="scope">
+            <el-image :src="scope.row.photos.url" style="width: 50px"></el-image>
+          </template>
+        </el-table-column>
         <el-table-column label="分类名称" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
@@ -24,7 +29,7 @@
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
             </el-button>
-            <el-button size="mini" @click="updateLevel(scope.row)" v-if="scope.row.level == 2 ? true : false">编辑
+            <el-button size="mini" @click="updateLevel(scope.row)">编辑
             </el-button>
             <el-button
               size="mini"
@@ -97,7 +102,7 @@
           path: "/sys/goods/category/edit",
           query: {
             parentId: this.$route.query.parentId,
-            level: 2,
+            level: row.level,
             optType: 'update',
             id: row.id
           }

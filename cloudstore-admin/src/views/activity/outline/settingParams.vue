@@ -10,6 +10,8 @@
           </el-table-column>
           <el-table-column :label='specslabel'  align="center" prop="goodsSkuBean.skuValue" width="200">
           </el-table-column>
+          <el-table-column label="SKU原价" align="center" prop="goodsSkuBean.price" width="250">
+          </el-table-column>
           <el-table-column label="活动价" align="center">
             <template slot-scope="scope">
               <el-form-item :prop="'skuStockList.' + scope.$index + '.onlinePrice'" :rules='rules.onlinePrice'>

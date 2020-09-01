@@ -1,5 +1,8 @@
 <template> 
   <div class="app-container">
+    <div style="border: 1px solid #EBEEF5; padding: 20px; margin-bottom: 20px; font-size: 16px">
+      <i class="el-icon-open"></i>当前活动：<span style="color: #f06d44;">{{name}}（{{addProfit}}）</span>
+    </div>
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -34,9 +37,9 @@
           <!--              </el-option>-->
           <!--            </el-select>-->
           <!--          </el-form-item>-->
-          <el-form-item label="供应商：">
-            <remoteCom v-model="listQuery.supplierIds_" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
-          </el-form-item>
+<!--          <el-form-item label="供应商：">-->
+<!--            <remoteCom v-model="listQuery.supplierIds_" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>-->
+<!--          </el-form-item>-->
         </el-form>
       </div>
     </el-card>
@@ -50,22 +53,20 @@
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60px" align="center"></el-table-column>
+        <el-table-column label="商品图片" align="center">
+          <template slot-scope="scope">
+            <el-image :src="scope.row.photos" style="width: 56px; height: 56px;"></el-image>
+          </template>
+        </el-table-column>
         <el-table-column label="商品名称" align="center" :formatter="goodsinfo" prop='goodsName'>
         </el-table-column>
         <el-table-column label="商品分类" align="center" :formatter="goodsinfo" prop="category">
         </el-table-column>
         <el-table-column label="SKU编号" align="center" :formatter="goodsinfo" prop="skuCode">
         </el-table-column>
-        <!--<el-table-column label="商品图片" align="center">
-          <template slot-scope="scope">
-            <el-image v-for=" (item,index) in scope.row.goodsPicesBean.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">
-              <div slot="placeholder" class="image-slot">
-                加载中<span class="dot">...</span>
-              </div>
-            </el-image>
-          </template>
-        </el-table-column>-->
         <el-table-column label="规格" align="center" :formatter="goodsinfo" prop="guige">
+        </el-table-column>
+        <el-table-column label="SKU原价" align="center" :formatter="goodsinfo" prop="skuprice">
         </el-table-column>
         <el-table-column label="活动价格" align="center" prop="offlinePrice" :formatter="nosetting">
         </el-table-column>
@@ -96,7 +97,7 @@
 <script>
   import {fetchActivityGoodsLists, delActivityGoodsList, fetchListWithChildren, outAssogoods} from '@/api/activity'
   import {msg} from '@/api/iunits'
-  import remoteCom from '@/components/remoteCom'
+  // import remoteCom from '@/components/remoteCom'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -104,9 +105,9 @@
   };
   export default {
     name: "trackinglist",
-    components: {
-      remoteCom
-    },
+    // components: {
+    //   remoteCom
+    // },
     data() {
       return {
         operateType: null,
@@ -120,12 +121,18 @@
           two: [],
           three: []
         },
-        status: 0
+        name: '',
+        addProfit: ''
       }
     },
     created() {
       this.listQuery.activityId = this.$route.query.id;
-      this.status = this.$route.query.status;
+      this.name = this.$route.query.name;
+      if (this.$route.query.status == 1) {
+        this.addProfit = '已参加佣金活动';
+      } else {
+        this.addProfit = '未参加佣金活动';
+      }
       this.getList(1);
       this.searchRootCategory();
     },
@@ -139,20 +146,11 @@
 
       // }
     },
-    filters: {
-      // verifyStatusFilter(value) {
-      //   if (value === 1) {
-      //     return '审核通过';
-      //   } else {
-      //     return '未审核';
-      //   }
-      // }
-    },
     methods: {
-      tochild(item, callback){
-        // return `用户名称：${item.name} / 用户账号：${item.access}`;
-        callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
-      },
+      // tochild(item, callback){
+      //   // return `用户名称：${item.name} / 用户账号：${item.access}`;
+      //   callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
+      // },
       settingactPrice(row) {
         this.$router.push({path: '/sys/activity/outlinesetParams', query: {id: row.skuId, activityId: this.$route.query.id, activityGoodsId: row.activityGoodsId, offlinePrice: row.offlinePrice}})
       },
@@ -269,6 +267,14 @@
           {
             try {
               return row.skuKey + ' ' + ':' + ' ' + row.skuValue;
+            } catch (e) {
+              return '数据读取错误';
+            }
+          }
+          case 'skuprice':
+          {
+            try {
+              return row.price;
             } catch (e) {
               return '数据读取错误';
             }

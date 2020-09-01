@@ -16,14 +16,17 @@
           <el-form-item label="商品名称：">
             <el-input style="width: 203px" v-model="listQuery.goodsName" placeholder="商品名称" clearable></el-input>
           </el-form-item>
-          <el-form-item label="商品品牌：">
-            <el-input style="width: 203px" v-model="listQuery.goodsBrand" placeholder="商品品牌" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="商品货号：">
-            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="所属供应商：">
-            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="所属供应商" clearable></el-input>
+<!--          <el-form-item label="商品品牌：">-->
+<!--            <el-input style="width: 203px" v-model="listQuery.goodsBrand" placeholder="商品品牌" clearable></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="商品货号：">-->
+<!--            <el-input style="width: 203px" v-model="listQuery.goodsNumber" placeholder="商品货号" clearable></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="所属供应商：">-->
+<!--            <el-input style="width: 203px" v-model="listQuery.shopName" placeholder="所属供应商" clearable></el-input>-->
+<!--          </el-form-item>-->
+          <el-form-item label="供应商：">
+            <remoteCom v-model="listQuery.supplierIds" ref="clearInput" url="/manage/search/supplier/search" @tochild="tochild"></remoteCom>
           </el-form-item>
           <el-form-item label="商品分类：">
             <el-select v-model="listQuery.categoryOneId" remote placeholder="一级分类" :loading="loading" v-on:change="seclectCategory($event, 1)" clearable>
@@ -53,15 +56,15 @@
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" v-loading="listLoading" border>
-        <!--<el-table-column label="商品图片" align="center">
+        <el-table-column label="商品图片" align="center">
           <template slot-scope="scope">
-            <el-image v-for=" (item,index) in scope.row.goodsPicesBean.goodsPhotos" :src="item.url" :key='index' style="width: 56px; height: 56px;margin-right: 20px;">
+            <el-image :src="scope.row.photos" style="width: 56px; height: 56px;">
               <div slot="placeholder" class="image-slot">
                 加载中<span class="dot">...</span>
               </div>
             </el-image>
           </template>
-        </el-table-column>-->
+        </el-table-column>
         <el-table-column label="商品名称" align="center">
           <template slot-scope="scope">{{scope.row.goodsBean.goodsName | changeMsg}}</template>
         </el-table-column>
@@ -95,6 +98,7 @@
 <script>
   import {getGoodslist, fetchListWithChildren} from '@/api/brokerage';
   import {fetchActivityGoodsLists, inAssogoods, outAssogoods} from '@/api/activity'
+  import remoteCom from '@/components/remoteCom'
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -102,6 +106,9 @@
   };
   export default {
     name: "productList",
+    components: {
+      remoteCom
+    },
     data() {
       return {
         category: {
@@ -168,6 +175,10 @@
       }
     },
     methods: {
+      tochild(item, callback){
+        // return `用户名称：${item.name} / 用户账号：${item.access}`;
+        callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
+      },
       suppilerShop(row, column) {
         try {
           return row.goodsBean.supplierShopBean.shopName;
@@ -280,6 +291,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.$refs.clearInput.clearInput();
         this.getList(2);
       },
       backPage() {

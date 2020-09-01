@@ -1,55 +1,55 @@
 <template> 
   <div class="app-container">
-    <el-card class="filter-container" shadow="never">
-      <div>
-        <i class="el-icon-search"></i>
-        <span>筛选搜索</span>
-        <el-button
-          style="float: right;margin-bottom: 10px;"
-          @click="handleSearchList()"
-          type="primary"
-          size="small">
-          查询
-        </el-button>
-        <el-button
-          style="float: right;margin-right: 15px;margin-bottom: 10px;"
-          @click="handleResetSearch()"
-          size="small">
-          重置
-        </el-button>
-      </div>
-      <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="130px">
-          <el-form-item label="活动名称：">
-            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="开始时间：">
-            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="结束时间：">
-            <el-date-picker v-model="listQuery.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动结束时间"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="活动状态：">
-            <el-select v-model="listQuery.status" placeholder="请选择是否启用" clearable>
-              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否参加佣金：">
-            <el-select v-model="listQuery.addProfit" placeholder="请选择是否参加佣金" clearable>
-              <el-option v-for="item in brokerageList" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否删除：">
-            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>
-              <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-card>
+<!--    <el-card class="filter-container" shadow="never">-->
+<!--      <div>-->
+<!--        <i class="el-icon-search"></i>-->
+<!--        <span>筛选搜索</span>-->
+<!--        <el-button-->
+<!--          style="float: right;margin-bottom: 10px;"-->
+<!--          @click="handleSearchList()"-->
+<!--          type="primary"-->
+<!--          size="small">-->
+<!--          查询-->
+<!--        </el-button>-->
+<!--        <el-button-->
+<!--          style="float: right;margin-right: 15px;margin-bottom: 10px;"-->
+<!--          @click="handleResetSearch()"-->
+<!--          size="small">-->
+<!--          重置-->
+<!--        </el-button>-->
+<!--      </div>-->
+<!--      <div style="margin-top: 15px">-->
+<!--        <el-form :inline="true" :model="listQuery" size="small" label-width="130px">-->
+<!--          <el-form-item label="活动名称：">-->
+<!--            <el-input style="width: 214px" v-model="listQuery.name" placeholder="活动名称" clearable></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="开始时间：">-->
+<!--            <el-date-picker v-model="listQuery.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" clearable type="date" placeholder="请选择活动开始时间"></el-date-picker>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="结束时间：">-->
+<!--            <el-date-picker v-model="listQuery.endTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动结束时间"></el-date-picker>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="活动状态：">-->
+<!--            <el-select v-model="listQuery.status" placeholder="请选择是否启用" clearable>-->
+<!--              <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="是否参加佣金：">-->
+<!--            <el-select v-model="listQuery.addProfit" placeholder="请选择是否参加佣金" clearable>-->
+<!--              <el-option v-for="item in brokerageList" :key="item.value" :label="item.label" :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="是否删除：">-->
+<!--            <el-select v-model="listQuery.isDelete" placeholder="请选择是否删除" clearable>-->
+<!--              <el-option v-for="item in delList" :key="item.value" :label="item.label" :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
+<!--      </div>-->
+<!--    </el-card>-->
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
@@ -302,7 +302,7 @@
       associatedGood(row) {
         this.$router.push({
           path: "/sys/activity/outlineassoGoods",
-          query: {id: row.id, status: row.status}
+          query: {id: row.id, status: row.addProfit, name: row.name}
         })
       },
       handeldelGoods(row) {

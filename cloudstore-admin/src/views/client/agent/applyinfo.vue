@@ -112,7 +112,7 @@
               break;
           }
           try{
-            return this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.villageBean.name + this.baseinfoForm.townBean.name;
+            return this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.townBean.name;
           }catch (e) {
             return this.baseinfoForm.address = '数据读取出错';
           }finally {

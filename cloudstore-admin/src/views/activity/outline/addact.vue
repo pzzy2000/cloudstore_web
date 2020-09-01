@@ -24,7 +24,7 @@
         <el-form-item label="活动海报图片(一张)：" prop="activePoster" v-if="activityForm.toType == 'haibao' ? true : false">
           <SingleUpload v-model="activePoster" logotype="haibao"></SingleUpload>
         </el-form-item>
-        <el-checkbox v-model="checked" style="margin-left: 120px">是否参加佣金活动</el-checkbox>
+<!--        <el-checkbox v-model="checked" style="margin-left: 120px">是否参加佣金活动</el-checkbox>-->
         <div style="text-align: right">
           <el-button type="primary" size="small" @click="subActname('activityForm')">提 交</el-button>
           <el-button size="small" @click="resetForm('activityForm')" v-show="isshow">重 置</el-button>
@@ -74,7 +74,7 @@
           activePoster: [{ required: true, message: '必须上传图片', trigger: 'change'}],
           toType: [{ required: true, message: '活动类型不能为空', trigger: 'change' }]
         },
-        checked: false,
+        // checked: false,
         startDatePicker: this.beginDate(),
         endDatePicker: this.processDate(),
         picture: [],
@@ -96,11 +96,11 @@
           this.activityForm = res.result.result;
           this.activityForm.startTime = new Date(this.activityForm.startTime);
           this.activityForm.endTime = new Date(this.activityForm.endTime);
-          if (this.activityForm.addProfit == 1) {
-            this.checked = true;
-          }else {
-            this.checked = false;
-          }
+          // if (this.activityForm.addProfit == 1) {
+          //   this.checked = true;
+          // }else {
+          //   this.checked = false;
+          // }
           if (this.activityForm.picture !== null && this.activityForm.picture !== undefined) {
             let Picobj = {};
             Picobj.uid = this.activityForm.picture;
@@ -133,33 +133,23 @@
         console.log(this.activityForm.activePoster);
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(this.checked){
-              this.$confirm('勾选了参加佣金活动，是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                this.submitAct();
-              }).catch((e) => e);
-            }else{
-              this.$confirm('没勾选参加佣金活动，是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                this.submitAct();
-              }).catch((e) => e);
-            }
+            this.$confirm('确定提交吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.submitAct();
+            }).catch(e => e)
           }
         })
       },
       submitAct() {
-        let changeCheck;
-        if (this.checked){
-          changeCheck = '1'
-        }else {
-          changeCheck = '0'
-        }
+        // let changeCheck;
+        // if (this.checked){
+        //   changeCheck = '1'
+        // }else {
+        //   changeCheck = '0'
+        // }
         this.activityForm.startTime = formatDate(new Date(this.activityForm.startTime), 'yyyy-MM-dd');
         this.activityForm.endTime = formatDate(new Date(this.activityForm.endTime), 'yyyy-MM-dd');
         let obj = {
@@ -168,7 +158,7 @@
           endTime: this.activityForm.endTime,
           picture: this.activityForm.picture,
           activePoster: this.activityForm.activePoster,
-          addProfit: changeCheck,
+          addProfit: 1,
           optType: this.optType,
           toType: this.activityForm.toType,
           type: 1
