@@ -6,6 +6,12 @@
         <el-form-item label="活动名称：" prop="name">
           <el-input-dispatcher v-model="activityForm.name" placeholder="请输入活动名称" style="width: 350px" />
         </el-form-item>
+        <el-form-item label="请选择代理：" prop="agent">
+          <el-select v-model="activityForm.agentId" placeholder="请选择活动类型代理" clearable>
+            <el-option v-for="item in agentList" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="开始时间：" prop="startTime" >
           <el-date-picker v-model="activityForm.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable  :picker-options="startDatePicker" type="date" placeholder="请选择活动开始时间"></el-date-picker>
         </el-form-item>
@@ -40,6 +46,7 @@
   import {msg} from '@/api/iunits'
   import SingleUpload from '@/components/Upload/singleUpload';
   import { formatDate } from '@/assets/common/data.js'
+  import { fetchListall } from '@/api/activity'
   export default {
     name: "addactivity",
     provide() {
@@ -54,6 +61,7 @@
       return {
         activityForm: {
           name: '',
+          agentID: '',
           startTime: '',
           endTime: '',
           picture: [],
@@ -68,6 +76,7 @@
             { required: true, message: '请输入活动名称', trigger: 'blur' },
             { min: 2, max: 4, message: "长度在2到4个字之间", trigger: "blur" }
           ],
+          agent: [{ required: true, message: '请选择代理', trigger: 'change' }],
           startTime: [{ required: true, message: '开始时间必填哦', trigger: 'blur' }],
           endTime: [{ required: true, message: '结束时间必填哦', trigger: 'blur' }],
           picture: [{ required: true, message: '必须上传图片', trigger: 'change' }],
@@ -79,7 +88,8 @@
         endDatePicker: this.processDate(),
         picture: [],
         activePoster: [],
-        toTypelist: [{label: '商品列表', value: 'list'}, {label: '海报', value: 'haibao'}]
+        toTypelist: [{label: '商品列表', value: 'list'}, {label: '海报', value: 'haibao'}],
+        agentList: []
       }
     },
     created() {
@@ -88,9 +98,19 @@
         this.getOneact();
         this.optType = 'update';
         this.isshow = false;
-      }
+      };
+      this.getAgentlist();
     },
     methods: {
+      getAgentlist() {
+        fetchListall({pageNum: 1, pageSize: 10, optType: 'search'}).then(response => {
+          if (response.result.code == 0) {
+            this.agentList = response.result.result.records;
+            let obj = {name: '公司', id: -1};
+            this.agentList.unshift(obj);
+          }
+        });
+      },
       getOneact() {
         getoneAct({id: this.$route.query.id}).then(res => {
           this.activityForm = res.result.result;
@@ -130,7 +150,7 @@
         }
         this.$set(this.activityForm, 'activePoster', activepic)
         // this.activityForm.activePoster = activepic;
-        console.log(this.activityForm.activePoster);
+        console.log(this.activityForm);
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$confirm('确定提交吗?', '提示', {
@@ -154,6 +174,7 @@
         this.activityForm.endTime = formatDate(new Date(this.activityForm.endTime), 'yyyy-MM-dd');
         let obj = {
           name: this.activityForm.name,
+          agentId: this.activityForm.agentId,
           startTime: this.activityForm.startTime,
           endTime: this.activityForm.endTime,
           picture: this.activityForm.picture,

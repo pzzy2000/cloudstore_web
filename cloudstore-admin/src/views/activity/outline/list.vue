@@ -302,7 +302,7 @@
       associatedGood(row) {
         this.$router.push({
           path: "/sys/activity/outlineassoGoods",
-          query: {id: row.id, status: row.addProfit, name: row.name}
+          query: {id: row.id, status: row.addProfit, name: row.name, agentId: row.agentId}
         })
       },
       handeldelGoods(row) {
@@ -399,7 +399,7 @@
         })
       },
       updateAct(row) {
-        this.$router.push({path: "/sys/activity/addact", query: {id: row.id}})
+        this.$router.push({path: "/sys/activity/outlineaddact", query: {id: row.id}})
       }
     }
   }

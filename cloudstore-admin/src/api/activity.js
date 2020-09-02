@@ -9,6 +9,14 @@ export function fetchList(params) {
   })
 }
 
+export function fetchListall(params){
+  return request({
+    url:'/agent/allList',
+    method:'post',
+    data: switchForm(params)
+  })
+}
+
 export function fetchListAll(params) {
   return request({
     url: '/activity/listAll',

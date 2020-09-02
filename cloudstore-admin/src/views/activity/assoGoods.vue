@@ -261,7 +261,7 @@
           })
         } else { //关联
           inAssogoods({
-            activityId: this.listQuery.activityId,
+            activityId: this.activityId,
             goodsId: row.goodsId,
             optType: "save"
           }).then(res => {

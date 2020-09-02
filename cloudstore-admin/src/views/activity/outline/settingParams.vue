@@ -91,7 +91,7 @@
         rules: {
           onlinePrice: [
             { required: true, message: '请输入活动价', trigger: 'blur' },
-            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+            // { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ],
           leader: [
             { required: true, message: '请输入团长佣金', trigger: 'blur' },

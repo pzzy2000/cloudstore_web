@@ -22,7 +22,7 @@
     created() {
       this.$nextTick(function() {
         new QRCode(this.$refs.qrCodeDiv, {
-          text: "https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=" + this.$route.query.id,
+          text: "https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=" + this.$route.query.id + '&agentId=' + this.$route.query.agentId,
           width: 256,
           height: 256,
           colorDark: "#333333", //二维码颜色
@@ -30,7 +30,7 @@
           correctLevel: QRCode.CorrectLevel.L //容错率，L/M/H
         });
       })
-      this.link = "https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=" + this.$route.query.id;
+      this.link = "https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=" + this.$route.query.id + '&agentId=' + this.$route.query.agentId;
     },
     data() {
       return {

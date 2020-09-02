@@ -162,7 +162,7 @@
             duration: 1000
           })
         } else {
-          this.$router.push({path: '/sys/activity/qrcode', query: {id: row.activityGoodsId}})
+          this.$router.push({path: '/sys/activity/qrcode', query: {id: row.activityGoodsId, agentId: this.$route.query.agentId}})
         }
       },
       nosetting(row, col) {
