@@ -272,6 +272,7 @@ export default {
 	},
 	onLoad(ops) {
 		this.activityGoodsId = ops.activityGoodsId
+		this.agentId = ops.agentId || '-1'
 		this.getActivityGoodsById()
 	},
 	methods: {
@@ -283,7 +284,7 @@ export default {
 			if (data) {
 				var tmp = data.result
 				this.goodsId = tmp.goodsId;
-				this.agentId = '-1'
+				// this.agentId = '-1'
 				this.goodsSkuId = tmp.goodsSkuId;
 				this.goodsSku = tmp.goodsSkuBean
 				this.activityId = tmp.activityId
@@ -373,7 +374,7 @@ export default {
 				payType: 'weixin',
 				detail: [{
 					activityId: this.activityId,
-					agentGoodsId: '-1',
+					agentGoodsId: this.agentId,
 					goodsId: this.goodsId,
 					goodsSkuId: this.goodsSkuId,
 					number: 1,

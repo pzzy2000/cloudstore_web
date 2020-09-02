@@ -161,6 +161,7 @@
 	.u-tab-item {
 		height: 110rpx;
 		background: #fff;
+		border-bottom: 2upx solid #f5f5f5;
 		box-sizing: border-box;
 		display: flex;
 		align-items: center;
@@ -168,7 +169,6 @@
 		font-size: 26rpx;
 		color: #666;
 		letter-spacing: 4upx;
-		margin-bottom: 2upx;
 	}
 	
 	.u-tab-item-active {
@@ -179,18 +179,21 @@
 		letter-spacing: 2upx;
 	}
 	
-	.u-tab-item-active::before {
-		content: "";
-		position: absolute;
-		border-left: 4upx solid #3AAAFF;
-		height: 100%;
-		right: 0;
-		top: 0;
+	.u-tab-item-active{
+		font-weight: bold;
+		&::before {
+			content: "";
+			position: absolute;
+			border-left: 4upx solid #3AAAFF;
+			height: 100%;
+			right: 0;
+			top: 0;
+		}
 	}
 
 	.u-tab-view {
 		height: 100%;
-		background-color: #f5f5f5;
+		background-color: #ffff;
 	}
 	
 	.right-box {

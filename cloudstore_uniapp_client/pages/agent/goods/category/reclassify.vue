@@ -16,12 +16,12 @@
 			</scroll-view>
 			<view class="right-box">
 				<view class="navbar">
-					<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">有货<text class="cuIcon-check"></text></view>
+					<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">有货<text class="cuIcon-check text-blue" v-if="havStock"></text></view>
 					<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">
 						<text>价格</text>
 						<view class="p-box">
-							<text :class="{ active: quantityOrder === 1 && filterIndex === 1 }" class="yticon icon-shang"></text>
-							<text :class="{ active: quantityOrder === 2 && filterIndex === 1 }" class="yticon icon-shang xia"></text>
+							<text :class="{ active: priceOrder === 1 }" class="yticon icon-shang"></text>
+							<text :class="{ active: priceOrder === 2 }" class="yticon icon-shang xia"></text>
 						</view>
 					</view>
 					<view class="nav-item cuIcon-filter" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">筛选</view>
@@ -29,7 +29,7 @@
 					<view class="nav-item-twoCategory" v-if="isTwoCategory">
 						<view class="twoCategory-list">
 							<view class="twoCategory-title">品牌</view>
-							<view v-for="(item, index) in selectTwoCategoryList" :key="index" class="twoCategory-item" :class="item.select? 'twoCategory-item-select' : '' "  @click="selectTwoCategory(item, index)">
+							<view v-for="(item, index) in GoodsBrandList" :key="index" class="twoCategory-item" :class="item.select? 'twoCategory-item-select' : '' "  @click="selectTwoCategory(item, index)">
 								{{item.name}}
 							</view>
 						</view>
@@ -39,7 +39,7 @@
 						</view>
 					</view>
 				</view>
-				<scroll-view scroll-y @scrolltolower='scrolltolower' style="width: 100%;height: 100%;padding-top: 80upx;">
+				<scroll-view scroll-y @scrolltolower='scrolltolower' style="width: 100%;height: 100%;padding-top: 80upx;position: relative;">
 					<view class="earning-empty" v-if='goodsList.length === 0'>
 						<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
 						<view class="earning-empty-text">没有该分类下的商品</view>
@@ -101,7 +101,15 @@
 					text: "微信好友",
 					type: 1
 				}],
-				isTwoCategory:false
+				isTwoCategory:false,
+				havStock: '',//是否有货，1为有货，空为全部，0为无货
+				dirVal: '',//排序字段
+				sortVal: '', //升序（desc），降序（asc）值
+				priceOrder: 0,
+				GoodsBrandList: [],
+				selectGoodsBrandList: [],
+				selectTwoCategoryArray: [],
+				selectTwoCategoryList: []
 			}
 		},
 		components: {
@@ -127,7 +135,8 @@
 			this.title = option.title
 			this.categoryOneId = option.categoryOneId
 			this.agentId = uni.getStorageSync('agentId')
-			if (option.categoryList) {
+			this.loadGoodsBrand()
+			if (option.categoryList) { //判断是从首页还是从分类页面进去的
 				this.itemList = JSON.parse(option.categoryList)
 				this.itemList.unshift({
 					text: '全部',
@@ -141,7 +150,7 @@
 			}
 		},
 		methods: {
-			isType() {
+			isType() { //判断分享的类型
 				var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 				switch (userType){
 					case 'agent':
@@ -152,7 +161,7 @@
 						return '分享赚￥';
 				}
 			},
-			scrolltolower() {
+			scrolltolower() { //右边滑动块到底，触发分页
 				this.pageNum = this.pageNum + 1;
 				this.loadData();
 			},
@@ -161,7 +170,7 @@
 					this.goodsList[i].client= Api.ishareAmount(this.goodsList[i]);
 				}
 			},
-			async loadTowTypeList () {
+			async loadTowTypeList () { //查询出二级分类的数据
 				let params = {
 					pageNum: 1,
 					parentId: this.categoryOneId
@@ -188,6 +197,24 @@
 					this.$api.msg('请求失败')
 				}
 			},
+			async loadGoodsBrand () { //查询商品品牌的数据
+				this.GoodsBrandList.length = 0
+				let params = {
+					categoryOneId: this.categoryOneId,
+					categoryTwoId: this.categoryTwoId
+				};
+				let list = await Api.apiCall('post', Api.agent.goods.goodsBrand, params, true);
+				if (list ){
+					if (list.code === 0) {
+						for (let tmp in list.result) {
+							this.GoodsBrandList.push({
+								name: list.result[tmp].goodsBrand,
+								select: false
+							})
+						}
+					}
+				}
+			},
 			async loadData() { //初始化加载商品数据，包括下拉和下拉刷新
 				var params = {
 					goodsName: '',
@@ -197,6 +224,10 @@
 					categoryOneId: this.categoryOneId,
 					categoryTwoId: this.categoryTwoId,
 					categoryThreeId: '',
+					havStock: this.havStock,
+					dir: this.dirVal,
+					sort: this.sortVal,
+					goodsBrand: this.selectGoodsBrandList
 				};
 				let list = await Api.apiCall('post', Api.agent.goods.list, params,true);
 				if (list) {
@@ -208,19 +239,26 @@
 					}
 				}
 			},
-			getImg() {
-				return Math.floor(Math.random() * 35);
+			initData () { //初始化数据
+				this.goodsList.length = 0
+				// this.selectGoodsBrandList = ''
+				// this.selectTwoCategoryArray.length = 0
+				this.pageNum = 1
+				this.loadData()
 			},
-			// 点击左边的栏目切换
-			async swichMenu(index, id) {
+			async swichMenu(index, id) { // 点击左边的栏目切换
 				this.categoryTwoId = id
+				this.isTwoCategory = false
 				if(index == this.current) return ;
 				this.current = index;
 				this.pageNum = 1
 				this.goodsList.length = 0
+				this.loadGoodsBrand()
+				this.selectGoodsBrandList = ''
+				this.selectTwoCategoryArray.length = 0
 				this.loadData()
 			},
-			toSearch () {
+			toSearch () { //点击搜索
 				uni.navigateTo({
 					url: '/pages/agent/goods/hotsale/search',
 				});
@@ -271,10 +309,18 @@
 			share() { //分享显示弹窗
 				this.$refs.share.toggleMask();
 			},
-			tabClick (index) {
+			tabClick (index) { //点击顶部tabbar筛选
 				if (index === 0) {
+					this.havStock = this.havStock === 1 ? '' : 1
+					this.isTwoCategory = false
+					this.initData()
 				}
 				if (index === 1) {
+					this.sortVal = this.sortVal === 'desc' ? 'asc' : 'desc'
+					this.dirVal = 'salePrice'
+					this.priceOrder = this.priceOrder === 1 ? 2 : 1
+					this.isTwoCategory = false
+					this.initData()
 				}
 				if (index === 2) {
 					this.isTwoCategory = !this.isTwoCategory
@@ -283,6 +329,32 @@
 					duration: 300,
 					scrollTop: 0
 				});
+			},
+			selectTwoCategory(item, index) { //点击活动分类的类别
+				this.GoodsBrandList[index].select = this.GoodsBrandList[index].select ? false : true
+				var index = this.selectTwoCategoryArray.indexOf(item.name);
+				if (index > -1) {
+					this.selectTwoCategoryArray.splice(index, 1);
+				} else {
+					this.selectTwoCategoryArray.push(item.name)
+				}
+			},
+			twoCategoryReset () { //重置活动分类
+				this.selectGoodsBrandList = ''
+				this.selectTwoCategoryArray.length = 0
+				for (let tmp in this.GoodsBrandList) {
+					this.GoodsBrandList[tmp].select = false
+				}
+				this.isTwoCategory = false
+				this.initData()
+			},
+			twoCategorySubmit () {//点击确定筛选活动分类
+				this.pageNum = 1
+				this.selectGoodsBrandList = this.selectTwoCategoryArray.join()
+				console.log(this.selectGoodsBrandList)
+				this.isTwoCategory = !this.isTwoCategory
+				this.goodsList.length = 0
+				this.loadData()
 			},
 			navToDetailPage(item) { //跳转到商品详情页
 				let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
@@ -315,7 +387,7 @@
 		display: flex;
 		background-color: #fff;
 		position: relative;
-		height: 100%;
+		height: calc(100% - 200upx);
 		.navbar {
 			position: absolute;
 			left: 0;
@@ -373,14 +445,18 @@
 					}
 					.reset {
 						border-right: 1upx solid #f5f5f5;
+						border-bottom: 1upx solid #f5f5f5;
 						color: #666;
 						background-color: #fff;
 						width: 30%;
+						border-radius: 0;
 					}
 					.submit {
+						border-bottom: 1upx solid #f5f5f5;
 						color: #39a9ff;
 						background-color: #fff;
 						width: 70%;
+						border-radius: 0;
 					}
 				}
 			}
@@ -424,7 +500,7 @@
 					color: #888;
 		
 					&.active {
-						color: $base-color;
+						color: #39a9ff;
 					}
 				}
 		
@@ -483,8 +559,7 @@
 		justify-content: center;
 		font-size: 24upx;
 		color: #666666;
-		margin-bottom: 2upx;
-
+		border-bottom: 2upx solid #fff;
 	}
 	
 	.u-tab-item-active {
@@ -493,21 +568,24 @@
 		background: #E4F4FF;
 	}
 	
-	.u-tab-item-active::before {
-		content: "";
-		position: absolute;
-		border-left: 4upx solid #3AAAFF;
-		height: 100%;
-		right: 0;
-		top: 0;
+	.u-tab-item-active{
+		font-weight: bold;
+		&::before {
+			content: "";
+			position: absolute;
+			border-left: 4upx solid #3AAAFF;
+			height: 100%;
+			right: 0;
+			top: 0;
+		}
 	}
 
 	.u-tab-view {
 		position: absolute;
 		left: 0;
 		top: 0;
-		height: calc(100 - 85px);
-		background-color: #fff;
+		height: 100%;
+		background-color: #f5f5f5;
 		width: 160upx;
 	}
 	
@@ -542,7 +620,11 @@
 		flex-wrap: wrap;
 	}
 	.earning-empty {
-		padding-top: 100upx;
+		position: absolute;
+		margin-top: -275upx;
+		top: 50%;
+		left: 50%;
+		margin-left: -150upx;
 		.earning-logo {
 			width: 300upx;
 			height: 180upx;

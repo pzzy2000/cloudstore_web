@@ -32,7 +32,7 @@
 			</view>
 		</view>
 		<view class="scroll-view-main">
-			<scroll-view scroll-x class="floor-list">
+			<scroll-view scroll-x class="floor-list" @scrolltoupper='scrollMoveLeft' @scrolltolower="scrollMoveRight">
 				<view class="scoll-wrapper" :style="{ width: towScreenWidth +'px' }">
 					<view class="cate-item" v-for="(item,index) in typeList" :key='index' :style="{ width: itemScreenWidth+ 'px'}" @click="toReclassify(item)">
 						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice" class="cate-item-img"></image>
@@ -40,8 +40,10 @@
 					</view>
 				</view>
 			</scroll-view>
-			<text class="cuIcon-back left"></text>
-			<text class="cuIcon-right right"></text>
+			<image src="/static/client/left.png" mode="" class="left" v-if="isLeftArrows"></image>
+			<image src="/static/client/right.png" mode="" class="right" v-if="isRightArrows"></image>
+			<!-- <text class="cuIcon-back left"></text>
+			<text class="cuIcon-right right"></text> -->
 		</view>
 		<!-- 活动 -->
 		<!-- <view class="activity-main">
@@ -110,6 +112,8 @@
 		},
 		data() {
 			return {
+				isLeftArrows: false,
+				isRightArrows: true,
 				screenWidth: '',
 				itemScreenWidth:　'',
 				towScreenWidth: '',
@@ -223,6 +227,14 @@
 						return '分享赚￥';
 				}
 			},
+			scrollMoveLeft () { //判断滑动导航条是否移动到左端
+				this.isLeftArrows = false
+				this.isRightArrows = true
+			},
+			scrollMoveRight () {//判断滑动导航条是否移动到右端
+				this.isLeftArrows = true
+				this.isRightArrows = false
+			},
 			shareAmount () { //处理分享出去的金额
 				this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 				let list = this.activity.show;
@@ -279,9 +291,43 @@
 				    },
 					fail: function (res) {
 						that.getAgentShop()
-						console.log('获取地址错误：'+res)
+						uni.showModal({
+							title: '提示',
+							content: '为方便提取和购买货物，请打开手机定位',
+							showCancel: true,
+							cancelText: '取消',
+							confirmText: '确定',
+							success: res => {
+								if (res.confirm){
+									// that.openSetting()
+								} else if(res.cancelText) {
+								}
+							},
+						});
 					}
 				});
+			},
+			 openSetting(){ //定位授权
+			    // 打开小程序的设置
+			    // #ifdef MP-WEIXIN
+			    uni.openSetting()
+			    // #endif
+			    
+			    // App跳转系统的设置界面
+			    // #ifdef APP-PLUS
+			    uni.getSystemInfo({
+			        success(res) {
+			            if(res.platform=='ios'){ //IOS
+			                plus.runtime.openURL("app-settings://");
+			            } else if (res.platform=='android'){ //安卓
+			                let main = plus.android.runtimeMainActivity();
+			                let Intent = plus.android.importClass("android.content.Intent");
+			                let mIntent = new Intent('android.settings.ACTION_SETTINGS');
+			                main.startActivity(mIntent);
+			            }
+			        }
+			    });
+			    // #endif
 			},
 			async searchActivityNavList() { //查询轮播图下的活动nav
 				let params = {
@@ -603,14 +649,18 @@
 			}
 		}
 		.left {
-			font-size: 30upx;
+			height: 30upx;
+			width: 30upx;
+			// font-size: 30upx;
 			margin-top: -15upx;
 			top: 50%;
 			left: 0;
 			position: absolute;
 		}
 		.right {
-			font-size: 30upx;
+			height: 30upx;
+			width: 30upx;
+			// font-size: 30upx;
 			margin-top: -15upx;
 			top: 50%;
 			right: 0;

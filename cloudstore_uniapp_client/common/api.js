@@ -2,8 +2,8 @@ import store from '../store/index';
 let timer, flag, timeout = null;
 export default {
 	
-	// BASEURI: 'http://106.52.184.24:18888/platform/',
-	BASEURI: 'https://api.sz-guochuang.com/platform/',
+	BASEURI: 'http://106.52.184.24:18888/platform/',
+	// BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -112,6 +112,7 @@ export default {
 		},
 		goods: { //商品接口
 		   list: 'app/public/goods/list' ,//获取商品列表
+		   goodsBrand: 'app/public/goods/getGoodsBrand',
 		   detail: 'app/public/goods/searchGoodsDetail',
 		   agentGoodsDetail:'app/public/goods/searchGoodsDetail',//查询代理商品的明细
 		   save:'agent/goods/app/save' ,//代理商将商品加入代理
