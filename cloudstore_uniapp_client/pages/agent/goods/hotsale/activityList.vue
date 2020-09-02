@@ -24,7 +24,7 @@
 						</view>
 					</view>
 					<view class="share-amount" @click.stop='shareSave(goods)'>
-						 <text v-text="goods.goodsPicesBean.client"></text>
+						 <text>{{isType() + goods.goodsPicesBean.client}}</text>
 					</view>
 				</view>
 			</view>
@@ -90,6 +90,17 @@
 			return shareObj
 		},
 		methods: {
+			isType() {
+				var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
+				switch (userType){
+					case 'agent':
+						return '最高赚￥';
+					case 'leader':
+						return '最高赚￥';
+					default:
+						return '分享赚￥';
+				}
+			},
 			shareAmount () { //处理分享出去的金额
 				for( let i in this.goodsList){
 					this.goodsList[i].goodsPicesBean.client= Api.ishareAmount(this.goodsList[i].goodsPicesBean);

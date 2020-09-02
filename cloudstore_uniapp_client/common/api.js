@@ -2,8 +2,8 @@ import store from '../store/index';
 let timer, flag, timeout = null;
 export default {
 	
-	// BASEURI: 'http://106.52.184.24:18888/platform/',
-	BASEURI: 'https://api.sz-guochuang.com/platform/',
+	BASEURI: 'http://106.52.184.24:18888/platform/',
+	// BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -112,6 +112,7 @@ export default {
 		},
 		goods: { //商品接口
 		   list: 'app/public/goods/list' ,//获取商品列表
+		   goodsBrand: 'app/public/goods/getGoodsBrand',
 		   detail: 'app/public/goods/searchGoodsDetail',
 		   agentGoodsDetail:'app/public/goods/searchGoodsDetail',//查询代理商品的明细
 		   save:'agent/goods/app/save' ,//代理商将商品加入代理
@@ -173,11 +174,11 @@ export default {
 		var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 		switch (userType){
 			case 'agent':
-				return '最高赚￥'+data.agent.toFixed(2);
+				return Number(data.agent).toFixed(2);
 			case 'leader':
-				return '最高赚￥'+((Number(data.agent)*1000 + Number(data.leader)*1000)/1000).toFixed(2)
+				return ((Number(data.agent)*1000 + Number(data.leader)*1000)/1000).toFixed(2)
 			default:
-				return '分享赚￥'+data.client.toFixed(2);
+				return Number(data.client).toFixed(2);
 		}
 	},
 	//节流防抖函数，func 要执行的回调函数，wait 延时的时间，mmediate 是否立即执行

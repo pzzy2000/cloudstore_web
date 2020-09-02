@@ -14,33 +14,57 @@
 					<text class="u-line-1">{{item.text}}</text>
 				</view>
 			</scroll-view>
-			<block>
-				<scroll-view scroll-y class="right-box" @scrolltolower='scrolltolower'>
+			<view class="right-box">
+				<view class="navbar">
+					<view class="nav-item" :class="{ current: filterIndex === 0 }" @click="tabClick(0)">有货<text class="cuIcon-check text-blue" v-if="havStock"></text></view>
+					<view class="nav-item" :class="{ current: filterIndex === 1 }" @click="tabClick(1)">
+						<text>价格</text>
+						<view class="p-box">
+							<text :class="{ active: priceOrder === 1 }" class="yticon icon-shang"></text>
+							<text :class="{ active: priceOrder === 2 }" class="yticon icon-shang xia"></text>
+						</view>
+					</view>
+					<view class="nav-item cuIcon-filter" :class="{ current: filterIndex === 2 }" @click="tabClick(2)">筛选</view>
+					<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
+					<view class="nav-item-twoCategory" v-if="isTwoCategory">
+						<view class="twoCategory-list">
+							<view class="twoCategory-title">品牌</view>
+							<view v-for="(item, index) in GoodsBrandList" :key="index" class="twoCategory-item" :class="item.select? 'twoCategory-item-select' : '' "  @click="selectTwoCategory(item, index)">
+								{{item.name}}
+							</view>
+						</view>
+						<view class="twoCategory-btn">
+							<button class="reset" @click="twoCategoryReset">重置</button>
+							<button class="submit" @click="twoCategorySubmit">确定</button>
+						</view>
+					</view>
+				</view>
+				<scroll-view scroll-y @scrolltolower='scrolltolower' style="width: 100%;height: 100%;padding-top: 80upx;position: relative;">
 					<view class="earning-empty" v-if='goodsList.length === 0'>
 						<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
 						<view class="earning-empty-text">没有该分类下的商品</view>
 					</view>
-						<view class="item-container">
-							<view class="goods-list" v-for="(item,index) in goodsList" :key='index' @click="navToDetailPage(item)">
-								<image class="goods-list-image" :src="item.goodsPhotos[0].url" mode=""></image>
-								<view class="goods-detail">
-									<view class="detail-title clamp">{{item.goodsName}}</view>
-									<view class="detail-subtitle clamp">{{item.goodsSubtitle}}</view>
-									<view class="detail-price">
-										<view class="price-num">
-											<text class="price-sale price-symbol">{{item.salePrice}}</text>
-											<text class="price-btn-unit">/{{item.unit || '无'}}</text>
-										</view>
-										<view class="price-btn">
-											<button class="price-share" @click.stop='shareSave(item)'><text v-text="item.client"></text></button>
-											<button class="price-buy">立即购买</button>
-										</view>
+					<view class="item-container">
+						<view class="goods-list" v-for="(item,index) in goodsList" :key='index' @click="navToDetailPage(item)">
+							<image class="goods-list-image" :src="item.goodsPhotos[0].url" mode=""></image>
+							<view class="goods-detail">
+								<view class="detail-title clamp">{{item.goodsName}}</view>
+								<view class="detail-subtitle clamp">{{item.goodsSubtitle}}</view>
+								<view class="detail-price">
+									<view class="price-num">
+										<text class="price-sale price-symbol">{{item.salePrice}}</text>
+										<text class="price-btn-unit">/{{item.unit || '无'}}</text>
+									</view>
+									<view class="price-btn">
+										<button class="price-share" @click.stop='shareSave(item)'><text>{{isType()+item.client}}</text></button>
+										<button class="price-buy">立即购买</button>
 									</view>
 								</view>
 							</view>
 						</view>
+					</view>
 				</scroll-view>
-			</block>
+			</view>
 		</view>
 		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 	</view>
@@ -76,7 +100,16 @@
 					icon: "/static/share_wechat.png",
 					text: "微信好友",
 					type: 1
-				}]
+				}],
+				isTwoCategory:false,
+				havStock: '',//是否有货，1为有货，空为全部，0为无货
+				dirVal: '',//排序字段
+				sortVal: '', //升序（desc），降序（asc）值
+				priceOrder: 0,
+				GoodsBrandList: [],
+				selectGoodsBrandList: [],
+				selectTwoCategoryArray: [],
+				selectTwoCategoryList: []
 			}
 		},
 		components: {
@@ -99,22 +132,87 @@
 			return shareObj
 		},
 		onLoad(option) {
-			this.agentId = uni.getStorageSync('agentId')
-			this.itemList = JSON.parse(option.categoryList)
-			this.current = option.current
 			this.title = option.title
 			this.categoryOneId = option.categoryOneId
-			this.categoryTwoId = this.itemList[this.current].value
-			this.loadData()
+			this.agentId = uni.getStorageSync('agentId')
+			this.loadGoodsBrand()
+			if (option.categoryList) { //判断是从首页还是从分类页面进去的
+				this.itemList = JSON.parse(option.categoryList)
+				this.itemList.unshift({
+					text: '全部',
+					value: ''
+				})
+				this.current = Number(option.current) + 1
+				this.categoryTwoId = this.itemList[this.current].value
+				this.loadData()
+			} else {
+				this.loadTowTypeList ()
+			}
 		},
 		methods: {
-			scrolltolower() {
+			isType() { //判断分享的类型
+				var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
+				switch (userType){
+					case 'agent':
+						return '最高赚￥';
+					case 'leader':
+						return '最高赚￥';
+					default:
+						return '分享赚￥';
+				}
+			},
+			scrolltolower() { //右边滑动块到底，触发分页
 				this.pageNum = this.pageNum + 1;
 				this.loadData();
 			},
 			shareAmount () { //处理分享出去的金额
 				for( let i in this.goodsList){
 					this.goodsList[i].client= Api.ishareAmount(this.goodsList[i]);
+				}
+			},
+			async loadTowTypeList () { //查询出二级分类的数据
+				let params = {
+					pageNum: 1,
+					parentId: this.categoryOneId
+				};
+				let list = await Api.apiCall('post', Api.agent.category.list, params, true);
+				if (list) {
+					if (list.result.records.length != 0) {
+						for (let tmp in list.result.records) {
+							this.itemList.push({
+								text: list.result.records[tmp].name,
+								value: list.result.records[tmp].id,
+							})
+						}
+						this.itemList.unshift({
+							text: '全部',
+							value: '',
+						})
+						this.categoryTwoId = this.itemList[this.current].value
+						this.loadData()
+					} else {
+						this.$api.msg('暂无分类数据')
+					}
+				} else {
+					this.$api.msg('请求失败')
+				}
+			},
+			async loadGoodsBrand () { //查询商品品牌的数据
+				this.GoodsBrandList.length = 0
+				let params = {
+					categoryOneId: this.categoryOneId,
+					categoryTwoId: this.categoryTwoId
+				};
+				let list = await Api.apiCall('post', Api.agent.goods.goodsBrand, params, true);
+				if (list ){
+					if (list.code === 0) {
+						for (let tmp in list.result) {
+							this.GoodsBrandList.push({
+								name: list.result[tmp].goodsBrand,
+								select: false
+							})
+						}
+					}
 				}
 			},
 			async loadData() { //初始化加载商品数据，包括下拉和下拉刷新
@@ -126,6 +224,10 @@
 					categoryOneId: this.categoryOneId,
 					categoryTwoId: this.categoryTwoId,
 					categoryThreeId: '',
+					havStock: this.havStock,
+					dir: this.dirVal,
+					sort: this.sortVal,
+					goodsBrand: this.selectGoodsBrandList
 				};
 				let list = await Api.apiCall('post', Api.agent.goods.list, params,true);
 				if (list) {
@@ -137,19 +239,26 @@
 					}
 				}
 			},
-			getImg() {
-				return Math.floor(Math.random() * 35);
+			initData () { //初始化数据
+				this.goodsList.length = 0
+				// this.selectGoodsBrandList = ''
+				// this.selectTwoCategoryArray.length = 0
+				this.pageNum = 1
+				this.loadData()
 			},
-			// 点击左边的栏目切换
-			async swichMenu(index, id) {
+			async swichMenu(index, id) { // 点击左边的栏目切换
 				this.categoryTwoId = id
+				this.isTwoCategory = false
 				if(index == this.current) return ;
 				this.current = index;
 				this.pageNum = 1
 				this.goodsList.length = 0
+				this.loadGoodsBrand()
+				this.selectGoodsBrandList = ''
+				this.selectTwoCategoryArray.length = 0
 				this.loadData()
 			},
-			toSearch () {
+			toSearch () { //点击搜索
 				uni.navigateTo({
 					url: '/pages/agent/goods/hotsale/search',
 				});
@@ -200,6 +309,53 @@
 			share() { //分享显示弹窗
 				this.$refs.share.toggleMask();
 			},
+			tabClick (index) { //点击顶部tabbar筛选
+				if (index === 0) {
+					this.havStock = this.havStock === 1 ? '' : 1
+					this.isTwoCategory = false
+					this.initData()
+				}
+				if (index === 1) {
+					this.sortVal = this.sortVal === 'desc' ? 'asc' : 'desc'
+					this.dirVal = 'salePrice'
+					this.priceOrder = this.priceOrder === 1 ? 2 : 1
+					this.isTwoCategory = false
+					this.initData()
+				}
+				if (index === 2) {
+					this.isTwoCategory = !this.isTwoCategory
+				}
+				uni.pageScrollTo({
+					duration: 300,
+					scrollTop: 0
+				});
+			},
+			selectTwoCategory(item, index) { //点击活动分类的类别
+				this.GoodsBrandList[index].select = this.GoodsBrandList[index].select ? false : true
+				var index = this.selectTwoCategoryArray.indexOf(item.name);
+				if (index > -1) {
+					this.selectTwoCategoryArray.splice(index, 1);
+				} else {
+					this.selectTwoCategoryArray.push(item.name)
+				}
+			},
+			twoCategoryReset () { //重置活动分类
+				this.selectGoodsBrandList = ''
+				this.selectTwoCategoryArray.length = 0
+				for (let tmp in this.GoodsBrandList) {
+					this.GoodsBrandList[tmp].select = false
+				}
+				this.isTwoCategory = false
+				this.initData()
+			},
+			twoCategorySubmit () {//点击确定筛选活动分类
+				this.pageNum = 1
+				this.selectGoodsBrandList = this.selectTwoCategoryArray.join()
+				console.log(this.selectGoodsBrandList)
+				this.isTwoCategory = !this.isTwoCategory
+				this.goodsList.length = 0
+				this.loadData()
+			},
 			navToDetailPage(item) { //跳转到商品详情页
 				let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
 				uni.navigateTo({
@@ -231,7 +387,149 @@
 		display: flex;
 		background-color: #fff;
 		position: relative;
-		height: 100%;
+		height: calc(100% - 200upx);
+		.navbar {
+			position: absolute;
+			left: 0;
+			top: 0;
+			display: flex;
+			width: 100%;
+			height: 80upx;
+			background: #fff;
+			border-bottom: 1upx solid #eee;
+			z-index: 10;
+			.nav-item-twoCategory {
+				position: absolute;
+				background-color: #fff;
+				top: 80upx;
+				right: 0upx;
+				width: 100%;
+				.twoCategory-title {
+					color: #999999;
+					width: 100%;
+					font-size: 22upx;
+					line-height: 50upx;
+					letter-spacing: 2upx;
+				}
+				.twoCategory-list {
+					display: flex;
+					justify-content: flex-start;
+					flex-wrap: wrap;
+					color: #333;
+					padding: 40upx 26upx;
+					width: 100%;
+					.twoCategory-item {
+						font-size: 26upx;
+						padding: 10upx 25upx;
+						margin: 15rpx 15rpx 15rpx 0;
+						background-color: #F5F5F5;
+						color: #666666;
+						letter-spacing: 2upx;
+						border-radius: 10upx;
+					}
+					.twoCategory-item-select {
+						background-color: #DDEFFF;
+						color: #49A2F2;
+					}
+				}
+				.twoCategory-btn {
+					display: flex;
+					border-top: 1upx solid #f5f5f5;
+					font-size: 32upx;
+					align-items: center;
+					text-align: center;
+					button {
+						&::after {
+							border: none;
+						}
+					}
+					.reset {
+						border-right: 1upx solid #f5f5f5;
+						border-bottom: 1upx solid #f5f5f5;
+						color: #666;
+						background-color: #fff;
+						width: 30%;
+						border-radius: 0;
+					}
+					.submit {
+						border-bottom: 1upx solid #f5f5f5;
+						color: #39a9ff;
+						background-color: #fff;
+						width: 70%;
+						border-radius: 0;
+					}
+				}
+			}
+			.nav-item {
+				flex: 1;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100%;
+				font-size: 30upx;
+				color: $font-color-dark;
+				position: relative;
+				&.current {
+					color: #08affe;
+		
+					&:after {
+						content: '';
+						position: absolute;
+						left: 50%;
+						bottom: 0;
+						transform: translateX(-50%);
+						width: 120upx;
+						height: 0;
+						border-bottom: 4upx solid #08affe;
+					}
+				}
+			}
+			.p-box {
+				display: flex;
+				flex-direction: column;
+		
+				.yticon {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 30upx;
+					height: 14upx;
+					line-height: 1;
+					margin-left: 4upx;
+					font-size: 26upx;
+					color: #888;
+		
+					&.active {
+						color: #39a9ff;
+					}
+				}
+		
+				.xia {
+					transform: scaleY(-1);
+				}
+			}
+		
+			.cate-item {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100%;
+				width: 80upx;
+				position: relative;
+				font-size: 44upx;
+		
+				&:after {
+					content: '';
+					position: absolute;
+					right: 0;
+					top: 50%;
+					transform: translateY(-50%);
+					border-left: 1px solid #ddd;
+					width: 0;
+					height: 36upx;
+				}
+			}
+		}
 	}
 
 	.u-search-inner {
@@ -261,8 +559,7 @@
 		justify-content: center;
 		font-size: 24upx;
 		color: #666666;
-		margin-bottom: 2upx;
-
+		border-bottom: 2upx solid #fff;
 	}
 	
 	.u-tab-item-active {
@@ -271,21 +568,24 @@
 		background: #E4F4FF;
 	}
 	
-	.u-tab-item-active::before {
-		content: "";
-		position: absolute;
-		border-left: 4upx solid #3AAAFF;
-		height: 100%;
-		right: 0;
-		top: 0;
+	.u-tab-item-active{
+		font-weight: bold;
+		&::before {
+			content: "";
+			position: absolute;
+			border-left: 4upx solid #3AAAFF;
+			height: 100%;
+			right: 0;
+			top: 0;
+		}
 	}
 
 	.u-tab-view {
 		position: absolute;
 		left: 0;
 		top: 0;
-		height: calc(100 - 85px);
-		background-color: #fff;
+		height: 100%;
+		background-color: #f5f5f5;
 		width: 160upx;
 	}
 	
@@ -320,7 +620,11 @@
 		flex-wrap: wrap;
 	}
 	.earning-empty {
-		padding-top: 100upx;
+		position: absolute;
+		margin-top: -275upx;
+		top: 50%;
+		left: 50%;
+		margin-left: -150upx;
 		.earning-logo {
 			width: 300upx;
 			height: 180upx;

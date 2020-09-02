@@ -9,10 +9,11 @@
 						class='top-img'
 						:src="allChecked?'/static/selected.png':'/static/select.png'" 
 						mode="aspectFit"
+						v-show="isAll"
 						@click="check('all')"
 					></image>
 					<image src="/static/client/cart-logo.png" mode="" class="top-logo"></image>
-					<view class="top-delete" @click="check('all')" v-if="!allChecked">
+					<view class="top-delete" @click="check('all')" v-if="!allChecked" v-show="isAll">
 						全选
 					</view>
 					<view class="top-delete" :class="{show: allChecked}" @click="clearCart" v-else>
@@ -43,7 +44,6 @@
 											</view>
 											<uni-number-box 
 												v-if="isNumber"
-												v-show="item.stock"
 												class="number"
 												:min="1"
 												:max="item.stock"
@@ -64,7 +64,7 @@
 				</view>
 			</view>
 			<view class="action-section">
-				<view class="checkbox" @click="check('all')">
+				<view class="checkbox" @click="check('all')" v-if="isAll">
 					<image 
 						:src="allChecked?'/static/selected.png':'/static/select.png'" 
 						mode="aspectFit"
@@ -101,6 +101,7 @@
 		},
 		data() {
 			return {
+				isAll: true,
 				total: 0, //总价格
 				allChecked: false, //全选状态  true|false
 				cartList: [],
@@ -191,7 +192,9 @@
 					const checked = !this.allChecked
 					const list = this.cartList;
 					list.forEach(item=>{
-						item.checked = checked;
+						if (item.stock != 0) {
+							item.checked = checked;
+						}
 					})
 					this.allChecked = checked;
 				}

@@ -31,8 +31,22 @@
 				<text class="num">{{ swiperLength }}</text>
 			</view>
 		</view>
+		<view class="scroll-view-main">
+			<scroll-view scroll-x class="floor-list" @scrolltoupper='scrollMoveLeft' @scrolltolower="scrollMoveRight">
+				<view class="scoll-wrapper" :style="{ width: towScreenWidth +'px' }">
+					<view class="cate-item" v-for="(item,index) in typeList" :key='index' :style="{ width: itemScreenWidth+ 'px'}" @click="toReclassify(item)">
+						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice" class="cate-item-img"></image>
+						<text class="clamp cate-item-text">{{item.name}}</text>
+					</view>
+				</view>
+			</scroll-view>
+			<image src="/static/client/left.png" mode="" class="left" v-if="isLeftArrows"></image>
+			<image src="/static/client/right.png" mode="" class="right" v-if="isRightArrows"></image>
+			<!-- <text class="cuIcon-back left"></text>
+			<text class="cuIcon-right right"></text> -->
+		</view>
 		<!-- 活动 -->
-		<view class="activity-main">
+		<!-- <view class="activity-main">
 			<view class="cate-section">
 				<view class="cate-item" v-for="(item,index) in activity.nav.one" :key="item.id" @click="navToCategory(item)">
 					<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice"></image>
@@ -45,7 +59,7 @@
 					<text class="clamp">{{item.name}}</text>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
 			<view class="f-header" @click="navToCategory(item)">
 				<view class="faddish-title">
@@ -57,7 +71,7 @@
 			</view>
 			<view class="goods-list">
 				<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
-					<view class="detail-img"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image></view>
+					<view class="detail-img"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFit"></image></view>
 					<view class="goods-detail">
 						<view class="detail-title">
 							<view class="clamp">{{ goods.goodsPicesBean.goodsName }}</view>
@@ -67,7 +81,8 @@
 								<text class="price-sale price-symbol">{{goods.goodsPicesBean.salePrice}}</text>/{{goods.goodsPicesBean.unit}}
 							</view>
 							<view class="share-amount">
-								<text v-text="goods.goodsPicesBean.client"></text>元
+								<!-- <text v-text="goods.goodsPicesBean.client">isType + {{isType() + goods.goodsPicesBean.client}}</text>元 -->
+								<text>{{ isType() + goods.goodsPicesBean.client}}</text>元
 							</view>
 						</view>
 						<view class="detail-bottom">
@@ -97,7 +112,11 @@
 		},
 		data() {
 			return {
+				isLeftArrows: false,
+				isRightArrows: true,
 				screenWidth: '',
+				itemScreenWidth:　'',
+				towScreenWidth: '',
 				carouselHeight: '',
 				TabCur: 0,
 				scrollLeft: 0,
@@ -119,6 +138,7 @@
 				shareAmounts: '',
 				userType: '',
 				loadingType: 'more', //加载更多状态
+				typeList:[],
 				activity: {
 					nav: {},
 					show: []
@@ -162,13 +182,21 @@
 		},
 		onLoad(ops) {
 			this.loadData();
+			// this.shareAmount()
 			this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 		},
 		onShow() {
 			this.screenWidth = Api.getSystemInfoSync().screenWidth * 0.94
+			this.itemScreenWidth = parseInt(parseInt(Api.getSystemInfoSync().screenWidth) / 5)
+			this.towScreenWidth = parseInt(parseInt(this.itemScreenWidth * 10) * 0.9)
 			this.carouselHeight = parseInt(parseInt(this.screenWidth) / 1.8)
 			this.getLocation()
-			this.shareAmount()
+			this.$nextTick(()=>{
+				this.shareAmount()
+			})
+			// Vue.nextTick(function(){
+			// 	this.shareAmount()
+			// })
 			uni.removeStorageSync('goodsInfo');
 		},
 		onShareAppMessage(res) {
@@ -188,10 +216,28 @@
 			return shareObj
 		},
 		methods: {
+			isType() {
+				var userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
+				switch (userType){
+					case 'agent':
+						return '最高赚￥';
+					case 'leader':
+						return '最高赚￥';
+					default:
+						return '分享赚￥';
+				}
+			},
+			scrollMoveLeft () { //判断滑动导航条是否移动到左端
+				this.isLeftArrows = false
+				this.isRightArrows = true
+			},
+			scrollMoveRight () {//判断滑动导航条是否移动到右端
+				this.isLeftArrows = true
+				this.isRightArrows = false
+			},
 			shareAmount () { //处理分享出去的金额
 				this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
 				let list = this.activity.show;
-				console.log(list)
 				for( let i in list){
 					let goodsList = list[i].goodsList;
 					for( let j in goodsList){
@@ -201,6 +247,7 @@
 			},
 			async loadData() {
 				this.getBanner();
+				this.loadgoodsType()
 				this.searchActivityNavList();
 				this.searchActivityShowList();
 			},
@@ -244,9 +291,43 @@
 				    },
 					fail: function (res) {
 						that.getAgentShop()
-						console.log('获取地址错误：'+res)
+						uni.showModal({
+							title: '提示',
+							content: '为方便提取和购买货物，请打开手机定位',
+							showCancel: true,
+							cancelText: '取消',
+							confirmText: '确定',
+							success: res => {
+								if (res.confirm){
+									// that.openSetting()
+								} else if(res.cancelText) {
+								}
+							},
+						});
 					}
 				});
+			},
+			 openSetting(){ //定位授权
+			    // 打开小程序的设置
+			    // #ifdef MP-WEIXIN
+			    uni.openSetting()
+			    // #endif
+			    
+			    // App跳转系统的设置界面
+			    // #ifdef APP-PLUS
+			    uni.getSystemInfo({
+			        success(res) {
+			            if(res.platform=='ios'){ //IOS
+			                plus.runtime.openURL("app-settings://");
+			            } else if (res.platform=='android'){ //安卓
+			                let main = plus.android.runtimeMainActivity();
+			                let Intent = plus.android.importClass("android.content.Intent");
+			                let mIntent = new Intent('android.settings.ACTION_SETTINGS');
+			                main.startActivity(mIntent);
+			            }
+			        }
+			    });
+			    // #endif
 			},
 			async searchActivityNavList() { //查询轮播图下的活动nav
 				let params = {
@@ -257,6 +338,29 @@
 				if (data) {
 					this.activity.nav = data.result; //查询出来的 
 					this.skeletonLoading = false
+				}
+			},
+			async loadgoodsType () { //初始化加载商品一级分类
+			this.typeList.length = 0
+				let params = {
+					pageNum: '1',
+					parentId: 0
+				};
+				let list = await Api.apiCall('post', Api.agent.category.list, params, true);
+				if (list) {
+					// console.log(list)
+					if (list.result.records.length != 0) {
+						for (let tmp in list.result.records) {
+							this.typeList.push({
+								name: list.result.records[tmp].name,
+								value: list.result.records[tmp].id,
+							})
+						}
+					} else {
+						this.$api.msg('暂无分类数据')
+					}
+				} else {
+					this.$api.msg('请求失败')
 				}
 			},
 			async searchActivityShowList() {//查询首页显示的活动名称
@@ -284,7 +388,10 @@
 				let data = await Api.apiCall('post', Api.agent.activity.searchIndexActivitygoodsList, params, true);
 				if (data) {
 					activity.goodsList = data.result.records;
-					this.shareAmount()
+					if (activity.goodsList) {
+						this.shareAmount()
+					}
+					// this.shareAmount()
 					// console.log(activity.goodsList)
 				}
 			},
@@ -350,6 +457,11 @@
 			toSearch() { //跳转至搜索界面
 				uni.navigateTo({
 					url: "/pages/agent/goods/hotsale/search"
+				});
+			},
+			toReclassify (item) {
+				uni.navigateTo({
+					url:'/pages/agent/goods/category/reclassify?categoryOneId='+item.value +'&title='+item.name
 				});
 			},
 			async shareSave (info) { //分享调用接口
@@ -503,7 +615,58 @@
 			transition: 0.4s;
 		}
 	}
-
+	.scroll-view-main {
+		width: 100%;
+		padding: 15rpx 0;
+		background-color: #fff;
+		margin-bottom: 20rpx;
+		position: relative;
+		.floor-list {
+			width: 100%;
+			margin: 0 auto;
+			background-color: #fff;
+			padding-top: 20upx;
+			.scoll-wrapper {
+				display:flex;
+				flex-wrap: wrap;
+				// width: 1580upx;
+				// align-items: flex-start;
+				.cate-item {
+					width: 120upx;
+					text-align: center;
+					margin-bottom: 15upx;
+					.cate-item-img {
+						width: 120upx;
+						height: 130upx;
+						border-radius: 50%;
+					}
+					.cate-item-text {
+						width: 100%;
+						text-align: center;
+						font-size: 26rpx;
+					}
+				}
+			}
+		}
+		.left {
+			height: 30upx;
+			width: 30upx;
+			// font-size: 30upx;
+			margin-top: -15upx;
+			top: 50%;
+			left: 0;
+			position: absolute;
+		}
+		.right {
+			height: 30upx;
+			width: 30upx;
+			// font-size: 30upx;
+			margin-top: -15upx;
+			top: 50%;
+			right: 0;
+			position: absolute;
+		}
+	}
 	.carousel {
 		width: 94%;
 		margin: 0 auto;

@@ -40,7 +40,7 @@
 			const timeout = setTimeout(function() {
 				if (that.actionType === 'xxsp') {
 					uni.navigateTo({
-						url: '/pages/client/belowTheLine/goods?activityGoodsId='+that.activityGoodsId
+						url: '/pages/client/belowTheLine/goods?activityGoodsId='+that.activityGoodsId+'&agentId='+that.agentId
 					});
 				} else {
 					that.getAgentInfo(timeout);
@@ -49,13 +49,20 @@
 		},
 		onLoad(ops) {
 			console.log(ops)
+			// https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=7977567650238697472&agentId=7958458085131948032
 			// ops.q = "https%3A%2F%2Fwww.sz-guochuang.com%2Finto%3Faction%3DoffLine%26id%3D7959350568732856320"
 			// ops.action = 'xxsp'
-			// ops.activityGoodsId = '7959350568732856320'
+			// ops.agentId = '7958458085131948032'
+			// ops.activityGoodsId = '7977567650238697472'
 			if (ops.q) {
 				this.url = decodeURIComponent(ops.q)
-				this.actionType = 'xxsp'
+				this.actionType = this.getQuery('action',this.url)
+				this.agentId = this.getQuery('agentId',this.url)
 				this.activityGoodsId = this.getQuery('activityGoodsId',this.url)
+				
+				// this.actionType = 'xxsp'
+				// this.agentId = '7958458085131948032'
+				// this.activityGoodsId = '7977567650238697472'
 			} else {
 				this.token = uni.getStorageSync('token')
 				this.agentId = ops.agentId

@@ -190,7 +190,7 @@
 				try{
 					return data.provinceBean.name+" "+data.cityBean.name+" "+data.areaBean.name;
 				}catch(e){
-					return "暂无地址信息"
+					return "暂无默认收货地址信息"
 				}
 			}
 		},
@@ -294,7 +294,7 @@
 					if(data.result.length != 0)
 					    this.setAddress(data.result)
 					} else {
-						this.$api.msg('您还没有收货地址哦')
+						this.$api.msg('您还没有默认收货地址')
 					}
 			},
 			async getGoodsData (goodsId,agentId,goodsSkuId,activityId) { //加载商品数据
