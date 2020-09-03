@@ -135,7 +135,6 @@
 			this.title = option.title
 			this.categoryOneId = option.categoryOneId
 			this.agentId = uni.getStorageSync('agentId')
-			this.loadGoodsBrand()
 			if (option.categoryList) { //判断是从首页还是从分类页面进去的
 				this.itemList = JSON.parse(option.categoryList)
 				this.itemList.unshift({
@@ -148,6 +147,7 @@
 			} else {
 				this.loadTowTypeList ()
 			}
+			this.loadGoodsBrand()
 		},
 		methods: {
 			isType() { //判断分享的类型
