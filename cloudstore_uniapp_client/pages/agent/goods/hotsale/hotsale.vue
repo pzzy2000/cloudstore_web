@@ -6,7 +6,8 @@
 			<view class="nav-title">丫咪购</view>
 			<view class="content">
 				<text class="cuIcon-locationfill text-white"></text>
-				<text class="text-white">附近代理点：{{agentShopInfo.address}}({{agentShopInfo.distance}}km)</text>
+				<text class="text-white">代理点：{{agentShopInfo.address}}</text>
+				<!-- ({{agentShopInfo.distance}}km) -->
 			</view>
 			<view class="search-input" @click.stop="toSearch">
 				<view class="search-form round">
@@ -61,14 +62,14 @@
 			</view>
 		</view> -->
 		<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
-			<view class="f-header" @click="navToCategory(item)">
-				<view class="faddish-title">
+			<!-- <view class="f-header" @click="navToCategory(item)"> -->
+				<!-- <view class="faddish-title"> -->
 					<!-- <view class="title-main">
 						{{item.name}}
 					</view> -->
-					<image :src="item.picturePice" mode="" class="title-img"></image>
-				</view>
-			</view>
+					<image :src="item.picturePice" mode="widthFix" class="title-img" @click="navToCategory(item)"></image>
+				<!-- </view> -->
+			<!-- </view> -->
 			<view class="goods-list">
 				<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
 					<view class="detail-img"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFit"></image></view>
@@ -192,6 +193,7 @@
 			this.itemScreenWidth = parseInt(parseInt(Api.getSystemInfoSync().screenWidth) / 5)
 			this.towScreenWidth = parseInt(parseInt(this.itemScreenWidth * 10) * 0.9)
 			this.carouselHeight = parseInt(parseInt(this.screenWidth) / 1.8)
+			this.agentId = uni.getStorageSync('agentId') || '-1'
 			this.getLocation()
 			this.$nextTick(()=>{
 				this.shareAmount()
@@ -264,14 +266,14 @@
 				this.searchActivityShowList();
 			},
 			async getAgentShop (res) { //获取最近的代理商
-				let agentId =-1;
-				let userInfo =  uni.getStorageSync('userInfo') ; 
-				if(userInfo!=null && userInfo.agent!=null){
-					agentId = userInfo.relationId;
-				}else{
-					agentId  = uni.getStorageSync('agentId');
-					agentId = (agentId!="undefined" && agentId !=null && agentId!='') ? agentId : '-1'
-				}
+				let agentId = this.agentId || '-1'
+				// let userInfo =  uni.getStorageSync('userInfo') ; 
+				// if(userInfo!=null && userInfo.agent!=null){
+				// 	agentId = userInfo.relationId;
+				// }else{
+				// 	agentId  = uni.getStorageSync('agentId');
+				// 	agentId = (agentId!="undefined" && agentId !=null && agentId!='') ? agentId : '-1'
+				// }
 				let params = {
 					 latitude: this.agentShopInfo.latitude,
 					 longitude: this.agentShopInfo.longitude,
@@ -280,12 +282,16 @@
 				let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params,true);
 				if (data) {
 					if (data.result) {
-						var tmpData = data.result.agentBean
-						this.agentShopInfo.name = tmpData.name
-						this.agentShopInfo.address = tmpData.community
-						this.agentShopInfo.distance = data.result.distance.toFixed(2)
 						this.agentId = data.result.agentId
 						uni.setStorageSync('agentId', this.agentId)
+						try{
+							var tmpData = data.result.agentBean
+							this.agentShopInfo.name = tmpData.name
+							this.agentShopInfo.address = tmpData.community
+							this.agentShopInfo.distance = data.result.distance.toFixed(2)
+						}catch(e){
+							console.log('获取代理点失败')
+						}
 					}
 				}else{
 				}
@@ -772,6 +778,9 @@
 	.activity-list {
 		background: #fff;
 		width: 100%;
+		.title-img {
+			width: 100%;
+		}
 	}
 	.f-header {
 		display: flex;
@@ -782,7 +791,6 @@
 		border-top-left-radius: 25rpx;
 		border-top-right-radius: 25rpx;
 		.faddish-title {
-			height: 120upx;
 			font-size: 30upx;
 			display: flex;
 			align-items: center;

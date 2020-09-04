@@ -18,7 +18,8 @@
 			</view>
 		</view>
 		<view class="c-list">
-			<view class="c-row" v-if="specList && specList.length > 0" @click="toggleSpec">
+			<!-- <view class="c-row" v-if="specList && specList.length > 0" @click="toggleSpec"> -->
+			<view class="c-row" v-if="specList && specList.length > 0">
 				<text class="tit">产品规格</text>
 				<view class="con">
 					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
@@ -98,12 +99,12 @@
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
 			</view>
-			<view class="p-b-btn" @click.stop="toggleSpec('cart')">
+			<view class="p-b-btn" @click.stop="addShopCar">
 				<text class="yticon icon-gouwuche "></text>
 				<text>加入购物车</text>
 			</view>
 			<view class="action-btn-group">
-				<button class="action-btn action-buy-btn" @click.stop="toggleSpec('buy')">立即购买</button>
+				<button class="action-btn action-buy-btn" @click.stop="toBuy">立即购买</button>
 				<!-- <button type="primary" class=" action-btn no-border add-cart-btn" v-if="!shareClientId" @click="toApply">申请团长</button> -->
 				<button class="action-btn action-share-btn" @click.stop="shareSave">{{ isType() + goods.client || '00.00'}}</button>
 			</view>
@@ -562,28 +563,44 @@ export default {
 				this.$api.msg('库存不足')
 				return false;
 			}
-			if (this.selectType === 'buy') {
-				var buyInfo = {
-					agentId: this.agentId,
-					activityId: this.activityId,
-					agentGoodsId: this.agentGoodsId,
-					goodsId: this.goodsId,
-					goodsSkuId: this.goodsSkuId,
-					shareId: this.shareId,
-					price: this.sku.price,
-					shareClientId: this.shareClientId
-				}
-				uni.setStorageSync('goodsInfo',buyInfo)
-				if (Api.isToken()) { //先判断有没有登录
-					uni.navigateTo({
-						url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&activityId='+ buyInfo.activityId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId+'&agentId='+buyInfo.agentId
-					});
-				}
-			} else if (this.selectType === 'cart'){
-				this.addShopCar()
-			} else {
-				this.toggleSpec()
+			var buyInfo = {
+				agentId: this.agentId,
+				activityId: this.activityId,
+				agentGoodsId: this.agentGoodsId,
+				goodsId: this.goodsId,
+				goodsSkuId: this.goodsSkuId,
+				shareId: this.shareId,
+				price: this.sku.price,
+				shareClientId: this.shareClientId
 			}
+			uni.setStorageSync('goodsInfo',buyInfo)
+			if (Api.isToken()) { //先判断有没有登录
+				uni.navigateTo({
+					url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&activityId='+ buyInfo.activityId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId+'&agentId='+buyInfo.agentId
+				});
+			}
+			// if (this.selectType === 'buy') {
+			// 	var buyInfo = {
+			// 		agentId: this.agentId,
+			// 		activityId: this.activityId,
+			// 		agentGoodsId: this.agentGoodsId,
+			// 		goodsId: this.goodsId,
+			// 		goodsSkuId: this.goodsSkuId,
+			// 		shareId: this.shareId,
+			// 		price: this.sku.price,
+			// 		shareClientId: this.shareClientId
+			// 	}
+			// 	uni.setStorageSync('goodsInfo',buyInfo)
+			// 	if (Api.isToken()) { //先判断有没有登录
+			// 		uni.navigateTo({
+			// 			url: '/pages/client/goods/buy?goodsId='+buyInfo.goodsId+'&goodsSkuId='+buyInfo.goodsSkuId+'&activityId='+ buyInfo.activityId+'&agentGoodsId='+buyInfo.agentGoodsId+'&shareClientId='+buyInfo.shareClientId+'&agentId='+buyInfo.agentId
+			// 		});
+			// 	}
+			// } else if (this.selectType === 'cart'){
+			// 	this.addShopCar()
+			// } else {
+			// 	this.toggleSpec()
+			// }
 		},
 		async addShopCar () {
 			let params = {
@@ -597,7 +614,7 @@ export default {
 			if (data) {
 				if (data.code === 0) {
 					this.$api.msg('加入购物车成功')
-					this.toggleSpec()
+					// this.toggleSpec()
 				} else {
 					this.$api.msg(data.msg)
 				}

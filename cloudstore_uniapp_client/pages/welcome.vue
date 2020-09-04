@@ -59,13 +59,14 @@
 				this.actionType = this.getQuery('action',this.url)
 				this.agentId = this.getQuery('agentId',this.url)
 				this.activityGoodsId = this.getQuery('activityGoodsId',this.url)
-				
+				uni.setStorageSync('agentId',this.agentId)
 				// this.actionType = 'xxsp'
 				// this.agentId = '7958458085131948032'
 				// this.activityGoodsId = '7977567650238697472'
 			} else {
 				this.token = uni.getStorageSync('token')
 				this.agentId = ops.agentId
+				uni.setStorageSync('agentId',this.agentId)
 				this.activityId = ops.activityId
 				this.goodsId = ops.goodsId
 				this.agentGoodsId = ops.agentGoodsId
