@@ -76,12 +76,17 @@
 				actionType: ''
 			};
 		},
-		onLoad() {
+		onLoad(ops) {
+			console.log(ops)
+			if (ops.action === 'login'){
+				uni.setStorageSync('agentId', -1)
+			}
 			// this.sysInfo = this.$db.get('sysInfo');
 			this.goodsInfo =  uni.getStorageSync('goodsInfo')
 			this.actionType = this.goodsInfo.actionType
 			this.activityGoodsId = this.goodsInfo.agentGoodsId
 			this.agentId = this.goodsInfo.agentId
+			console.log(this.agentId)
 			this.goodsId = this.goodsInfo.goodsId
 			this.activityId = this.goodsInfo.activityId
 			this.agentGoodsId = this.goodsInfo.agentGoodsId

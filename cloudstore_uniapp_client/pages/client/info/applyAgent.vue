@@ -320,11 +320,16 @@
 				}
 			},
 			typePickerChange (e) { //选择代理类型
-				this.typePickerIndex = e.detail.value
-				if (e.detail.value === 0) {
-					this.agentfrom.agentType = 'agent'
-				} else {
-					this.agentfrom.agentType = 'leader'
+				this.typePickerIndex = Number(e.detail.value)
+				switch (this.typePickerIndex) {
+					case 0: 
+						this.agentfrom.agentType = 'agent'
+					break;
+					case 1:
+						this.agentfrom.agentType = 'leader'
+					break;
+					default: 
+						this.$api.msg('类型出错')
 				}
 			},
 			complete(e) { //点击了地址的上一级分类

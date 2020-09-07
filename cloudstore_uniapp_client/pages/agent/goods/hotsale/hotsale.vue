@@ -6,7 +6,8 @@
 			<view class="nav-title">丫咪购</view>
 			<view class="content">
 				<text class="cuIcon-locationfill text-white"></text>
-				<text class="text-white">附近代理点：{{agentShopInfo.address}}({{agentShopInfo.distance}}km)</text>
+				<text class="text-white">代理点：{{agentShopInfo.address}}</text>
+				<!-- ({{agentShopInfo.distance}}km) -->
 			</view>
 			<view class="search-input" @click.stop="toSearch">
 				<view class="search-form round">
@@ -32,7 +33,7 @@
 			</view>
 		</view>
 		<view class="scroll-view-main">
-			<scroll-view scroll-x class="floor-list" @scrolltoupper='scrollMoveLeft' @scrolltolower="scrollMoveRight">
+			<scroll-view scroll-x class="floor-list" @scrolltoupper='scrollMoveLeft' @scrolltolower="scrollMoveRight" @scroll="scroll">
 				<view class="scoll-wrapper" :style="{ width: towScreenWidth +'px' }">
 					<view class="cate-item" v-for="(item,index) in typeList" :key='index' :style="{ width: itemScreenWidth+ 'px'}" @click="toReclassify(item)">
 						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice" class="cate-item-img"></image>
@@ -61,14 +62,14 @@
 			</view>
 		</view> -->
 		<view  v-for='item  in activity.show' :key="item.id" class="activity-list">
-			<view class="f-header" @click="navToCategory(item)">
-				<view class="faddish-title">
-					<view class="title-main">
+			<!-- <view class="f-header" @click="navToCategory(item)"> -->
+				<!-- <view class="faddish-title"> -->
+					<!-- <view class="title-main">
 						{{item.name}}
-					</view>
-					<image src="/static/index-bannar-bj.png" mode="" class="title-img"></image>
-				</view>
-			</view>
+					</view> -->
+					<image :src="item.picturePice" mode="widthFix" class="title-img" @click="navToCategory(item)"></image>
+				<!-- </view> -->
+			<!-- </view> -->
 			<view class="goods-list">
 				<view v-for="(goods, index) in item.goodsList" :key="index" class="goods-item" @click="navToDetailPage(goods)">
 					<view class="detail-img"><image :src="goods.goodsPicesBean.goodsPhotos[0].url" mode="aspectFit"></image></view>
@@ -114,6 +115,8 @@
 			return {
 				isLeftArrows: false,
 				isRightArrows: true,
+				upperThreshold: 50, 
+				lowerThreshold: 50,
 				screenWidth: '',
 				itemScreenWidth:　'',
 				towScreenWidth: '',
@@ -190,6 +193,7 @@
 			this.itemScreenWidth = parseInt(parseInt(Api.getSystemInfoSync().screenWidth) / 5)
 			this.towScreenWidth = parseInt(parseInt(this.itemScreenWidth * 10) * 0.9)
 			this.carouselHeight = parseInt(parseInt(this.screenWidth) / 1.8)
+			this.agentId = uni.getStorageSync('agentId') || '-1'
 			this.getLocation()
 			this.$nextTick(()=>{
 				this.shareAmount()
@@ -227,13 +231,23 @@
 						return '分享赚￥';
 				}
 			},
-			scrollMoveLeft () { //判断滑动导航条是否移动到左端
-				this.isLeftArrows = false
+			scroll (event) {
+				this.isLeftArrows = true
 				this.isRightArrows = true
 			},
+			scrollMoveLeft () { //判断滑动导航条是否移动到左端
+				let timer = setTimeout(()=>{
+					this.isLeftArrows = false
+					this.isRightArrows = true
+					clearTimeout(timer)
+				},100)
+			},
 			scrollMoveRight () {//判断滑动导航条是否移动到右端
-				this.isLeftArrows = true
-				this.isRightArrows = false
+				let timer = setTimeout(()=>{
+					this.isLeftArrows = true
+					this.isRightArrows = false
+					clearTimeout(timer)
+				},100)
 			},
 			shareAmount () { //处理分享出去的金额
 				this.userType = uni.getStorageSync('userInfo').agent || uni.getStorageSync('userInfo').userType
@@ -252,14 +266,14 @@
 				this.searchActivityShowList();
 			},
 			async getAgentShop (res) { //获取最近的代理商
-				let agentId =-1;
-				let userInfo =  uni.getStorageSync('userInfo') ; 
-				if(userInfo!=null && userInfo.agent!=null){
-					agentId = userInfo.relationId;
-				}else{
-					agentId  = uni.getStorageSync('agentId');
-					agentId = (agentId!="undefined" && agentId !=null && agentId!='') ? agentId : '-1'
-				}
+				let agentId = this.agentId || '-1'
+				// let userInfo =  uni.getStorageSync('userInfo') ; 
+				// if(userInfo!=null && userInfo.agent!=null){
+				// 	agentId = userInfo.relationId;
+				// }else{
+				// 	agentId  = uni.getStorageSync('agentId');
+				// 	agentId = (agentId!="undefined" && agentId !=null && agentId!='') ? agentId : '-1'
+				// }
 				let params = {
 					 latitude: this.agentShopInfo.latitude,
 					 longitude: this.agentShopInfo.longitude,
@@ -268,12 +282,16 @@
 				let data = await Api.apiCall('post', Api.agent.activity.getAgentDistance, params,true);
 				if (data) {
 					if (data.result) {
-						var tmpData = data.result.agentBean
-						this.agentShopInfo.name = tmpData.name
-						this.agentShopInfo.address = tmpData.community
-						this.agentShopInfo.distance = data.result.distance.toFixed(2)
 						this.agentId = data.result.agentId
 						uni.setStorageSync('agentId', this.agentId)
+						try{
+							var tmpData = data.result.agentBean
+							this.agentShopInfo.name = tmpData.name
+							this.agentShopInfo.address = tmpData.community
+							this.agentShopInfo.distance = data.result.distance.toFixed(2)
+						}catch(e){
+							console.log('获取代理点失败')
+						}
 					}
 				}else{
 				}
@@ -354,6 +372,7 @@
 							this.typeList.push({
 								name: list.result.records[tmp].name,
 								value: list.result.records[tmp].id,
+								picturePice: list.result.records[tmp].categoryPicUrl
 							})
 						}
 					} else {
@@ -460,6 +479,7 @@
 				});
 			},
 			toReclassify (item) {
+				console.log(item)
 				uni.navigateTo({
 					url:'/pages/agent/goods/category/reclassify?categoryOneId='+item.value +'&title='+item.name
 				});
@@ -617,7 +637,7 @@
 	}
 	.scroll-view-main {
 		width: 100%;
-		padding: 15rpx 0;
+		padding-top: 15rpx;
 		background-color: #fff;
 		margin-bottom: 20rpx;
 		position: relative;
@@ -625,7 +645,7 @@
 			width: 100%;
 			margin: 0 auto;
 			background-color: #fff;
-			padding-top: 20upx;
+			padding-top: 10upx;
 			.scoll-wrapper {
 				display:flex;
 				flex-wrap: wrap;
@@ -634,7 +654,11 @@
 				.cate-item {
 					width: 120upx;
 					text-align: center;
-					margin-bottom: 15upx;
+					margin-bottom: 30upx;
+					// height: 170upx;
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: center;
 					.cate-item-img {
 						width: 120upx;
 						height: 130upx;
@@ -754,6 +778,9 @@
 	.activity-list {
 		background: #fff;
 		width: 100%;
+		.title-img {
+			width: 100%;
+		}
 	}
 	.f-header {
 		display: flex;
@@ -764,7 +791,6 @@
 		border-top-left-radius: 25rpx;
 		border-top-right-radius: 25rpx;
 		.faddish-title {
-			height: 120upx;
 			font-size: 30upx;
 			display: flex;
 			align-items: center;

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<nav-bar :bgColor="['#66bdff','#3ebdff']" type="fixed">我的收益</nav-bar>
+		<nav-bar :bgColor="['#66bdff','#3eabff']" type="fixed">我的收益</nav-bar>
 		<view class="earning-main">
 			<image src="/static/index-top-bg.png" mode="" class="earning-bg"></image>
 			<view class="earning-main-computed">

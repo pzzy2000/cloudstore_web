@@ -160,9 +160,9 @@ export default {
 		let menuButtonTop = Number(menuButtonTopHeight) - Number(statusBarHeight) //获取出胶囊距离状态栏的高度
 		if (uni.getSystemInfoSync().platform == 'android') {
 			//手机为安卓时：高度为状态栏高度+两倍胶囊距离状态栏高度+胶囊高度
-			return statusBarHeight + menuButtonTop *2 + menuButtonHeight
+			return statusBarHeight + menuButtonTop * 2 + menuButtonHeight
 		} else {
-			return statusBarHeight + menuButtonTop + menuButtonHeight
+			return statusBarHeight + menuButtonTop * 2 + menuButtonHeight
 		}
 		//获取状态栏的高度
 		//整个导航栏加状态栏的高度

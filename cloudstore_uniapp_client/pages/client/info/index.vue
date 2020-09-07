@@ -247,7 +247,7 @@
 					this.$api.msg('敬请期待')
 				} else {
 					uni.navigateTo({
-						url: url
+						url: url +'?action=login'
 					});
 				}
 				//this.$api.msg('提现功能于9月30日开发')
