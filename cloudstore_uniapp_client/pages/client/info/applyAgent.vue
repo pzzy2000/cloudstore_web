@@ -128,7 +128,7 @@
 				picker:['身份证'],
 				index: 0,
 				typePicker: ['代理', '团长'],
-				typePickerIndex: 0,
+				typePickerIndex: 1,
 				upImgUrl: Api.BASEURI+Api.upImgUrl.imgUrl,
 				category: 'image',
 				imgListId: [],
@@ -164,7 +164,7 @@
 					parentId:0,
 					dirctType:'areas',
 				};
-				let list = await Api.apiCall('post', Api.areas.province, params);
+				let list = await Api.apiCall('post', Api.areas.province, params, true);
 				if (list) {
 					if (list.code === 0 && list.result.total != 0) {
 						for (let tmp in list.result.records) {
@@ -210,7 +210,7 @@
 										if (data.result.agentType === 'agent') {
 											that.typePickerIndex = 0
 											that.agentfrom.agentType = data.result.agentType
-										} else {
+										} else if (data.result.agentType === 'leader'){
 											that.typePickerIndex = 1
 											that.agentfrom.agentType = data.result.agentType
 										}
@@ -276,7 +276,7 @@
 						if (data.result.agentType === 'agent') {
 							this.typePickerIndex = 0
 							this.agentfrom.agentType = data.result.agentType
-						} else {
+						} else if (data.result.agentType === 'leader'){
 							this.typePickerIndex = 1
 							this.agentfrom.agentType = data.result.agentType
 						}
@@ -323,10 +323,10 @@
 				this.typePickerIndex = Number(e.detail.value)
 				switch (this.typePickerIndex) {
 					case 0: 
-						this.agentfrom.agentType = 'agent'
+						this.agentfrom.agentType = 'leader'
 					break;
 					case 1:
-						this.agentfrom.agentType = 'leader'
+						this.agentfrom.agentType = 'agent'
 					break;
 					default: 
 						this.$api.msg('类型出错')
@@ -384,7 +384,7 @@
 					uni.hideLoading()
 					return false;
 				} else {
-					let list = await Api.apiCall('post', Api.areas.province, params);
+					let list = await Api.apiCall('post', Api.areas.province, params, true);
 					if (list) {
 						if (list.code === 0 && list.result.total != 0) {
 							for (let tmp in list.result.records) {
@@ -511,7 +511,7 @@
 				if (this.agentfrom.optType === 'update') {
 					params.id = this.agentfrom.id
 				}
-				let data = await Api.apiCall('post', Api.client.applyAgent.save, params);
+				let data = await Api.apiCall('post', Api.client.applyAgent.save, params, true);
 				if (data) {
 					if (data.code === 0) {
 						uni.showModal({

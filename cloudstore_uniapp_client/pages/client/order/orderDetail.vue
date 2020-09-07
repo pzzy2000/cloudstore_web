@@ -211,7 +211,7 @@
 					}
 					switch (data.result.orderBean.transportType) {
 						case 10:
-						this.transportType = '配送'
+						this.transportType = '代理配送'
 						break;
 						case 20:
 						this.transportType = '自提'

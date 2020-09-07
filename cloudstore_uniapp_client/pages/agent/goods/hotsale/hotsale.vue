@@ -776,10 +776,10 @@
 	}
 
 	.activity-list {
-		background: #fff;
 		width: 100%;
 		.title-img {
 			width: 100%;
+			margin-top: 5upx;
 		}
 	}
 	.f-header {
@@ -942,13 +942,13 @@
 	justify-content: space-between;
 	flex-wrap: wrap;
 	align-content: flex-start;
-	padding: 35upx 25upx 0;
+	padding: 20upx 20upx 0;
 	background-color: #F5F5F5;
 	.goods-item {
 		// width: 340upx;
-		width: 48%;
+		width: 48.5%;
 		padding: 18upx;
-		margin-bottom: 30upx;
+		margin-bottom: 20upx;
 		border-radius: 10upx;
 		background: #fff;
 		position: relative;
