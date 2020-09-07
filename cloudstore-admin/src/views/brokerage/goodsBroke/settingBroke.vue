@@ -142,19 +142,7 @@
                       type: 'success',
                       duration: 800
                     })
-                  }else{
-                    this.$message({
-                      message: '更新SKU佣金失败['+res.result.msg+']',
-                      type: 'error',
-                      duration: 800
-                    })
                   }
-                }else{
-                  this.$message({
-                    message: '更新SKU佣金失败',
-                    type: 'error',
-                    duration: 800
-                  })
                 }
               })
             }).catch(e => e)

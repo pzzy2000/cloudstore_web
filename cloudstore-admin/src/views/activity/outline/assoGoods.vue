@@ -305,12 +305,10 @@
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
-        this.$refs.clearInput.clearInput();
+        // this.$refs.clearInput.clearInput();
         this.listQuery.activityId = this.$route.query.id;
         this.category.two = [];
-        this.category.three = [];
         this.getList(2);
-        console.log(this.listQuery)
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;

@@ -181,7 +181,11 @@
       },
       changeShow(data) {
         switch (data) {
-          case 'returns': return "查看详情";
+          case '1': return "查看详情";
+            break;
+          case '0': return "前往审核";
+            break;
+          case '2': return "查看详情";
             break;
           default: return "查看详情";
             break;

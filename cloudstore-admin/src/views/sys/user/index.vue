@@ -39,9 +39,9 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="创建时间：">
-            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>
-          </el-form-item>
+<!--          <el-form-item label="创建时间：">-->
+<!--            <el-date-picker v-model="listQuery.createTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" clearable type="date" placeholder="请选择活动创建时间"></el-date-picker>-->
+<!--          </el-form-item>-->
           <el-form-item label="审核状态：">
             <el-select v-model="listQuery.status" placeholder="审核状态" clearable>
               <el-option

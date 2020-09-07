@@ -202,6 +202,7 @@
       },
       getList(idx) {
         this.listLoading = true;
+        this.listQuery.type = 0;
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.result.result.records;

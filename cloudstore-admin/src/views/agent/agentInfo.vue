@@ -8,7 +8,15 @@
             <el-input-dispatcher v-model="baseinfoForm.name" />
           </el-form-item>
           <br />
-          <el-form-item label="地址：" prop="address">
+          <el-form-item label="身份证号：" prop="name">
+            <el-input-dispatcher v-model="baseinfoForm.identityCard" />
+          </el-form-item>
+          <br />
+          <el-form-item label="定位地址：" prop="name">
+            <el-input-dispatcher v-model="baseinfoForm.community" />
+          </el-form-item>
+          <br />
+          <el-form-item label="填写地址：" prop="address">
             <el-input-dispatcher v-model="baseinfoForm.address" />
           </el-form-item>
           <br />
@@ -45,10 +53,10 @@
       data() {
         return {
           baseinfoForm: {
-            name: '123',
-            address: '广东省深圳市宝安区',
-            detailAddress: '广东省深圳市宝安区华丰智谷B栋119',
-            phone: '13300000001'
+            // name: '123',
+            // address: '广东省深圳市宝安区',
+            // detailAddress: '广东省深圳市宝安区华丰智谷B栋119',
+            // phone: '13300000001'
           },
           rwDispatcherState: 'write',
           titleMsg: '',
@@ -79,13 +87,11 @@
       methods: {
         getAgent() {
           getOneagent({id: this.$route.query.agentId}).then(res => {
-            console.log(res);
-            // this.baseinfoForm = res.result.result;
-            // if (this.baseinfoForm.provinceBean == null){
-            //   this.baseinfoForm.address = ''
-            // }else{
-            //   this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + ' ' + this.baseinfoForm.cityBean.name + ' ' + this.baseinfoForm.areaBean.name;
-            // }
+            if(res.result.code == 0) {
+              this.baseinfoForm = res.result.result;
+              this.baseinfoForm.address = this.baseinfoForm.provinceBean.name + this.baseinfoForm.cityBean.name + this.baseinfoForm.areaBean.name + this.baseinfoForm.townBean.name;
+              this.baseinfoForm.detailAddress = this.baseinfoForm.address + this.baseinfoForm.detailAddress
+            }
           })
         },
         toLastpage() {

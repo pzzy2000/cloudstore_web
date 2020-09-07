@@ -186,12 +186,6 @@
               type: 'success',
               duration: 800
             })
-          } else {
-            this.$message({
-              message: "暂无数据",
-              type: 'warning',
-              duration: 800
-            })
           }
         });
       },

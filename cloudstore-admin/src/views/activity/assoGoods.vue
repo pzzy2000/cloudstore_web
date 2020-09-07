@@ -23,8 +23,9 @@
 <!--              </el-option>-->
 <!--            </el-select>-->
 <!--          </el-form-item>-->
-          <el-form-item label="商品信息：">
-            <remoteCom v-model="listQuery.goodsIds_" ref="clearInput" url="/manage/search/goods/search" @tochild="tochild"></remoteCom>
+          <el-form-item label="商品名称：">
+<!--            <remoteCom v-model="listQuery.goodsIds_" ref="clearInput" url="/manage/search/goods/search" @tochild="tochild"></remoteCom>-->
+            <el-input style="width: 214px" v-model="listQuery.goodsName" placeholder="商品名称"></el-input>
           </el-form-item>
           <el-form-item label="供应商信息：">
             <dbremoteCom v-model="listQuery.supplierIds_" ref="clearInputone" url="/manage/search/supplier/search" @dbTochild="dbTochild"></dbremoteCom>
@@ -193,29 +194,29 @@
       handleSearchList() {
         // let activityId = event;
         // this.activityId = activityId;
-        if (this.listQuery.activityId == undefined) {
-          this.$message({
-            message: '请先选择活动！',
-            type: 'warning',
-            duration: 800
-          })
-        }else {
+        // if (this.listQuery.activityId == undefined) {
+        //   this.$message({
+        //     message: '请先选择活动！',
+        //     type: 'warning',
+        //     duration: 800
+        //   })
+        // }else {
           this.listQuery.pageNum = 1;
           this.getList(this.listQuery);
-        }
+        // }
       },
       handleResetSearch() {
         let activityId = this.listQuery.activityId;
         this.listQuery = Object.assign({}, defaultListQuery);
         this.listQuery.activityId = activityId;
-        this.$refs.clearInput.clearInput();
+        // this.$refs.clearInput.clearInput();
         this.$refs.clearInputone.clearInput();
         this.getList(this.listQuery);
-        // this.$message({
-        //   message: "重置成功",
-        //   type: 'success',
-        //   duration: 800
-        // })
+        this.$message({
+          message: "重置成功",
+          type: 'success',
+          duration: 800
+        })
       },
       getList(activityId) {
         this.list = [];

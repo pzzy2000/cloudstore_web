@@ -6,7 +6,7 @@
         <el-form-item label="活动名称：" prop="name">
           <el-input-dispatcher v-model="activityForm.name" placeholder="请输入活动名称" style="width: 350px" />
         </el-form-item>
-        <el-form-item label="请选择代理：" prop="agent">
+        <el-form-item label="请选择代理：" prop="agentId">
           <el-select v-model="activityForm.agentId" placeholder="请选择活动类型代理" clearable>
             <el-option v-for="item in agentList" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
@@ -61,7 +61,7 @@
       return {
         activityForm: {
           name: '',
-          agentID: '',
+          agentId: '',
           startTime: '',
           endTime: '',
           picture: [],
@@ -76,7 +76,7 @@
             { required: true, message: '请输入活动名称', trigger: 'blur' },
             { min: 2, max: 4, message: "长度在2到4个字之间", trigger: "blur" }
           ],
-          agent: [{ required: true, message: '请选择代理', trigger: 'change' }],
+          agentId: [{ required: true, message: '请选择代理', trigger: 'change' }],
           startTime: [{ required: true, message: '开始时间必填哦', trigger: 'blur' }],
           endTime: [{ required: true, message: '结束时间必填哦', trigger: 'blur' }],
           picture: [{ required: true, message: '必须上传图片', trigger: 'change' }],

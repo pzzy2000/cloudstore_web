@@ -282,7 +282,7 @@
       },
       goodsCategory(row, column) {
         try {
-          if (row.goodsBean.categoryThreeBean !== null) {
+          if (row.goodsBean.categoryThreeBean !== undefined) {
             return row.goodsBean.categoryOneBean.name + "/" + row.goodsBean.categoryTwoBean.name + "/" + row.goodsBean.categoryThreeBean.name;
           } else {
             return row.goodsBean.categoryOneBean.name + "/" + row.goodsBean.categoryTwoBean.name;
@@ -326,7 +326,7 @@
           this.list = response.result.result.records;
           this.total = parseInt(response.result.result.total);
           if (idx == 0) {
-            if (res.result.result.records.length == 0) {
+            if (response.result.result.records.length == 0) {
               this.$message({
                 message: "暂无数据",
                 type: 'warning',
@@ -518,6 +518,7 @@
       },
       handleResetSearch() {
         this.selectProductCateValue = [];
+        this.category.two = [];
         this.listQuery = Object.assign({}, defaultListQuery);
         this.getList(2);
       },

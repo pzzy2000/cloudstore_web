@@ -267,7 +267,6 @@
         for (let i=0; i<this.goodsku.skuStockList.length; i++) {
           codeArr.push(this.goodsku.skuStockList[i].skuCode);
         }
-        console.log(codeArr, this.warnList)
         for (let i=0; i<this.warnList.length; i++) {
           if (rowIndex == codeArr.indexOf(this.warnList[i])) {
             return 'warn-row';
@@ -289,23 +288,31 @@
         // //     }
         // //   }
         // // }
-        this.$confirm('是否更新此商品的整个信息?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$refs[formName].validate((valid) => {
-            if (valid) {
-              this.updateGoodsProperties1();
-            } else {
-              this.$message({
-                message: "验证不通过！",
-                type: 'error',
-                duration: 800
-              })
-              return false;
-            }
+        if (this.goodsku.skuStockList.length > 1) {
+          this.$message({
+            message: 'SKU只能有一个',
+            type: 'warning',
+            duration: 1000
           })
+          return;
+        }
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$confirm('是否更新此商品的整个信息?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.updateGoodsProperties1();
+            })
+          } else {
+            this.$message({
+              message: "验证不通过！",
+              type: 'error',
+              duration: 800
+            })
+            return false;
+          }
         });
       },
 

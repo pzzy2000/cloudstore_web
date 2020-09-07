@@ -52,6 +52,27 @@ export const constantRouterMap = [
 
 export const asyncRouterMap = [
   {
+    path: '/sys/statement',
+    component: Layout,
+    redirect: '/sys/statement/order/index',
+    name: 'statement',
+    meta: {title: '数据分析', icon: 'product-list'},
+    children: [
+      {
+        path: 'order/index',
+        name: 'state_order',
+        component: () => import('@/views/statement/order/index'),
+        meta: {title: '订单分析', icon: 'product-list'}
+      },
+      {
+        path: 'user/index',
+        name: 'state_user',
+        component: () => import('@/views/statement/user/index'),
+        meta: {title: '用户分析', icon: 'product-list'}
+      }
+    ]
+  },
+  {
     path: '/sys/power',
     component: Layout,
     redirect: '/sys/power/module/list',
