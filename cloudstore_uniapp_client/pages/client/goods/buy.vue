@@ -281,7 +281,7 @@
 					}
 					this.transportType = this.pickerList[0].code
 					this.pickerIndex = 0
-					if(this.transportType === 20) {
+					if(this.transportType === 10) {
 						this.isPickAddress = true
 					}
 				}
@@ -472,7 +472,7 @@
 					}
 				});
 			},
-			async paySuccess (id) {
+			async paySuccess (id) { //支付成功调用方法
 				let parmas = {
 					orderId: id
 				}
@@ -831,7 +831,9 @@
 			color: #999;
 			margin-right: 10upx;
 		}
-	
+		.picker {
+			font-size: 24upx;
+		}
 		.cell-tip {
 			font-size: 24upx;
 			color: #333;

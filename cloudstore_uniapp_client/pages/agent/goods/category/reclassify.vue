@@ -39,12 +39,13 @@
 						</view>
 					</view>
 				</view>
-				<scroll-view scroll-y @scrolltolower='scrolltolower' style="width: 100%;height: 100%;padding-top: 80upx;position: relative;">
+				<scroll-view :scroll-y='!isTwoCategory' @scrolltolower='scrolltolower' catchtouchmove="false" style="width: 100%;height: 100%;padding-top: 80upx;position: relative;">
 					<view class="earning-empty" v-if='goodsList.length === 0'>
 						<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
 						<view class="earning-empty-text">没有该分类下的商品</view>
 					</view>
 					<view class="item-container">
+						<view class="masking" v-if="ismask" @click="isMasking" catchtouchmove="false"></view>
 						<view class="goods-list" v-for="(item,index) in goodsList" :key='index' @click="navToDetailPage(item)">
 							<image class="goods-list-image" :src="item.goodsPhotos[0].url" mode=""></image>
 							<view class="goods-detail">
@@ -79,6 +80,8 @@
 			return {
 				title: '',
 				scrollTop: 0, //tab标题的滚动条位置
+				scrolly: true,
+				ismask: false,
 				current: 0, // 预设当前项的值
 				menuHeight: 0, // 左边菜单的高度
 				menuItemHeight: 0, // 左边菜单item的高度
@@ -165,6 +168,9 @@
 				this.pageNum = this.pageNum + 1;
 				this.loadData();
 			},
+			moveHandle () {
+				return false;
+			},
 			shareAmount () { //处理分享出去的金额
 				for( let i in this.goodsList){
 					this.goodsList[i].client= Api.ishareAmount(this.goodsList[i]);
@@ -249,6 +255,7 @@
 			async swichMenu(index, id) { // 点击左边的栏目切换
 				this.categoryTwoId = id
 				this.isTwoCategory = false
+				this.ismask = false
 				if(index == this.current) return ;
 				this.current = index;
 				this.pageNum = 1
@@ -313,6 +320,7 @@
 				if (index === 0) {
 					this.havStock = this.havStock === 1 ? '' : 1
 					this.isTwoCategory = false
+					this.ismask = false
 					this.initData()
 				}
 				if (index === 1) {
@@ -320,10 +328,12 @@
 					this.dirVal = 'salePrice'
 					this.priceOrder = this.priceOrder === 1 ? 2 : 1
 					this.isTwoCategory = false
+					this.ismask = false
 					this.initData()
 				}
 				if (index === 2) {
 					this.isTwoCategory = !this.isTwoCategory
+					this.ismask = !this.ismask
 				}
 				uni.pageScrollTo({
 					duration: 300,
@@ -346,15 +356,21 @@
 					this.GoodsBrandList[tmp].select = false
 				}
 				this.isTwoCategory = false
+				this.ismask = false
 				this.initData()
 			},
 			twoCategorySubmit () {//点击确定筛选活动分类
 				this.pageNum = 1
+				this.ismask = false
 				this.selectGoodsBrandList = this.selectTwoCategoryArray.join()
 				console.log(this.selectGoodsBrandList)
 				this.isTwoCategory = !this.isTwoCategory
 				this.goodsList.length = 0
 				this.loadData()
+			},
+			isMasking () {
+				this.isTwoCategory = !this.isTwoCategory
+				this.ismask = !this.ismask
 			},
 			navToDetailPage(item) { //跳转到商品详情页
 				let goodsId = item.id, activitId = item.activityId, activityGoodsId= item.activityGoodsId;
@@ -530,6 +546,14 @@
 				}
 			}
 		}
+		.masking {
+			width: 100%;
+			height: 100%;
+			min-height: 1500upx;
+			background: rgba(0,0,0, 0.5);
+			position: absolute;
+			z-index: 2;
+		}
 	}
 
 	.u-search-inner {
@@ -579,7 +603,9 @@
 			top: 0;
 		}
 	}
-
+	.u-line-1 {
+		text-align: center;
+	}
 	.u-tab-view {
 		position: absolute;
 		left: 0;
@@ -591,7 +617,7 @@
 	
 	.right-box {
 		background-color: #fff;
-		width: calc(100% - 165upx);
+		width: calc(100% - 160upx);
 		position: absolute;
 		left: 160upx;
 		top: 0;
@@ -618,6 +644,7 @@
 	.item-container {
 		display: flex;
 		flex-wrap: wrap;
+		position: relative;
 	}
 	.earning-empty {
 		position: absolute;

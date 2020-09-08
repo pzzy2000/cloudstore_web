@@ -24,7 +24,7 @@
 				<view class="con">
 					<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
 				</view>
-				<text class="yticon icon-you"></text>
+				<!-- <text class="yticon icon-you"></text> -->
 			</view>
 			<view class="c-row">
 				<text class="tit">活动内容</text>
@@ -603,6 +603,10 @@ export default {
 			// }
 		},
 		async addShopCar () {
+			if (this.sku.stock <= 0) {
+				this.$api.msg('暂时无货')
+				return false;
+			}
 			let params = {
 				agentId: this.agentId,
 				goodsId: this.goodsId,
