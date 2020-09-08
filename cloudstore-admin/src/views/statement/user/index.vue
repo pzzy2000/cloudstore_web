@@ -16,7 +16,7 @@
     <div class="statistics-layout">
       <div class="layout-title">订单统计</div>
       <el-row>
-        <el-col :span="4">
+        <el-col :span="3">
           <div style="padding: 20px">
             <div>
               <div style="color: #909399;font-size: 14px">当前订单总数</div>
@@ -52,10 +52,10 @@
             <!--            </div>-->
           </div>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="21">
           <div style="border-left:1px solid #DCDFE6; text-align: right">
             <div>
-              <div id="myCharts" ref="myCharts" style="width: 1350px; height: 350px; margin-top: 20px"></div>
+              <div id="myCharts" ref="myCharts" style="width: 1450px; height: 350px; margin-top: 20px"></div>
             </div>
           </div>
         </el-col>
@@ -121,8 +121,8 @@
     },
     mounted(){
       this.line();
-      this.pieOne();
-      this.pieTwo();
+      // this.pieOne();
+      // this.pieTwo();
     },
     watch:{
       dateArr(val){//监听数据发生改变 刷新图表数据

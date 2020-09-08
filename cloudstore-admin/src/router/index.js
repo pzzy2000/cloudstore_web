@@ -709,6 +709,21 @@ export const asyncRouterMap = [
     ]
 
   },
+  {
+    path: '/sys/task',
+    component: Layout,
+    redirect: '/sys/task/list',
+    name: 'task',
+    meta: {title: '任务管理', icon: 'product-list'},
+    children: [
+      {
+        path: 'sys/task/list',
+        name: 'task_lisk',
+        component: () => import('@/views/task/list'),
+        meta: {title: '任务列表', icon: 'product-list'}
+      }
+    ]
+  },
   {path: '*', redirect: '/404', hidden: true}
 ]
 
