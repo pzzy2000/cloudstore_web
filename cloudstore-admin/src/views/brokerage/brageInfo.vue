@@ -113,15 +113,15 @@
         rules: {
           leader: [
             { required: true, message: '请输入团长佣金', trigger: 'blur' },
-            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+            // { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ],
           agent: [
             { required: true, message: '请输入代理佣金', trigger: 'blur' },
-            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+            // { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ],
           client: [
             { required: true, message: '请输入客户佣金', trigger: 'blur' },
-            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+            // { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ],
           clientShare: [
             { required: true, message: '请输入客户分享积分', trigger: 'blur' },
@@ -132,7 +132,7 @@
           ],
           delivery: [
             { required: true, message: '请输入配送金额', trigger: 'blur' },
-            { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
+            // { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ]
         }
       }

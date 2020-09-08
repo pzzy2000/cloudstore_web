@@ -46,24 +46,26 @@
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center" fixed></el-table-column>
-        <el-table-column label="供应商名称"  align="center">
+        <el-table-column label="任务名称"  align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="供应商电话"  align="center">
-          <template slot-scope="scope">{{scope.row.phone | changeMis}}</template>
+        <el-table-column label="任务类型"  align="center">
+          <template slot-scope="scope">{{scope.row.type | changeMis}}</template>
         </el-table-column>
-        <el-table-column label="所属账号"  align="center" :formatter="showAccess">
+        <el-table-column label="计划开始时间" prop="startTime" align="center">
         </el-table-column>
-        <el-table-column label="审核状态"  align="center" :formatter="showStatus">
+        <el-table-column label="执行计划" align="center" prop="exePlan">
         </el-table-column>
-        <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
+        <el-table-column label="执行方法"  align="center" prop="className">
+        </el-table-column>
+        <el-table-column label="计划描述"  align="center" prop="desc">
+        </el-table-column>
+        <el-table-column label="状态"  align="center" prop="status" :formatter="showStatus">
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-            <p>
-              <el-button size="mini" @click="handleUpdateUserInfo(scope.$index, scope.row)">查看
-              </el-button>
-            </p>
+            <el-button size="mini" type="primary" @click="handleStart(scope.$index, scope.row)">开始</el-button>
+            <el-button size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -77,7 +79,7 @@
   </div>
 </template>
 <script>
-  import {fetchList} from '@/api/supplier'
+  import {fetchList, planStart} from '@/api/task'
   import remoteCom from '@/components/remoteCom'
   import {msg} from '@/api/iunits'
   const defaultListQuery = {
@@ -130,32 +132,7 @@
       }
     },
     created() {
-      // function Foo() {
-      //   getName = function () { alert(1); };
-      //   return this;
-      // }
-      // Foo.getName = function () { alert(2); };
-      // Foo.prototype.getName = function () { alert(3); };
-      // var getName = function () { alert(4); };
-      // function getName() { alert(5); };
-      // Foo.getName();
-      // getName();
-      // Foo().getName();
-      // getName();
-      // new Foo.getName();
-      // new Foo().getName();
-      // new new Foo().getName();
       this.getList(1);
-    },
-    watch: {
-      selectProductCateValue: function(newValue) {
-        if (newValue != null && newValue.length == 2) {
-          this.listQuery.productCategoryId = newValue[1];
-        } else {
-          this.listQuery.productCategoryId = null;
-        }
-
-      }
     },
     filters: {
       verifyStatusFilter(value) {
@@ -166,8 +143,8 @@
         }
       },
       changeMis(data) {
-        if (data !== null) {
-          return data;
+        if (data == 'timer') {
+          return '定时';
         }else{
           return "数据读取错误"
         }
@@ -179,36 +156,17 @@
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`所属账号：${item.name} / 联系人：${item.phone}`);
       },
-      showAccess(row,column){
-        return ( row.sysManagerUserBean ==null )?'数据读取错误':row.sysManagerUserBean.name ;
-      },
-      showStatus(row, column) {
-        let status = row.status;
-        switch (status) {
-          case 0:
-            return '待审核';
-          case 1:
-            return '已通过';
-          case 2:
-            return '违规关闭';
-          default: return "数据读取错误";
-            breal;
-        }
-      },
-
-      deleteStatus(row, column) {
-        let status = row.status;
-        switch (status) {
-          case 0:
-            return '已删除';
+      showStatus(row, col) {
+        switch (row.status) {
+          case 'start': return "启动";
             break;
-          case 1:
-            return '未删除';
+          case 'stop': return  "暂停";
             break;
-          default: return "正常";
+          case 'delete': return "删除";
+            break;
+          default: return "数据读取出错";
             break;
         }
-        // 状态;0:正常;1:违规关闭;2:永久关闭
       },
       getList(idx) {
         this.listLoading = true;
@@ -244,19 +202,16 @@
         this.listQuery.pageNum = 1;
         this.getList(0);
       },
-      handleUpdateUserInfo(index, row) {
-        let pageNum = this.listQuery.pageNum;
-        let pageSize = this.listQuery.pageSize;
-        let userId = row.id;
-
-        this.$router.push({
-          path: '/sys/supplier/info',
-          query: {
-            supplierId: userId,
-            pageNum: pageNum,
-            pageSize: pageSize
-          }
-        });
+      handleStart(index, row) {
+        this.$confirm('是否开始?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          planStart({id: row.id}).then(res => {
+            console.log(res);
+          })
+        }).catch(e => e);
       },
 
       handleSizeChange(val) {
@@ -293,22 +248,17 @@
         this.getList(2)
       },
       handleDelete(index, row) {
-        this.$confirm('是否要进行删除操作?', '提示', {
+        this.$confirm('是否要删除?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let ids = [];
-          ids.push(row.id);
-          this.updateDeleteStatus(1, ids);
-        });
+          console.log("删除")
+        }).catch(e => e);
       },
     }
   }
 </script>
 
 <style scoped>
-  .el-table >>> td{
-    padding: 0 !important;
-  }
 </style>

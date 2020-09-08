@@ -717,10 +717,16 @@ export const asyncRouterMap = [
     meta: {title: '任务管理', icon: 'product-list'},
     children: [
       {
-        path: 'sys/task/list',
+        path: 'list',
         name: 'task_lisk',
         component: () => import('@/views/task/list'),
         meta: {title: '任务列表', icon: 'product-list'}
+      },
+      {
+        path: 'addtask',
+        name: 'task_add',
+        component: () => import('@/views/task/addtask'),
+        meta: {title: '添加任务', icon: 'product-list'}
       }
     ]
   },
