@@ -39,3 +39,11 @@ export function wuliuInfo(params) {
     data: switchForm(params)
   })
 }
+
+export function wuliupeisong(params) {
+  return request({
+    url: '/order/allocation/info/delivery',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

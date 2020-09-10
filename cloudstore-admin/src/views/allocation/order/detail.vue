@@ -41,6 +41,7 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>物流信息</span>
+      <el-button type="primary" @click="wuliupeisong" size="mini" style="float: right" :disabled="disabled">物流配送</el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="wuliuTable" :data="wuliuList" style="width:100%" v-loading="listLoading" border>
@@ -86,8 +87,8 @@
         <el-table-column label="收货人地址" align="center">
           <template slot-scope="scope">{{scope.row.consigneeAddress}}</template>
         </el-table-column>
-        <el-table-column>
-<!--          <template slot-scope="scope">{{scope.row.consigneeAddress}}</template>-->
+        <el-table-column label="物流单号" align="center">
+          <template slot-scope="scope">{{scope.row.logisticsNumber}}</template>
         </el-table-column>
       </el-table>
     </div>
@@ -140,7 +141,7 @@
   </div>
 </template>
 <script>
-  import {fetchDetailList as fetchList, peisong, wuliuInfo} from '@/api/allocation'
+  import {fetchDetailList as fetchList, peisong, wuliuInfo, wuliupeisong} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
   const defaultList = {
@@ -163,7 +164,8 @@
         total: 1,
         dialogVisible: false,
         btnMsg: '',
-        type: ''
+        type: '',
+        disabled: true
       }
     },
     created() {
@@ -206,6 +208,25 @@
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`订单号：${item.number}`);
+      },
+      wuliupeisong() {
+        this.$confirm('是否生成物流单号?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          wuliupeisong({id: this.$route.query.id}).then(res => {
+            if(res.result.code == 0){
+              this.disabled = true;
+              this.$message({
+                message: '生成物流单号成功!',
+                type: 'success',
+                duration: 800
+              })
+              this.getList();
+            }
+          })
+        }).catch(e => e);
       },
       showAllocDetail(row, r) {
         switch (r.property) {
@@ -375,6 +396,8 @@
         })
       },
       getList() {
+        this.orderList = [];
+        this.wuliuList = [];
         this.pageList.allocationId = this.$route.query.id;
         fetchList(this.pageList).then(res => {
           if (res.result.code == 0) {
@@ -383,9 +406,13 @@
           }
         })
         wuliuInfo({id: this.$route.query.id}).then(res => {
-          console.log(res);
           if (res.result.code == 0) {
             this.wuliuList.push(res.result.result);
+            if (this.wuliuList[0].status == 'dxd') {
+              this.disabled = false
+            } else {
+              this.disabled = true
+            }
           }
         })
       },
