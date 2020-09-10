@@ -54,9 +54,9 @@
         </el-table-column>
         <el-table-column label="计划开始时间" prop="startTime" align="center">
         </el-table-column>
-        <el-table-column label="执行计划" align="center" prop="exePlan">
+        <el-table-column label="执行时间Cron" align="center" prop="exePlan">
         </el-table-column>
-        <el-table-column label="执行方法"  align="center" prop="className">
+        <el-table-column label="ClassName"  align="center" prop="className">
         </el-table-column>
         <el-table-column label="计划描述"  align="center" prop="desc">
         </el-table-column>
@@ -64,7 +64,7 @@
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="handleStart(scope.$index, scope.row)">开始</el-button>
+            <el-button size="mini" type="primary" @click="handleStartorStop(scope.$index, scope.row)">{{scope.row.status == 'stop' ? '开始' : '停止'}}</el-button>
             <el-button size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -79,7 +79,7 @@
   </div>
 </template>
 <script>
-  import {fetchList, planStart} from '@/api/task'
+  import {fetchList, planStart, planStop, planDelete} from '@/api/task'
   import remoteCom from '@/components/remoteCom'
   import {msg} from '@/api/iunits'
   const defaultListQuery = {
@@ -202,16 +202,42 @@
         this.listQuery.pageNum = 1;
         this.getList(0);
       },
-      handleStart(index, row) {
-        this.$confirm('是否开始?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          planStart({id: row.id}).then(res => {
-            console.log(res);
-          })
-        }).catch(e => e);
+      handleStartorStop(index, row) {
+        if (row.status == 'stop') {
+          this.$confirm('是否开始?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            planStart({id: row.id}).then(res => {
+              if (res.result.code == 0) {
+                this.$message({
+                  message: '开始成功',
+                  type: 'success',
+                  duration: 800
+                });
+                this.getList(1);
+              }
+            })
+          }).catch(e => e);
+        } else {
+          this.$confirm('是否停止?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            planStop({id: row.id}).then(res => {
+              if (res.result.code == 0) {
+                this.$message({
+                  message: '停止成功',
+                  type: 'success',
+                  duration: 800
+                });
+                this.getList(1);
+              }
+            })
+          }).catch(e => e);
+        }
       },
 
       handleSizeChange(val) {
@@ -253,7 +279,16 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log("删除")
+          planDelete({id: row.id}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: '删除成功',
+                type: 'success',
+                duration: 800
+              });
+              this.getList(1);
+            }
+          })
         }).catch(e => e);
       },
     }

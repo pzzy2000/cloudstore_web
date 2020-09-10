@@ -31,3 +31,11 @@ export function peisong(params) {
     params: params
   })
 }
+
+export function wuliuInfo(params) {
+  return request({
+    url: '/order/allocation/info/get',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

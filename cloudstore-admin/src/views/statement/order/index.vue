@@ -20,7 +20,7 @@
           <div style="padding: 20px">
             <div>
               <div style="color: #909399;font-size: 14px">当前订单总数</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{orderNumber}}</div>
+              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{sale}}</div>
 <!--              <div>-->
 <!--                <span class="color-success" style="font-size: 14px">+10%</span>-->
 <!--                <span style="color: #C0C4CC;font-size: 14px">同比上月</span>-->
@@ -28,7 +28,7 @@
             </div>
             <div style="margin-top: 20px;">
               <div style="color: #909399;font-size: 14px">当前销售总额</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{sale}}</div>
+              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{orderNumber}}</div>
 <!--              <div>-->
 <!--                <span class="color-danger" style="font-size: 14px">-10%</span>-->
 <!--                <span style="color: #C0C4CC;font-size: 14px">同比上周</span>-->

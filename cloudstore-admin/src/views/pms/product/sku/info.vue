@@ -236,7 +236,7 @@
             //     return _.toNumber(value)
             //   }
             // },
-            {pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '请输入正确格式'}
+            // {pattern: /^[0-9]{0,3}$|^[0-9]{0,3}(\.[0-9]{1,2})?$/, message: '请输入正确格式'}
           ],
           stock: [
             {required: true, message: "商品库存必填", trigger: "blur"}
@@ -345,11 +345,11 @@
             } else {
               let arr = response.result.msg.split(",");
               this.warnList = arr;
-              this.$message({
-                message: 'SKU编号[' + response.result.msg + ']重复了',
-                type: 'error',
-                duration: 2000
-              })
+              // this.$message({
+              //   message: 'SKU编号[' + response.result.msg + ']重复了',
+              //   type: 'error',
+              //   duration: 2000
+              // })
             }
           });
         } else {

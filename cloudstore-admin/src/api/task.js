@@ -24,3 +24,19 @@ export function planStart(params) {
     data: switchForm(params)
   })
 }
+
+export function planStop(params) {
+  return request({
+    url: '/task/stop',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
+
+export function planDelete(params) {
+  return request({
+    url: '/task/delete',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

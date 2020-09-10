@@ -13,13 +13,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="计划开始时间：" prop="startTime">
-          <el-date-picker v-model="taskList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" type="date" placeholder="请选择日期" clearable></el-date-picker>
+<!--          <el-date-picker v-model="taskList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" type="date" placeholder="请选择日期" clearable></el-date-picker>-->
+          <el-date-picker v-model="taskList.startTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-form-item>
-        <el-form-item label="执行计划：" prop="exePlan">
-          <el-input-dispatcher placeholder="请输入执行计划" v-model="taskList.exePlan" style="width: 300px"></el-input-dispatcher>
+        <el-form-item label="执行时间Cron：" prop="exePlan">
+          <el-input-dispatcher placeholder="请输入执行时间Cron" v-model="taskList.exePlan" style="width: 300px"></el-input-dispatcher>
         </el-form-item>
-        <el-form-item label="执行方法：" prop="className">
-          <el-input-dispatcher placeholder="请输入执行方法" v-model="taskList.className" style="width: 300px"></el-input-dispatcher>
+        <el-form-item label="ClassName：" prop="className">
+          <el-input-dispatcher placeholder="请输入ClassName" v-model="taskList.className" style="width: 300px"></el-input-dispatcher>
         </el-form-item>
         <el-form-item label="计划描述：" prop="desc">
           <el-input-dispatcher type="textarea" placeholder="请输入计划描述" v-model="taskList.desc" style="width: 300px" rows="3"></el-input-dispatcher>
@@ -57,10 +58,7 @@
         rules: {
           name: [
             {required: true, message: '请输入公司名称', trigger: 'blur'},
-          ],
-          code: [
-            {required: true, message: '请输入公司编码', trigger: 'blur'},
-          ],
+          ]
         },
         logisId: '',
         optType: ''
@@ -75,27 +73,31 @@
     // },
     methods: {
       addLogis(formName) {
-        let obj = {
-          name: this.taskList.name,
-          type: this.taskList.type,
-          startTime: this.taskList.startTime,
-          exePlan: this.taskList.exePlan,
-          className: this.taskList.className,
-          desc: this.taskList.desc,
-          status: 'stop',
-          optType: 'save'
-        }
-        planSave(obj).then(res => {
-          console.log(res);
-          return;
-          if (res.result.code == 0){
-            this.$message({
-              message: '添加成功',
-              type: 'success'
-            });
-            this.$router.push("/sys/task/list")
+        this.$confirm('是否要删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let obj = {
+            name: this.taskList.name,
+            type: this.taskList.type,
+            startTime: this.taskList.startTime,
+            exePlan: this.taskList.exePlan,
+            className: this.taskList.className,
+            desc: this.taskList.desc,
+            status: 'stop',
+            optType: 'save'
           }
-        })
+          planSave(obj).then(res => {
+            if (res.result.code == 0){
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              });
+              this.$router.push("/sys/task/list")
+            }
+          })
+        }).catch(e => e);
       },
       backLastpage() {
         this.$router.push("/sys/task/list")

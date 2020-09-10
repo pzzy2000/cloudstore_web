@@ -40,6 +40,59 @@
     </el-card>
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
+      <span>物流信息</span>
+    </el-card>
+    <div style="margin: 20px 20px 0 20px">
+      <el-table ref="wuliuTable" :data="wuliuList" style="width:100%" v-loading="listLoading" border>
+        <!--@selection-change="handleSelectionChange": 多选操作可以用到-->
+        <el-table-column label="发货人姓名" align="center">
+          <template slot-scope="scope">{{scope.row.consignerName}}</template>
+        </el-table-column>
+        <el-table-column label="发货人电话" align="center">
+          <template slot-scope="scope">{{scope.row.consignerPhone}}</template>
+        </el-table-column>
+        <el-table-column label="发货人地址" align="center">
+          <template slot-scope="scope">{{scope.row.consignerAddress}}</template>
+        </el-table-column>
+        <el-table-column label="提货时间" align="center">
+          <template slot-scope="scope">{{scope.row.deliveryTime | formatDate}}</template>
+        </el-table-column>
+        <el-table-column label="提送类型" align="center">
+          <template slot-scope="scope">{{scope.row.deliveryType | changetype}}</template>
+        </el-table-column>
+        <el-table-column label="客户单号" align="center">
+          <template slot-scope="scope">{{scope.row.customerOrderNumber}}</template>
+        </el-table-column>
+        <el-table-column label="状态" align="center">
+          <template slot-scope="scope">{{scope.row.status | changeStatus}}</template>
+        </el-table-column>
+      </el-table>
+      <el-table ref="wuliuTable" :data="wuliuList" style="width:100%" v-loading="listLoading" border>
+        <el-table-column label="收货人姓名" align="center">
+          <template slot-scope="scope">{{scope.row.consigneeName}}</template>
+        </el-table-column>
+        <el-table-column label="收货人电话" align="center">
+          <template slot-scope="scope">{{scope.row.consigneePhone}}</template>
+        </el-table-column>
+        <el-table-column label="收货人所在省份" align="center">
+          <template slot-scope="scope">{{scope.row.consigneeProvince}}</template>
+        </el-table-column>
+        <el-table-column label="收货人所在城市" align="center">
+          <template slot-scope="scope">{{scope.row.consigneeCity}}</template>
+        </el-table-column>
+        <el-table-column label="收货人所在地区" align="center">
+          <template slot-scope="scope">{{scope.row.consigneeDistrict}}</template>
+        </el-table-column>
+        <el-table-column label="收货人地址" align="center">
+          <template slot-scope="scope">{{scope.row.consigneeAddress}}</template>
+        </el-table-column>
+        <el-table-column>
+<!--          <template slot-scope="scope">{{scope.row.consigneeAddress}}</template>-->
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
+      <i class="el-icon-tickets"></i>
       <span>数据列表</span>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
@@ -87,7 +140,7 @@
   </div>
 </template>
 <script>
-  import {fetchDetailList as fetchList, peisong} from '@/api/allocation'
+  import {fetchDetailList as fetchList, peisong, wuliuInfo} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
   const defaultList = {
@@ -104,6 +157,7 @@
       return {
         activeIndex: '1',
         orderList: [],
+        wuliuList: [],
         listLoading: false,
         pageList: Object.assign({}, defaultList),
         total: 1,
@@ -121,7 +175,32 @@
         let date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
       },
-
+      changetype(data) {
+        switch (data) {
+          case 1: return "自提";
+            break;
+          case 2: return "送货";
+            break;
+          default: return "数据读取错误";
+            break;
+        }
+      },
+      changeStatus(data) {
+        switch (data) {
+          case 'dxd': return "待下单";
+            break;
+          case 'yxd': return "已下单";
+            break;
+          case 'yjd': return "已接单";
+            break;
+          case 'yzh': return "已装货";
+            break;
+          case 'yqs': return "已签收";
+            break;
+          default: return "数据读取错误";
+            break;
+        }
+      }
     },
     methods: {
       tochild(item, callback){
@@ -301,6 +380,12 @@
           if (res.result.code == 0) {
             this.orderList = res.result.result.records;
             this.total = parseInt(res.result.result.total);
+          }
+        })
+        wuliuInfo({id: this.$route.query.id}).then(res => {
+          console.log(res);
+          if (res.result.code == 0) {
+            this.wuliuList.push(res.result.result);
           }
         })
       },
