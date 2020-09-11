@@ -287,6 +287,14 @@
 				"enablePullDownRefresh": true
 			}
         }
+        ,{
+            "path" : "pages/agent/goods/category/mallmenu2",
+            "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -307,7 +315,7 @@
 				"text": "推荐"
 			},
 			{
-				"pagePath": "pages/agent/goods/category/mallmenu",
+				"pagePath": "pages/agent/goods/category/mallmenu2",
 				"iconPath": "static/tabbar/classify.png",
 				"selectedIconPath": "static/tabbar/classify-select.png",
 				"text": "分类"

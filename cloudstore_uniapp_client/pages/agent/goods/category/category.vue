@@ -5,7 +5,7 @@
 			<view class="u-search-box">
 				<view class="u-search-inner" @click="toSearch">
 					<u-icon name="search" color="#909399" :size="28"></u-icon>
-					<text class="u-search-text">搜索商品</text>
+					<text class="u-search-text">{{goodsName || '点击搜索商品'}}</text>
 				</view>
 			</view>
 			<view class="navbar">
@@ -509,7 +509,7 @@ page,
 
 .u-search-text {
 	font-size: 26rpx;
-	color: #cdcdcd;
+	color: #555;
 	margin-left: 10rpx;
 }
 /* 分类 */
@@ -691,7 +691,7 @@ page,
 				line-height: 40upx;
 				margin-right: 20upx;
 				letter-spacing: 2upx;
-				width: 180upx;
+				min-width: 180upx;
 				background-image: linear-gradient(90deg, #FECE40, #FE8E18);
 				&::after {
 					border: none;

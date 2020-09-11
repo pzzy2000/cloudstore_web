@@ -1,6 +1,5 @@
 <template>
 	<view class="u-wrap">
-		<nav-bar backState="1000">{{title}}</nav-bar>
 		<view class="u-search-box">
 			<view class="u-search-inner" @click="toSearch">
 				<u-icon name="search" color="#909399" :size="28"></u-icon>
@@ -747,7 +746,7 @@
 						padding: 0;
 						height: 40upx;
 						line-height: 40upx;
-						width: 130upx;
+						min-width: 130upx;
 						margin-right: 10upx;
 						background-image: linear-gradient(90deg, #FECE40, #FE8E18);
 						&::after {
