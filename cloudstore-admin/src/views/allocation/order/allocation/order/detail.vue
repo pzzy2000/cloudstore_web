@@ -301,13 +301,13 @@
         getOneorder(params).then(res => {
           if (res.result.code == 0) {
             this.baseInfo = res.result.result;
-            let arr = [];
-            for (let i=0; i<this.baseInfo.orderDetailsBean.length; i++) {
-              if (this.baseInfo.orderDetailsBean[i].status == 'WaitDeliver') {
-                arr.push(this.baseInfo.orderDetailsBean[i]);
-              }
-            }
-            this.$set(this.baseInfo, 'orderDetailsBean', arr);
+            // let arr = [];
+            // for (let i=0; i<this.baseInfo.orderDetailsBean.length; i++) {
+            //   if (this.baseInfo.orderDetailsBean[i].status == 'WaitDeliver') {
+            //     arr.push(this.baseInfo.orderDetailsBean[i]);
+            //   }
+            // }
+            // this.$set(this.baseInfo, 'orderDetailsBean', arr);
             this.baseInfoList.push(res.result.result);
           }
         })

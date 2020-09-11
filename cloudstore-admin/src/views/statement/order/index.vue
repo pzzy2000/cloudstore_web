@@ -61,7 +61,7 @@
         </el-col>
       </el-row>
     </div>
-    <div style="margin: 20px">
+    <div style="margin: 20px; overflow:hidden;">
       <div style="float: left">
         <div id="myChartss" ref="myChartss" style="width: 900px; height: 400px; margin-top: 20px"></div>
       </div>
@@ -69,13 +69,23 @@
         <div id="myChartsTwo" ref="myChartsTwo" style="width: 700px; height: 400px; margin-top: 20px"></div>
       </div>
     </div>
+    <div>
+      <stateMent url="/report/statistics/getReportAmountByAgentId" name="订单总量" msg="saleOrders"></stateMent>
+    </div>
+    <div>
+      <stateMent url="/report/statistics/getReportAmountByAgentId" name="销售总额" msg="saleMoneys"></stateMent>
+    </div>
   </div>
 </template>
 
 <script>
   import echarts from 'echarts'
   import {showcharts, showPiccharts} from '@/api/charts'
+  import stateMent from '@/components/statement'
   export default {
+    components: {
+      stateMent
+    },
     data () {
       return {
         lineOne: [],
@@ -312,6 +322,8 @@
         })
       },
       getRatelist() {
+        this.pieoneArr = [];
+        this.pietwoArr = [];
         showPiccharts({type: 'action', day: 7}).then(res => {
           if (res.result.code == 0) {
             let obj = {};
@@ -341,10 +353,12 @@
         })
       },
       oneWeek() {
-        this.getList({type: 'action', day: 7})
+        this.getList({type: 'action', day: 7});
+        this.getRatelist();
       },
       oneMonth() {
-        this.getList({type: 'action', day: 30})
+        this.getList({type: 'action', day: 30});
+        this.getRatelist();
       },
       searchList() {
         console.log(this.value)

@@ -47,3 +47,11 @@ export function wuliupeisong(params) {
     data: switchForm(params)
   })
 }
+
+export function wuliuquxiao(params) {
+  return request({
+    url: '/order/allocation/info/cancelDelivery',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

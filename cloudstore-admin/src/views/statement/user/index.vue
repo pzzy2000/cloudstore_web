@@ -69,13 +69,23 @@
         <div id="myChartsTwo" ref="myChartsTwo" style="width: 700px; height: 400px; margin-top: 20px"></div>
       </div>
     </div>
+    <div>
+      <stateMent url="/report/statistics/getReportUserByAgentId" name="用户注册次数" msg="regUserSums"></stateMent>
+    </div>
+    <div>
+      <stateMent url="/report/statistics/getReportUserByAgentId" name="用户访问次数" msg="visitUserSums"></stateMent>
+    </div>
   </div>
 </template>
 
 <script>
-  import echarts from 'echarts'
-  import {showUsercharts, showPiccharts} from '@/api/charts'
+  import echarts from 'echarts';
+  import {showUsercharts, showPiccharts} from '@/api/charts';
+  import stateMent from '@/components/statement';
   export default {
+    components: {
+      stateMent
+    },
     data () {
       return {
         lineOne: [],

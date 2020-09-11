@@ -41,7 +41,7 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>物流信息</span>
-      <el-button type="primary" @click="wuliupeisong" size="mini" style="float: right" :disabled="disabled">物流配送</el-button>
+      <el-button type="primary" @click="wuliupeisong" size="mini" style="float: right">{{msg}}</el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="wuliuTable" :data="wuliuList" style="width:100%" v-loading="listLoading" border>
@@ -141,7 +141,7 @@
   </div>
 </template>
 <script>
-  import {fetchDetailList as fetchList, peisong, wuliuInfo, wuliupeisong} from '@/api/allocation'
+  import {fetchDetailList as fetchList, peisong, wuliuInfo, wuliupeisong, wuliuquxiao} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
   const defaultList = {
@@ -165,7 +165,7 @@
         dialogVisible: false,
         btnMsg: '',
         type: '',
-        disabled: true
+        msg: ''
       }
     },
     created() {
@@ -210,23 +210,43 @@
         callback(`订单号：${item.number}`);
       },
       wuliupeisong() {
-        this.$confirm('是否生成物流单号?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          wuliupeisong({id: this.$route.query.id}).then(res => {
-            if(res.result.code == 0){
-              this.disabled = true;
-              this.$message({
-                message: '生成物流单号成功!',
-                type: 'success',
-                duration: 800
-              })
-              this.getList();
-            }
-          })
-        }).catch(e => e);
+        if (this.wuliuList[0].status == 'dxd') {
+          this.$confirm('是否生成物流单号?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            wuliupeisong({id: this.$route.query.id}).then(res => {
+              if(res.result.code == 0){
+                this.disabled = true;
+                this.$message({
+                  message: '生成物流单号成功!',
+                  type: 'success',
+                  duration: 800
+                })
+                this.getList();
+              }
+            })
+          }).catch(e => e);
+        } else {
+          this.$confirm('是否取消配送?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            wuliuquxiao({id: this.$route.query.id}).then(res => {
+              if(res.result.code == 0){
+                this.disabled = true;
+                this.$message({
+                  message: '取消配送成功!',
+                  type: 'success',
+                  duration: 800
+                })
+                this.getList();
+              }
+            })
+          }).catch(e => e);
+        }
       },
       showAllocDetail(row, r) {
         switch (r.property) {
@@ -409,9 +429,9 @@
           if (res.result.code == 0) {
             this.wuliuList.push(res.result.result);
             if (this.wuliuList[0].status == 'dxd') {
-              this.disabled = false
+              this.msg = '物流配送';
             } else {
-              this.disabled = true
+              this.msg = '取消配送';
             }
           }
         })

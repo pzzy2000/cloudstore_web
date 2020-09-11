@@ -25,10 +25,10 @@ export function showUsercharts(params) {
   })
 }
 
-// export function showPiccharts(params) {
-//   return request({
-//     url: '/report/statistics/getReportRate',
-//     method: 'POST',
-//     data: switchForm(params)
-//   })
-// }
+export function leaderReport(url, params) {
+  return request({
+    url: url,
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
