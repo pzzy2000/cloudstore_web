@@ -91,6 +91,8 @@
         myCharts.setOption(options);
       },
       getLeaderlist(url, obj) {
+        this.dateArr = [];
+        this.leaderArr = [];
         leaderReport(url, obj).then(res => {
           console.log(res);
           if(res.result.code == 0) {
@@ -120,7 +122,6 @@
               obj.data = array;
               this.series.push(obj);
             }
-            console.log(this.dateArr, this.series)
           }
         })
       },

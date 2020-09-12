@@ -14,7 +14,7 @@
       value-format="yyyy-MM-dd">
     </el-date-picker>
     <div class="statistics-layout">
-      <div class="layout-title">订单统计</div>
+      <div class="layout-title">用户统计</div>
       <el-row>
         <el-col :span="3">
           <div style="padding: 20px">
@@ -70,10 +70,10 @@
       </div>
     </div>
     <div>
-      <stateMent url="/report/statistics/getReportUserByAgentId" name="用户注册次数" msg="regUserSums"></stateMent>
+      <stateMent :url="urlone" name="用户注册次数" msg="regUserSums" ref="childone"></stateMent>
     </div>
     <div>
-      <stateMent url="/report/statistics/getReportUserByAgentId" name="用户访问次数" msg="visitUserSums"></stateMent>
+      <stateMent :url="urltwo" name="用户访问次数" msg="visitUserSums" ref="childtwo"></stateMent>
     </div>
   </div>
 </template>
@@ -92,6 +92,8 @@
         dateArr: [],
         lineTwo: [],
         value: '',
+        urlone: '/report/statistics/getReportUserByAgentId',
+        urltwo: '/report/statistics/getReportUserByAgentId',
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -319,7 +321,6 @@
                 this.lineTwo.push(0);
               }
             }
-            console.log(this.lineOne, this.lineTwo, this.dateArr);
           }
         })
       },
@@ -348,30 +349,39 @@
                 this.pietwoArr.push(obj);
               }
             }
-            console.log(this.pieoneArr, this.pietwoArr);
           }
         })
       },
       oneWeek() {
+        this.value = '';
         this.getList({type: 'action', day: 7})
+        this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 7})
+        this.$refs.childtwo.getLeaderlist(this.urltwo, {type: 'action', day: 7})
       },
       oneMonth() {
-        this.getList({type: 'action', day: 30})
+        this.value = '';
+        this.getList({type: 'action', day: 30});
+        this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 30})
+        this.$refs.childtwo.getLeaderlist(this.urltwo, {type: 'action', day: 30})
       },
       searchList() {
-        console.log(this.value)
         let obj = {
           startTime: this.value[0],
           endsTime: this.value[1],
           type: 'dates'
         }
         this.getList(obj);
+        this.$refs.childone.getLeaderlist(this.urlone, obj)
+        this.$refs.childtwo.getLeaderlist(this.urltwo, obj)
       }
     }
   }
 </script>
 
 <style scoped>
+  .el-date-editor >>> .el-range-separator{
+    width: 6%;
+  }
   .app-container {
     margin-top: 40px;
     margin-left: 120px;

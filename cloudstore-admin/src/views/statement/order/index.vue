@@ -70,10 +70,10 @@
       </div>
     </div>
     <div>
-      <stateMent url="/report/statistics/getReportAmountByAgentId" name="订单总量" msg="saleOrders"></stateMent>
+      <stateMent :url="urlone" name="订单总量" msg="saleOrders" ref="childone"></stateMent>
     </div>
     <div>
-      <stateMent url="/report/statistics/getReportAmountByAgentId" name="销售总额" msg="saleMoneys"></stateMent>
+      <stateMent :url="urltwo" name="销售总额" msg="saleMoneys" ref="childtwo"></stateMent>
     </div>
   </div>
 </template>
@@ -92,6 +92,8 @@
         dateArr: [],
         lineTwo: [],
         value: '',
+        urlone: '/report/statistics/getReportAmountByAgentId',
+        urltwo: '/report/statistics/getReportAmountByAgentId',
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -127,7 +129,7 @@
     },
     created() {
       this.getList({type: 'action', day: 7});
-      this.getRatelist();
+      this.getRatelist({type: 'action', day: 7});
     },
     mounted(){
       this.line();
@@ -317,14 +319,13 @@
                 this.lineTwo.push(0);
               }
             }
-            console.log(this.lineOne, this.lineTwo, this.dateArr);
           }
         })
       },
-      getRatelist() {
+      getRatelist(obj) {
         this.pieoneArr = [];
         this.pietwoArr = [];
-        showPiccharts({type: 'action', day: 7}).then(res => {
+        showPiccharts(obj).then(res => {
           if (res.result.code == 0) {
             let obj = {};
             const data = res.result.result.saleMoneys;
@@ -348,32 +349,42 @@
                 this.pietwoArr.push(obj);
               }
             }
-            console.log(this.pieoneArr, this.pietwoArr);
           }
         })
       },
       oneWeek() {
+        this.value = '';
         this.getList({type: 'action', day: 7});
-        this.getRatelist();
+        this.getRatelist({type: 'action', day: 7});
+        this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 7})
+        this.$refs.childtwo.getLeaderlist(this.urltwo, {type: 'action', day: 7})
       },
       oneMonth() {
+        this.value = '';
         this.getList({type: 'action', day: 30});
-        this.getRatelist();
+        this.getRatelist({type: 'action', day: 30});
+        this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 30})
+        this.$refs.childtwo.getLeaderlist(this.urltwo, {type: 'action', day: 30})
       },
       searchList() {
-        console.log(this.value)
         let obj = {
           startTime: this.value[0],
           endsTime: this.value[1],
           type: 'dates'
         }
         this.getList(obj);
+        this.getRatelist(obj);
+        this.$refs.childone.getLeaderlist(this.urlone, obj)
+        this.$refs.childtwo.getLeaderlist(this.urltwo, obj)
       }
     }
   }
 </script>
 
 <style scoped>
+  .el-date-editor >>> .el-range-separator{
+    width: 6%;
+  }
   .app-container {
     margin-top: 40px;
     margin-left: 120px;
