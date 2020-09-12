@@ -44,6 +44,7 @@
 											</view>
 											<uni-number-box 
 												v-if="isNumber"
+												v-show="item.stock"
 												class="number"
 												:min="1"
 												:max="item.stock"

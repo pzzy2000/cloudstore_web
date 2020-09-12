@@ -1,6 +1,9 @@
 <template>
 	<view class="container">
-		<nav-bar backState="1000">搜索商品</nav-bar>
+		<nav-bar fontColor="#fff"  bgColor="#39a9ff" title="搜索商品" :titleCenter="true">
+			<view class="cuIcon-back" slot="left" @click.stop="toHome"></view>
+		</nav-bar>
+		<!-- <nav-bar backState="1000">搜索商品</nav-bar> -->
 		<view class="cu-bar search bg-white">
 			<view class="search-form round">
 				<text class="cuIcon-search"></text>
@@ -98,6 +101,11 @@
 				} else {
 					this.$api.msg('您还没有搜索记录哦')
 				}
+			},
+			toHome () {
+				uni.switchTab({
+					url:"/pages/agent/goods/hotsale/hotsale"
+				})
 			}
 		}
 	}
@@ -108,6 +116,16 @@
 		width: 100%;
 		height: 100%;
 		background-color: #FFF;
+		.header {
+			.title {
+				font-weight: normal;
+			}
+		}
+	}
+	.cuIcon-back {
+		margin-left: 25upx;
+		font-size: 38upx;
+		color: #555;
 	}
 	.cu-bar .search-form {
 		margin: 0 0 0 30upx;

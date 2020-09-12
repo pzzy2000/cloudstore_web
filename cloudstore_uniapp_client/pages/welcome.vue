@@ -48,21 +48,21 @@
 			},2000)
 		},
 		onLoad(ops) {
-			console.log(ops)
-			// https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=7977567650238697472&agentId=7958458085131948032
-			// ops.q = "https%3A%2F%2Fwww.sz-guochuang.com%2Finto%3Faction%3DoffLine%26id%3D7959350568732856320"
-			// ops.action = 'xxsp'
-			// ops.agentId = '7958458085131948032'
-			// ops.activityGoodsId = '7977567650238697472'
+			// ops.q = 'https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=8022116928738824192&agentId=7970898669096407040'
 			if (ops.q) {
 				this.url = decodeURIComponent(ops.q)
-				this.actionType = this.getQuery('action',this.url)
+				this.actionType = this.getQuery('action',this.url) || 'xxsp'
 				this.agentId = this.getQuery('agentId',this.url)
 				this.activityGoodsId = this.getQuery('activityGoodsId',this.url)
 				uni.setStorageSync('agentId',this.agentId)
+				// console.log(this.actionType)
+				// console.log(this.agentId)
+				// console.log(this.activityGoodsId)
+				
 				// this.actionType = 'xxsp'
-				// this.agentId = '7958458085131948032'
-				// this.activityGoodsId = '7977567650238697472'
+				// this.activityGoodsId = '8022116928738824192'
+				// this.agentId = '7970898669096407040'
+				// uni.setStorageSync('agentId',this.agentId)
 			} else {
 				this.token = uni.getStorageSync('token')
 				this.agentId = ops.agentId
