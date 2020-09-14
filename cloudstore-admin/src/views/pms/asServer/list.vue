@@ -51,16 +51,22 @@
         this.$router.push({path: '/sys/goods/goodsAsserver/info', query: {id: row.id, optType: 'read'}})
       },
       handeldelRules(row) {
-        deleteRule({ids: row.id}).then(res => {
-          if (res.result.code == 0) {
-            this.$message({
-              message: '删除成功',
-              type: 'success',
-              duration: 800
-            })
-            this.getList();
-          }
-        })
+        this.$confirm('是否要删除该条款', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteRule({ids: row.id}).then(res => {
+            if (res.result.code == 0) {
+              this.$message({
+                message: '删除成功',
+                type: 'success',
+                duration: 800
+              })
+              this.getList();
+            }
+          })
+        }).catch(e => e)
       },
       updateInfo(row) {
         this.$router.push({path: '/sys/goods/goodsAsserver/update', query: {id: row.id, optType: 'update'}})
