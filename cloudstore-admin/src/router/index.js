@@ -92,7 +92,7 @@ export const asyncRouterMap = [
       path: 'role/module/list',
       name: 'role_module_list',
       component: () => import('@/views/power/role/rolemodule'),
-      meta: {title: '角色列表', icon: 'product-list'},
+      meta: {title: '管理角色权限', icon: 'product-list'},
       hidden: true
     }]
   },
