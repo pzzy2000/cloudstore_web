@@ -35,7 +35,7 @@
 		<view class="scroll-view-main">
 			<scroll-view scroll-x class="floor-list" @scrolltoupper='scrollMoveLeft' @scrolltolower="scrollMoveRight" @scroll="scroll">
 				<view class="scoll-wrapper" :style="{ width: towScreenWidth +'px' }">
-					<view class="cate-item" v-for="(item,index) in typeList" :key='index' :style="{ width: itemScreenWidth+ 'px'}" @click="toReclassify(item)">
+					<view class="cate-item" v-for="(item,index) in typeList" :key='index' :style="{ width: itemScreenWidth+ 'px'}" @click="toReclassify(index)">
 						<image :src="item.picturePice ==null ? '/static/log.png' : item.picturePice" class="cate-item-img"></image>
 						<text class="clamp cate-item-text">{{item.name}}</text>
 					</view>
@@ -478,10 +478,9 @@
 					url: "/pages/agent/goods/hotsale/search"
 				});
 			},
-			toReclassify (item) {
-				console.log(item)
-				uni.navigateTo({
-					url:'/pages/agent/goods/category/reclassify?categoryOneId='+item.value +'&title='+item.name
+			toReclassify (index) {
+				uni.reLaunch({
+					url:'/pages/agent/goods/category/mallmenu?index='+index
 				});
 			},
 			async shareSave (info) { //分享调用接口

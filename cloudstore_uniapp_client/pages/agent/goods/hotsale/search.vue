@@ -71,15 +71,15 @@
 				if (name) {
 					this.searchValue = name
 				} else {
+					if (this.searchValue.length === 0) {
+						this.$api.msg('请输入需要搜索的商品')
+						return false;
+					}
 					this.historyList.splice(0, 0, this.searchValue)
-				}
-				if (this.searchValue.length === 0) {
-					this.$api.msg('请输入需要搜索的商品')
-					return false
 				}
 				uni.setStorageSync('searchHistory', Array.from(new Set(this.historyList)).slice(0,10))
 				uni.navigateTo({
-				    url: "/pages/agent/goods/category/category?goodsName="+this.searchValue
+					url: "/pages/agent/goods/category/category?goodsName="+this.searchValue
 				});
 			},
 			record () {
