@@ -8,7 +8,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="userinfo" size="small" label-width="140px" ref="userinfo" :rules="rules">
           <el-form-item label="用户名称：" prop="name">
-            <el-input-dispatcher style="width: 214px" v-model="userinfo.name" placeholder="用户名字"></el-input-dispatcher>
+            <el-input-dispatcher style="width: 214px" v-model="userinfo.name" placeholder="用户名称"></el-input-dispatcher>
           </el-form-item>
           <br />
           <el-form-item label="登录名：" prop="access">
@@ -27,9 +27,9 @@
             <el-input-dispatcher style="width: 214px" v-model="userinfo.createDate" placeholder="创建时间"></el-input-dispatcher>
           </el-form-item>
           <br />
-          <el-form-item label="审核状态：" prop="status">
-            <el-input-dispatcher style="width: 214px" v-model="userinfo.status" placeholder="审核状态"></el-input-dispatcher>
-          </el-form-item>
+<!--          <el-form-item label="审核状态：" prop="status">-->
+<!--            <el-input-dispatcher style="width: 214px" v-model="userinfo.status" placeholder="审核状态"></el-input-dispatcher>-->
+<!--          </el-form-item>-->
         </el-form>
       </div>
       <div style="overflow: hidden">
@@ -139,7 +139,9 @@
       // this.userinfo.name ='111';
       // this.rwDispatcherState="read"//write  read
       // this.visibleUpdate="none";
-      this.getList();
+      if (this.$route.query.type !== 'add') {
+        this.getList();
+      }
       this.optType = this.$route.query.type;
       this.rwDispatcherState = this.$route.query.rds;
       switch (this.$route.query.type) {
@@ -155,6 +157,9 @@
        getList() {
          getOneuser({id: this.$route.query.userId}).then(res => {
            console.log(res);
+           if (res.result.code == 0) {
+             this.userinfo = res.result.result;
+           }
          })
        },
       toback(){

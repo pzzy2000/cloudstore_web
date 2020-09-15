@@ -61,9 +61,9 @@
         <el-table-column label="下单时间" align="center" prop="orderBean.createTime">
 <!--          <template slot-scope="scope">{{scope.row.payPrice}}</template>-->
         </el-table-column>
-        <el-table-column label="支付时间" align="center" prop="orderBean">
-          <template slot-scope="scope">{{scope.row.orderBean.payTime | formatDate}}</template>
-        </el-table-column>
+<!--        <el-table-column label="支付时间" align="center" prop="orderBean">-->
+<!--          <template slot-scope="scope">{{scope.row.orderBean.payTime | formatDate}}</template>-->
+<!--        </el-table-column>-->
         <el-table-column label="佣金状态" align="center" prop="profitStauts" :formatter="changeMsg">
 <!--          <template slot-scope="scope">{{scope.row.payPrice}}</template>-->
         </el-table-column>
@@ -113,6 +113,8 @@
           case 'Client': return "客户";
             break;
           case 'agent': return "代理";
+            break;
+          case 'leader': return "团长";
             break;
           default: return "数据出错";
             break;

@@ -321,7 +321,7 @@
         this.getList(1);
       },
       readOrder(index, row){
-        this.$router.push({name: "order_read", query: {id: row.id}});
+        this.$router.push({name: "order_info", query: {id: row.id}});
       },
       beginDate(){
         const self = this

@@ -130,32 +130,44 @@
         this.showViewer = false
       },
       refused() {
-        verified({status: 2, id: this.$route.query.id}).then(res => {
-          console.log(res);
-          if (res.result.code == 0) {
-            this.$message({
-              message: '拒绝成功',
-              type: 'success',
-              duration: 800
-            });
-            this.$router.go(-1);
-          }
-        })
+        this.$confirm('是否拒绝?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          verified({status: 2, id: this.$route.query.id}).then(res => {
+            console.log(res);
+            if (res.result.code == 0) {
+              this.$message({
+                message: '拒绝成功',
+                type: 'success',
+                duration: 800
+              });
+              this.$router.go(-1);
+            }
+          })
+        }).catch(e => e)
       },
       submitApply() {
-        this.loading = true;
-        verified({status: 1, id: this.$route.query.id}).then(res => {
-          console.log(res);
-          if (res.result.code == 0) {
-            this.$message({
-              message: '通过成功',
-              type: 'success',
-              duration: 800
-            });
-            this.loading = false;
-            this.$router.go(-1);
-          }
-        })
+        this.$confirm('是否通过?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true;
+          verified({status: 1, id: this.$route.query.id}).then(res => {
+            console.log(res);
+            if (res.result.code == 0) {
+              this.$message({
+                message: '通过成功',
+                type: 'success',
+                duration: 800
+              });
+              this.loading = false;
+              this.$router.go(-1);
+            }
+          })
+        }).catch(e => e)
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();

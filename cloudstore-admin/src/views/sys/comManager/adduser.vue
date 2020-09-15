@@ -8,6 +8,9 @@
         <el-form-item label="访问账号：" prop="access" >
           <el-input v-model="userForm.access" placeholder="请输入访问账号" style="width: 350px" />
         </el-form-item>
+        <el-form-item label="密码：" prop="password" >
+          <el-input v-model="userForm.password" placeholder="请输入密码" style="width: 350px" />
+        </el-form-item>
         <el-form-item label="电话：" prop="phone" >
           <el-input v-model="userForm.phone" placeholder="请输入电话" style="width: 350px" />
         </el-form-item>
@@ -33,11 +36,16 @@
         userForm: {
           name: '',
           phone: '',
-          access:''
+          access:'',
+          password: ''
         },
         rules: {
           name: [{ required: true, message: '请输入名字', trigger: 'blur' }],
           access:[{ required: true, message: '请输入访问账号', trigger: 'blur' }],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            {min: 6, max: 12, message: "长度在6到12个字符", trigger: 'blur'}
+          ],
           phone: [
             { required: true, message: '请输入电话', trigger: 'blur' },
             { pattern: /^1(3|4|5|7|8)\d{9}$/, message: '格式不对', trigger: 'blur'}

@@ -69,6 +69,12 @@ export const asyncRouterMap = [
         name: 'state_user',
         component: () => import('@/views/statement/user/index'),
         meta: {title: '用户分析', icon: 'product-list'}
+      },
+      {
+        path: 'outline/count',
+        name: 'state_outline',
+        component: () => import('@/views/statement/outline/index'),
+        meta: {title: '线下活动统计', icon: 'product-list'}
       }
     ]
   },
@@ -467,7 +473,7 @@ export const asyncRouterMap = [
       },
       {
         path: 'user/edit',
-        name: 'useredit',
+        name: 'user_edit',
         component: () => import('@/views/sys/user/edit'),
         meta: {title: '编辑系统用户', icon: 'product-list'},
         hidden: true
@@ -480,27 +486,27 @@ export const asyncRouterMap = [
       },
       {
         path: 'dict/list',
-        name: 'dictlist',
+        name: 'dict_list',
         component: () => import('@/views/sys/dict/list'),
         meta: {title: '数字字典列表', icon: 'ums-resource'}
       },
       {
         path: 'dict/add',
-        name: 'dictadd',
+        name: 'dict_add',
         component: () => import('@/views/sys/dict/add'),
         meta: {title: '添加数字字典', icon: 'ums-resource'},
         hidden: true
       },
       {
         path: 'index/slideshow',
-        name: 'slideshow',
+        name: 'slide_show',
         component: () => import('@/views/sys/slide/slideshow'),
         meta: {title: '轮播图详情', icon: 'ums-resource'},
         hidden: true
       },
       {
         path: 'slide/list',
-        name: 'slidelist',
+        name: 'slide_list',
         component: () => import('@/views/sys/slide/list'),
         meta: {title: '轮播图列表', icon: 'ums-resource'}
       },
@@ -518,14 +524,14 @@ export const asyncRouterMap = [
       },
       {
         path: 'adduser',
-        name: 'com_adduser',
+        name: 'manage_adduser',
         component: () => import('@/views/sys/comManager/adduser'),
         meta: {title: '添加用户', icon: 'ums-resource'},
         hidden: true
       },
       {
         path: 'userpower',
-        name: 'user_power',
+        name: 'manage_userpower',
         component: () => import('@/views/sys/comManager/power'),
         meta: {title: '用户权限', icon: 'ums-resource'},
         hidden: true
@@ -624,7 +630,7 @@ export const asyncRouterMap = [
       },
       {
         path: 'readorder',
-        name: 'order_read',
+        name: 'order_info',
         component: () => import('@/views/order/orderlist/readorder'),
         meta: {title: '查看订单', icon: 'product-list'},
         hidden: true

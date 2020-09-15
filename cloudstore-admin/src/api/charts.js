@@ -32,3 +32,11 @@ export function leaderReport(url, params) {
     data: switchForm(params)
   })
 }
+
+export function getOutlinelist(params) {
+  return request({
+    url: '/report/order/statistics/offLineOrderCount',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}

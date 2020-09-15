@@ -11,7 +11,7 @@
         <el-table-column label="模块" align="center" width="400">
           <template slot-scope="scope">{{scope.row.module}}</template>
         </el-table-column>
-        <el-table-column label="功能" align="center">
+        <el-table-column label="功能" align="left">
           <template slot-scope="scope">
             <el-checkbox-group v-model="checkList">
               <el-checkbox v-for="item in scope.row.opts" :key="item.id" :label="item.id">{{item.name}}</el-checkbox>
