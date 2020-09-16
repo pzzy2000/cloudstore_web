@@ -75,10 +75,15 @@
 								<view class="detail-title clamp">{{item.goodsName}}</view>
 								<view class="detail-subtitle clamp">{{item.goodsSubtitle}}</view>
 								<view class="detail-price">
-									<view class="price-num">
-										<text class="price-sale price-symbol">{{item.salePrice}}</text>
-										<text class="price-btn-unit">/{{item.unit || '无'}}</text>
-									</view>
+									<template>
+										<view class="price-num" v-if="item.salePrice != 0.01">
+											<text class="price-sale price-symbol">{{item.salePrice}}</text>
+											<text class="price-btn-unit">/{{item.unit || '无'}}</text>
+										</view>
+										<view class="price-text" v-else>
+											<text class="price-sale">静待惊喜价</text>
+										</view>
+									</template>
 									<view class="price-btn">
 										<button class="price-share" @click.stop='onShareSave(item)'><text>{{handler().isType()+item.client}}</text></button>
 										<button class="price-buy">立即购买</button>
@@ -118,8 +123,8 @@
 				categoryOneId: '',
 				categoryTwoId: '',
 				havStock: '',  //有货显示
-				dirVal: "salePrice",
-				sortVal: "asc",
+				dirVal: "", //salePrice
+				sortVal: "",//asc
 				goodsBrandList: [],
 				isGoodsBrand: false,
 				selectGoodsBrandList: [],
@@ -305,6 +310,8 @@
 				this.selectGoodsBrandListValue = '' //传给后台的品牌选择列表数据清空
 				this.pageNum = 1 //分页页码变为1
 				this.havStock = '' //默认筛选为全部，而不是有货
+				this.dirVal = ''  //初始化价格排序
+				this.sortVal = '' //初始化价格排序
 			
 				this.mallmenuOneTypeCurrent = index //获取一级分类的下标,实现选中高亮
 				this.categoryOneId = value //获取一级分类的id
@@ -319,6 +326,8 @@
 				this.selectGoodsBrandListValue = '' //传给后台的品牌选择列表数据清空
 				this.pageNum = 1 //分页页码变为1
 				this.havStock = '' //默认筛选为全部，而不是有货
+				this.dirVal = ''  //初始化价格排序
+				this.sortVal = '' //初始化价格排序
 				
 				this.mallmenuTwoTypeCurrent = index
 				this.categoryTwoId = value
@@ -343,6 +352,7 @@
 			onPrice () { //价格升序和降序
 				this.goodsList.length = 0
 				this.pageNum = 1
+				this.dirVal = 'salePrice'
 				this.sortVal = this.sortVal === 'desc' ? 'asc' : 'desc'
 				this.netWork().getGoodsData()
 			},
@@ -772,6 +782,10 @@
 								color: #999;
 								font-size: 24upx;
 							}
+						}
+						.price-text {
+							color: #FF1414;
+							font-size: 24upx;
 						}
 						.price-btn {
 							text-align: center;
