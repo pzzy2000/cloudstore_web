@@ -43,9 +43,9 @@
 						url: '/pages/agent/info/order/index'
 					},
 					{
-						name: '敬请期待',
-						icon: 'cuIcon-refund',
-						url: ''
+						name: '物流管理',
+						icon: 'cuIcon-deliver',
+						url: '/pages/agent/info/logistics/index'
 					},
 					{
 						name: '敬请期待',
@@ -104,9 +104,11 @@
 						    url: url
 						});
 					} else {
-						uni.navigateTo({
-							url: url
-						})
+						this.$api.msg('敬请期待')
+						return false;
+						// uni.navigateTo({
+						// 	url: url
+						// })
 					}
 				} else {
 					this.$api.msg('敬请期待')

@@ -207,7 +207,7 @@
 						uni.setStorageSync('token', data.result.token);
 						if (this.actionType === 'belowTheLine') {
 							uni.navigateTo({
-								url: '/pages/client/belowTheLine/goods?activityGoodsId='+this.activityGoodsId
+								url: '/pages/client/belowTheLine/goods?activityGoodsId='+this.activityGoodsId+'&agentId='+this.agentId
 							});
 						} else {
 							if (this.goodsId) {
@@ -228,7 +228,7 @@
 			toPages () {
 				if (this.actionType === 'belowTheLine') {
 					uni.navigateTo({
-						url: '/pages/client/belowTheLine/goods?activityGoodsId='+this.activityGoodsId
+						url: '/pages/client/belowTheLine/goods?activityGoodsId='+this.activityGoodsId+'&agentId='+this.agentId
 					});
 				} else {
 					if (this.goodsId) {

@@ -30,12 +30,12 @@
 				</view>
 				<!-- <text class="yticon icon-you"></text> -->
 			</view>
-			<view class="c-row">
+			<!-- <view class="c-row">
 				<text class="tit">活动内容</text>
 				<view class="con-list">
 					<text>{{activity.name}}</text>
 				</view>
-			</view>
+			</view> -->
 			<view class="c-row" v-for="(item ,index) in propertyValue" :key='index' v-if='item[index]'>
 				<text class="tit">{{item.goodsPropertyParamName}}</text>
 				<view class="con-list">
@@ -271,8 +271,9 @@ export default {
 	onShow() {
 	},
 	onLoad(ops) {
+		console.log(ops)
 		this.activityGoodsId = ops.activityGoodsId
-		this.agentId = ops.agentId || '-1'
+		this.agentId = ops.agentId
 		this.getActivityGoodsById()
 	},
 	methods: {
@@ -356,7 +357,7 @@ export default {
 				return false;
 			}
 			var buyInfo = {
-				agentId: '-1',
+				agentId: this.agentId,
 				activityId: this.activityId,
 				agentGoodsId: this.activityGoodsId,
 				goodsId: this.goodsId,
@@ -390,7 +391,7 @@ export default {
 					success: function (loginRes) {
 						let  vxCode = loginRes.code;
 						Api.apiCallbackCall("POST", Api.client.belowTheLine.createOffLineOrder, params, true, false, function(data){
-							if (data) {
+							if (data.code === 0) {
 								let re =data.result;
 								let params = {
 									'code': vxCode,
@@ -398,11 +399,23 @@ export default {
 								}
 								that.orderId = re.id
 								Api.apiCallbackCall("POST", Api.client.buy.prePay, params, true, true, function(da_ta){
-								if (da_ta) {
-									that.payMent(da_ta)
+									if (da_ta) {
+										that.payMent(da_ta)
+									} else {
+										uni.showToast({
+											title: '支付失败',
+											duration: 1500,
+											icon: 'none'
+										});
 									}
 								});
 								// that.payMent(data)
+							} else {
+								uni.showToast({
+									title: data.msg,
+									duration: 1500,
+									icon: 'none'
+								});
 							}
 						})
 					}

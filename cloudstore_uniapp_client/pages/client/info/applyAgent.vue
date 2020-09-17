@@ -102,7 +102,7 @@
 					shopName: '',
 					name: '',
 					phone: '',
-					agentType: 'agent',
+					agentType: 'leader',
 					cardType: 'IDCard',
 					cardId: '',
 					cardPhoto: [],
@@ -179,91 +179,153 @@
 					}
 				}
 			},
-			getApplyAgentData () { //获取代理商的数据
+			async getApplyAgentData () { //获取代理商的数据
 				let token = uni.getStorageSync('token'), params = {}, that = this;
-				if (token) {
-					uni.request({
-						url: Api.BASEURI + Api.client.applyAgent.getClientAgent,
-						method: 'post',
-						header: {
-							'content-type': 'application/x-www-form-urlencoded',
-							'auth': token
-						},
-						data: params,
-						fail: function() {
-							uni.hideLoading();
-							uni.showToast({
-								title: '获取信息失败',
-								icon: 'none'
-							});
-						},
-						success: function(res) {
-							if (res) {
-								var data = res.data.result
-								if(data) {
-									if (data.code === 0 && data.result != null) {
-										that.agentfrom.id = data.result.id,
-										that.agentfrom.shopName = data.result.shopName
-										that.agentfrom.name = data.result.name
-										that.agentfrom.phone = data.result.phone
-										that.agentfrom.mapText = data.result.community
-										if (data.result.agentType === 'agent') {
-											that.typePickerIndex = 0
-											that.agentfrom.agentType = data.result.agentType
-										} else if (data.result.agentType === 'leader'){
-											that.typePickerIndex = 1
-											that.agentfrom.agentType = data.result.agentType
-										}
-										for (let tmp in data.result.goodsPhotos) {
-											that.imageList.push(data.result.goodsPhotos[tmp].url)
-											that.imgListId.push(data.result.goodsPhotos[tmp].uid)
-										}
-										if(that.imgListId.length ||　that.imageList.length) {
-											that.isUpload = true //控制上传图片组件的显示与隐藏
-										}
-										//赋值省、市、区、区域、社区内容
-										that.agentfrom.cardType = data.result.cardType
-										that.agentfrom.address = data.result.detailAddress
-										that.agentfrom.cardId = data.result.cardNo
-										that.agentfrom.longitude = data.result.longitude
-										that.agentfrom.latitude = data.result.latitude
-										try{
-											that.agentfrom.provinceId = data.result.provinceId
-											that.agentfrom.cityId = data.result.cityId
-											that.agentfrom.areaId = data.result.areaId
-											that.agentfrom.townId = data.result.townId
-											// that.agentfrom.villageId = data.result.villageId
-											that.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name
-											
-										}catch(e){
-											that.$api.msg('地址信息出错')
-										}
-										if (data.result.status === 0) {
-											that.checkText = '正在审核中,资料不能修改'
-											that.isCheck = true
-											that.isEdit = true
-										}else if(data.result.status === 2) {
-											that.isCheck = true
-											that.checkText = '审核不通过，请提交资料再次审核'
-											that.agentfrom.optType = 'update'
-											that.isEdit = false
-										} else if (data.result.status === 1){
-											that.agentTitle = '代理资料'
-											that.isEdit = true
-										} else {
-											that.isUpload = true
-										}
-									} else {
-										that.isUpload = true
-										that.$api.msg(data.msg)
-									} 
-								}
-								uni.hideLoading()
-								uni.stopPullDownRefresh()
-							}
-						},
-					})
+				let res = await Api.apiCall('post', Api.client.applyAgent.getClientAgent, params, true)
+				if (res) {
+					var data = res
+					if (data.code === 0 && data.result != null) {
+						that.agentfrom.id = data.result.id,
+						that.agentfrom.shopName = data.result.shopName
+						that.agentfrom.name = data.result.name
+						that.agentfrom.phone = data.result.phone
+						that.agentfrom.mapText = data.result.community
+						if (data.result.agentType === 'agent') {
+							that.typePickerIndex = 0
+							that.agentfrom.agentType = data.result.agentType
+						} else if (data.result.agentType === 'leader'){
+							that.typePickerIndex = 1
+							that.agentfrom.agentType = data.result.agentType
+						}
+						for (let tmp in data.result.goodsPhotos) {
+							that.imageList.push(data.result.goodsPhotos[tmp].url)
+							that.imgListId.push(data.result.goodsPhotos[tmp].uid)
+						}
+						if(that.imgListId.length ||　that.imageList.length) {
+							that.isUpload = true //控制上传图片组件的显示与隐藏
+						}
+						//赋值省、市、区、区域、社区内容
+						that.agentfrom.cardType = data.result.cardType
+						that.agentfrom.address = data.result.detailAddress
+						that.agentfrom.cardId = data.result.cardNo
+						that.agentfrom.longitude = data.result.longitude
+						that.agentfrom.latitude = data.result.latitude
+						try{
+							that.agentfrom.provinceId = data.result.provinceId
+							that.agentfrom.cityId = data.result.cityId
+							that.agentfrom.areaId = data.result.areaId
+							that.agentfrom.townId = data.result.townId
+							// that.agentfrom.villageId = data.result.villageId
+							that.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name
+							
+						}catch(e){
+							that.$api.msg('地址信息出错')
+						}
+						if (data.result.status === 0) {
+							that.checkText = '正在审核中,资料不能修改'
+							that.isCheck = true
+							that.isEdit = true
+						}else if(data.result.status === 2) {
+							that.isCheck = true
+							that.checkText = '审核不通过，请提交资料再次审核'
+							that.agentfrom.optType = 'update'
+							that.isEdit = false
+						} else if (data.result.status === 1){
+							that.agentTitle = '代理资料'
+							that.isEdit = true
+						} else {
+							that.isUpload = true
+						}
+					} else {
+						that.isUpload = true
+						that.$api.msg(data.msg)
+					} 
+					// uni.hideLoading()
+					uni.stopPullDownRefresh()
 				}
+				// if (token) {
+				// 	uni.request({
+				// 		url: Api.BASEURI + Api.client.applyAgent.getClientAgent,
+				// 		method: 'post',
+				// 		header: {
+				// 			'content-type': 'application/x-www-form-urlencoded',
+				// 			'auth': token
+				// 		},
+				// 		data: params,
+				// 		fail: function() {
+				// 			uni.hideLoading();
+				// 			uni.showToast({
+				// 				title: '获取信息失败',
+				// 				icon: 'none'
+				// 			});
+				// 		},
+				// 		success: function(res) {
+				// 			if (res) {
+				// 				var data = res.data.result
+				// 				if(data) {
+				// 					if (data.code === 0 && data.result != null) {
+				// 						that.agentfrom.id = data.result.id,
+				// 						that.agentfrom.shopName = data.result.shopName
+				// 						that.agentfrom.name = data.result.name
+				// 						that.agentfrom.phone = data.result.phone
+				// 						that.agentfrom.mapText = data.result.community
+				// 						if (data.result.agentType === 'agent') {
+				// 							that.typePickerIndex = 0
+				// 							that.agentfrom.agentType = data.result.agentType
+				// 						} else if (data.result.agentType === 'leader'){
+				// 							that.typePickerIndex = 1
+				// 							that.agentfrom.agentType = data.result.agentType
+				// 						}
+				// 						for (let tmp in data.result.goodsPhotos) {
+				// 							that.imageList.push(data.result.goodsPhotos[tmp].url)
+				// 							that.imgListId.push(data.result.goodsPhotos[tmp].uid)
+				// 						}
+				// 						if(that.imgListId.length ||　that.imageList.length) {
+				// 							that.isUpload = true //控制上传图片组件的显示与隐藏
+				// 						}
+				// 						//赋值省、市、区、区域、社区内容
+				// 						that.agentfrom.cardType = data.result.cardType
+				// 						that.agentfrom.address = data.result.detailAddress
+				// 						that.agentfrom.cardId = data.result.cardNo
+				// 						that.agentfrom.longitude = data.result.longitude
+				// 						that.agentfrom.latitude = data.result.latitude
+				// 						try{
+				// 							that.agentfrom.provinceId = data.result.provinceId
+				// 							that.agentfrom.cityId = data.result.cityId
+				// 							that.agentfrom.areaId = data.result.areaId
+				// 							that.agentfrom.townId = data.result.townId
+				// 							// that.agentfrom.villageId = data.result.villageId
+				// 							that.agentfrom.provinceName = data.result.provinceBean.name+" / "+ data.result.cityBean.name+" / "+ data.result.areaBean.name +" / "+ data.result.townBean.name
+											
+				// 						}catch(e){
+				// 							that.$api.msg('地址信息出错')
+				// 						}
+				// 						if (data.result.status === 0) {
+				// 							that.checkText = '正在审核中,资料不能修改'
+				// 							that.isCheck = true
+				// 							that.isEdit = true
+				// 						}else if(data.result.status === 2) {
+				// 							that.isCheck = true
+				// 							that.checkText = '审核不通过，请提交资料再次审核'
+				// 							that.agentfrom.optType = 'update'
+				// 							that.isEdit = false
+				// 						} else if (data.result.status === 1){
+				// 							that.agentTitle = '代理资料'
+				// 							that.isEdit = true
+				// 						} else {
+				// 							that.isUpload = true
+				// 						}
+				// 					} else {
+				// 						that.isUpload = true
+				// 						that.$api.msg(data.msg)
+				// 					} 
+				// 				}
+				// 				uni.hideLoading()
+				// 				uni.stopPullDownRefresh()
+				// 			}
+				// 		},
+				// 	})
+				// }
 			},
 			assignmentInfo (res) { //将代理资料进行赋值
 				var data = res.data.result
@@ -323,10 +385,10 @@
 				this.typePickerIndex = Number(e.detail.value)
 				switch (this.typePickerIndex) {
 					case 0: 
-						this.agentfrom.agentType = 'leader'
+						this.agentfrom.agentType = 'agent'
 					break;
 					case 1:
-						this.agentfrom.agentType = 'agent'
+						this.agentfrom.agentType = 'leader'
 					break;
 					default: 
 						this.$api.msg('类型出错')
@@ -507,7 +569,6 @@
 					latitude: this.agentfrom.latitude,
 					optType: this.agentfrom.optType
 				}
-				console.log()
 				if (this.agentfrom.optType === 'update') {
 					params.id = this.agentfrom.id
 				}

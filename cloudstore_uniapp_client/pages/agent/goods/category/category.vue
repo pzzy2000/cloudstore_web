@@ -33,9 +33,14 @@
 					<view class="detail-title clamp">{{ goods.goodsName }}</view>
 					<view class="sub-title clamp text-gray">{{ goods.goodsSubtitle }}</view>
 					<view class="price-box">
-						<view class="price">
-							 <text class="priceSale price-symbol">{{ goods.salePrice }}</text>/{{ goods.unit }}
-						</view>
+						<template>
+							<view class="price" v-if="goods.salePrice != 0.01">
+								 <text class="priceSale price-symbol">{{ goods.salePrice }}</text>/{{ goods.unit }}
+							</view>
+							<view class="price" v-else>
+								<text class="price-text">静待惊喜价</text>
+							</view>
+						</template>
 						<view class="flex justify-around">
 							<button class="price-btn share" @click.stop='shareSave(goods)'><text>{{isType()+goods.client}}</text></button>
 							<button class="price-btn buy">立即购买</button>
@@ -121,6 +126,7 @@
 				categoryOneId: '',
 				categoryTwoId: '',
 				categoryThreeId: '',
+				shareName: '',
 				shareList: [{
 					icon: "/static/share_wechat.png",
 					text: "微信好友",
@@ -130,6 +136,7 @@
 		},
 		onLoad(options) {
 			this.statusBarHeight = Number(Api.statusBarHeight())
+			this.searchName = options.goodsName
 			this.goodsName = options.goodsName
 			this.agentId = uni.getStorageSync('agentId')
 			this.loadActiviList();
@@ -158,7 +165,7 @@
 		},
 		onShareAppMessage(res) {
 			var shareObj = {
-				title: this.goodsName,
+				title: this.shareName,
 				imageUrl: this.imageUrl,
 				params: {
 					agentId: this.agentId,
@@ -198,7 +205,7 @@
 					this.categoryTwoId = ''
 					this.categoryThreeId = ''
 					this.receiveData = []
-				} 
+				}
 				var params = {
 					goodsName: this.goodsName || '',
 					activityId: this.activityId,
@@ -361,7 +368,7 @@
 				this.goodsId = info.id
 				this.activityId = info.activityId
 				this.agentGoodsId = info.activityGoodsId
-				this.goodsName = info.goodsName
+				this.shareName = info.goodsName
 				this.imageUrl = info.sharePicsUrl
 				if (Api.isToken()) {
 					let params = {
@@ -638,7 +645,7 @@ page,
 		.price-box {
 			display: flex;
 			justify-content: space-between;
-			align-items: flex-end;
+			align-items: center;
 			width: 100%;
 			color: #999;
 			.price {
@@ -646,6 +653,11 @@ page,
 				.priceSale {
 					color: red;
 					font-size: 35upx;
+					margin-right: 5upx;
+				}
+				.price-text {
+					color: red;
+					font-size: 26upx;
 					margin-right: 5upx;
 				}
 				.pricemart {

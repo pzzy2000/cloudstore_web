@@ -7,7 +7,7 @@
 				<view class="earning-title">历史总收益</view>
 				<view class="earning-number">{{cuIconList[0].num}}</view>
 				<view class="cu-list grid" :class="['col-' + gridCol,gridBorder?'':'no-border']">
-					<view class="cu-item earnin-content" v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
+					<view class="cu-item earnin-content" :class="selectTab === index ? 'backSelect' : '' " v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
 						<text class="num">{{item.num}}</text>
 						<view class="title">{{item.name}}</view>
 					</view>
@@ -97,6 +97,7 @@
 						num: '0',
 						value: 3
 					}],
+					selectTab: 0,
 					gridCol: 4,
 					gridBorder: false,
 					tabEarning: 2,
@@ -173,6 +174,7 @@
 					this.financetDataList = []
 					this.tabEarning = index
 					this.pageNum = 1
+					this.selectTab = index
 					if (index === 0) {
 						this.lisFinancetData(2, 1)
 						this.status = 2;
@@ -208,7 +210,6 @@
 	.earning-main {
 		position: relative;
 		width: 100%;
-		padding-bottom: 30upx;
 		.earning-bg {
 			position: absolute;
 			left: 0;
@@ -232,6 +233,9 @@
 				font-weight: blod;
 				white-space: 5upx;
 			}
+			.backSelect {
+				background-image: linear-gradient(to top, rgb(38,160,255), transparent);
+			}
 		}
 	}
 	.cu-list.grid.no-border {
@@ -242,6 +246,7 @@
 	}
 	.earnin-content {
 		color: #fff;
+		padding-bottom: 30upx !important;
 		.title {
 			font-size: 30upx;
 		}

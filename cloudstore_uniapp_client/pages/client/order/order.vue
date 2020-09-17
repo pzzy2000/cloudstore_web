@@ -16,19 +16,22 @@
 		<view v-for="(item,index) in orderList" :key="index" class="order-item" v-if="orderList.length != 0">
 			<view class="i-top">
 				<text class="time">订单号: {{item.number}}</text>
-				<template>
+				<view class="">
 					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
 					<text class="state" v-else-if="item.orderStatus === 'payed'">已支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'peisong'">待配送</text>
 					<text class="state" v-else-if="item.orderStatus === 'refunding'">退款中</text>
 					<text class="state" v-else-if="item.orderStatus === 'refunded'">已退款</text>
-					<text class="state" v-else-if="item.orderStatus === 'peisoged'">已配送</text>
+					<template v-else-if="item.orderStatus === 'peisoged'">
+						<text class="state" v-if="item.allocationInfoBean.status === 'yqs' && item.type != 1">已到货</text>
+						<text class="state" v-else>已配送</text>
+					</template>
 					<text class="state" v-else-if="item.orderStatus === 'complete'">已完成</text>
 					<text class="state" v-else-if="item.orderStatus === 'returnsing'">退货中</text>
 					<text class="state" v-else-if="item.orderStatus === 'returns'">已退货</text>
 					<text class="state" v-else-if="item.orderStatus === 'close'">超时关闭</text>
-				</template>
+				</view>
 			</view>
 			<view class="goods-box-single" v-for="(order, index1) in item.detailPicBean" :key="index1" @click="toOrder(item)">
 				<image class="goods-img" :src="order.goodsSkuBean.photos[0].url || order.goodsPicesBean.goodsPhotos[0].url" mode="aspectFill"></image>
@@ -89,8 +92,8 @@
 				<!-- 已配送 -->
 				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'peisoged'">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
-					<button class="cu-btn round" @click.stop="confirmOrder(item)">确认收货</button>
-					<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)" v-if="item.type != 1">申请售后</button>
+					<button class="cu-btn round" @click.stop="confirmOrder(item)" v-if="item.orderStatus === 'peisoged' && item.allocationInfoBean.status === 'yqs' || item.type === 1">确认收货</button>
+					<button class="cu-btn round" @click.stop="toAfterSale('/pages/client/order/afterSale',item)" v-show="item.type != 1" v-if="item.orderStatus === 'peisoged' && item.allocationInfoBean.status === 'yqs'">申请售后</button>
 				</view>
 				<!-- 退款中 -->
 				<view class="margin-tb-sm text-right state-btn" v-if="item.orderStatus === 'refunding'">

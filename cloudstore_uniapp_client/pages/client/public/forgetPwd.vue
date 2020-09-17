@@ -3,7 +3,7 @@
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="welcome">修改密码</view>
+			<view class="welcome">忘记密码</view>
 			<view class="input-content">
 				<view class="input-item">
 					<text class="tit">手机号码</text>
@@ -22,7 +22,7 @@
 					<input type="password" placeholder="请输入新密码" v-model="password" maxlength="16"/>
 				</view>
 				<view class="input-item">
-					<text class="tit">新密码</text>
+					<text class="tit">确认新密码</text>
 					<input type="password" placeholder="请再次输入新密码" v-model="passwords" maxlength="16"/>
 				</view>
 			</view>

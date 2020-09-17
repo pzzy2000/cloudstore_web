@@ -10,7 +10,7 @@
 			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
 			<view class="nav-item-twoCategory" v-if="isTwoCategory">
 				<view class="twoCategory-list">
-					<view class="twoCategory-title">活动类别</view>
+					<view class="twoCategory-title">商品类别</view>
 					<view v-for="(item, index) in selectTwoCategoryList" :key="index" class="twoCategory-item" :class="item.select? 'twoCategory-item-select' : '' "  @click="selectTwoCategory(item, index)">
 						{{item.name}}
 					</view>

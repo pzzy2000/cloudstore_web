@@ -234,7 +234,7 @@ export default {
 				icon: 'none'
 			});
 			uni.navigateTo({
-				url: `/pages/public/login`
+				url: `/pages/client/public/login`
 			})
 		}
 		let formData = {}
@@ -273,7 +273,7 @@ export default {
 					let timer = setTimeout(() => {
 						clearTimeout(timer);
 						uni.navigateTo({
-							url: `/pages/public/login`
+							url: `/pages/client/public/login`
 						})
 					}, 2000);
 				} else
