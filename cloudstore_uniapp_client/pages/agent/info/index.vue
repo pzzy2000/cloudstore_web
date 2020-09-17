@@ -104,11 +104,11 @@
 						    url: url
 						});
 					} else {
-						this.$api.msg('敬请期待')
-						return false;
-						// uni.navigateTo({
-						// 	url: url
-						// })
+						// this.$api.msg('敬请期待')
+						// return false;
+						uni.navigateTo({
+							url: url
+						})
 					}
 				} else {
 					this.$api.msg('敬请期待')

@@ -89,7 +89,7 @@
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
 			<view class="action-btn-group">
-				<button class="action-btn action-buy-btn" @click.stop="toBuy(buy)">立即购买</button>
+				<button class="action-btn action-buy-btn" @click.stop="buy(buy)">立即购买</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -126,7 +126,7 @@
 					</view>
 				</div>
 				<view class="buyBtn">
-					<button class="cu-btn" v-if="isBuyBtn" @click.stop="toBuy(buy)">确定</button>
+					<button class="cu-btn" v-if="isBuyBtn" @click.stop="buy(buy)">确定</button>
 					<button class="cu-btn zero" v-if="!isBuyBtn">暂时缺货</button>
 				</view>
 			</view>
@@ -350,6 +350,9 @@ export default {
 			if (data) {
 				this.goodsHtml = data.result.mobileHtml
 			}
+		},
+		buy () { //点击支付按钮
+			Api.debounce(this.toBuy, 3000, true);
 		},
  		toBuy() { //点击立即购买
 			if (this.sku.stock <= 0) {

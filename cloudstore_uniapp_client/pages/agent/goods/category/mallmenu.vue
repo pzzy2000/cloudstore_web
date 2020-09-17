@@ -290,7 +290,7 @@
 								return '分享赚￥';
 						}
 					},
-					initData () { //将需要初始化的数据抽离出来
+					initData: () => { //将需要初始化的数据抽离出来
 						this.goodsList = [] //清空商品列表
 						this.isGoodsBrand = false //品牌选择框隐藏
 						this.isSelectTwoType = false //下拉二级分类隐藏
@@ -298,37 +298,21 @@
 						this.selectGoodsBrandListValue = '' //传给后台的品牌选择列表数据清空
 						this.pageNum = 1 //分页页码变为1
 						this.havStock = '' //默认筛选为全部，而不是有货
+						this.dirVal = ''  //初始化价格排序
+						this.sortVal = '' //初始化价格排序
 					}
 				}
 			},
 			//以下为事件层
 			onGoodsOneType (index, value) { //点击一级分类
-				this.goodsList = [] //清空商品列表
-				this.isGoodsBrand = false //品牌选择框隐藏
-				this.isSelectTwoType = false //下拉二级分类隐藏
-				this.selectGoodsBrandList = [] //品牌选择列表清空
-				this.selectGoodsBrandListValue = '' //传给后台的品牌选择列表数据清空
-				this.pageNum = 1 //分页页码变为1
-				this.havStock = '' //默认筛选为全部，而不是有货
-				this.dirVal = ''  //初始化价格排序
-				this.sortVal = '' //初始化价格排序
-			
+				this.handler().initData()
 				this.mallmenuOneTypeCurrent = index //获取一级分类的下标,实现选中高亮
 				this.categoryOneId = value //获取一级分类的id
 				this.mallmenuTwoTypeCurrent = 0 //二级分类默认选择全部
 				this.netWork().getGoodsTwoType()
 			}, //点击二级分类
 			onGoodsTwoType (index, value)  {
-				this.goodsList = [] //清空商品列表
-				this.isGoodsBrand = false //品牌选择框隐藏
-				this.isSelectTwoType = false //下拉二级分类隐藏
-				this.selectGoodsBrandList = [] //品牌选择列表清空
-				this.selectGoodsBrandListValue = '' //传给后台的品牌选择列表数据清空
-				this.pageNum = 1 //分页页码变为1
-				this.havStock = '' //默认筛选为全部，而不是有货
-				this.dirVal = ''  //初始化价格排序
-				this.sortVal = '' //初始化价格排序
-				
+				this.handler().initData()
 				this.mallmenuTwoTypeCurrent = index
 				this.categoryTwoId = value
 				this.netWork().getGoodsData()

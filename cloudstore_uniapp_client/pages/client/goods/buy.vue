@@ -259,16 +259,16 @@
 						//TODO handle the exception
 					}
 					this.transportAgentId = data.result.agentId
-					if (this.transportAgentId === '-1') {
-						uni.showModal({
-							title: '提示',
-							content: '您收货地址附近没有代理配送点，已自动选择为快递配送',
-							showCancel: false,
-							cancelText: '取消',
-							confirmText: '确定',
-							success: res => {},
-						});
-					}
+					// if (this.transportAgentId === '-1') {
+					// 	uni.showModal({
+					// 		title: '提示',
+					// 		content: '您收货地址附近没有代理配送点，已自动选择为快递配送',
+					// 		showCancel: false,
+					// 		cancelText: '取消',
+					// 		confirmText: '确定',
+					// 		success: res => {},
+					// 	});
+					// }
 					this.picker.length = 0
 					this.pickerList.length = 0
 					var tmpData = data.result.type
@@ -342,6 +342,21 @@
 				if (!this.addressData.id) {
 					this.$api.msg('您还未选择收货地址')
 					return;
+				}
+				if (this.transportAgentId === '-1') {
+					uni.showModal({
+						title: '提示',
+						content: '您所处小区暂无团长前置仓，您目前无法下单，敬请理解！',
+						showCancel: false,
+						cancelText: '取消',
+						confirmText: '确定',
+						success: res => {
+							uni.navigateBack({
+							    delta: 1
+							});
+						},
+					});
+					return false;
 				}
 				uni.showLoading({
 					title: '正在创建订单',
