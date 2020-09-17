@@ -41,7 +41,7 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>物流信息</span>
-      <el-button type="primary" @click="wuliupeisong" size="mini" style="float: right">{{msg}}</el-button>
+      <el-button type="primary" @click="wuliupeisong" size="mini" style="float: right" v-if="powershowing(power.ps_agent_delivery)">{{msg}}</el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="wuliuTable" :data="wuliuList" style="width:100%" v-loading="listLoading" border>
@@ -117,8 +117,8 @@
         </el-table-column>
         <el-table-column label="操作" width="200px" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="readOrder(scope.$index, scope.row)">订单详情</el-button>
-            <el-button size="mini" type="primary" :disabled="scope.row.status == 'yps' ? true : false" @click="peisong(scope.$index, scope.row)">配送
+            <el-button size="mini" @click="readOrder(scope.$index, scope.row)" v-if="powershowing(power.ps_order_detail)">订单详情</el-button>
+            <el-button size="mini" type="primary" :disabled="scope.row.status == 'yps' ? true : false" @click="peisong(scope.$index, scope.row)" v-if="powershowing(power.ps_order_send)">配送
             </el-button>
 
             <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
@@ -144,6 +144,7 @@
   import {fetchDetailList as fetchList, peisong, wuliuInfo, wuliupeisong, wuliuquxiao} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
+  import {powershow} from "@/utils/power";
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -165,10 +166,12 @@
         dialogVisible: false,
         btnMsg: '',
         type: '',
-        msg: ''
+        msg: '',
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList();
     },
     filters: {
@@ -205,6 +208,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`订单号：${item.number}`);

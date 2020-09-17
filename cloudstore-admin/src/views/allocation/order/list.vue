@@ -56,6 +56,7 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button type="primary" @click="exportExcel" size="mini" style="float: right" v-if="powershowing(power.ps_agent_export)">导出</el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
@@ -77,7 +78,7 @@
         <el-table-column label="配送状态" align="center" prop="allocStatus" :formatter="showAllocInfo">
         </el-table-column>
         -->
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" v-if="powershowing(power.ps_agent_detail)">
           <template slot-scope="scope">
             <el-button size="mini" @click="readOrder(scope.$index, scope.row)">配送详情</el-button>
 <!--
@@ -124,6 +125,8 @@
     import { fetchAgentList  as fetchList, peisong} from '@/api/allocation'
     import { formatDate } from '@/assets/common/data.js'
     import remoteCom from '@/components/remoteCom'
+    import {powershow} from "@/utils/power";
+    import {exportMethod} from '@/api/exportMethod'
     const defaultList = {
       pageNum: 1,
       pageSize: 10,
@@ -146,12 +149,14 @@
           btnMsg: '',
           type: '',
           statusList: [{label: "待配送", value: 'dps'}, {label: "已配送", value: 'yps'}, {label: "已送达", value: 'ysd'}],
+          power: ''
         }
       },
       beforeCreate() {
         that = this;
       },
       created() {
+        this.power = JSON.parse(localStorage.getItem('opt'));
         this.getList(1);
       },
       activated() {
@@ -166,6 +171,17 @@
 
       },
       methods: {
+        exportExcel() {
+          let obj = {
+            url: '/platform/order/allocation/exportExcel',//http://106.52.184.24:18888
+            method: 'POST',
+            fileName: '订单表格'
+          }
+          exportMethod(obj);
+        },
+        powershowing(key) {
+          return powershow(key);
+        },
         tochild(item, callback){
           // return `用户名称：${item.name} / 用户账号：${item.access}`;
           callback(`代理商名字：${item.name} / 代理商电话：${item.phone}`);

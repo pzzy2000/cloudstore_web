@@ -3,7 +3,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
-      <el-button class="btn-add" @click="addProductAttrCate()" size="mini" v-show="isshow">
+      <el-button class="btn-add" @click="addProductAttrCate()" size="mini" v-if="powershowing(power.property_add)">
         添加
       </el-button>
     </el-card>
@@ -32,24 +32,24 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="getAttrList(scope.$index, scope.row)">规格列表
+              @click="getAttrList(scope.$index, scope.row)" v-if="powershowing(power.goods_specs_list)">规格列表
             </el-button>
             <el-button
               size="mini"
-              @click="getParamList(scope.$index, scope.row)">参数列表
+              @click="getParamList(scope.$index, scope.row)" v-if="powershowing(power.goods_param_list)">参数列表
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center" v-if="isshow">
+        <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleUpdate(scope.$index, scope.row)">编辑
+              @click="handleUpdate(scope.$index, scope.row)" v-if="powershowing(power.property_update)">编辑
             </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.$index, scope.row)" v-if="powershowing(power.property_delete)">删除
             </el-button>
           </template>
         </el-table-column>
@@ -71,7 +71,7 @@
 </template>
 <script>
   import {fetchList,deleteProductAttrCate} from '@/api/productAttrCate'
-
+  import {powershow} from "@/utils/power";
   export default {
     name: 'productAttrCateList',
     data() {
@@ -85,22 +85,21 @@
         },
         dialogVisible: false,
         dialogTitle:'',
-        isshow: true
+        // isshow: true,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList();
-      switch (localStorage.getItem('userType')){
-        case 'platform': this.isshow = false;
-          break;
-        case 'supplier': this.isshow = true;
-          break;
-      }
     },
     activated() {
       this.getList();
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {

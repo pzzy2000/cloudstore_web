@@ -54,7 +54,7 @@
         </el-table-column>
         <el-table-column label="所属店铺" align="center" :formatter="showMsg" prop="supplierShop">
         </el-table-column>
-        <el-table-column label="操作" align="center" width="200">
+        <el-table-column label="操作" align="center" width="200" v-if="powershowing(power.broke_setting)">
           <template slot-scope="scope">
             <el-button type="primary" @click="settingBroke(scope.row)" size="mini">设置佣金</el-button>
           </template>
@@ -79,6 +79,7 @@
 <script>
   import {fetchList} from '@/api/brokerage'
   import remoteCom from '@/components/remoteCom'
+  import {powershow} from "@/utils/power";
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -94,13 +95,18 @@
         list: [],
         listLoading: true,
         listQuery: Object.assign({}, defaultList),
-        total: 0
+        total: 0,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`供应商账号：${item.name} / 供应商电话：${item.phone}`);

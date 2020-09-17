@@ -66,7 +66,7 @@
         </el-table-column>
         <el-table-column label="订单状态" align="center" prop="orderStatus" :formatter="showAllocDetail" width="150">
         </el-table-column>
-        <el-table-column label="操作" width="200px"  align="center">
+        <el-table-column label="操作" width="200px" align="center" v-if="powershowing(power.ps_kd_info)">
                   <template slot-scope="scope">
                     <el-button size="mini" @click="readOrder(scope.$index, scope.row)">订单详情</el-button>
         <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
@@ -91,6 +91,7 @@
 <script>
   import {fetchKdList as fetchList} from '@/api/allocation'
   import {formatDate} from '@/assets/common/data.js'
+  import {powershow} from "@/utils/power";
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -123,10 +124,12 @@
           disabledDate(time) {
             return time.getTime() > Date.now();
           }
-        }
+        },
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     activated() {
@@ -141,6 +144,9 @@
 
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       showAllocDetail(row, r) {
         switch (r.property) {
           case 'goodsName': {

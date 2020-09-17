@@ -52,7 +52,7 @@
         </el-table-column>
       </el-table>
       <div style="text-align: center; margin-top: 30px">
-        <el-button type="primary" @click="submit('brokeRules')" size="small">提交</el-button>
+        <el-button type="primary" @click="submit('brokeRules')" size="small" v-if="powershowing(power.broke_goods_subDef)">提交</el-button>
         <el-button @click="backPage" size="small">返回</el-button>
       </div>
     </el-form>
@@ -61,6 +61,7 @@
 
 <script>
   import {getgoodsSku, saveSetting} from '@/api/brokerage'
+  import {powershow} from "@/utils/power";
   export default {
     name: "settingBroke",
     data() {
@@ -94,13 +95,18 @@
             { required: true, message: '请输入配送金额', trigger: 'blur' },
             // { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ]
-        }
+        },
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList();
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList() {
         getgoodsSku({goodsId: this.$route.query.id}).then(res => {
           this.goodsku.skuStockList = res.result.result.records;

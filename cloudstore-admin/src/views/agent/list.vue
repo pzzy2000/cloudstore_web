@@ -62,7 +62,7 @@
         <el-table-column label="是否删除" align="center" :formatter="deleteStatus">
         </el-table-column>
 
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" v-if="powershowing(power.agent_info)">
           <template slot-scope="scope">
             <el-button size="mini" @click="showinfo(scope.$index, scope.row)">查看
             </el-button>
@@ -96,6 +96,7 @@
 <script>
   import { fetchList, delAgent } from '@/api/agent'
   import { msg } from '@/api/iunits'
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -120,42 +121,18 @@
           value: 2,
           label: '已拒绝'
         }],
-        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}]
-        // userTypes: [
-        //   //   {
-        //   //   value: 'supplier',
-        //   //   label: '供应商'
-        //   // },
-        //   {
-        //     value: 'platform',
-        //     label: '平台管理'
-        //   }
-        // ],
-        // verifyStatusOptions: [{
-        //   value: 1,
-        //   label: '审核通过'
-        // }, {
-        //   value: 0,
-        //   label: '未审核'
-        // }]
+        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
-    watch: {
-
-    },
-    // filters: {
-    //   verifyStatusFilter(value) {
-    //     if (value == 1) {
-    //       return '审核通过';
-    //     } else {
-    //       return '未审核';
-    //     }
-    //   }
-    // },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       showAccess(row, column) {
         return (row.sysManagerUserBean == null) ? '数据读取错误' : row.sysManagerUserBean.name;
       },

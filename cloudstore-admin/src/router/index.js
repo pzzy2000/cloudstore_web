@@ -141,7 +141,7 @@ export const asyncRouterMap = [
       },
       {
         path: 'outlineaddact',
-        name: 'outline_addact',
+        name: 'outline_add',
         component: () => import('@/views/activity/outline/addact'),
         meta: {title: '添加线下活动', icon: 'product-list'},
         hidden: true
@@ -472,6 +472,20 @@ export const asyncRouterMap = [
         meta: {title: '系统用户列表', icon: 'product-list', keepAlive: true}
       },
       {
+        path: 'user/add',
+        name: 'user_add',
+        component: () => import('@/views/sys/user/edit'),
+        meta: {title: '添加系统用户', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'user/info',
+        name: 'user_info',
+        component: () => import('@/views/sys/user/edit'),
+        meta: {title: '查看系统用户', icon: 'product-list'},
+        hidden: true
+      },
+      {
         path: 'user/edit',
         name: 'user_edit',
         component: () => import('@/views/sys/user/edit'),
@@ -499,9 +513,16 @@ export const asyncRouterMap = [
       },
       {
         path: 'index/slideshow',
-        name: 'slide_show',
+        name: 'slide_add',
         component: () => import('@/views/sys/slide/slideshow'),
-        meta: {title: '轮播图详情', icon: 'ums-resource'},
+        meta: {title: '添加轮播图', icon: 'ums-resource'},
+        hidden: true
+      },
+      {
+        path: 'index/slideshow',
+        name: 'slide_edit',
+        component: () => import('@/views/sys/slide/slideshow'),
+        meta: {title: '编辑轮播图', icon: 'ums-resource'},
         hidden: true
       },
       {
@@ -527,6 +548,13 @@ export const asyncRouterMap = [
         name: 'manage_adduser',
         component: () => import('@/views/sys/comManager/adduser'),
         meta: {title: '添加用户', icon: 'ums-resource'},
+        hidden: true
+      },
+      {
+        path: 'edit',
+        name: 'manage_edit',
+        component: () => import('@/views/sys/comManager/adduser'),
+        meta: {title: '编辑用户', icon: 'ums-resource'},
         hidden: true
       },
       {

@@ -55,16 +55,15 @@
         </el-table-column>
         <el-table-column label="供应商店铺" align="center" :formatter="goodsinfo" column-key="supplierShopBean">
         </el-table-column>
-        <el-table-column prop="address" label="是否关联" align="center" width="100">
+        <el-table-column prop="address" label="是否关联" align="center" width="100" v-if="powershowing(power.activity_isAsso)">
           <template slot-scope="scope" >
-            <div v-if="scope.row.joins == 1">
-              <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#409eff"
-                         inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
+<!--            <div v-if="scope.row.joins == 1">-->
+              <el-switch v-model="scope.row.link" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)" :disabled="disabled">
               </el-switch>
-            </div>
-            <div v-else>
-              {{scope.row.activityBean.name}}
-            </div>
+<!--            </div>-->
+<!--            <div v-else>-->
+<!--              {{scope.row.activityBean.name}}-->
+<!--            </div>-->
           </template>
         </el-table-column>
       </el-table>
@@ -92,7 +91,7 @@
   } from '@/api/iunits'
   import remoteCom from '@/components/remoteCom'
   import dbremoteCom from '@/components/remoteCom/dbIndex'
-
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -113,10 +112,12 @@
         listQuery: Object.assign({}, defaultListQuery),
         total: 0,
         activityId: '',
-        disabled: false
+        disabled: false,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       // this.activityList();
       this.seclectactivity();
       // this.getList();
@@ -127,6 +128,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         callback(`商品名称：${item.goodsName}`);
       },
@@ -271,6 +275,7 @@
               console.log(res);
               msg('申请加入活动成功');
               this.disabled = false;
+              this.seclectactivity();
             }else{
               row.link = 0;
               setTimeout(function(){

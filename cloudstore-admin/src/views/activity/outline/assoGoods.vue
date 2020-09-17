@@ -47,7 +47,7 @@
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
       <el-button size="mini" @click="backPage" style="float: right">返回</el-button>
-      <el-button type="primary" size="mini" @click="associatedGood" style="float: right; margin-right: 20px">关联商品</el-button>
+      <el-button type="primary" size="mini" @click="associatedGood" style="float: right; margin-right: 20px" v-if="powershowing(power.outline_goodslist)">关联商品</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" @selection-change="handleSelectionChange" v-loading="listLoading"
@@ -77,9 +77,9 @@
         <el-table-column label="操作" align="center" width="320">
           <template slot-scope="scope">
 <!--            <el-button size="mini" @click="readInfo(scope.row)">查看详情</el-button>-->
-            <el-button type="primary" size="mini" @click="settingactPrice(scope.row)">设置参数</el-button>
-            <el-button size="mini" @click="qrcode(scope.$index, scope.row)">生成二维码</el-button>
-            <el-button type="danger" size="mini" @click="handeldel(scope.row)">取消关联</el-button>
+            <el-button type="primary" size="mini" @click="settingactPrice(scope.row)" v-if="powershowing(power.outline_setparams)">设置参数</el-button>
+            <el-button size="mini" @click="qrcode(scope.$index, scope.row)" v-if="powershowing(power.outline_qrcode)">生成二维码</el-button>
+            <el-button type="danger" size="mini" @click="handeldel(scope.row)" v-if="powershowing(power.outline_cancel)">取消关联</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -97,6 +97,7 @@
 <script>
   import {fetchActivityGoodsLists, delActivityGoodsList, fetchListWithChildren, outAssogoods} from '@/api/activity'
   import {msg} from '@/api/iunits'
+  import {powershow} from "@/utils/power";
   // import remoteCom from '@/components/remoteCom'
   const defaultListQuery = {
     pageNum: 1,
@@ -122,10 +123,12 @@
           three: []
         },
         name: '',
-        addProfit: ''
+        addProfit: '',
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.listQuery.activityId = this.$route.query.id;
       this.name = this.$route.query.name;
       if (this.$route.query.status == 1) {
@@ -151,6 +154,9 @@
       //   // return `用户名称：${item.name} / 用户账号：${item.access}`;
       //   callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);
       // },
+      powershowing(key) {
+        return powershow(key);
+      },
       settingactPrice(row) {
         this.$router.push({path: '/sys/activity/outlinesetParams', query: {id: row.skuId, activityId: this.$route.query.id, activityGoodsId: row.activityGoodsId, offlinePrice: row.offlinePrice}})
       },

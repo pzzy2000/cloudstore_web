@@ -61,7 +61,7 @@
     <br/>
     <div style="width: 100%;text-align:center">
       <br /> <br /> <br /> <br />
-      <el-button style="margin-bottom: 10px;" @click="updateGoodsProperties('brokeRules')" size="small">
+      <el-button style="margin-bottom: 10px;" @click="updateGoodsProperties('brokeRules')" size="small" v-if="powershowing(power.brage_subSKU)">
         提 交
       </el-button>
       <el-button @click="backPage" size="small">返 回</el-button>
@@ -76,7 +76,8 @@
   };
   import {getSkulist, updateBrosku} from '@/api/brokerage';
   import SingleUpload from '@/components/Upload/singleUpload';
-   import {msg}  from '@/api/iunits';
+  import {msg}  from '@/api/iunits';
+  import {powershow} from "@/utils/power";
   export default {
     name: "brageInfo",
     provide() {
@@ -134,14 +135,19 @@
             { required: true, message: '请输入配送金额', trigger: 'blur' },
             // { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ]
-        }
+        },
+        power: '',
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.rwDispatcherState = "write";
       this.getgoodsInfo();
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       updateGoodsProperties(formName) {
         // console.log(this.goodsku.skuStockList);
         // let onoff = true;

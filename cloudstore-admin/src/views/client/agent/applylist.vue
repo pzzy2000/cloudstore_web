@@ -69,7 +69,7 @@
         <el-table-column label="审核状态" align="center">
           <template slot-scope="scope">{{scope.row.status | changeStatus}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="180px"  align="center">
+        <el-table-column label="操作" width="180px" align="center" v-if="powershowing(power.agent_apply_info)">
           <template slot-scope="scope">
             <el-button size="mini" @click="delLogis(scope.row)">{{scope.row.status | changeMsg}}</el-button>
           </template>
@@ -98,6 +98,7 @@
     optType: "search"
   }
   import {fetchList} from '@/api/client'
+  import {powershow} from "@/utils/power";
   export default {
     name: "userapply",
     data() {
@@ -109,10 +110,12 @@
         publishStatusOptions: [],
         verifyStatusOptions: [{label: '待审核', value: '0'}, {label: '已通过', value: '1'}, {label: '已拒绝', value: '2'}],
         total: 0,
-        statusList: [{label: "团长", value: 'leader'}, {label: "代理", value: 'agent'}]
+        statusList: [{label: "团长", value: 'leader'}, {label: "代理", value: 'agent'}],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     activated() {
@@ -157,6 +160,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList(idx) {
         fetchList(this.listQuery).then(res => {
           console.log(res);

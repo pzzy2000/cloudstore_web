@@ -66,7 +66,7 @@
         <el-table-column label="申请状态" align="center">
           <template slot-scope="scope">{{scope.row.type | changeMsg}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="200px"  align="center">
+        <el-table-column label="操作" width="200px" align="center" v-if="powershowing(power.as_info)">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)">{{scope.row.type | changeShow}}</el-button>
           </template>
@@ -92,6 +92,7 @@
   import {afterSalelist} from '@/api/order'
   import { formatDate } from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
+  import {powershow} from "@/utils/power";
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -130,10 +131,12 @@
           {label: "微信订单", value: "3"}
         ],
         dialogVisible: false,
-        btntext: ''
+        btntext: '',
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     activated() {
@@ -193,6 +196,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`用户账号：${item.phone} / 用户名称：${item.name}`);

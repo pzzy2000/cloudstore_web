@@ -39,7 +39,7 @@
     <br/>
     <div style="width: 100%;text-align:center">
       <br /> <br /> <br /> <br />
-      <el-button style="margin-bottom: 10px;" type="primary" @click="updateGoodsProperties('brokeRules')" size="small">
+      <el-button style="margin-bottom: 10px;" type="primary" @click="updateGoodsProperties('brokeRules')" size="small" v-if="powershowing(power.outline_setSKU)">
         提 交
       </el-button>
       <el-button @click="backPage" size="small">返 回</el-button>
@@ -55,6 +55,7 @@
   import SingleUpload from '@/components/Upload/singleUpload';
   import {msg}  from '@/api/iunits';
   import {getoneSKU, updateSetting} from '@/api/activity';
+  import {powershow} from "@/utils/power";
   export default {
     name: "brageInfo",
     provide() {
@@ -101,14 +102,19 @@
             { required: true, message: '请输入客户购买积分', trigger: 'blur' },
             { pattern: /^(\d|1\d|20)(\.\d{0,2})?$/, message: '最大20.99，小数点后两位' }
           ]
-        }
+        },
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.rwDispatcherState = "write";
       this.getList();
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       updateGoodsProperties(formName) {
         this.$refs[formName].validate((valid) => {
           // if (valid && onoff) {

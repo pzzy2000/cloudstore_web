@@ -53,7 +53,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right" @click="addactivity">添加活动</el-button>
+      <el-button size="mini" style="float: right" @click="addactivity" v-if="powershowing(power.outline_add)">添加活动</el-button>
       <!--
       <el-button
         class="btn-add"
@@ -77,6 +77,9 @@
         <el-table-column label="活动名称" align="center" fixed>
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
+        <el-table-column label="代理名称" align="center" fixed :formatter="showAgent">
+<!--          <template slot-scope="scope">{{scope.row.agentBean.name}}</template>-->
+        </el-table-column>
         <el-table-column label="开始时间" align="center" width="160">
           <template slot-scope="scope">{{scope.row.startTime | formatDate}}</template>
         </el-table-column>
@@ -99,9 +102,9 @@
         </el-table-column>
         <el-table-column label="操作" width="270" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button size="mini" @click="updateAct(scope.row)">修改活动</el-button>
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-show="isshow" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false">删除</el-button>
+            <el-button type="primary" size="mini" @click="associatedGood(scope.row)" v-if="powershowing(power.outline_assoGoods)">关联商品</el-button>
+            <el-button size="mini" @click="updateAct(scope.row)" v-if="powershowing(power.outline_update)">修改活动</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" v-if="powershowing(power.outline_delete)" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -127,6 +130,7 @@
   import { fetchList, changeShowidx, delActivity, showInnavigate, onoffAct } from '@/api/activity'
   import {msg}  from '@/api/iunits'
   import { formatDate } from '@/assets/common/data.js'
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -142,20 +146,22 @@
         total: 0,
         listLoading: true,
         multipleSelection: [],
-        isshow: false,
+        // isshow: false,
         statusList: [{label: "已开启", value: '1'}, {label: "未开启", value: '0'}],
         brokerageList: [{label: "已参加", value: '1'}, {label: "未参加", value: '0'}],
-        delList: [{label: "已删除", value: '1'}, {label: "正常", value: '0'}]
+        delList: [{label: "已删除", value: '1'}, {label: "正常", value: '0'}],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
-      switch (localStorage.getItem('userType')){
-        case 'platform': this.isshow = true;
-          break;
-        case 'supplier': this.isshow = false;
-          break;
-      }
+      // switch (localStorage.getItem('userType')){
+      //   case 'platform': this.isshow = true;
+      //     break;
+      //   case 'supplier': this.isshow = false;
+      //     break;
+      // }
     },
     watch: {
       // selectProductCateValue: function (newValue) {
@@ -192,6 +198,16 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
+      showAgent(row) {
+        if (row.agentBean !== undefined) {
+          return row.agentBean.name;
+        } else {
+          return "数据读取出错";
+        }
+      },
       getList(idx) {
         this.listLoading = true;
         this.listQuery.type = 1;

@@ -46,7 +46,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button type="primary" size="mini" @click="backPage" style="float: right">申请活动</el-button>
+      <el-button type="primary" size="mini" @click="backPage" style="float: right" v-if="powershowing(power.activity_apply)">申请活动</el-button>
       <el-button size="mini" @click="returnPage" style="float: right; margin-right: 20px">返回</el-button>
     </el-card>
     <div class="table-container">
@@ -74,7 +74,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="160">
           <template slot-scope="scope">
-            <el-button type="danger" size="mini" @click="handeldel(scope.row)">删除</el-button>
+            <el-button type="danger" size="mini" @click="handeldel(scope.row)" v-if="powershowing(power.activity_delasso)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -93,6 +93,7 @@
   import {fetchActivityGoodsList, delActivityGoodsList, fetchListWithChildren} from '@/api/activity'
   import {msg} from '@/api/iunits'
   import remoteCom from '@/components/remoteCom'
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -117,10 +118,12 @@
           three: []
         },
         name: '',
-        addProfit: ''
+        addProfit: '',
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.listQuery.activityId = this.$route.query.id;
       this.name = this.$route.query.name;
       if (this.$route.query.status == 1) {
@@ -151,6 +154,9 @@
       // }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);

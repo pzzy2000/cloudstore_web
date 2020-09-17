@@ -3,7 +3,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button style="float: right; margin-right: 20px" size="mini" @click="handleAddPic">添加</el-button>
+      <el-button style="float: right; margin-right: 20px" size="mini" @click="handleAddPic" v-if="powershowing(power.slide_add)">添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width: 100%" v-loading="listLoading" border>
@@ -20,8 +20,8 @@
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-            <el-button size="small" type="primary" @click="handleUpdatePic(scope.row)">修改</el-button>
-            <el-button size="small" type="danger" @click="handleDeletePic(scope.row)">删除</el-button>
+            <el-button size="small" type="primary" @click="handleUpdatePic(scope.row)" v-if="powershowing(power.slide_edit)">修改</el-button>
+            <el-button size="small" type="danger" @click="handleDeletePic(scope.row)" v-if="powershowing(power.slide_delete)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -31,15 +31,18 @@
 
 <script>
   import {getSlidelist, delSlide} from '@/api/indexSlid'
+  import {powershow} from "@/utils/power";
   export default {
     name: "list",
     data() {
       return {
         list: [],
-        listLoading: false
+        listLoading: false,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList();
     },
     filters: {
@@ -56,6 +59,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList() {
         getSlidelist().then(res => {
           console.log(res);

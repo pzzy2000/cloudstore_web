@@ -6,7 +6,7 @@
       <el-button class="btn-add" @click="backPage()" size="mini">
         返回
       </el-button>
-      <el-button class="btn-add" @click="addProductAttr()" size="mini" style="margin-right: 20px" v-show="isshow">
+      <el-button class="btn-add" @click="addProductAttr()" size="mini" style="margin-right: 20px" v-if="(powershowing(power.goods_specs_add)&&listQuery.type == 0) || (powershowing(power.goods_param_add) && listQuery.type == 1)">
         添加
       </el-button>
     </el-card>
@@ -28,16 +28,16 @@
         <el-table-column label="属性类型"  align="center">
           <template slot-scope="scope">{{scope.row.type | attrType}}</template>
         </el-table-column>
-        <el-table-column label="操作" align="center" v-if="isshow">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleUpdate(scope.$index, scope.row)">编辑
+              @click="handleUpdate(scope.$index, scope.row)" v-if="(powershowing(power.goods_specs_update)&&listQuery.type == 0) || (powershowing(power.goods_param_update) && listQuery.type == 1)">编辑
             </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.$index, scope.row)" v-if="(powershowing(power.goods_specs_delete)&&listQuery.type == 0) || (powershowing(power.goods_param_delete) && listQuery.type == 1)">删除
             </el-button>
           </template>
         </el-table-column>
@@ -87,7 +87,7 @@
 </template>
 <script>
   import {fetchList, deleteProductAttr,createProductAttr,updateProductAttr} from '@/api/productAttr'
-
+  import {powershow} from "@/utils/power";
   export default {
     name: 'productAttrList',
     data() {
@@ -113,22 +113,20 @@
             value: "deleteProductAttr"
           }
         ],
-        isshow: true
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList();
-      switch (localStorage.getItem('userType')){
-        case 'platform': this.isshow = false;
-          break;
-        case 'supplier': this.isshow = true;
-          break;
-      }
     },
     activated() {
       this.getList();
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {

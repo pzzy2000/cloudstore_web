@@ -85,7 +85,7 @@
 <!--            </el-image>-->
 <!--          </template>-->
 <!--        </el-table-column>-->
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" v-if="powershowing(power.brage_info)">
           <template slot-scope="scope">
             <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU佣金管理
             </el-button>
@@ -141,6 +141,7 @@
 <script>
   // import {fetchList, updateDeleteStatus, updateNewStatus, updateRecommendStatus, updatePublishStatus} from '@/api/product'
   import {getGoodslist, fetchListWithChildren} from '@/api/brokerage';
+  import {powershow} from "@/utils/power";
   // import {fetchList as fetchSkuStockList, update as updateSkuStockList} from '@/api/skuStock'
   // import {fetchList as fetchProductAttrList} from '@/api/productAttr'
   // import {fetchList as fetchBrandList} from '@/api/brand'
@@ -159,6 +160,7 @@
     name: "productList",
     data() {
       return {
+        power: '',
         editSkuInfo: {
           dialogVisible: false,
           productId: null,
@@ -232,6 +234,7 @@
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
       this.searchRootCategory();
     },
@@ -266,6 +269,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       suppilerShop(row, column) {
         try {
           return row.goodsBean.supplierShopBean.shopName;

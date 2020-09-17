@@ -55,29 +55,35 @@
         handleConfirm(formName){
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              if(this.$route.query.optTp == "add"){
-                createProductAttr({'goodsPropertyId':this.$route.query.goodsPropertyId,'name':this.productAttrCatForm.name,'optType':'save','type':this.$route.query.type}).then(response=>{
-                  if (response.result.code == 0) {
-                    this.$message({
-                      message: '添加成功',
-                      type: 'success',
-                      duration:1000
-                    });
-                    this.$router.go(-1);
-                  }
-                });
-              }else{
-                createProductAttr({'id':this.$route.query.id,'name':this.productAttrCatForm.name,'optType':'update'}).then(response=>{
-                  if (response.result.code == 0) {
-                    this.$message({
-                      message: '修改成功',
-                      type: 'success',
-                      duration:1000
-                    });
-                    this.$router.go(-1);
-                  }
-                });
-              }
+              this.$confirm('是否提交', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                if(this.$route.query.optTp == "add"){
+                  createProductAttr({'goodsPropertyId':this.$route.query.goodsPropertyId,'name':this.productAttrCatForm.name,'optType':'save','type':this.$route.query.type}).then(response=>{
+                    if (response.result.code == 0) {
+                      this.$message({
+                        message: '添加成功',
+                        type: 'success',
+                        duration:1000
+                      });
+                      this.$router.go(-1);
+                    }
+                  });
+                }else{
+                  createProductAttr({'id':this.$route.query.id,'name':this.productAttrCatForm.name,'optType':'update'}).then(response=>{
+                    if (response.result.code == 0) {
+                      this.$message({
+                        message: '修改成功',
+                        type: 'success',
+                        duration:1000
+                      });
+                      this.$router.go(-1);
+                    }
+                  });
+                }
+              }).catch(e => e)
             } else {
               console.log('error submit!!');
               return false;

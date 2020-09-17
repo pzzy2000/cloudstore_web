@@ -46,8 +46,8 @@
             </el-table>
           </el-form-item>
           <div style="text-align: center">
-            <el-button type="primary" style="margin-right: 20px" size="small" @click="submitApply" v-show="isshow" :loading="loading">审核通过</el-button>
-            <el-button style="margin-right: 20px" size="small" @click="refused" v-show="isshow">拒绝</el-button>
+            <el-button type="primary" style="margin-right: 20px" size="small" @click="submitApply" :loading="loading" v-if="powershowing(power.agent_apply_recept) && isshow">审核通过</el-button>
+            <el-button style="margin-right: 20px" size="small" @click="refused" v-if="powershowing(power.agent_apply_refuse) && isshow">拒绝</el-button>
             <el-button size="small" @click="backpage" type="primary">返回</el-button>
           </div>
         </el-form>
@@ -60,6 +60,7 @@
 <script>
   import { getOneapply, verified } from '@/api/client'
   import ElImageViewer from "element-ui/packages/image/src/image-viewer";
+  import {powershow} from "@/utils/power";
   export default {
     name: "agent-info",
     provide () {
@@ -77,13 +78,18 @@
         isshow: true,
         showViewer: false,
         srcList: [],
-        loading: false
+        loading: false,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getOneapply();
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getOneapply() {
         getOneapply({id: this.$route.query.id}).then(res => {
           console.log(res);

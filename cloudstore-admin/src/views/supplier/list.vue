@@ -58,12 +58,10 @@
         </el-table-column>
         <el-table-column label="是否删除"  align="center" :formatter="deleteStatus">
         </el-table-column>
-        <el-table-column label="操作" width="260" align="center">
+        <el-table-column label="操作" width="160" align="center" v-if="powershowing(power.supplier_info)">
           <template slot-scope="scope">
-            <p>
-              <el-button size="mini" @click="handleUpdateUserInfo(scope.$index, scope.row)">查看
-              </el-button>
-            </p>
+            <el-button size="mini" @click="handleUpdateUserInfo(scope.$index, scope.row)">查看
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,6 +89,7 @@
   import {fetchList} from '@/api/supplier'
   import remoteCom from '@/components/remoteCom'
   import {msg} from '@/api/iunits'
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -137,10 +136,12 @@
           label: '未审核'
         }],
         statusList: [{label: "待审核", value: '0'}, {label: "已通过", value: '1'}, {label: "违规关闭", value: '2'}],
-        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}]
+        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       // function Foo() {
       //   getName = function () { alert(1); };
       //   return this;
@@ -185,6 +186,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         console.log(item)
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
@@ -319,7 +323,7 @@
 </script>
 
 <style scoped>
-  .el-table >>> td{
-    padding: 0 !important;
-  }
+  /*.el-table >>> td{*/
+  /*  padding: 0 !important;*/
+  /*}*/
 </style>

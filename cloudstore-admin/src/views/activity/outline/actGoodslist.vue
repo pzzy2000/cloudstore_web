@@ -81,7 +81,7 @@
         </el-table-column>
         <el-table-column label="规格" align="center" prop="skuValue">
         </el-table-column>
-        <el-table-column prop="address" label="是否关联" align="center" width="100">
+        <el-table-column prop="address" label="是否关联" align="center" width="100" v-if="powershowing(power.outline_isAsso)">
           <template slot-scope="scope" >
             <el-switch v-model="scope.row.joins" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="changeSwitch($event, scope.row)">
             </el-switch>
@@ -99,6 +99,7 @@
   import {getGoodslist, fetchListWithChildren} from '@/api/brokerage';
   import {fetchActivityGoodsLists, inAssogoods, outAssogoods} from '@/api/activity'
   import remoteCom from '@/components/remoteCom'
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -137,10 +138,12 @@
         }, {
           value: 0,
           label: '未审核'
-        }]
+        }],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
       this.searchRootCategory();
     },
@@ -175,6 +178,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`供应商名称：${item.name} / 供应商电话：${item.phone}`);

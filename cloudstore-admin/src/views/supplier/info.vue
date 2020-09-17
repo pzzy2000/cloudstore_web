@@ -95,16 +95,13 @@
          </el-form-item>
         </el-form>
         <div style="text-align: center">
-          <el-button style="margin-bottom: 10px;" @click="shownUpdateSbutton(true)" :style="{ display: shownUpdateSubelButton}"
-            size="small">
+          <el-button style="margin-bottom: 10px;" @click="shownUpdateSbutton(true)" :style="{ display: shownUpdateSubelButton}" v-if="powershowing(power.supplier_update)" size="small">
             更新
           </el-button>
-          <el-button style="margin-bottom: 10px;" @click="shownUpdateSbutton(false)" :style="{ display: shownUpdateButton}"
-            size="small">
+          <el-button style="margin-bottom: 10px;" @click="shownUpdateSbutton(false)" :style="{ display: shownUpdateButton}" size="small">
             取消
           </el-button>
-          <el-button style="margin-bottom: 10px" :style="{ display: shownUpdateButton}"
-            @click="savebaseinfo('blicenseOne', 'blicenseTwo')" type="primary" size="small">
+          <el-button style="margin-bottom: 10px" :style="{ display: shownUpdateButton}" @click="savebaseinfo('blicenseOne', 'blicenseTwo')" type="primary" size="small">
             提交
           </el-button>
           <el-button @click="backPage" size="small">返回</el-button>
@@ -120,7 +117,7 @@
   import { searchSupplierDetail,saveSupplierInfo } from '@/api/supplier' ;
   import ElImageViewer from "element-ui/packages/image/src/image-viewer";
   import{photoUrl} from '@/api/iunits';
-
+  import {powershow} from "@/utils/power";
   export default {
     name: "supplierBaseinfo",
     components: {
@@ -296,7 +293,8 @@
         shownUpdateSubelButton: "",
         supplierId: typeof(this.$route.query.supplierId) == 'undefined' ? null : this.$route.query.supplierId,
         showViewer: false,
-        srcList: []
+        srcList: [],
+        power: ''
       }
     },
     mounted() {
@@ -307,8 +305,12 @@
       // this.baseinfo.name="www";
       this.blicense.startTime = "2012-02-12"
       this.loadInfo();
+      this.power = JSON.parse(localStorage.getItem('opt'));
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       shownUpdateSbutton(action) {
         if (action == true) {
           this.shownUpdateButton = ""

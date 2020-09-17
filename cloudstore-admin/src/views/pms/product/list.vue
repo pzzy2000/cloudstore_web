@@ -65,7 +65,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button class="btn-add" @click="handleAddProduct()" size="mini">
+      <el-button class="btn-add" @click="handleAddProduct()" size="mini" v-if="powershowing(power.goods_add)">
         添加
       </el-button>
     </el-card>
@@ -108,7 +108,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="140" align="center">
+        <el-table-column label="状态" width="140" align="center" v-if="powershowing(power.sku_updown)">
           <template slot-scope="scope">
             上架：
             <el-switch @change="handlePublishStatusChange($event, scope.row)" :active-value="1" :inactive-value="0"
@@ -140,18 +140,17 @@
         </el-table-column> -->
         <el-table-column label="操作" width="350" align="center">
           <template slot-scope="scope">
-
-            <el-button size="mini" @click="handleShowProduct(scope.$index, scope.row)">查看
+            <el-button size="mini" @click="handleShowProduct(scope.$index, scope.row)" v-if="powershowing(power.goods_info)">查看
             </el-button>
-            <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)">编辑
+            <el-button size="mini" @click="handleUpdateProduct(scope.$index, scope.row)" v-if="powershowing(power.goods_edit)">编辑
             </el-button>
-            <el-button size="mini" @click="addsku(scope.$index, scope.row)">SKU管理
+            <el-button size="mini" @click="addsku(scope.$index, scope.row)" v-if="powershowing(power.sku_edit)">SKU管理
             </el-button>
             <!-- <el-button
                 size="mini"
                 @click="handleShowLog(scope.$index, scope.row)">日志
               </el-button> -->
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" v-if="powershowing(power.goods_delete)">删除
             </el-button>
           </template>
         </el-table-column>
@@ -236,6 +235,7 @@
     fetchListWithChildren
   } from '@/api/productCate'
   import remoteCom from '@/components/remoteCom'
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
@@ -300,10 +300,12 @@
         }, {
           value: 0,
           label: '未审核'
-        }]
+        }],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
       this.searchRootCategory();
       //this.getBrandList();
@@ -332,6 +334,9 @@
       this.getList(1);
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`供应商账号：${item.name} / 供应商电话：${item.phone}`);

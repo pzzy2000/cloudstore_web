@@ -69,7 +69,7 @@
 <!--        </el-table-column>-->
         <el-table-column label="操作" width="200px"  align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)" :disabled="scope.row.type == 1 ? true : false">商品佣金</el-button>
+            <el-button type="primary" size="mini" @click="readOrder(scope.$index, scope.row)" :disabled="scope.row.type == 1 ? true : false" v-if="powershowing(power.broke_goods)">商品佣金</el-button>
 <!--            <el-button size="mini" @click="read(scope.row)">查看</el-button>-->
           </template>
         </el-table-column>
@@ -98,6 +98,7 @@
   };
   import {getActlist} from '@/api/brokerage'
   import { formatDate } from '@/assets/common/data.js'
+  import {powershow} from "@/utils/power";
   // var token = getToken(); // 要保证取到
   export default {
     name: "brokerage",
@@ -110,10 +111,12 @@
         orderList: [],
         listLoading: false,
         listQuery: Object.assign({}, defaultList),
-        total: 1
+        total: 1,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       // this.rwDispatcherState = "write";
       this.getList(1);
     },
@@ -146,6 +149,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       handleSearchList() {
         this.listQuery.pageNum = 1;
         this.getList(0);

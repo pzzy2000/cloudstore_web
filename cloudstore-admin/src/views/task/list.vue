@@ -64,8 +64,8 @@
         </el-table-column>
         <el-table-column label="操作" width="260" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="handleStartorStop(scope.$index, scope.row)">{{scope.row.status == 'stop' ? '开始' : '停止'}}</el-button>
-            <el-button size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="primary" @click="handleStartorStop(scope.$index, scope.row)" v-if="powershowing(power.task_start)">{{scope.row.status == 'stop' ? '开始' : '停止'}}</el-button>
+            <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" v-if="powershowing(power.task_delete)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -82,6 +82,7 @@
   import {fetchList, planStart, planStop, planDelete} from '@/api/task'
   import remoteCom from '@/components/remoteCom'
   import {msg} from '@/api/iunits'
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -128,10 +129,12 @@
           label: '未审核'
         }],
         statusList: [{label: "待审核", value: '0'}, {label: "已通过", value: '1'}, {label: "违规关闭", value: '2'}],
-        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}]
+        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     filters: {
@@ -151,6 +154,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         console.log(item)
         // return `用户名称：${item.name} / 用户账号：${item.access}`;

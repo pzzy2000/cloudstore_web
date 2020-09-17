@@ -53,8 +53,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right" @click="addactivity">添加活动</el-button>
-<!--      v-if="power.activity_add == 1 ? true : false"-->
+      <el-button size="mini" style="float: right" @click="addactivity" v-if="powershowing(power.activity_add)">添加活动</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable"
@@ -82,7 +81,7 @@
         <el-table-column label="是否参加佣金" align="center">
           <template slot-scope="scope">{{scope.row.addProfit | changeMsg}}</template>
         </el-table-column>
-        <el-table-column label="是否显示在首页" align="center">
+        <el-table-column label="是否显示在首页" align="center" v-if="powershowing(power.activity_showIndex)">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.showIndex" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="changeSwitch(scope.row)">
             </el-switch>
@@ -90,13 +89,13 @@
 <!--            v-if="!scope.row.activityBean.name"-->
           </template>
         </el-table-column>
-        <el-table-column label="是否启用" align="center">
+        <el-table-column label="是否启用" align="center" v-if="powershowing(power.activity_start)">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="onoffAct(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="是否显示在导航栏" align="center" width="150">
+        <el-table-column label="是否显示在导航栏" align="center" width="150" v-if="powershowing(power.activity_showNavigate)">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.navigateIndex" :active-value="1" :inactive-value="0" active-color="#409eff" inactive-color="#dcdfe6" @change="showInnavigate(scope.row)">
             </el-switch>
@@ -106,11 +105,9 @@
         </el-table-column>
         <el-table-column label="操作" width="270" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="associatedGood(scope.row)">关联商品</el-button>
-            <el-button size="mini" @click="updateAct(scope.row)">修改活动</el-button>
-<!--            v-if="powershowing(power.activity_update)"-->
-            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false">删除</el-button>
-<!--            v-if="powershowing(power.activity_delete)"-->
+            <el-button type="primary" size="mini" @click="associatedGood(scope.row)" v-if="powershowing(power.asso_goods)">关联商品</el-button>
+            <el-button size="mini" @click="updateAct(scope.row)" v-if="powershowing(power.activity_update)">修改活动</el-button>
+            <el-button type="danger" size="mini" @click="handeldelGoods(scope.row)" :disabled="scope.row.isDelete == 1 ? true : false || scope.row.status == 1 ? true : false" v-if="powershowing(power.activity_delete)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -160,7 +157,7 @@
     },
     created() {
       this.getList(1);
-      // this.power = JSON.parse(localStorage.getItem('opt'));
+      this.power = JSON.parse(localStorage.getItem('opt'));
     },
     watch: {
       // selectProductCateValue: function (newValue) {

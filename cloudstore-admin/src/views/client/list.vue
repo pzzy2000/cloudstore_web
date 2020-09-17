@@ -70,7 +70,7 @@
 <!--            </el-switch>-->
 <!--          </template>-->
 <!--        </el-table-column>-->
-        <el-table-column label="操作" align="center" width="150">
+        <el-table-column label="操作" align="center" width="150" v-if="powershowing(power.client_info)">
           <template slot-scope="scope">
             <el-button size="mini" @click="readUser(scope.row)">查看</el-button>
           </template>
@@ -94,6 +94,7 @@
 
 <script>
   import {getUserlist} from '@/api/client'
+  import {powershow} from "@/utils/power";
   let defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -106,10 +107,12 @@
         listLoading: false,
         list: [],
         total: 0,
-        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}]
+        delList: [{label: "已删除", value: '1'}, {label: "未删除", value: '0'}],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     filters: {
@@ -117,7 +120,7 @@
         switch (data) {
           case 0: return "未删除";
             break;
-          case 0: return "已删除";
+          case 1: return "已删除";
             break;
           default: return "数据读取错误";
             break;
@@ -125,6 +128,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList(idx) {
         getUserlist(this.pageList).then(res => {
           console.log(res);

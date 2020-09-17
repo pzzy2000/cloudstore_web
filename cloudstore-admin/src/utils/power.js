@@ -1,5 +1,5 @@
 export function powershow(key) {
-  if (localStorage.getItem('userAccont') == 13673772852) {
+  if (localStorage.getItem('userAccont') == 1440000001) {
     return true;
   } else {
     if (key == 1) {

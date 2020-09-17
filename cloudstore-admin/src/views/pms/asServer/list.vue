@@ -3,7 +3,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button size="mini" style="float: right" @click="addrules">添加条款</el-button>
+      <el-button size="mini" style="float: right" @click="addrules" v-if="powershowing(power.goods_Asserver_add)">添加条款</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productTable" :data="list" style="width:100%" v-loading="listLoading" border>
@@ -14,9 +14,9 @@
         </el-table-column>
         <el-table-column label="操作" width="270" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="rulesInfo(scope.row)">查看详情</el-button>
-            <el-button size="mini" @click="updateInfo(scope.row)">更新条款</el-button>
-            <el-button type="danger" size="mini" @click="handeldelRules(scope.row)">删除</el-button>
+            <el-button size="mini" @click="rulesInfo(scope.row)" v-if="powershowing(power.goods_Asserver_info)">查看详情</el-button>
+            <el-button size="mini" @click="updateInfo(scope.row)" v-if="powershowing(power.goods_Asserver_update)">更新条款</el-button>
+            <el-button type="danger" size="mini" @click="handeldelRules(scope.row)" v-if="powershowing(power.goods_Asserver_delete)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -26,18 +26,24 @@
 
 <script>
   import {getAslist, deleteRule} from '@/api/goodsAsServer'
+  import {powershow} from "@/utils/power";
   export default {
     name: "list",
     data() {
       return {
         list: [],
-        listLoading: true
+        listLoading: true,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList();
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList() {
         getAslist().then(res => {
           this.list = res.result.result.records;

@@ -54,7 +54,7 @@
           </el-table-column>
         </el-table>
         <div style="text-align: center; margin-top: 30px">
-          <el-button type="primary" @click="submit('defRules')" size="small">提交</el-button>
+          <el-button type="primary" @click="submit('defRules')" size="small" v-if="powershowing(power.broke_subDefault)">提交</el-button>
 <!--          <el-button @click="backPage" size="small">返回</el-button>-->
         </div>
       </el-form>
@@ -64,7 +64,7 @@
 
 <script>
   import {getdefbroke, settingDef} from '@/api/brokerage'
-
+  import {powershow} from "@/utils/power";
   export default {
     name: "index",
     data() {
@@ -98,10 +98,12 @@
             { required: true, message: '请输入购买积分', trigger: 'blur' },
             { pattern: /^(\d|1\d|20)$/, message: '0~20，不能有小数' }
           ]
-        }
+        },
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList();
     },
     filters: {
@@ -114,6 +116,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       // delLogis() {
       //   console.log("1");
       // },

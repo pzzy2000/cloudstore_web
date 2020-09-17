@@ -4,7 +4,7 @@
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
       <el-button size="mini" style="float: right" @click="backPage" v-show="isshow">返回</el-button>
-      <el-button type="primary" size="mini" style="float: right; margin-right: 20px" @click="addlevel">添加</el-button>
+      <el-button type="primary" size="mini" style="float: right; margin-right: 20px" @click="addlevel" v-if="powershowing(power.category_add)">添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="productCateTable" style="width: 100%" :data="list" v-loading="listLoading" border>
@@ -29,12 +29,12 @@
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
             </el-button>
-            <el-button size="mini" @click="updateLevel(scope.row)">编辑
+            <el-button size="mini" @click="updateLevel(scope.row)" v-if="powershowing(power.category_edit)">编辑
             </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handleDeletethislevel(scope.$index, scope.row)">删除
+              @click="handleDeletethislevel(scope.$index, scope.row)" v-if="powershowing(power.category_delete)">删除
             </el-button>
           </template>
         </el-table-column>
@@ -57,7 +57,7 @@
 
 <script>
   import {fetchList, deleteProductCate, updateShowStatus, updateNavStatus, deleteGoodlevel} from '@/api/productCate'
-
+  import {powershow} from "@/utils/power";
   export default {
     name: "productCateList",
     data() {
@@ -70,10 +70,12 @@
           pageSize: 10,
           parentId: 0,
         },
-        isshow: true
+        isshow: true,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.resetParentId();
       this.getList();
       if (this.$route.query.level == undefined) {
@@ -97,6 +99,9 @@
     //   }
     // },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       updateLevel(row) {
         this.$router.push({
           path: "/sys/goods/category/edit",

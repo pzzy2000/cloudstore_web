@@ -55,7 +55,7 @@
         class="btn-add"
         @click="addDict"
         size="mini"
-        style="margin-right: 20px">
+        style="margin-right: 20px" v-if="powershowing(power.dict_add)">
         添加
       </el-button>
     </el-card>
@@ -111,6 +111,7 @@
 </template>
 <script>
   import {fetchList,searchDictionaries} from '@/api/sysdict'
+  import {powershow} from "@/utils/power";
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -127,10 +128,12 @@
         listLoading: true,
         multipleSelection: [],
         verifyList: {},
-        isshow: false
+        isshow: false,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
        this.resetParentId();
        this.getList(1);
        console.log(this.$route.query.parentId)
@@ -161,6 +164,9 @@
        }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       resetParentId(){
         this.listQuery.pageNum = 1;
         if (this.$route.query.parentId != null) {

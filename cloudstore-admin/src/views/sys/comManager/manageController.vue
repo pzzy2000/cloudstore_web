@@ -3,7 +3,7 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button class="btn-add" @click="handleAddProduct" size="mini">
+      <el-button class="btn-add" @click="handleAddProduct" size="mini" v-if="powershowing(power.manage_adduser)">
         添加
       </el-button>
     </el-card>
@@ -20,9 +20,9 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="manageUser(scope.row)">用户权限</el-button>
-            <el-button size="mini" @click="udpLogis(scope.row)">编辑</el-button>
-            <el-button type="danger" size="mini" @click="delLogis(scope.row)">删除</el-button>
+            <el-button type="primary" size="mini" @click="manageUser(scope.row)" v-if="powershowing(power.manage_userpower)">用户权限</el-button>
+            <el-button size="mini" @click="udpLogis(scope.row)" v-if="powershowing(power.manage_edit)">编辑</el-button>
+            <el-button type="danger" size="mini" @click="delLogis(scope.row)" v-if="powershowing(power.manage_delete)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -32,6 +32,7 @@
 
 <script>
   import {getUserlist, deluser} from '@/api/sysManager'
+  import {powershow} from "@/utils/power";
   const defaultList = {
     pageNum: 1,
     pageSize: 100,
@@ -43,13 +44,18 @@
       return {
         pageList: Object.assign({}, defaultList),
         list: [],
-        listLoading: false
+        listLoading: false,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList();
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       getList() {
         getUserlist(this.pageList).then(res => {
           if (res.result.code == 0) {

@@ -61,7 +61,7 @@
       <el-button
         class="btn-add"
         @click="handleAddProduct()"
-        size="mini">
+        size="mini" v-if="powershowing(power.user_add)">
         添加
       </el-button>
     </el-card>
@@ -96,16 +96,16 @@
           <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="handleShowProduct(scope.$index, scope.row)">查看
+                @click="handleShowProduct(scope.$index, scope.row)" v-if="powershowing(power.user_info)">查看
               </el-button>
               <el-button
                 size="mini"
-                @click="handleUpdateUserInfo(scope.$index, scope.row)">编辑
+                @click="handleUpdateUserInfo(scope.$index, scope.row)" v-if="powershowing(power.user_edit)">编辑
               </el-button>
               <el-button
                 size="mini"
                 type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除
+                @click="handleDelete(scope.$index, scope.row)" v-if="powershowing(power.user_delete)">删除
               </el-button>
 
           </template>
@@ -129,6 +129,7 @@
 </template>
 <script>
   import { fetchList, updateDeleteStatus } from '@/api/sysuser'
+  import {powershow} from "@/utils/power";
    import {msg}  from '@/api/iunits'
   const defaultListQuery = {
     pageNum: 1,
@@ -170,10 +171,12 @@
         }, {
           value: 0,
           label: '未审核'
-        }]
+        }],
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     watch: {
@@ -208,6 +211,9 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       showStatus(row, column){
         let  status  = row.status;
         switch(status){
@@ -315,10 +321,10 @@
       handleShowProduct(index, row) {
         let  pageNum = this.listQuery.pageNum;
         let  pageSize =this.listQuery.pageSize;
-        this.$router.push({path:'/sys/manager/user/edit',query: {type: 'read', rds: 'read', userId: row.id, pageNum:pageNum, pageSize:pageSize}});
+        this.$router.push({path:'/sys/manager/user/info',query: {type: 'read', rds: 'read', userId: row.id, pageNum:pageNum, pageSize:pageSize}});
       },
       handleAddProduct() {
-        this.$router.push({path:'/sys/manager/user/edit',query: {type: 'add', rds: 'write'}})
+        this.$router.push({path:'/sys/manager/user/add',query: {type: 'add', rds: 'write'}})
       }
       // handleUpdateProduct(index,row){
       //   this.$router.push({path:'/pms/updateProduct',query:{id:row.id}});

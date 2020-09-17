@@ -55,7 +55,6 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button type="primary" @click="exportExcel" size="mini" style="float: right">导出</el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
@@ -89,7 +88,7 @@
         <el-table-column label="订单状态" align="center">
           <template slot-scope="scope">{{scope.row.orderStatus | changeStatus}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="200px"  align="center">
+        <el-table-column label="操作" width="200px" align="center" v-if="powershowing(power.order_info)">
           <template slot-scope="scope">
             <el-button size="mini" @click="readOrder(scope.$index, scope.row)">查看订单</el-button>
 <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
@@ -114,9 +113,9 @@
 
 <script>
   import {fetchList} from '@/api/order'
-  import {exportMethod} from '@/api/exportMethod'
   import { formatDate } from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
+  import {powershow} from "@/utils/power";
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -165,12 +164,14 @@
         type: '',
         startDatePicker: this.beginDate(),
         endDatePicker: this.processDate(),
+        power: ''
       }
     },
     beforeCreate() {
       that = this;
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     filters: {
@@ -231,18 +232,13 @@
       }
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         console.log(item)
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`用户名称：${item.name} / 用户账号：${item.access}`);
-      },
-      exportExcel() {
-        let obj = {
-          url: './platform/order/allocation/exportExcel',//http://106.52.184.24:18888
-          method: 'POST',
-          fileName: '订单表格'
-        }
-        exportMethod(obj);
       },
       getList(idx) {
         fetchList(this.pageList).then(res => {

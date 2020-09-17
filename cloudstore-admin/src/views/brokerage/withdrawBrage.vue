@@ -68,7 +68,7 @@
 <!--        <el-table-column label="提现状态" align="center">-->
 <!--          <template slot-scope="scope">{{scope.row.payPrice}}</template>-->
 <!--        </el-table-column>-->
-        <el-table-column label="操作" width="200px"  align="center">
+        <el-table-column label="操作" width="200px" align="center" v-if="powershowing(power.withdraw_info)">
           <template slot-scope="scope">
             <el-button size="mini" @click="readInfo(scope.$index, scope.row)">查看</el-button>
 <!--            <el-button size="mini" @click="read(scope.row)" type="danger">删除</el-button>-->
@@ -95,6 +95,7 @@
   import {listUserBroke} from '@/api/brokerage'
   import { formatDate } from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
+  import {powershow} from "@/utils/power";
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -111,13 +112,18 @@
         list:[],
         total:0,
         listQuery: Object.assign({}, defaultList),
-        listLoading: false
+        listLoading: false,
+        power: ''
       }
     },
     created() {
+      this.power = JSON.parse(localStorage.getItem('opt'));
       this.getList(1);
     },
     methods: {
+      powershowing(key) {
+        return powershow(key);
+      },
       tochild(item, callback){
         // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`用户账号：${item.phone} / 用户名称：${item.name}`);
