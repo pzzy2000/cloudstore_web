@@ -69,11 +69,31 @@
         <div id="myChartsTwo" ref="myChartsTwo" style="width: 700px; height: 400px; margin-top: 20px"></div>
       </div>
     </div>
-    <div>
-      <stateMent :url="urlone" name="订单总量" msg="saleOrders" ref="childone"></stateMent>
+    <div class="statistics-layout">
+      <div class="layout-title">订单总量</div>
+      <el-row>
+        <el-col :span="3">
+          <div style="color: white">占位符</div>
+        </el-col>
+        <el-col :span="21">
+          <div style="border-left: 1px solid rgb(220, 223, 230)">
+            <stateMent :url="urlone" name="订单总量" msg="saleOrders" ref="childone"></stateMent>
+          </div>
+        </el-col>
+      </el-row>
     </div>
-    <div>
-      <stateMent :url="urltwo" name="销售总额" msg="saleMoneys" ref="childtwo"></stateMent>
+    <div class="statistics-layout">
+      <div class="layout-title">销售总额</div>
+      <el-row>
+        <el-col :span="3">
+          <div style="color: white">占位符</div>
+        </el-col>
+        <el-col :span="21">
+          <div style="border-left: 1px solid rgb(220, 223, 230)">
+            <stateMent :url="urltwo" name="销售总额" msg="saleMoneys" ref="childtwo"></stateMent>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>

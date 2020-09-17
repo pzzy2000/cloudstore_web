@@ -61,19 +61,39 @@
         </el-col>
       </el-row>
     </div>
-    <div style="margin: 20px">
-      <div style="float: left">
-        <div id="myChartss" ref="myChartss" style="width: 900px; height: 400px; margin-top: 20px"></div>
-      </div>
-      <div style="float: left">
-        <div id="myChartsTwo" ref="myChartsTwo" style="width: 700px; height: 400px; margin-top: 20px"></div>
-      </div>
+<!--    <div style="margin: 20px">-->
+<!--      <div style="float: left">-->
+<!--        <div id="myChartss" ref="myChartss" style="width: 900px; height: 400px; margin-top: 20px"></div>-->
+<!--      </div>-->
+<!--      <div style="float: left">-->
+<!--        <div id="myChartsTwo" ref="myChartsTwo" style="width: 700px; height: 400px; margin-top: 20px"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="statistics-layout">
+      <div class="layout-title">用户注册次数</div>
+      <el-row>
+        <el-col :span="3">
+          <div style="color: white">占位符</div>
+        </el-col>
+        <el-col :span="21">
+          <div style="border-left: 1px solid rgb(220, 223, 230)">
+            <stateMent :url="urlone" name="用户注册次数" msg="regUserSums" ref="childone"></stateMent>
+          </div>
+        </el-col>
+      </el-row>
     </div>
-    <div>
-      <stateMent :url="urlone" name="用户注册次数" msg="regUserSums" ref="childone"></stateMent>
-    </div>
-    <div>
-      <stateMent :url="urltwo" name="用户访问次数" msg="visitUserSums" ref="childtwo"></stateMent>
+    <div class="statistics-layout">
+      <div class="layout-title">用户访问次数</div>
+      <el-row>
+        <el-col :span="3">
+          <div style="color: white">占位符</div>
+        </el-col>
+        <el-col :span="21">
+          <div style="border-left: 1px solid rgb(220, 223, 230)">
+            <stateMent :url="urltwo" name="用户访问次数" msg="visitUserSums" ref="childtwo"></stateMent>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
