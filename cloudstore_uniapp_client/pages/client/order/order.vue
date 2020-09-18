@@ -123,7 +123,7 @@
 		</view>
 		
 		<view class="earning-empty" v-if="!orderList.length">
-			<image src="../../../static/client/earning-logo.png" mode="" class="earning-logo"></image>
+			<image src="/static/client/earning-logo.png" mode="" class="earning-logo"></image>
 			<view class="earning-empty-text">暂无{{navTitle}}订单哦</view>
 		</view>
 	</view>

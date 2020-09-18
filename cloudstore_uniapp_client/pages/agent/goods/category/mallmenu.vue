@@ -290,7 +290,7 @@
 								return '分享赚￥';
 						}
 					},
-					initData () { //将需要初始化的数据抽离出来
+					initData: () => { //将需要初始化的数据抽离出来
 						this.goodsList = [] //清空商品列表
 						this.isGoodsBrand = false //品牌选择框隐藏
 						this.isSelectTwoType = false //下拉二级分类隐藏
@@ -298,37 +298,21 @@
 						this.selectGoodsBrandListValue = '' //传给后台的品牌选择列表数据清空
 						this.pageNum = 1 //分页页码变为1
 						this.havStock = '' //默认筛选为全部，而不是有货
+						this.dirVal = ''  //初始化价格排序
+						this.sortVal = '' //初始化价格排序
 					}
 				}
 			},
 			//以下为事件层
 			onGoodsOneType (index, value) { //点击一级分类
-				this.goodsList = [] //清空商品列表
-				this.isGoodsBrand = false //品牌选择框隐藏
-				this.isSelectTwoType = false //下拉二级分类隐藏
-				this.selectGoodsBrandList = [] //品牌选择列表清空
-				this.selectGoodsBrandListValue = '' //传给后台的品牌选择列表数据清空
-				this.pageNum = 1 //分页页码变为1
-				this.havStock = '' //默认筛选为全部，而不是有货
-				this.dirVal = ''  //初始化价格排序
-				this.sortVal = '' //初始化价格排序
-			
+				this.handler().initData()
 				this.mallmenuOneTypeCurrent = index //获取一级分类的下标,实现选中高亮
 				this.categoryOneId = value //获取一级分类的id
 				this.mallmenuTwoTypeCurrent = 0 //二级分类默认选择全部
 				this.netWork().getGoodsTwoType()
 			}, //点击二级分类
 			onGoodsTwoType (index, value)  {
-				this.goodsList = [] //清空商品列表
-				this.isGoodsBrand = false //品牌选择框隐藏
-				this.isSelectTwoType = false //下拉二级分类隐藏
-				this.selectGoodsBrandList = [] //品牌选择列表清空
-				this.selectGoodsBrandListValue = '' //传给后台的品牌选择列表数据清空
-				this.pageNum = 1 //分页页码变为1
-				this.havStock = '' //默认筛选为全部，而不是有货
-				this.dirVal = ''  //初始化价格排序
-				this.sortVal = '' //初始化价格排序
-				
+				this.handler().initData()
 				this.mallmenuTwoTypeCurrent = index
 				this.categoryTwoId = value
 				this.netWork().getGoodsData()
@@ -522,7 +506,7 @@
 			padding: 20upx;
 			display: flex;
 			flex-wrap: wrap;
-			z-index: 3;
+			z-index: 4;
 			.popup-TwoType-text {
 				background-color: #F5F5F5;
 				border-radius: 10upx;
@@ -570,8 +554,9 @@
 					text-align: right;
 					padding-right: 10upx;
 					line-height: 50upx;
-					// background-image: linear-gradient(#fff,#fff);
-					 background-image: linear-gradient(to left, rgb(255, 255, 255),rgb(255, 255, 255), transparent);
+					background-image: linear-gradient(to left, rgb(255, 255, 255),rgb(255, 255, 255), transparent);
+					background-image: -webkit-linear-gradient(to left, rgb(255, 255, 255),rgb(255, 255, 255), transparent);
+					background-image: -o-linear-gradient(to left, rgb(255, 255, 255),rgb(255, 255, 255), transparent);
 					.cuIcon-triangledownfill {
 						width: 100%;
 						height: 100%;
@@ -607,6 +592,9 @@
 				height: 80upx;
 				line-height: 80upx;
 				padding: 0 20upx;
+				background: #fff;
+				z-index: 3;
+				position: relative;
 				.screen-main-price {
 					display: flex;
 					justify-content: center;
@@ -630,7 +618,7 @@
 				.nav-item-twoCategory {
 					position: absolute;
 					background-color: #fff;
-					top: 160upx;
+					top: 80upx;
 					right: 0upx;
 					width: 100%;
 					z-index: 3;
@@ -698,7 +686,8 @@
 			height: 100%;
 			position: absolute;
 			background: rgba(0,0,0, 0.5);
-			z-index: 1;
+			z-index: 2;
+			top: 0;
 		}
 		.mallmenu-right-scroll {
 			height: calc(100% - 190upx);
@@ -777,6 +766,7 @@
 							.price-sale {
 								color: #FF1414;
 								font-size: 32upx;
+								font-weight: 500;
 							}
 							.price-unit {
 								color: #999;

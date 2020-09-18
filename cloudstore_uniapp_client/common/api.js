@@ -151,6 +151,10 @@ export default {
 		agentOrder: {
 			list: 'app/private/order/delivery/list',
 			delivery: 'app/private/order/delivery/order'
+		},
+		agentLogistics: {
+			list: 'app/private/order/allocation/agent/list',
+			detail: 'app/private/order/allocation/agent/detail'
 		}
 	},
 	statusBarHeight () { //距离头部的固定定位信息

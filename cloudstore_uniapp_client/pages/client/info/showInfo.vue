@@ -64,7 +64,7 @@
 						this.phone = data.result.phone;
 						this.type = data.result.agent
 						if (this.type === 'agent') {
-							this.type = '代理商'
+							this.type = '分销团长'
 						} else if (this.type === 'leader'){
 							this.type = '团长'
 						} else {

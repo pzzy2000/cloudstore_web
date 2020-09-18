@@ -68,21 +68,21 @@
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.userType == 'client'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
-						<text class="text-block text">申请代理</text>
+						<text class="text-block text">申请团长</text>
 					</view>
 				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/client/info/applyAgent')" v-if="user.userType == 'agent'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
-						<text class="text-block text">代理资料</text>
+						<text class="text-block text">分销团长资料</text>
 					</view>
 				</view>
-				<view class="cu-item arrow"  @click="toapplyAgent('/pages/agent/info/index')" v-if="user.userType == 'leader'">
+				<!-- <view class="cu-item arrow"  @click="toapplyAgent('/pages/agent/info/index')" v-if="user.userType == 'leader'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
-						<text class="text-block text">代理入口</text>
+						<text class="text-block text">团长入口</text>
 					</view>
-				</view>
+				</view> -->
 				<view class="cu-item arrow">
 					<button class="cu-btn content" open-type="contact">
 						<text class="cuIcon-service"></text>
@@ -179,7 +179,7 @@
 						this.user.userType = 'client'
 					break;
 					case 'agent':
-						this.user.agentType = '代理'
+						this.user.agentType = '分销团长'
 						this.user.userType = 'agent'
 					break;
 					case 'leader':

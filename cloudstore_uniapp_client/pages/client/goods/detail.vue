@@ -284,6 +284,10 @@ export default {
 		return shareObj
 	},
 	onShow() {
+		uni.pageScrollTo({
+			duration: 300,
+			scrollTop: 0
+		});
 	},
 	onLoad(ops) {
 		this.goodsId = ops.goodsId;
