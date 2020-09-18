@@ -62,7 +62,7 @@
       </el-row>
     </div>
     <div class="statistics-layout">
-      <div class="layout-title">用户注册次数</div>
+      <div class="layout-title">用户注册数</div>
       <el-row>
         <el-col :span="6">
           <div style="color: white">
@@ -291,7 +291,7 @@
             formatter: "{a} <br/>{b}: {c} ({d}%)",
           },
           title: {
-            text: '销售总额',   //图表顶部的标题
+            text: '注册用户占比',   //图表顶部的标题
             left: 'center'
             // subtext: '纯属虚构'    //副标题
           },
@@ -403,14 +403,14 @@
         this.value = '';
         this.getList({type: 'action', day: 7})
         this.getBarlist({type: 'action', day: 7});
-        this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 7})
+        // this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 7})
         this.$refs.childtwo.getLeaderlist(this.urltwo, {type: 'action', day: 7})
       },
       oneMonth() {
         this.value = '';
         this.getList({type: 'action', day: 30});
         this.getBarlist({type: 'action', day: 30});
-        this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 30})
+        // this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 30})
         this.$refs.childtwo.getLeaderlist(this.urltwo, {type: 'action', day: 30})
       },
       searchList() {
@@ -420,7 +420,8 @@
           type: 'dates'
         }
         this.getList(obj);
-        this.$refs.childone.getLeaderlist(this.urlone, obj)
+        this.getBarlist(obj);
+        // this.$refs.childone.getLeaderlist(this.urlone, obj)
         this.$refs.childtwo.getLeaderlist(this.urltwo, obj)
       }
     }

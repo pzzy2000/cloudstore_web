@@ -70,7 +70,7 @@
 <!--      </div>-->
 <!--    </div>-->
     <div class="statistics-layout">
-      <div class="layout-title">前五名团长订单总量</div>
+      <div class="layout-title">团长订单总量</div>
       <el-row>
         <el-col :span="6">
           <div>
@@ -85,7 +85,7 @@
       </el-row>
     </div>
     <div class="statistics-layout">
-      <div class="layout-title">前五名团长销售总额</div>
+      <div class="layout-title">团长销售总额</div>
       <el-row>
         <el-col :span="6">
           <div style="color: white">
