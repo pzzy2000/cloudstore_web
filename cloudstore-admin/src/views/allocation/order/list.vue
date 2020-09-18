@@ -173,7 +173,7 @@
       methods: {
         exportExcel() {
           let obj = {
-            url: '/platform/order/allocation/exportExcel',//http://106.52.184.24:18888
+            url: './platform/order/allocation/exportExcel',//http://106.52.184.24:18888
             method: 'POST',
             fileName: '订单表格'
           }

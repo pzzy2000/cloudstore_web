@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="myCharts" ref="myCharts" style="width: 1450px; height: 350px; margin-top: 20px"></div>
+    <div id="myCharts" ref="myCharts" :style="{'--width': charWidth}" class="charts"></div>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
   import {leaderReport} from '@/api/charts'
   export default {
     name: "index",
-    props: ['url', 'name', 'msg'],
+    props: ['url', 'name', 'msg', 'charWidth'],
     data() {
       return {
         series: [],
@@ -129,6 +129,10 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.charts{
+  width: var(--width);
+  height: 350px;
+  margin-top: 20px;
+}
 </style>

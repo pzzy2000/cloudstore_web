@@ -16,7 +16,7 @@
     <div class="statistics-layout">
       <div class="layout-title">订单统计</div>
       <el-row>
-        <el-col :span="3">
+        <el-col :span="6">
           <div style="padding: 20px">
             <div>
               <div style="color: #909399;font-size: 14px">当前订单总数</div>
@@ -52,45 +52,49 @@
 <!--            </div>-->
           </div>
         </el-col>
-        <el-col :span="21">
+        <el-col :span="18">
           <div style="border-left:1px solid #DCDFE6; text-align: right">
             <div>
-              <div id="myCharts" ref="myCharts" style="width: 1450px; height: 350px; margin-top: 20px"></div>
+              <div id="myCharts" ref="myCharts" style="width: 1240px; height: 350px; margin-top: 20px"></div>
             </div>
           </div>
         </el-col>
       </el-row>
     </div>
-    <div style="margin: 20px; overflow:hidden;">
-      <div style="float: left">
-        <div id="myChartss" ref="myChartss" style="width: 900px; height: 400px; margin-top: 20px"></div>
-      </div>
-      <div style="float: left">
-        <div id="myChartsTwo" ref="myChartsTwo" style="width: 700px; height: 400px; margin-top: 20px"></div>
-      </div>
-    </div>
+<!--    <div style="margin: 20px; overflow:hidden;">-->
+<!--      <div style="float: left">-->
+<!--        -->
+<!--      </div>-->
+<!--      <div style="float: left">-->
+
+<!--      </div>-->
+<!--    </div>-->
     <div class="statistics-layout">
-      <div class="layout-title">订单总量</div>
+      <div class="layout-title">前五名团长订单总量</div>
       <el-row>
-        <el-col :span="3">
-          <div style="color: white">占位符</div>
+        <el-col :span="6">
+          <div>
+            <div id="myChartsTwo" ref="myChartsTwo" style="width: 400px; height: 350px; margin-top: 20px"></div>
+          </div>
         </el-col>
-        <el-col :span="21">
+        <el-col :span="18">
           <div style="border-left: 1px solid rgb(220, 223, 230)">
-            <stateMent :url="urlone" name="订单总量" msg="saleOrders" ref="childone"></stateMent>
+            <stateMent :url="urlone" name="订单总量" msg="saleOrders" ref="childone" charWidth="1240px"></stateMent>
           </div>
         </el-col>
       </el-row>
     </div>
     <div class="statistics-layout">
-      <div class="layout-title">销售总额</div>
+      <div class="layout-title">前五名团长销售总额</div>
       <el-row>
-        <el-col :span="3">
-          <div style="color: white">占位符</div>
+        <el-col :span="6">
+          <div style="color: white">
+            <div id="myChartss" ref="myChartss" style="width: 400px; height: 350px; margin-top: 20px"></div>
+          </div>
         </el-col>
-        <el-col :span="21">
+        <el-col :span="18">
           <div style="border-left: 1px solid rgb(220, 223, 230)">
-            <stateMent :url="urltwo" name="销售总额" msg="saleMoneys" ref="childtwo"></stateMent>
+            <stateMent :url="urltwo" name="销售总额" msg="saleMoneys" ref="childtwo" charWidth="1240px"></stateMent>
           </div>
         </el-col>
       </el-row>
@@ -240,13 +244,19 @@
             y: 'bottom',    //延Y轴居中
             x: 'center' //居右显示
           },
-          tooltip: {},
+          tooltip: {
+            show: true,
+            trigger: 'item',
+            showContent: true,
+            formatter: "{a} <br/>{b}: {c} ({d}%)",
+          },
           title: {
             text: '销售总额',   //图表顶部的标题
             left: 'center'
             // subtext: '纯属虚构'    //副标题
           },
           series: [{
+            name: '团长',
             type: 'pie',
             radius: '40%',
             center: ['50%', '50%'],
@@ -261,13 +271,13 @@
                 shadowOffsetX: 0,
                 shadowColor: 'rgba(255, 0, 0, 0.5)'
               },
-              normal:{
-                label:{
-                  show: true,
-                  formatter: '{b} : {c} ({d}%)'
-                },
-                labelLine :{show:true}
-              }
+              // normal:{
+              //   label:{
+              //     show: true,
+              //     formatter: '{b} : {c} ({d}%)'
+              //   },
+              //   labelLine :{show:true}
+              // }
             }
           }]
         }
@@ -281,15 +291,22 @@
             y: 'bottom',    //延Y轴居中
             x: 'center' //居右显示
           },
-          tooltip: {},
+          tooltip: {
+            show: true,
+            trigger: 'item',
+            showContent: true,
+            formatter: "{a} <br/>{b}: {c} ({d}%)",
+            // position: ['50%', '50%']
+          },
           title: {
             text: '订单数量',   //图表顶部的标题
             left: 'center'
             // subtext: '纯属虚构'    //副标题
           },
           series: [{
+            name: '团长',
             type: 'pie',
-            radius: '40%',
+            radius: '50%',
             center: ['50%', '50%'],
             // data: [
             //   {name: '销售总额', value: 1212},
@@ -302,13 +319,13 @@
                 shadowOffsetX: 0,
                 shadowColor: 'rgba(255, 0, 0, 0.5)'
               },
-              normal:{
-                label:{
-                  show: true,
-                  formatter: '{b} : {c} ({d}%)'
-                },
-                labelLine :{show:true}
-              }
+              // normal:{
+              //   label:{
+              //     show: false,
+              //     // formatter: '{b} : {c} ({d}%)'
+              //   },
+              //   // labelLine :{show:true}
+              // }
             }
           }]
         }
@@ -350,25 +367,29 @@
             let obj = {};
             const data = res.result.result.saleMoneys;
             const orderData = res.result.result.saleOrders;
-            const colorArr = ['#FF7878', '#68C1B8', '#FD7EB2', '#A4ADBD', '#fff', '#eee'];
+            const colorArr = ['#019fe8', '#77ccf3', '#f07276', '#f39a00', '#fee300', '#eee'];
+            const colorArray = ['#f07276', '#f39a00', '#019fe8', '#77ccf3', '#fee300', '#eee'];
             for (let i=0; i<data.length; i++) {
               if (data[i].agentId !== '-1') {
                 obj = {name: data[i].agentBean.name, value: data[i].sums, itemStyle: { color: colorArr[i] }};
                 this.pieoneArr.push(obj);
-              } else {
-                obj = {name: '其他', value: data[i].sums};
-                this.pieoneArr.push(obj);
               }
+              // else {
+              //   obj = {name: '其他', value: data[i].sums};
+              //   this.pieoneArr.push(obj);
+              // }
             }
             for (let i=0; i<orderData.length; i++) {
               if (data[i].agentId !== '-1') {
-                obj = {name: orderData[i].agentBean.name, value: orderData[i].sums, itemStyle: { color: colorArr[i] }};
-                this.pietwoArr.push(obj);
-              } else {
-                obj = {name: '其他', value: orderData[i].sums};
+                obj = {name: orderData[i].agentBean.name, value: orderData[i].sums, itemStyle: { color: colorArray[i] }};
                 this.pietwoArr.push(obj);
               }
+              // else {
+              //   obj = {name: '其他', value: orderData[i].sums};
+              //   this.pietwoArr.push(obj);
+              // }
             }
+            console.log(this.pieoneArr)
           }
         })
       },

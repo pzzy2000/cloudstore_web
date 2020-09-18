@@ -16,7 +16,7 @@
     <div class="statistics-layout">
       <div class="layout-title">用户统计</div>
       <el-row>
-        <el-col :span="3">
+        <el-col :span="6">
           <div style="padding: 20px">
             <div>
               <div style="color: #909399;font-size: 14px">当前用户注册次数</div>
@@ -52,32 +52,30 @@
             <!--            </div>-->
           </div>
         </el-col>
-        <el-col :span="21">
+        <el-col :span="18">
           <div style="border-left:1px solid #DCDFE6; text-align: right">
             <div>
-              <div id="myCharts" ref="myCharts" style="width: 1450px; height: 350px; margin-top: 20px"></div>
+              <div id="myCharts" ref="myCharts" style="width: 1240px; height: 350px; margin-top: 20px"></div>
             </div>
           </div>
         </el-col>
       </el-row>
     </div>
-<!--    <div style="margin: 20px">-->
-<!--      <div style="float: left">-->
-<!--        <div id="myChartss" ref="myChartss" style="width: 900px; height: 400px; margin-top: 20px"></div>-->
-<!--      </div>-->
-<!--      <div style="float: left">-->
-<!--        <div id="myChartsTwo" ref="myChartsTwo" style="width: 700px; height: 400px; margin-top: 20px"></div>-->
-<!--      </div>-->
-<!--    </div>-->
     <div class="statistics-layout">
       <div class="layout-title">用户注册次数</div>
       <el-row>
-        <el-col :span="3">
-          <div style="color: white">占位符</div>
+        <el-col :span="6">
+          <div style="color: white">
+            <div style="color: white">
+              <div id="myChartss" ref="myChartss" style="width: 400px; height: 350px; margin-top: 20px"></div>
+            </div>
+          </div>
         </el-col>
-        <el-col :span="21">
+        <el-col :span="18">
           <div style="border-left: 1px solid rgb(220, 223, 230)">
-            <stateMent :url="urlone" name="用户注册次数" msg="regUserSums" ref="childone"></stateMent>
+            <div>
+              <div id="barChart" ref="barChart" style="width: 1240px; height: 350px; margin-top: 20px"></div>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -85,12 +83,12 @@
     <div class="statistics-layout">
       <div class="layout-title">用户访问次数</div>
       <el-row>
-        <el-col :span="3">
+        <el-col :span="6">
           <div style="color: white">占位符</div>
         </el-col>
-        <el-col :span="21">
+        <el-col :span="18">
           <div style="border-left: 1px solid rgb(220, 223, 230)">
-            <stateMent :url="urltwo" name="用户访问次数" msg="visitUserSums" ref="childtwo"></stateMent>
+            <stateMent :url="urltwo" name="用户访问次数" msg="visitUserSums" ref="childtwo" charWidth="1240px"></stateMent>
           </div>
         </el-col>
       </el-row>
@@ -100,7 +98,7 @@
 
 <script>
   import echarts from 'echarts';
-  import {showUsercharts, showPiccharts} from '@/api/charts';
+  import {showUsercharts, showPiccharts, barCharts} from '@/api/charts';
   import stateMent from '@/components/statement';
   export default {
     components: {
@@ -144,28 +142,37 @@
         pieoneArr: [],
         pietwoArr: [],
         orderNumber: 0,
-        sale: 0
+        sale: 0,
+        leaderArr: [],
+        alluserArr: [],
+        allregArr: []
       }
     },
     created() {
       this.getList({type: 'action', day: 7});
       // this.getRatelist();
+      this.getBarlist({type: 'action', day: 7});
     },
     mounted(){
       this.line();
       // this.pieOne();
       // this.pieTwo();
+      this.bar();
+      this.pieOne();
     },
     watch:{
       dateArr(val){//监听数据发生改变 刷新图表数据
         this.line();
       },
+      leaderArr(val) {
+        this.bar();
+      },
       pieoneArr(val){//监听数据发生改变 刷新图表数据
         this.pieOne();
       },
-      pietwoArr(val){//监听数据发生改变 刷新图表数据
-        this.pieTwo();
-      },
+      // pietwoArr(val){//监听数据发生改变 刷新图表数据
+      //   this.pieTwo();
+      // },
       // lineArr(val){//监听数据发生改变 刷新图表数据
       //   this.line();
       // }
@@ -232,88 +239,90 @@
         }
         myCharts.setOption(options);
       },
-      // pieOne() {
-      //   const myCharts = echarts.init(this.$refs.myChartss);
-      //   let options = {
-      //     legend: {
-      //       orient: 'horizontal',  //垂直显示
-      //       y: 'bottom',    //延Y轴居中
-      //       x: 'center' //居右显示
-      //     },
-      //     tooltip: {},
-      //     title: {
-      //       text: '销售总额',   //图表顶部的标题
-      //       left: 'center'
-      //       // subtext: '纯属虚构'    //副标题
-      //     },
-      //     series: [{
-      //       type: 'pie',
-      //       radius: '40%',
-      //       center: ['50%', '50%'],
-      //       // data: [
-      //       //   {name: '销售总额', value: 1212},
-      //       //   {name: '订单数量', value: 2323}
-      //       // ],
-      //       data: this.pieoneArr,
-      //       itemStyle: {
-      //         emphasis: {
-      //           shadowBlur: 10,
-      //           shadowOffsetX: 0,
-      //           shadowColor: 'rgba(255, 0, 0, 0.5)'
-      //         },
-      //         normal:{
-      //           label:{
-      //             show: true,
-      //             formatter: '{b} : {c} ({d}%)'
-      //           },
-      //           labelLine :{show:true}
-      //         }
-      //       }
-      //     }]
-      //   }
-      //   myCharts.setOption(options);
-      // },
-      // pieTwo() {
-      //   const myCharts = echarts.init(this.$refs.myChartsTwo);
-      //   let options = {
-      //     legend: {
-      //       orient: 'horizontal',  //垂直显示
-      //       y: 'bottom',    //延Y轴居中
-      //       x: 'center' //居右显示
-      //     },
-      //     tooltip: {},
-      //     title: {
-      //       text: '订单数量',   //图表顶部的标题
-      //       left: 'center'
-      //       // subtext: '纯属虚构'    //副标题
-      //     },
-      //     series: [{
-      //       type: 'pie',
-      //       radius: '40%',
-      //       center: ['50%', '50%'],
-      //       // data: [
-      //       //   {name: '销售总额', value: 1212},
-      //       //   {name: '订单数量', value: 2323}
-      //       // ],
-      //       data: this.pietwoArr,
-      //       itemStyle: {
-      //         emphasis: {
-      //           shadowBlur: 10,
-      //           shadowOffsetX: 0,
-      //           shadowColor: 'rgba(255, 0, 0, 0.5)'
-      //         },
-      //         normal:{
-      //           label:{
-      //             show: true,
-      //             formatter: '{b} : {c} ({d}%)'
-      //           },
-      //           labelLine :{show:true}
-      //         }
-      //       }
-      //     }]
-      //   }
-      //   myCharts.setOption(options);
-      // },
+      bar() {
+        const myCharts = echarts.init(this.$refs.barChart);
+        let options = {
+          legend: {},
+          tooltip: {},
+          xAxis: {
+            type: 'category',
+            data: this.leaderArr
+          },
+          yAxis: {   //y轴坐标数据
+            type : 'value',
+            // gridIndex: 0
+          },
+          series: [
+            {
+              name: '社区总户数',
+              data: this.alluserArr,
+              type: 'bar',
+              itemStyle: {
+                normal: {
+                  color: "#f07276"
+                }
+              },
+            },
+            {
+              name: '注册用户数',
+              data: this.allregArr,
+              type: 'bar',
+              itemStyle: {
+                normal: {
+                  color: "#fee300"
+                }
+              },
+            }]
+        }
+        myCharts.setOption(options);
+      },
+      pieOne() {
+        const myCharts = echarts.init(this.$refs.myChartss);
+        let options = {
+          legend: {
+            orient: 'horizontal',  //垂直显示
+            y: 'bottom',    //延Y轴居中
+            x: 'center' //居右显示
+          },
+          tooltip: {
+            show: true,
+            trigger: 'item',
+            showContent: true,
+            formatter: "{a} <br/>{b}: {c} ({d}%)",
+          },
+          title: {
+            text: '销售总额',   //图表顶部的标题
+            left: 'center'
+            // subtext: '纯属虚构'    //副标题
+          },
+          series: [{
+            name: '团长',
+            type: 'pie',
+            radius: '40%',
+            center: ['50%', '50%'],
+            // data: [
+            //   {name: '销售总额', value: 1212},
+            //   {name: '订单数量', value: 2323}
+            // ],
+            data: this.pieoneArr,
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(255, 0, 0, 0.5)'
+              },
+              // normal:{
+              //   label:{
+              //     show: true,
+              //     formatter: '{b} : {c} ({d}%)'
+              //   },
+              //   labelLine :{show:true}
+              // }
+            }
+          }]
+        }
+        myCharts.setOption(options);
+      },
       getList(obj) {
         this.dateArr = [];
         this.lineOne = [];
@@ -344,43 +353,63 @@
           }
         })
       },
-      getRatelist() {
-        showPiccharts({type: 'action', day: 7}).then(res => {
+      // getRatelist() {
+      //   showPiccharts({type: 'action', day: 7}).then(res => {
+      //     if (res.result.code == 0) {
+      //       let obj = {};
+      //       const data = res.result.result.saleMoneys;
+      //       const orderData = res.result.result.saleOrders;
+      //       const colorArr = ['#FF7878', '#68C1B8', '#FD7EB2', '#A4ADBD', '#fff', '#eee'];
+      //       for (let i=0; i<data.length; i++) {
+      //         if (data[i].agentId !== '-1') {
+      //           obj = {name: data[i].agentBean.name, value: data[i].sums, itemStyle: { color: colorArr[i] }};
+      //           this.pieoneArr.push(obj);
+      //         } else {
+      //           obj = {name: '其他', value: data[i].sums};
+      //           this.pieoneArr.push(obj);
+      //         }
+      //       }
+      //       for (let i=0; i<orderData.length; i++) {
+      //         if (data[i].agentId !== '-1') {
+      //           obj = {name: orderData[i].agentBean.name, value: orderData[i].sums, itemStyle: { color: colorArr[i] }};
+      //           this.pietwoArr.push(obj);
+      //         } else {
+      //           obj = {name: '其他', value: orderData[i].sums};
+      //           this.pietwoArr.push(obj);
+      //         }
+      //       }
+      //     }
+      //   })
+      // },
+      getBarlist(obj) {
+        barCharts(obj).then(res => {
           if (res.result.code == 0) {
-            let obj = {};
-            const data = res.result.result.saleMoneys;
-            const orderData = res.result.result.saleOrders;
-            const colorArr = ['#FF7878', '#68C1B8', '#FD7EB2', '#A4ADBD', '#fff', '#eee'];
-            for (let i=0; i<data.length; i++) {
-              if (data[i].agentId !== '-1') {
-                obj = {name: data[i].agentBean.name, value: data[i].sums, itemStyle: { color: colorArr[i] }};
-                this.pieoneArr.push(obj);
-              } else {
-                obj = {name: '其他', value: data[i].sums};
-                this.pieoneArr.push(obj);
-              }
+            this.leaderArr = [];
+            this.alluserArr = [];
+            this.allregArr = [];
+            this.pieoneArr = [];
+            let data = res.result.result;
+            for (let i=0; i<data.agentHouseBean.length; i++) {
+              this.leaderArr.push(data.agentHouseBean[i].agentBean.name);
+              this.alluserArr.push(data.agentHouseBean[i].houseNumber);
+              this.allregArr.push(data.agentHouseBean[i].registerNumber);
             }
-            for (let i=0; i<orderData.length; i++) {
-              if (data[i].agentId !== '-1') {
-                obj = {name: orderData[i].agentBean.name, value: orderData[i].sums, itemStyle: { color: colorArr[i] }};
-                this.pietwoArr.push(obj);
-              } else {
-                obj = {name: '其他', value: orderData[i].sums};
-                this.pietwoArr.push(obj);
-              }
-            }
+            let arr = [{name: '已注册用户', value: data.register, itemStyle: { color: '#fee300' }}, {name: '未注册用户', value: data.house-data.register, itemStyle: { color: '#77ccf3' }}]
+            this.pieoneArr = arr;
           }
         })
       },
       oneWeek() {
         this.value = '';
         this.getList({type: 'action', day: 7})
+        this.getBarlist({type: 'action', day: 7});
         this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 7})
         this.$refs.childtwo.getLeaderlist(this.urltwo, {type: 'action', day: 7})
       },
       oneMonth() {
         this.value = '';
         this.getList({type: 'action', day: 30});
+        this.getBarlist({type: 'action', day: 30});
         this.$refs.childone.getLeaderlist(this.urlone, {type: 'action', day: 30})
         this.$refs.childtwo.getLeaderlist(this.urltwo, {type: 'action', day: 30})
       },

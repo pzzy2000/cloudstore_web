@@ -2,7 +2,9 @@ import {asyncRouterMap, constantRouterMap} from '@/router/index';
 
 //判断是否有权限访问该菜单
 function hasPermission(menus, routeChild) {
-  if (localStorage.getItem('userAccont') == 1440000001) {
+  let userCount = localStorage.getItem('userAccont')
+  if (userCount == 1440000001) {
+  // || userCount == 13714641024 || userCount == 13714641019 || userCount == 13714640980 || userCount == 13714640974 || userCount == 13714640993
     return true
   } else {
     if (routeChild.name) {

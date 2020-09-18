@@ -40,3 +40,11 @@ export function getOutlinelist(params) {
     data: switchForm(params)
   })
 }
+
+export function barCharts(params) {
+  return request({
+    url: '/report/statistics/getHouseByAgentId',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
