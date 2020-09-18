@@ -30,12 +30,12 @@
 				</view>
 				<!-- <text class="yticon icon-you"></text> -->
 			</view>
-			<!-- <view class="c-row">
+			<view class="c-row">
 				<text class="tit">活动内容</text>
 				<view class="con-list">
 					<text>{{activity.name}}</text>
 				</view>
-			</view> -->
+			</view>
 			<view class="c-row" v-for="(item ,index) in propertyValue" :key='index' v-if='item[index]'>
 				<text class="tit">{{item.goodsPropertyParamName}}</text>
 				<view class="con-list">

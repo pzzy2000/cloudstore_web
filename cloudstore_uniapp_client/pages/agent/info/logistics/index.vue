@@ -14,7 +14,7 @@
 				<view class="earning-empty-text">暂无{{tabName}}数据</view>
 			</view>
 			<view class="logistics-main">
-				<view class="logistics-main-content" v-for="item in logisticsList" :key="item.id">
+				<view class="logistics-main-content" v-for="item in logisticsList" :key="item.id" @click="onLogisticsDetail(item.id)">
 					<view class="logistics-time">
 						<text>下单时间：{{item.allocationTime}}</text>
 					</view>
@@ -32,7 +32,6 @@
 					</view>
 				</view>
 			</view>
-			<button type="default" @click="onTest">按钮</button>
 		</view>
 	</view>
 </template>
@@ -112,6 +111,11 @@
 				this.pageNum = 1
 				this.netWork().getLogistics()
 			},
+			onLogisticsDetail (id) {
+				uni.navigateTo({
+					url: '/pages/agent/info/logistics/detail?id='+id,
+				});
+			}
 		}
 	}
 </script>

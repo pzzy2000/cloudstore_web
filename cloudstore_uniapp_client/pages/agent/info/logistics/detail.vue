@@ -57,14 +57,31 @@
 	export default {
 		data() {
 			return {
-				
+				id: ''
 			}
 		},
 		components: {
 			navBar
 		},
+		onLoad(ops) {
+			// this.id = ops.id
+			this.netWork().getLogisticsDetail(ops.id)
+		},
 		methods: {
-			
+			netWork () {
+				return {
+					getLogisticsDetail: async (id) => {
+						let parmas = {
+							id: id,
+						}
+						let data = await Api.apiCall('post', Api.agent.agentLogistics.detail, parmas, true )
+						if (data) {
+							console.log(data)
+							// this.logisticsList = data.result.records
+						}
+					}
+				}
+			}
 		}
 	}
 </script>

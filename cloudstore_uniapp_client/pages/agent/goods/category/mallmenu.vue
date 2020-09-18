@@ -506,7 +506,7 @@
 			padding: 20upx;
 			display: flex;
 			flex-wrap: wrap;
-			z-index: 3;
+			z-index: 4;
 			.popup-TwoType-text {
 				background-color: #F5F5F5;
 				border-radius: 10upx;
@@ -554,8 +554,9 @@
 					text-align: right;
 					padding-right: 10upx;
 					line-height: 50upx;
-					// background-image: linear-gradient(#fff,#fff);
-					 background-image: linear-gradient(to left, rgb(255, 255, 255),rgb(255, 255, 255), transparent);
+					background-image: linear-gradient(to left, rgb(255, 255, 255),rgb(255, 255, 255), transparent);
+					background-image: -webkit-linear-gradient(to left, rgb(255, 255, 255),rgb(255, 255, 255), transparent);
+					background-image: -o-linear-gradient(to left, rgb(255, 255, 255),rgb(255, 255, 255), transparent);
 					.cuIcon-triangledownfill {
 						width: 100%;
 						height: 100%;
@@ -591,6 +592,9 @@
 				height: 80upx;
 				line-height: 80upx;
 				padding: 0 20upx;
+				background: #fff;
+				z-index: 3;
+				position: relative;
 				.screen-main-price {
 					display: flex;
 					justify-content: center;
@@ -614,7 +618,7 @@
 				.nav-item-twoCategory {
 					position: absolute;
 					background-color: #fff;
-					top: 160upx;
+					top: 80upx;
 					right: 0upx;
 					width: 100%;
 					z-index: 3;
@@ -682,7 +686,8 @@
 			height: 100%;
 			position: absolute;
 			background: rgba(0,0,0, 0.5);
-			z-index: 1;
+			z-index: 2;
+			top: 0;
 		}
 		.mallmenu-right-scroll {
 			height: calc(100% - 190upx);
@@ -761,6 +766,7 @@
 							.price-sale {
 								color: #FF1414;
 								font-size: 32upx;
+								font-weight: 500;
 							}
 							.price-unit {
 								color: #999;

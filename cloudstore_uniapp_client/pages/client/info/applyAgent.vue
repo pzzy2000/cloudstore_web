@@ -19,7 +19,7 @@
 				<input placeholder="请输入电话号码" name="input" :value="agentfrom.phone" :disabled='isEdit' @input="editInput($event,'phone')"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">代理类型</view>
+				<view class="title">团长类型</view>
 				<template>
 					<picker @change="typePickerChange" :value="typePickerIndex" :range="typePicker" :disabled='isEdit' v-if="!isEdit">
 						<view class="picker">
@@ -95,7 +95,7 @@
 	export default {
 		data() {
 			return {
-				agentTitle: '申请代理',
+				agentTitle: '申请团长',
 				popup:false,//控制省市区三级联动
 				agentfrom: {
 					id: '',
@@ -127,7 +127,7 @@
 				},
 				picker:['身份证'],
 				index: 0,
-				typePicker: ['代理', '团长'],
+				typePicker: ['分销团长', '团长'],
 				typePickerIndex: 1,
 				upImgUrl: Api.BASEURI+Api.upImgUrl.imgUrl,
 				category: 'image',
@@ -231,7 +231,7 @@
 							that.agentfrom.optType = 'update'
 							that.isEdit = false
 						} else if (data.result.status === 1){
-							that.agentTitle = '代理资料'
+							that.agentTitle = '团长资料'
 							that.isEdit = true
 						} else {
 							that.isUpload = true
@@ -365,7 +365,7 @@
 							this.agentfrom.optType = 'update'
 							this.isEdit = false
 						} else if (data.result.status === 1){
-							this.agentTitle = '代理资料'
+							this.agentTitle = '团长资料'
 							this.isEdit = true
 						}
 					} else {
