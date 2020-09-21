@@ -166,6 +166,7 @@
       getList(idx) {
         this.listLoading = true;
         this.listQuery.addProfit = 1;
+        this.listQuery.type = 0;
         getActlist(this.listQuery).then(res => {
           this.listLoading = false
           this.orderList = res.result.result.records;
