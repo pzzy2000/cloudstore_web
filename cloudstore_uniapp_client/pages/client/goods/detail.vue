@@ -15,6 +15,7 @@
 			<view class="price-box">
 				<text class="price price-symbol">{{ sku.price }}</text>/{{ goods.unit }}
 				<text class="martPrice">销售价:{{goods.martPrice || ''}}</text>
+				<text class="stock">库存:{{sku.stock || ''}}</text>
 			</view>
 		</view>
 		<view class="c-list">
@@ -712,6 +713,11 @@ export default {
 		.martPrice {
 			margin-left: 15upx;
 			text-decoration: line-through;
+		}
+		.stock {
+			font-size: 26upx;
+			color: #999999;
+			margin-left: 20upx;
 		}
 	}
 	.price {
