@@ -77,12 +77,12 @@
 						<text class="text-block text">分销团长资料</text>
 					</view>
 				</view>
-				<!-- <view class="cu-item arrow"  @click="toapplyAgent('/pages/agent/info/index')" v-if="user.userType == 'leader'">
+				 <view class="cu-item arrow"  @click="toapplyAgent('/pages/agent/info/index')" v-if="user.userType == 'leader'">
 					<view class="content">
 						<text class="cuIcon-vip"></text>
 						<text class="text-block text">团长入口</text>
 					</view>
-				</view> -->
+				</view> 
 				<view class="cu-item arrow">
 					<button class="cu-btn content" open-type="contact">
 						<text class="cuIcon-service"></text>

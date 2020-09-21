@@ -42,7 +42,7 @@
 				<view class="order-item-bottom">
 					<text class=".order-item-id">订单编号：{{item.ordersId}}</text>
 					<template>
-						<text class=".order-item-id">金额 : {{item.ordersBean.payPrice}}</text>
+						<text class="text-orange"  >1212</text>
 					</template>
 				</view>
 			</view>
