@@ -124,7 +124,7 @@
 			return {
 				goodsId: '',
 				activity: '',
-				goodsDetail: '',
+				goodsDetail: [],
 				orderDetail: '',
 				transportType: '',
 				skuInfo: '',
