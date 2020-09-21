@@ -386,7 +386,7 @@
 											goodsId: that.buyGoodsList[tmp].goodsId,
 											goodsSkuId: that.buyGoodsList[tmp].goodsSkuId,
 											number: that.buyGoodsList[tmp].number,
-											payPrice: (Number(that.buyGoodsList[tmp].number) * (Number(that.buyGoodsList[tmp].price) * 100))/100,
+                                            payPrice: ((Number(that.buyGoodsList[tmp].price) * 1000) * that.buyGoodsList[tmp].number) / 1000,
 											price: that.buyGoodsList[tmp].price,
 											shareId: that.buyGoodsList[tmp].shareId,
 										})
