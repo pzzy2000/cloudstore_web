@@ -89,7 +89,7 @@
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
 			<view class="action-btn-group">
-				<button class="action-btn action-buy-btn" @click.stop="buy(buy)">立即购买</button>
+				<button class="action-btn action-buy-btn" @click.stop="toggleSpec()">立即购买</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -98,32 +98,12 @@
 			<view class="mask"></view>
 			<view class="layer attr-content" @click.stop="stopPrevent">
 				<div class='sku-detail'>
-					<view class="a-t">
-						<image :src="sku.imgUrl"></image>
-						<view class="right">
-							<text class="price">¥ <text class="price-num">{{ sku.price }}</text></text>
-							<text class="stock">库存：{{ sku.stock }}件</text>
-							<view class="selected">
-								已选：
-								<text class="selected-text" v-for="(sItem, sIndex) in specSelected" :key="sIndex">{{ sItem.name }}</text>
-							</view>
-						</view>
-					</view>
-					<view v-for="(item, index) in specList" :key="index" class="attr-list">
-						<text>{{ item.goodsPropertyParamName }}</text>
-						<view class="item-list">
-							<text
-								v-for="(childItem, childIndex) in specChildList"
-								v-if="childItem.pid === item.id"
-								:key="childIndex"
-								class="tit"
-								:class="{ selected: childItem.selected }"
-								@click="selectSpec(childIndex, childItem.pid)"
-							>
-								{{ childItem.name }}
-							</text>
-						</view>
-					</view>
+          <view class="">请选择商品数量</view>
+          <view class="sku-detail-buy">
+            <view class="buy-number" v-for="(item,index) in buyNumber" :key="index" @click="onBuyNumber(index)" :class="buyNumberIndex === index ? 'select-buy-number' : ''">
+              {{item.number}}
+            </view>
+          </view>
 				</div>
 				<view class="buyBtn">
 					<button class="cu-btn" v-if="isBuyBtn" @click.stop="buy(buy)">确定</button>
@@ -249,7 +229,29 @@ export default {
 			selectType: '',
 			isBuyBtn: true,
 			activityGoodsId: '',
-			offlinePrice: ''
+			offlinePrice: '',
+      buyNumber: [
+        {
+          number: 1
+        },
+        {
+          number: 2
+        },
+        {
+          number: 3
+        },
+        {
+          number: 4
+        },
+        {
+          number: 5
+        },
+        {
+          number: 6
+        },
+      ],
+      buyNumberIndex: '',
+      buyNumberValue:''
 		};
 	},
 	onShareAppMessage(res) {
@@ -351,8 +353,22 @@ export default {
 				this.goodsHtml = data.result.mobileHtml
 			}
 		},
+    toggleSpec () {
+      this.specClass = this.specClass === 'none' ? 'show' : 'none'
+    },
+    stopPrevent() {}, //遮罩层的方法
+    onBuyNumber (index) {
+      this.buyNumberIndex = index
+      this.buyNumberValue = this.buyNumber[index].number
+    },
 		buy () { //点击支付按钮
-			Api.debounce(this.toBuy, 3000, true);
+      this.toggleSpec()
+      if (this.buyNumberValue) {
+        Api.debounce(this.toBuy, 3000, true);
+      } else {
+        this.$api.msg('请选择商品数量')
+      }
+      // console.log(this.buyNumberValue)
 		},
  		toBuy() { //点击立即购买
 			if (this.sku.stock <= 0) {
@@ -381,8 +397,8 @@ export default {
 					agentGoodsId: this.agentId,
 					goodsId: this.goodsId,
 					goodsSkuId: this.goodsSkuId,
-					number: 1,
-					payPrice: this.offlinePrice,
+					number: this.buyNumberValue,
+					payPrice:  (Number(this.buyNumberValue) *  Number(this.offlinePrice) * 1000)/1000 ,
 					price: this.offlinePrice,
 					shareId: '-1'
 				}]
@@ -771,7 +787,25 @@ export default {
 .attr-content {
 	position: relative;
 	.sku-detail {
-	  padding: 0 40rpx 50rpx 40rpx;
+	  padding: 40upx;
+    text-align: center;
+    .sku-detail-buy {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40upx;
+       .buy-number {
+         border: 1upx solid #999;
+         color: #999;
+         height: 80upx;
+         line-height: 80upx;
+         width: 80upx;
+         text-align: center;
+       }
+       .select-buy-number {
+          border: 1upx solid #08affe;
+          color: #08affe;
+       }
+    }
 	}
 	.a-t {
 		display: flex;
