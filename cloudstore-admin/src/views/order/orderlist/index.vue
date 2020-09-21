@@ -47,7 +47,10 @@
             </el-select>
           </el-form-item>
           <el-form-item label="用户信息：">
-            <remoteCom v-model="pageList.clientIds" url="/manage/search/client/search" @tochild="tochild"></remoteCom>
+            <remoteCom v-model="pageList.clientIds" ref="clearInput" url="/manage/search/client/search" @tochild="tochild"></remoteCom>
+          </el-form-item>
+          <el-form-item label="代理信息：">
+            <remoteCom v-model="pageList.agentIds" ref="dbclearInput" url="/manage/search/agent/search" @tochild="dbtochild"></remoteCom>
           </el-form-item>
         </el-form>
       </div>
@@ -236,9 +239,10 @@
         return powershow(key);
       },
       tochild(item, callback){
-        console.log(item)
-        // return `用户名称：${item.name} / 用户账号：${item.access}`;
         callback(`用户名称：${item.name} / 用户账号：${item.access}`);
+      },
+      dbtochild(item, callback){
+        callback(`代理名称：${item.name} / 代理账号：${item.phone}`);
       },
       getList(idx) {
         fetchList(this.pageList).then(res => {
@@ -305,6 +309,8 @@
       },
       handleResetSearch() {
         this.pageList = Object.assign({}, defaultList);
+        this.$refs.clearInput.clearInput();
+        this.$refs.dbclearInput.clearInput();
         this.getList(2);
       },
       handleCurrentChange(val) {

@@ -27,6 +27,16 @@
 <!--          <el-form-item label="用户昵称：" prop="name">-->
 <!--            <el-input style="width: 214px" v-model="listQuery.name" placeholder="用户昵称" clearable></el-input>-->
 <!--          </el-form-item>-->
+          <el-form-item label="佣金类型：" prop="phone">
+            <el-select v-model="listQuery.userType" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -109,11 +119,18 @@
     data() {
       return {
         searchList: {},
-        list:[],
-        total:0,
+        list: [],
+        total: 0,
         listQuery: Object.assign({}, defaultList),
         listLoading: false,
-        power: ''
+        power: '',
+        options: [{
+          value: 'agent',
+          label: '代理'
+        }, {
+          value: 'Client',
+          label: '用户'
+        }],
       }
     },
     created() {
