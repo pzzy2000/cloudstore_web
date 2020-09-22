@@ -263,6 +263,7 @@
 				"enablePullDownRefresh": false
 			}
         },
+		
 		{
 		    "path" : "pages/agent/info/index",
 		    "style" : { //团长页面
@@ -271,6 +272,24 @@
 				"enablePullDownRefresh": false
 			}
 		},
+		
+		{
+		    "path" : "pages/agent/info/iorder/orderlist",
+		    "style" : { //团长订单list
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+		    "path" : "pages/agent/info/iorder/orderDetail",
+		    "style" : { //团长订单详情
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		
 		{
             "path" : "pages/agent/info/order/index",
             "style" : { //团长管理订单页面

@@ -2,8 +2,8 @@ import store from '../store/index';
 let timer, flag, timeout = null;
 export default {
 	
-	// BASEURI: 'http://106.52.184.24:18888/platform/',
-	BASEURI: 'https://api.sz-guochuang.com/platform/',
+	 BASEURI: 'http://106.52.184.24:18888/platform/',
+	 // BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -141,6 +141,8 @@ export default {
 			updateAddressStatus: 'app/client/address/updateAddressStatus'
 		},
 		order: {
+			getAgentClientOrderDetail:'/app/private/order/getAgentClientOrderDetail',
+			getAgentOrders: 'app/private/order/getAgentOrders',
 			getAgentOrder: 'order/app/getAgentOrder',
 			getClientOrder:　'order/app/getClientOrder',
 			getAgentOrderCount: 'order/app/getAgentOrderCount' //我的小店的订单数量，代理商品

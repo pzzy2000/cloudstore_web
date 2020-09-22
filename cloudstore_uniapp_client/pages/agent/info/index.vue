@@ -37,10 +37,15 @@
 					detailUrl: '/static/logo.png'
 				},
 				agentList:[
+					// {
+					// 	name: '配送管理',
+					// 	icon: 'cuIcon-calendar',
+					// 	url: '/pages/agent/info/order/index'
+					// },
 					{
-						name: '配送管理',
+						name: '订单管理',
 						icon: 'cuIcon-calendar',
-						url: '/pages/agent/info/order/index'
+						url: '/pages/agent/info/iorder/orderlist'
 					},
 					{
 						name: '物流管理',
@@ -104,11 +109,11 @@
 						    url: url
 						});
 					} else {
-						this.$api.msg('敬请期待')
-						return false;
-						// uni.navigateTo({
-						// 	url: url
-						// })
+						// this.$api.msg('敬请期待')
+						// return false;
+						uni.navigateTo({
+							url: url
+						})
 					}
 				} else {
 					this.$api.msg('敬请期待')

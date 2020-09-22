@@ -48,7 +48,7 @@
 			},2000)
 		},
 		onLoad(ops) {
-			// ops.q = 'https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=8029421646846627840&agentId=8052174999192080384'
+			// ops.q = 'https://www.sz-guochuang.com/into?action=xxsp&activityGoodsId=8056680932194652160&agentId=7970898669096407040'
 			if (ops.q) {
 				this.url = decodeURIComponent(ops.q)
 				this.actionType = this.getQuery('action',this.url) || 'xxsp'
