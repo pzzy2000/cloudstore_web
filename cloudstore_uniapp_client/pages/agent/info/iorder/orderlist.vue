@@ -15,7 +15,7 @@
 		<!-- 订单列表 -->
 		<view v-for="(item,index) in orderList" :key="index" class="order-item" v-if="orderList.length != 0">
 			<view class="i-top">
-				<text class="time">下单手机: {{item.clientBean.phone}}</text>
+				<text class="time">客户手机: {{item.clientBean.phone}}</text>
 				<view class="">
 					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
