@@ -15,7 +15,7 @@
 		<!-- 订单列表 -->
 		<view v-for="(item,index) in orderList" :key="index" class="order-item" v-if="orderList.length != 0">
 			<view class="i-top">
-				<text class="time">订单号: {{item.number}}</text>
+				<text class="time">下单手机: {{item.clientBean.phone}}</text>
 				<view class="">
 					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
@@ -70,11 +70,13 @@
 					<text class="price">{{item.payPrice}}</text>
 				</view>
 			</view>
-			<template>
+			<view class="i-top">
+				<text>订单号: {{item.number}}</text>
 				<view class="padd-tb-sm text-right state-btn">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
-			</template>
+			</view>
+			
 		</view>
 		
 		<view class="earning-empty" v-if="!orderList.length">
