@@ -39,6 +39,14 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button
+        style="float: right; margin-right: 10px"
+        @click="exportXml"
+        type="primary"
+        size="mini"
+        :disabled="disabled">
+        {{btnText}}
+      </el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
@@ -96,6 +104,7 @@
   import { formatDate } from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
   import {powershow} from "@/utils/power";
+  import {exportMethod} from '@/api/exportMethod'
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
@@ -138,7 +147,9 @@
         type: '',
         startDatePicker: this.beginDate(),
         endDatePicker: this.processDate(),
-        power: ''
+        power: '',
+        btnText: '导出',
+        disabled: false
       }
     },
     created() {
@@ -204,6 +215,30 @@
       },
       dbtochild(item, callback){
         callback(`代理名称：${item.name} / 代理账号：${item.phone}`);
+      },
+      async exportXml() {
+        this.btnText = "导出中";
+        this.disabled = true;
+        if (this.pageList.endsTime !== '' && this.pageList.endsTime !== undefined) {
+          let str = this.pageList.endsTime.substr(0, 10);
+          this.pageList.endsTime = str + ' 23:59:59';
+        }
+        let obj = {
+          url: './platform/order/details/orderDetailsExcel',//http://106.52.184.24:18888
+          method: 'POST',
+          fileName: '代理订单表格',
+          data: this.pageList
+        }
+        let n = await exportMethod(obj);
+        if (n == 0) {
+          this.$message({
+            message: '导出成功',
+            type: 'success',
+            duration: 800
+          })
+          this.btnText = "导出";
+          this.disabled = false;
+        }
       },
       getList(idx) {
         getAgentSaleList(this.pageList).then(res => {

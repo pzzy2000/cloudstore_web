@@ -408,7 +408,7 @@
         }
       },
       peisong(index, row) {
-        peisong({id: row.allocationId}).then(res => {
+        peisong({id: row.id}).then(res => {
           if (res.result.code == 0) {
             this.$message({
               message: '配送成功',

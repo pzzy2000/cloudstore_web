@@ -177,10 +177,15 @@
         async exportExcel() {
           this.btnText = "导出中";
           this.disabled = true;
+          if (this.listQuery.endsTime !== '' && this.listQuery.endsTime !== undefined) {
+            let str = this.listQuery.endsTime.substr(0, 10);
+            this.listQuery.endsTime = str + ' 23:59:59';
+          }
           let obj = {
             url: './platform/order/allocation/exportExcel',//http://106.52.184.24:18888
             method: 'POST',
-            fileName: '订单表格'
+            fileName: '订单表格',
+            data: this.listQuery
           }
           let n = await exportMethod(obj);
           if (n == 0) {
