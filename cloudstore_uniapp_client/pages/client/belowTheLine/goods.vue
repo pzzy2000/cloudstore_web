@@ -361,10 +361,10 @@ export default {
       this.buyNumberIndex = index
       this.buyNumberValue = this.buyNumber[index].number
     },
-		buy () { //点击支付按钮
-      this.toggleSpec()
+	buy () { //点击支付按钮
       if (this.buyNumberValue) {
         Api.debounce(this.toBuy, 3000, true);
+		this.toggleSpec()
       } else {
         this.$api.msg('请选择商品数量')
       }
@@ -803,7 +803,8 @@ export default {
        }
        .select-buy-number {
           border: 1upx solid #08affe;
-          color: #08affe;
+		  background-color: #08affe;
+          color: #fff;
        }
     }
 	}

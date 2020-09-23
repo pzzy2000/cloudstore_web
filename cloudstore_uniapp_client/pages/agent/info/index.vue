@@ -114,6 +114,14 @@
 						uni.navigateTo({
 							url: url
 						})
+						// if (url === '/pages/agent/info/logistics/index') {
+						// 	this.$api.msg('敬请期待')
+						// 	return false;
+						// } else {
+						// 	uni.navigateTo({
+						// 		url: url
+						// 	})
+						// }
 					}
 				} else {
 					this.$api.msg('敬请期待')
