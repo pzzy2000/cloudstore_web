@@ -55,3 +55,11 @@ export function getAgentgoods(params) {
     data: switchForm(params)
   })
 }
+
+export function getAgentSaleList(params) {
+  return request({
+    url: '/order/details/searchOrderDetails',
+    method: 'POST',
+    data: switchForm(params)
+  })
+}
