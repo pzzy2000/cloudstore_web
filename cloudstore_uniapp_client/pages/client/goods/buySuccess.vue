@@ -26,7 +26,7 @@
 												<text class="sku-price-unit">/{{item.goodsPicesBean.unit}}</text>
 											</view>
 											<view class="sku-price-right">
-												×1
+												×{{item.quantity}}
 											</view>
 										</view>
 									</view>

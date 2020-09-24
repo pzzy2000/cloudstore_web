@@ -456,6 +456,11 @@ export const asyncRouterMap = [
       component: () => import('@/views/agent/addgoods'),
       meta: {title: '添加代理商品', icon: 'product-list'},
       hidden: true
+    }, {
+      path: 'agentSalelist',
+      name: 'agent_saleList',
+      component: () => import('@/views/agent/agentSalelist'),
+      meta: {title: '代理销售列表', icon: 'product-list'}
     }]
   },
   {
@@ -664,10 +669,17 @@ export const asyncRouterMap = [
         hidden: true
       },
       {
-        path: 'csmlist',
-        name: 'csm_list',
-        component: () => import('@/views/order/consignlist/index'),
-        meta: {title: '发货列表', icon: 'product-list'},
+        path: 'agentOrder',
+        name: 'order_agent',
+        component: () => import('@/views/order/agentOrder/index'),
+        meta: {title: '代理订单列表', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'agentOrderinfo',
+        name: 'order_agentinfo',
+        component: () => import('@/views/order/agentOrder/info'),
+        meta: {title: '代理订单详情', icon: 'product-list'},
         hidden: true
       },
       {

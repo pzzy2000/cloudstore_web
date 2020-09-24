@@ -15,7 +15,7 @@
 		<!-- 订单列表 -->
 		<view v-for="(item,index) in orderList" :key="index" class="order-item" v-if="orderList.length != 0">
 			<view class="i-top">
-				<text class="time">订单号: {{item.number}}</text>
+				<text class="time">客户手机: {{item.clientBean.phone}}</text>
 				<view class="">
 					<text class="state" v-if="item.orderStatus === 'wait'">待支付</text>
 					<text class="state" v-else-if="item.orderStatus === 'pay'">支付待确认</text>
@@ -70,11 +70,13 @@
 					<text class="price">{{item.payPrice}}</text>
 				</view>
 			</view>
-			<template>
+			<view class="i-top">
+				<text>订单号: {{item.number}}</text>
 				<view class="padd-tb-sm text-right state-btn">
 					<button class="cu-btn round" @click.stop="toOrder(item)">查看订单</button>
 				</view>
-			</template>
+			</view>
+			
 		</view>
 		
 		<view class="earning-empty" v-if="!orderList.length">
@@ -98,13 +100,14 @@
 			return {
 				navTitle: '',
 				tabCurrentIndex: 0,
-				orderStatus: '',
+				orderStatus: 'peisong',
 				orderList: [],
 				pageNum: 1,
-				navList: [{
+				navList: [
+					{
 						state: 0,
-						text: '全部',
-						type: '',
+						text: '待配送',
+						type: 'peisong',
 						loadingType: 'more',
 						orderList: []
 					},
@@ -117,22 +120,22 @@
 					},
 					{
 						state: 2,
-						text: '待配送',
-						type: 'peisong',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 3,
 						text: '已配送',
 						type: 'peisoged',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
-						state: 4,
+						state: 3,
 						text: '已完成',
 						type: 'complete',
+						loadingType: 'more',
+						orderList: []
+					},
+					{
+						state: 4,
+						text: '全部',
+						type: '',
 						loadingType: 'more',
 						orderList: []
 					}
@@ -145,19 +148,19 @@
 				this.tabCurrentIndex = Number(options.status)
 				switch (this.tabCurrentIndex) {
 					case 0:
-					this.orderStatus = ''
+					this.orderStatus = 'peisong'
 					break;
 					case 1:
 					this.orderStatus = 'wait'
 					break;
 					case 2:
-					this.orderStatus = 'peisong'
-					break;
-					case 3:
 					this.orderStatus = 'peisoged'
 					break;
-					case 4:
+					case 3:
 					this.orderStatus = 'complete'
+					break;
+					case 4:
+					this.orderStatus = ''
 					break;
 				}
 			}
@@ -197,7 +200,9 @@
 						switch (tabIndex) {
 							case 0:
 								for (let tmp in tmpData) {
-									this.orderList.push(tmpData[tmp])
+									if (tmpData[tmp].orderStatus === 'peisong') {
+										this.orderList.push(tmpData[tmp])
+									}
 								}
 							break;
 							case 1:
@@ -209,23 +214,21 @@
 							break;
 							case 2:
 								for (let tmp in tmpData) {
-									if (tmpData[tmp].orderStatus === 'peisong') {
+									if (tmpData[tmp].orderStatus === 'peisoged') {
 										this.orderList.push(tmpData[tmp])
 									}
 								}
 							break;
 							case 3:
 								for (let tmp in tmpData) {
-									if (tmpData[tmp].orderStatus === 'peisoged') {
+									if (tmpData[tmp].orderStatus === 'complete') {
 										this.orderList.push(tmpData[tmp])
 									}
 								}
 							break;
 							case 4:
 								for (let tmp in tmpData) {
-									if (tmpData[tmp].orderStatus === 'complete') {
-										this.orderList.push(tmpData[tmp])
-									}
+									this.orderList.push(tmpData[tmp])
 								}
 							break;
 						}
@@ -433,13 +436,14 @@
 			height: 80upx;
 			font-size: 22upx;
 			color: #999999;
+			border-bottom: 1upx solid #eee;
 			.time {
 				color: #333333;
-				font-size: 24upx;
+				font-size: 28upx;
 			}
 			.state {
 				color: #49B1FD;
-				font-size: 24upx;
+				font-size: 28upx;
 			}
 			.price-box {
 				color: #999;
@@ -738,7 +742,6 @@
 	.state-btn {
 		padding: 20upx 0;
 		margin: 0;
-		border-top: 1upx solid #eee;
 		.cu-btn {
 			background-image: linear-gradient(#39A9FF, #2D9BEF);
 			color: #fff;

@@ -33,8 +33,10 @@
 							</view>
 						</scroll-view>
 						<view class="pull-down" @click="onPullDown">
-							<text class="cuIcon-triangleupfill" v-if="isSelectTwoType"></text>
-							<text class="cuIcon-triangledownfill" v-if="!isSelectTwoType"></text>
+							<image src="/static/agent/top.png" mode="" class="cuIcon-triangleupfill" v-if="isSelectTwoType"></image>
+							<image src="/static/agent/bottom.png" mode="" class="cuIcon-triangledownfill" v-if="!isSelectTwoType"></image>
+							<!-- <text class="cuIcon-triangleupfill" v-if="isSelectTwoType"></text>
+							<text class="cuIcon-triangledownfill" v-if="!isSelectTwoType"></text> -->
 						</view>
 					</view>
 					<view class="mallmenu-screen-main">

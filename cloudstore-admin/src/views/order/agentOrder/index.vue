@@ -1,13 +1,13 @@
 <template>
   <div>
-<!--    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">-->
-<!--      <el-menu-item index="1">全部订单(<span>1000</span>)</el-menu-item>-->
-<!--      <el-menu-item index="2">待付款(<span>1000</span>)</el-menu-item>-->
-<!--      <el-menu-item index="3">待发货(<span>1000</span>)</el-menu-item>-->
-<!--      <el-menu-item index="4">已发货(<span>1000</span>)</el-menu-item>-->
-<!--      <el-menu-item index="5">已完成(<span>1000</span>)</el-menu-item>-->
-<!--      <el-menu-item index="6">已关闭(<span>1000</span>)</el-menu-item>-->
-<!--    </el-menu>-->
+    <!--    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">-->
+    <!--      <el-menu-item index="1">全部订单(<span>1000</span>)</el-menu-item>-->
+    <!--      <el-menu-item index="2">待付款(<span>1000</span>)</el-menu-item>-->
+    <!--      <el-menu-item index="3">待发货(<span>1000</span>)</el-menu-item>-->
+    <!--      <el-menu-item index="4">已发货(<span>1000</span>)</el-menu-item>-->
+    <!--      <el-menu-item index="5">已完成(<span>1000</span>)</el-menu-item>-->
+    <!--      <el-menu-item index="6">已关闭(<span>1000</span>)</el-menu-item>-->
+    <!--    </el-menu>-->
     <el-card class="filter-container" shadow="never" style="margin: 20px 20px 0 20px">
       <div>
         <i class="el-icon-search"></i>
@@ -33,24 +33,25 @@
           </el-form-item>
           <el-form-item label="开始时间：" prop="code">
             <el-date-picker v-model="pageList.startTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd HH:mm:ss" type="date" :picker-options="startDatePicker" placeholder="选择日期" clearable>
-<!--              :picker-options="pickerOptions"-->
+              <!--              :picker-options="pickerOptions"-->
             </el-date-picker>
           </el-form-item>
           <el-form-item label="结束时间：" prop="code">
             <el-date-picker v-model="pageList.endsTime" sformat="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" :picker-options="endDatePicker" placeholder="选择日期" clearable>
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="订单状态：" prop="orderstatus">
-            <el-select v-model="pageList.orderStatus" placeholder="请选择" clearable>
+          <el-form-item label="订单状态：" prop="statuss">
+            <el-select v-model="pageList.statuss" multiple placeholder="请选择" clearable>
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="用户信息：">
-            <remoteCom v-model="pageList.clientIds" ref="clearInput" url="/manage/search/client/search" @tochild="tochild"></remoteCom>
+          <el-form-item label="用户名称：" prop="name">
+            <el-input style="width: 214px" v-model="pageList.userName" placeholder="用户名称" clearable></el-input>
           </el-form-item>
-          <el-form-item label="代理信息：">
-            <remoteCom v-model="pageList.agentIds" ref="dbclearInput" url="/manage/search/agent/search" @tochild="dbtochild"></remoteCom>
+          <el-form-item label="代理名称：" prop="name">
+<!--            <el-input style="width: 214px" v-model="pageList.agentName" placeholder="代理名称" clearable></el-input>-->
+            <remoteCom v-model="pageList.agentIds" ref="clearInput" url="/manage/search/agent/search" @tochild="tochild"></remoteCom>
           </el-form-item>
         </el-form>
       </div>
@@ -58,6 +59,14 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button
+        style="float: right; margin-right: 10px"
+        @click="exportXml"
+        type="primary"
+        size="mini"
+        :disabled="disabled">
+        {{btnText}}
+      </el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
@@ -66,35 +75,44 @@
         <el-table-column label="订单编号" align="center" fixed>
           <template slot-scope="scope">{{scope.row.number}}</template>
         </el-table-column>
-<!--        <el-table-column label="商品" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.goods}}</template>-->
-<!--        </el-table-column>-->
+        <!--        <el-table-column label="商品" align="center">-->
+        <!--          <template slot-scope="scope">{{scope.row.goods}}</template>-->
+        <!--        </el-table-column>-->
         <el-table-column label="下单时间" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDate}}</template>
         </el-table-column>
         <el-table-column prop="useraccess" label="用户账号" align="center" :formatter="showMsg">
-<!--          <template slot-scope="scope">{{scope.row.clientBean.access}}</template>-->
+                    <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
         <el-table-column prop="username" label="用户名称" align="center" :formatter="showMsg">
-<!--          <template slot-scope="scope">{{scope.row.clientBean.name}}</template>-->
+          <template slot-scope="scope">{{scope.row.userName}}</template>
+        </el-table-column>
+        <el-table-column label="单价" align="center">
+          <template slot-scope="scope">￥{{scope.row.price}}</template>
+        </el-table-column>
+        <el-table-column label="数量" align="center">
+          <template slot-scope="scope">{{scope.row.quantity}}</template>
         </el-table-column>
         <el-table-column label="订单金额" align="center">
           <template slot-scope="scope">￥{{scope.row.payPrice}}</template>
         </el-table-column>
         <el-table-column label="支付方式" align="center">
-<!--          <template slot-scope="scope">{{scope.row.payType}}</template>-->
+          <!--          <template slot-scope="scope">{{scope.row.payType}}</template>-->
           <template slot-scope="scope">微信</template>
         </el-table-column>
-<!--        <el-table-column label="订单类型" align="center">-->
-<!--          <template slot-scope="scope">{{scope.row.ordertype}}</template>-->
-<!--        </el-table-column>-->
+        <el-table-column label="代理" align="center">
+          <template slot-scope="scope">{{scope.row.agentName}}</template>
+        </el-table-column>
+        <!--        <el-table-column label="订单类型" align="center">-->
+        <!--          <template slot-scope="scope">{{scope.row.ordertype}}</template>-->
+        <!--        </el-table-column>-->
         <el-table-column label="订单状态" align="center">
           <template slot-scope="scope">{{scope.row.orderStatus | changeStatus}}</template>
         </el-table-column>
         <el-table-column label="操作" width="200px" align="center" v-if="powershowing(power.order_info)">
           <template slot-scope="scope">
             <el-button size="mini" @click="readOrder(scope.$index, scope.row)">查看订单</el-button>
-<!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
+            <!--            <el-button :type="scope.row.orderStatus === 'close' ? 'danger' : 'primary'" size="mini" @click="delLogis(scope.row)">{{scope.row.orderStatus | changeMsg}}</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -115,15 +133,17 @@
 </template>
 
 <script>
-  import {fetchList} from '@/api/order'
+  import {getAgentOL, exportAgentOrder} from '@/api/order'
   import { formatDate } from '@/assets/common/data.js'
   import remoteCom from '@/components/remoteCom'
   import {powershow} from "@/utils/power";
+  import {exportMethod} from '@/api/exportMethod'
   const defaultList = {
     pageNum: 1,
     pageSize: 10,
     optType:'search'
   };
+  let that;
   export default {
     name: "list",
     components: {
@@ -166,8 +186,13 @@
         type: '',
         startDatePicker: this.beginDate(),
         endDatePicker: this.processDate(),
-        power: ''
+        power: '',
+        btnText: '导出',
+        disabled: false
       }
+    },
+    beforeCreate() {
+      that = this;
     },
     created() {
       this.power = JSON.parse(localStorage.getItem('opt'));
@@ -231,17 +256,41 @@
       }
     },
     methods: {
+      async exportXml() {
+        this.btnText = "导出中";
+        this.disabled = true;
+        if (this.pageList.endsTime !== '' && this.pageList.endsTime !== undefined) {
+          let str = this.pageList.endsTime.substr(0, 10);
+          this.pageList.endsTime = str + ' 23:59:59';
+        }
+        let obj = {
+          url: './platform/order/details/orderDetailsExcel',//http://106.52.184.24:18888
+          method: 'POST',
+          fileName: '代理订单表格',
+          data: this.pageList
+        }
+        let n = await exportMethod(obj);
+        if (n == 0) {
+          this.$message({
+            message: '导出成功',
+            type: 'success',
+            duration: 800
+          })
+          this.btnText = "导出";
+          this.disabled = false;
+        }
+      },
       powershowing(key) {
         return powershow(key);
       },
       tochild(item, callback){
-        callback(`用户名称：${item.name} / 用户账号：${item.access}`);
+        callback(`用户名称：${item.name} / 用户账号：${item.phone}`);
       },
-      dbtochild(item, callback){
-        callback(`代理名称：${item.name} / 代理账号：${item.phone}`);
-      },
+      // dbtochild(item, callback){
+      //   callback(`代理名称：${item.name} / 代理账号：${item.phone}`);
+      // },
       getList(idx) {
-        fetchList(this.pageList).then(res => {
+        getAgentOL(this.pageList).then(res => {
           if (res.result.code == 0) {
             this.orderList = res.result.result.records;
             this.total = parseInt(res.result.result.total);
@@ -306,7 +355,7 @@
       handleResetSearch() {
         this.pageList = Object.assign({}, defaultList);
         this.$refs.clearInput.clearInput();
-        this.$refs.dbclearInput.clearInput();
+        // this.$refs.dbclearInput.clearInput();
         this.getList(2);
       },
       handleCurrentChange(val) {
@@ -319,7 +368,7 @@
         this.getList(1);
       },
       readOrder(index, row){
-        this.$router.push({name: "order_info", query: {id: row.id}});
+        this.$router.push({path: "/order/manage/agentOrderinfo", query: {id: row.id}});
       },
       beginDate(){
         const self = this

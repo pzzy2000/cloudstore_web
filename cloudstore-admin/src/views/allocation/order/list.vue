@@ -56,7 +56,8 @@
     <el-card class="operate-container" shadow="never" style="margin: 20px 20px 0 20px">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button type="primary" @click="exportExcel" size="mini" style="float: right" v-if="powershowing(power.ps_agent_export)">导出</el-button>
+      <el-button type="primary" @click="exportExcel" size="mini" style="float: right" v-if="powershowing(power.ps_agent_export)" :disabled="disabled">
+        {{btnText}}</el-button>
     </el-card>
     <div style="margin: 20px 20px 0 20px">
       <el-table ref="productTable" :data="orderList" style="width:100%" v-loading="listLoading" border>
@@ -149,7 +150,9 @@
           btnMsg: '',
           type: '',
           statusList: [{label: "待配送", value: 'dps'}, {label: "已配送", value: 'yps'}, {label: "已送达", value: 'ysd'}],
-          power: ''
+          power: '',
+          btnText: '导出',
+          disabled: false
         }
       },
       beforeCreate() {
@@ -171,13 +174,29 @@
 
       },
       methods: {
-        exportExcel() {
+        async exportExcel() {
+          this.btnText = "导出中";
+          this.disabled = true;
+          if (this.listQuery.endsTime !== '' && this.listQuery.endsTime !== undefined) {
+            let str = this.listQuery.endsTime.substr(0, 10);
+            this.listQuery.endsTime = str + ' 23:59:59';
+          }
           let obj = {
             url: './platform/order/allocation/exportExcel',//http://106.52.184.24:18888
             method: 'POST',
-            fileName: '订单表格'
+            fileName: '订单表格',
+            data: this.listQuery
           }
-          exportMethod(obj);
+          let n = await exportMethod(obj);
+          if (n == 0) {
+            this.$message({
+              message: '导出成功',
+              type: 'success',
+              duration: 800
+            })
+            this.btnText = "导出";
+            this.disabled = false;
+          }
         },
         powershowing(key) {
           return powershow(key);

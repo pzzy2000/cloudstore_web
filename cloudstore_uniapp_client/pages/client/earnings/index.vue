@@ -10,6 +10,7 @@
 					<view class="cu-item earnin-content" :class="selectTab === index ? 'backSelect' : '' " v-for="(item,index) in cuIconList" :key="item.value" v-if="index<gridCol*2" @click="earninngType(item.value)">
 						<text class="num">{{item.num}}</text>
 						<view class="title">{{item.name}}</view>
+						<image src="/static/agent/earnings-bg.png" class="earnin-bg" mode="" v-if="selectTab === index"></image>
 					</view>
 				</view>
 			</view>
@@ -234,7 +235,10 @@
 				white-space: 5upx;
 			}
 			.backSelect {
-				background-image: linear-gradient(to top, rgb(38,160,255), transparent);
+				position: relative;
+				// background-image: linear-gradient(to top, rgb(38,160,255), transparent);
+				// background-image: -webkit-linear-gradient(to top, rgb(38,160,255), transparent);
+				// background-image: -o-linear-gradient(to top, rgb(38,160,255), transparent);
 			}
 		}
 	}
@@ -247,6 +251,7 @@
 	.earnin-content {
 		color: #fff;
 		padding-bottom: 30upx !important;
+		// position: relative;
 		.title {
 			font-size: 30upx;
 		}
@@ -254,6 +259,13 @@
 			font-size: 26upx;
 			color: #fff !important;
 		}
+	}
+	.earnin-bg {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		bottom: 1upx;
+		z-index: -1;
 	}
 	.cu-list.grid {
 		background: none;
