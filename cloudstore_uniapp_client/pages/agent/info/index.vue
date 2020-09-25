@@ -16,15 +16,41 @@
 				</view>
 			</view>
 		</view>
+		<view class="today-push">
+			<text class="today-push-title text-red">今日必推</text>
+			<!-- <text class="line"></text> -->
+			<view class="today-push-list">
+				<view class="today-push-list-item" v-for="item in todayPush" :key='item.activityGoodsPicBean.id'>
+					<image :src="item.activityGoodsPicBean.goodsPicesBean.goodsDetailPhotos[0].url" mode="" class="today-push-img"></image>
+					<view class="today-push-item-content">
+						<view class="item-title clamp">
+							{{item.activityGoodsPicBean.goodsPicesBean.goodsName}}
+							<view class="cu-tag badge bg-yellow">Hot</view>
+						</view>
+						<text class="item-sub-title">{{item.activityGoodsPicBean.goodsPicesBean.goodsSubtitle}}</text>
+						<view class="item-buttom">
+							<view class="item-price">
+								<text class="price-sale price-symbol">{{item.activityGoodsPicBean.offlinePrice}}</text>
+								<text class="price-mart price-symbol">{{item.activityGoodsPicBean.goodsPicesBean.martPrice}}/{{item.activityGoodsPicBean.goodsPicesBean.unit}}</text>
+							</view>
+							<button type="default" class="promotion-btn" @click.stop="shareSave(item.activityGoodsPicBean)">分享赚￥{{financeGoodsProfit(item.financeGoodsProfit)}}</button>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
 		<view class="exit-btn" @click="toUrl('/pages/client/info/index', 'tab')">
 			退出
 		</view>
+		<!-- 分享 -->
+		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
 	</view>
 </template>
 
 <script>
 	import Api from '@/common/api';
 	import navBar from '@/components/zhouWei-navBar';
+	import share from '@/components/share';
 	export default {
 		data() {
 			return {
@@ -36,6 +62,20 @@
 					url: '/static/logo.png',
 					detailUrl: '/static/logo.png'
 				},
+				imageUrl: '',
+				goodsName: '',
+				goodsId: '',
+				activityId: '',
+				agentGoodsId: '',
+				shareClientId: -1,
+				todayPush: '',
+				shareList: [
+					{
+					  icon: "/static/share_wechat.png",
+					  text: "微信好友",
+					  type: 1
+					}
+				],
 				agentList:[
 					// {
 					// 	name: '配送管理',
@@ -86,19 +126,94 @@
 			}
 		},
 		components: {
-			navBar
+			navBar, share
 		},
 		onLoad () {
+			
 			this.getuserinfo()
+			this.netWork().getBaoKuaiGoods()
+		},
+		onShareAppMessage(res) {
+			var shareObj = {
+				title: this.goodsName,
+				imageUrl: this.imageUrl,
+				params: {
+					agentId: this.agentId,
+					goodsId: this.goodsId,
+					activityId: this.activityId,
+					agentGoodsId: this.agentGoodsId,
+					shareClientId: -1,
+					userType: 'Client'
+				},
+				path: '/pages/welcome?goodsId='+this.goodsId+'&agentGoodsId='+this.agentGoodsId+'&shareClientId='+this.shareClientId+'&activityId='+this.activityId+'&agentId='+this.agentId,
+			}
+			return shareObj
 		},
 		methods: {
+			netWork () {
+				return {
+					getBaoKuaiGoods: async () => {
+						let params = {}
+						let data = await Api.apiCall('post', Api.agent.agentInfo.baoKuaiGoods, params, true, false);
+						if (data) {
+							console.log(data.result)
+							if (data.result.length) {
+								this.todayPush = data.result
+							}
+						}
+					}
+				}
+			},
 			getuserinfo(){ // 获取微信用户信息
 				let userInfo = uni.getStorageSync('userInfo');
 				if (userInfo) {
 					this.user.name = userInfo.name || '普通会员'
 					this.user.url = userInfo.wxPic;
+					this.user.relationId = userInfo.relationId
+					this.agentId = userInfo.relationId
 					if (!userInfo.wxPic) {
 						this.user.url = this.user.detailUrl
+					}
+				}
+			},
+			financeGoodsProfit (item) {
+				return (Number(item.leader) * 1000 + Number(item.agent) * 1000)/1000
+				console.log((Number(item.leader) * 1000 + Number(item.agent) * 1000)/1000)
+			},
+			share() { //分享显示弹窗
+				this.$refs.share.toggleMask();
+			},
+			async shareSave (item) { //分享调用接口
+				this.goodsId = item.goodsId
+				this.activityId = item.activityId
+				this.agentGoodsId = item.id
+				this.goodsName = item.goodsPicesBean.goodsName 
+				this.imageUrl = item.goodsPicesBean.goodsDetailPhotos[0].url
+				if (Api.isToken()) {
+					uni.showLoading({
+						title: '正在加载',
+						mask: false
+					});
+					let params = {
+						'agentId': this.agentId,
+						'goodsId': this.goodsId,
+						'activityId': this.activityId,
+						'shareId': '-1',
+						'type': ''
+					} 
+					let data = await Api.apiCall('post', Api.agent.share.save, params, true);
+					if (data) {
+						uni.hideLoading() 
+						if (data.code === 0) {
+							this.shareClientId = data.result.id
+							if (this.shareClientId) {
+								this.share()
+							}
+						}else{
+							uni.showToast({
+								title: data.msg
+							});
+						}
 					}
 				}
 			},
@@ -135,7 +250,8 @@
 <style scoped lang="scss">
 	.container {
 		position: relative;
-		background-color: #f5f5f5;
+		// background-color: #f5f5f5;
+		padding-bottom: 180upx;
 	}
 	.user-section {
 		padding: 100upx 30upx 0 30upx;
@@ -180,6 +296,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		position: absolute;
+		z-index: 3;
 		.agent-main-list {
 			text-align: center;
 			font-size: 30upx;
@@ -196,6 +313,102 @@
 			}
 		}
 	}
+	.today-push {
+		width: 90%;
+		margin: 0 auto;
+		padding-top: 300upx;
+		position: relative;
+		.today-push-title {
+			display: block;
+			margin: 0 auto;
+			width: 50%;
+			text-align: center;
+			font-size: 35upx;
+			font-weight: bold;
+			line-height: 70upx;
+		}
+		.line {
+			width: 90%;
+			height: 1upx;
+			top: 335upx;
+			background-color: #555;
+			position: absolute;
+			margin-left: -45%;
+			left: 50%;
+
+		}
+		.today-push-list {
+			.today-push-list-item {
+				display: flex;
+				justify-content: start;
+				background-color: #fff;
+				width: 100%;
+				border-radius: 15upx;
+				padding: 15upx;
+				margin-bottom: 15upx;
+				.today-push-img {
+					height: 165upx;
+					width: 165upx;
+					border-radius: 15upx;
+					margin-right: 30upx;
+				}
+				.today-push-item-content {
+					width: calc(100% - 200upx);
+					.item-title {
+						position: relative;
+						display: inline-block;
+						font-size: 28upx;
+						color: #000;
+						line-height: 50upx;
+						.cu-tag.badge {
+							top: 0;
+							right: -50upx;
+						}
+					}
+					.item-sub-title {
+						font-size: 24upx;
+						width: 100%;
+						color: #555;
+						height: 60upx;
+						display: flex;
+						align-items: flex-start;
+					}
+					.item-buttom {
+						display: flex;
+						justify-content: space-between;
+						.item-price {
+							.price-sale {
+								color: red;
+								width: 100%;
+								display: inline-block;
+								font-size: 26upx;
+							}
+							.price-mart {
+								color: #555;
+								font-size: 22upx;
+								text-decoration: line-through;
+							}
+						}
+						.promotion-btn {
+							width: 180upx;
+							height: 50upx;
+							text-align: center;
+							line-height: 50upx;
+							margin: 0;
+							padding: 0;
+							border-radius: 35upx;
+							font-size: 28upx;
+							background-image: linear-gradient(-90deg, #FE8A14, #FED041);
+							color: #fff;
+							&::after {
+								border: none;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	.exit-btn {
 		position: fixed;
 		bottom: 50upx;
@@ -209,5 +422,6 @@
 		font-size: 26upx;
 		text-align: center;
 		border-radius: 15upx;
+		box-shadow: 0 0 14upx 0 rgba(64,181,255, 0.2);
 	}
 </style>

@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<nav-bar backState="3000" @backClick='toInfo'>订单列表</nav-bar>
+		<nav-bar backState="1000">订单列表</nav-bar>
 		<view class="navbar">
 			<view 
 				v-for="(item, index) in navList" :key="index" 
@@ -176,11 +176,6 @@
 			this.getOrderData(this.tabCurrentIndex)
 		},
 		methods: {
-			toInfo () {
-				uni.switchTab({
-					url:"/pages/client/info/index"
-				})
-			},
 			async getOrderData (tabIndex = 0) {
 				uni.showLoading({
 					title: '正在加载',
