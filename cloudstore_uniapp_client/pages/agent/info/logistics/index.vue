@@ -16,20 +16,22 @@
 			<view class="logistics-main">
 				<view class="logistics-main-content" v-for="item in logisticsList" :key="item.id" @click="onLogisticsDetail(item.id)">
 					<view class="logistics-time">
-						<text>下单时间：{{item.allocationTime}}</text>
-					</view>
-					<view class="logistics-info">
-						<text class="name">{{item.agentBean.name}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.agentBean.phone}}</text>
+						<text>配送时间：{{item.allocationTime}}</text>
 						<template>
 							<text class="status" v-if="item.status === 'dps'">待配送</text>
 							<text class="status" v-else-if="item.status === 'yps'">已配送</text>
 							<text class="status" v-else-if="item.status === 'ysd'">已送达</text>
 						</template>
 					</view>
+					<view class="logistics-info">
+						<text class="name">{{item.agentBean.name}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.agentBean.phone}}</text>
+						
+					</view>
 					<view class="logistics-address">
 						<text>{{item.agentBean.detailAddress}}</text>
 						<button>确认签收</button>
 					</view>
+					
 				</view>
 			</view>
 		</view>

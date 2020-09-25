@@ -5,42 +5,43 @@
 			<view class="logistics-info">
 				<view class="info-number">
 					<text>配送单号：</text>
-					<text>2009160957775023</text>
+					<text>{{detail.allocationNo}}</text>
 				</view>
-				<view class="info-time">
+				<view class="info-number">
 					<text>配送时间：</text>
-					<text>2020-09-16 09:58:34</text>
+					<text>{{detail.allocationTime}}</text>
 				</view>
 				<view class="info-relation">
-					<view class="info-relation-title">物流单号：</view>
 					<view class="info-relation-detail">
 						<text class="cuIcon-locationfill"></text>
 						<view class="relation-info">
-							<text>李先生</text>
-							<text>13844556677</text>
+							<text>收货人:</text>
+							<text>{{detail.agentBean.name}}</text>
 						</view>
-						<view class="relation-address">深圳市宝安区福永华丰智谷福海科技产业园</view>
+						<view class="relation-info">
+							<text>联系电话:</text>
+							<text>{{detail.agentBean.phone}}</text>
+						</view>
+						<view class="relation-address">
+						配送地址:{{detail.agentBean.provinceBean.name}}
+						{{detail.agentBean.cityBean.name}}
+						{{detail.agentBean.townBean.name}}
+						{{detail.agentBean.community}}
+						{{detail.agentBean.detailAddress}}
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="logistics-detail-content">
 			<view class="cu-timeline">
-				<view class="cu-item text-blue">
+				<view class="cu-item text-blue" v-for="item in detail.infoBeans.details" >
 					<view class="content">
-						<text>2020-12-12</text> 快件已到达月球，准备发往地球
+						<text>{{item.time}}</text> 
+						<text>{{item.msg}}</text>
 					</view>
 				</view>
-				<view class="cu-item text-blue">
-					<view class="content">
-						<text>2020-12-12</text> 快件已到达月球，准备发往地球
-					</view>
-				</view>
-				<view class="cu-item text-blue">
-					<view class="content">
-						<text>2020-12-12</text> 快件已到达月球，准备发往地球
-					</view>
-				</view>
+				
 			</view>
 		</view>
 		<!-- <view class="logistics-detail-order">
@@ -57,7 +58,8 @@
 	export default {
 		data() {
 			return {
-				id: ''
+				id: '',
+				detail:null
 			}
 		},
 		components: {
@@ -77,6 +79,7 @@
 						let data = await Api.apiCall('post', Api.agent.agentLogistics.detail, parmas, true )
 						if (data) {
 							console.log(data)
+							this.detail = data.result;
 							// this.logisticsList = data.result.records
 						}
 					}
