@@ -2,8 +2,8 @@ import store from '../store/index';
 let timer, flag, timeout = null;
 export default {
 	
-	 BASEURI: 'http://106.52.184.24:18888/platform/',
-	  // BASEURI: 'https://api.sz-guochuang.com/platform/',
+	 // BASEURI: 'http://106.52.184.24:18888/platform/',
+	  BASEURI: 'https://api.sz-guochuang.com/platform/',
 	
 	h5Appid: 'wxb4660f37187c0b8e', // h5微信登录的appId  暂时测试用
 	
@@ -148,7 +148,8 @@ export default {
 			getAgentOrderCount: 'order/app/getAgentOrderCount' //我的小店的订单数量，代理商品
 		},
 		agentInfo: {
-			getAgentShop: 'agent/goods/app/getAgentShop'
+			getAgentShop: 'agent/goods/app/getAgentShop',
+			baoKuaiGoods: 'app/public/activity/baoKuaiGoods'
 		},
 		agentOrder: {
 			list: 'app/private/order/delivery/list',
@@ -156,7 +157,8 @@ export default {
 		},
 		agentLogistics: {
 			list: 'app/private/order/allocation/agent/list',
-			detail: 'app/private/order/allocation/agent/detail'
+			detail: 'app/private/order/allocation/agent/detail',
+			yps: 'app/private/order/delivery/yps'
 		}
 	},
 	statusBarHeight () { //距离头部的固定定位信息

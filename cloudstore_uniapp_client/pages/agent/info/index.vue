@@ -20,7 +20,7 @@
 			<text class="today-push-title text-red">今日必推</text>
 			<!-- <text class="line"></text> -->
 			<view class="today-push-list">
-				<view class="today-push-list-item" v-for="item in todayPush" :key='item.activityGoodsPicBean.id'>
+				<view class="today-push-list-item" v-for="item in todayPush" :key='item.activityGoodsPicBean.id' @click="onToDetail(item.activityGoodsPicBean)">
 					<image :src="item.activityGoodsPicBean.goodsPicesBean.goodsDetailPhotos[0].url" mode="" class="today-push-img"></image>
 					<view class="today-push-item-content">
 						<view class="item-title clamp">
@@ -33,7 +33,7 @@
 								<text class="price-sale price-symbol">{{item.activityGoodsPicBean.offlinePrice}}</text>
 								<text class="price-mart price-symbol">{{item.activityGoodsPicBean.goodsPicesBean.martPrice}}/{{item.activityGoodsPicBean.goodsPicesBean.unit}}</text>
 							</view>
-							<button type="default" class="promotion-btn" @click.stop="shareSave(item.activityGoodsPicBean)">分享赚￥{{financeGoodsProfit(item.financeGoodsProfit)}}</button>
+							<button type="default" class="promotion-btn">分享推广</button>
 						</view>
 					</view>
 				</view>
@@ -63,6 +63,7 @@
 					detailUrl: '/static/logo.png'
 				},
 				imageUrl: '',
+				agentId: '',
 				goodsName: '',
 				goodsId: '',
 				activityId: '',
@@ -154,7 +155,7 @@
 				return {
 					getBaoKuaiGoods: async () => {
 						let params = {}
-						let data = await Api.apiCall('post', Api.agent.agentInfo.baoKuaiGoods, params, true, false);
+						let data = await Api.apiCall('post', Api.agent.agentInfo.baoKuaiGoods, params, true);
 						if (data) {
 							console.log(data.result)
 							if (data.result.length) {
@@ -216,6 +217,17 @@
 						}
 					}
 				}
+			},
+			onToDetail (item) {
+				let goodsId = item.goodsId;
+				let activitId = item.activityId;
+				let agentGoodsId= item.id;
+				// uni.navigateTo({
+				// 	url: `/pages/agent/goods/agent/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}`
+				// });
+				uni.navigateTo({
+					url: `/pages/client/goods/detail?goodsId=${goodsId}&activityId=${activitId}&agentGoodsId=${agentGoodsId}&agentId=${this.agentId}`
+				});
 			},
 			toUrl (url, type) { //页面跳转
 				if(url) {
