@@ -173,6 +173,40 @@ export const asyncRouterMap = [
         component: () => import('@/views/activity/outline/qrCode'),
         meta: {title: '生成二维码', icon: 'product-list'},
         hidden: true
+      },
+      {
+        path: 'hotSalelist',
+        name: 'hotSale_list',
+        component: () => import('@/views/activity/hotSale/list'),
+        meta: {title: '爆款活动列表', icon: 'product-list'}
+      },
+      {
+        path: 'hotSaleaddact',
+        name: 'hotSale_add',
+        component: () => import('@/views/activity/hotSale/addact'),
+        meta: {title: '添加爆款活动', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'hotSaleassoGoods',
+        name: 'hotSale_assoGoods',
+        component: () => import('@/views/activity/hotSale/assoGoods'),
+        meta: {title: '爆款活动商品', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'hotSaleactGoodslist',
+        name: 'hotSale_goodslist',
+        component: () => import('@/views/activity/hotSale/actGoodslist'),
+        meta: {title: '爆款商品列表', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'hotSalesetParams',
+        name: 'hotSale_setparams',
+        component: () => import('@/views/activity/hotSale/settingParams'),
+        meta: {title: '爆款线下参数', icon: 'product-list'},
+        hidden: true
       }
     ]
   },
