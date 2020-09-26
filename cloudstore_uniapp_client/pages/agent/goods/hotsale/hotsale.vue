@@ -191,7 +191,7 @@
 		onShow() {
 			this.screenWidth = Api.getSystemInfoSync().screenWidth * 0.94
 			this.itemScreenWidth = parseInt(parseInt(Api.getSystemInfoSync().screenWidth) / 5)
-			this.towScreenWidth = parseInt(parseInt(this.itemScreenWidth * 10) * 0.9)
+			this.towScreenWidth = parseInt(parseInt(this.itemScreenWidth * 10) * 0.6)
 			this.carouselHeight = parseInt(parseInt(this.screenWidth) / 1.8)
 			this.agentId = uni.getStorageSync('agentId') || '-1'
 			this.getLocation()

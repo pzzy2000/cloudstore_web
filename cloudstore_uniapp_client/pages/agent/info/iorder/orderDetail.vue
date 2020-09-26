@@ -70,7 +70,6 @@
 			</view>
 					
 		</view>
-		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell">
 				<text class="cell-tit clamp">订单编号</text>
@@ -80,18 +79,32 @@
 				<text class="cell-tit clamp">下单时间</text>
 				<text class="cell-tip">{{orderDetail.createTime}}</text>
 			</view>
+			<view class="yt-list-cell">
+				<text class="cell-tit clamp">下单人姓名</text>
+				<text class="cell-tip">{{clientInfo.name}}</text>
+			</view>
+			<view class="yt-list-cell">
+				<text class="cell-tit clamp">下单人电话</text>
+				<text class="cell-tip">{{clientInfo.phone}}</text>
+			</view>
+		</view>
+		<!-- 金额明细 -->
+		<view class="yt-list">
 			<view class="yt-list-cell" v-if="transportType">
 				<text class="cell-tit clamp">收货方式</text>
 				<text class="cell-tip">{{transportType}}</text>
 			</view>
 			<view class="yt-list-cell" v-if="clientInfo.name">
 				<text class="cell-tit clamp">收货人</text>
-				<text class="cell-tip">{{clientInfo.name}}</text>
+				<text class="cell-tip">{{addressData.name || '暂无收货人'}}</text>
 			</view>
-			<view class="yt-list-cell pickAddress" v-if="clientInfo.address">
+			<view class="yt-list-cell" v-if="clientInfo.name">
+				<text class="cell-tit clamp">收货人电话</text>
+				<text class="cell-tip">{{addressData.phone || '暂无电话'}}</text>
+			</view>
+			<view class="yt-list-cell pickAddress" v-if="addressData.address != '-1'">
 				<text class="cell-tit clamp">收货地址</text>
-				<textarea :value="clientInfo.address" class="textarea" disabled="true" style="line-height: 20upx;"></textarea>
-				<!-- <text class="cell-tip">{{clientInfo.address}}</text> -->
+				<textarea :value="addressData.address" class="textarea" disabled="true" style="line-height: 20upx;"></textarea>
 			</view>
 			<view class="yt-list-cell desc-cell pickAddress" v-if="isPickAddress">
 				<text class="cell-tit">自提地址</text>
@@ -124,7 +137,11 @@
 			return {
 				goodsId: '',
 				activity: '',
-				goodsDetail: [],
+				goodsDetail: [
+					{
+						price: ''
+					}
+				],
 				orderDetail: '',
 				transportType: '',
 				skuInfo: '',
@@ -162,10 +179,10 @@
 						price: 15,
 					}
 				],
-				addressData: {
+				addressData: { //收货人的信息
 					id: '',
 					name: '',
-					mobile: '',
+					phone: '',
 					addressName: '',
 					address: '',
 					area: '',
@@ -175,8 +192,9 @@
 				isPickAddress: false,
 				pickAddress: '',
 				PickPhone: '',
-				clientInfo: {
+				clientInfo: { //下单人的信息
 					name: '',
+					phone: '',
 					address: ''
 				},
 				logisticsInfo: ''
@@ -205,17 +223,25 @@
 				let data = await Api.apiCall('post', Api.agent.order.getAgentClientOrderDetail, params, true);
 				if (data) {
 					var transportAgent = data.result.orderBean.transportAgentBean
-					var clientInfo = data.result.orderBean.clientAddressBean
+					var clientAddress = data.result.orderBean.clientAddressBean //获取收货人信息
 					this.goodsDetail = data.result.details
 					this.orderDetail = data.result.orderBean
 					this.logisticsInfo = data.result.infoDetails
-					//获取收货地址
+					//获取下单用户信息
 					try{
-						this.clientInfo.name = data.result.orderBean.clientAddressBean.name
-						this.clientInfo.address = clientInfo.provinceBean.name+clientInfo.cityBean.name+ clientInfo.areaBean.name + (clientInfo.community || '' ) +clientInfo.detailAddress
+						this.clientInfo.name = data.result.orderBean.clientBean.name
+						this.clientInfo.phone = data.result.orderBean.clientBean.phone
 					}catch(e){
 						this.clientInfo.name = ''
-						this.clientInfo.address = ''
+						this.clientInfo.phone = ''
+					}
+					//获取收货人信息
+					if (data.result.orderBean.clientAddressId != -1) {
+						this.addressData.name = clientAddress.name
+						this.addressData.phone = clientAddress.phone
+						this.addressData.address = clientAddress.provinceBean.name+clientAddress.cityBean.name+ clientAddress.areaBean.name + (clientAddress.community || '' ) +clientAddress.detailAddress
+					} else {
+						this.addressData.address = data.result.orderBean.clientAddressId
 					}
 					//获取自提点地址和配送方式
 					if (data.result.orderBean.transportType === 20) { 
@@ -223,6 +249,7 @@
 						this.PickPhone = transportAgent.phone
 						this.pickAddress = transportAgent.provinceBean.name+transportAgent.cityBean.name+transportAgent.areaBean.name+transportAgent.townBean.name+transportAgent.community+transportAgent.detailAddress
 					}
+					console.log(data.result.orderBean.transportType)
 					switch (data.result.orderBean.transportType) {
 						case 10:
 						this.transportType = '代理配送'

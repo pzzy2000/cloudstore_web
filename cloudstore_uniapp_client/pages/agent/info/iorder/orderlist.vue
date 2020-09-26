@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<nav-bar backState="3000" @backClick='toInfo'>订单列表</nav-bar>
+		<nav-bar backState="1000">订单列表</nav-bar>
 		<view class="navbar">
 			<view 
 				v-for="(item, index) in navList" :key="index" 
@@ -100,13 +100,14 @@
 			return {
 				navTitle: '',
 				tabCurrentIndex: 0,
-				orderStatus: '',
+				orderStatus: 'peisong',
 				orderList: [],
 				pageNum: 1,
-				navList: [{
+				navList: [
+					{
 						state: 0,
-						text: '全部',
-						type: '',
+						text: '待配送',
+						type: 'peisong',
 						loadingType: 'more',
 						orderList: []
 					},
@@ -119,22 +120,22 @@
 					},
 					{
 						state: 2,
-						text: '待配送',
-						type: 'peisong',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 3,
 						text: '已配送',
 						type: 'peisoged',
 						loadingType: 'more',
 						orderList: []
 					},
 					{
-						state: 4,
+						state: 3,
 						text: '已完成',
 						type: 'complete',
+						loadingType: 'more',
+						orderList: []
+					},
+					{
+						state: 4,
+						text: '全部',
+						type: '',
 						loadingType: 'more',
 						orderList: []
 					}
@@ -147,19 +148,19 @@
 				this.tabCurrentIndex = Number(options.status)
 				switch (this.tabCurrentIndex) {
 					case 0:
-					this.orderStatus = ''
+					this.orderStatus = 'peisong'
 					break;
 					case 1:
 					this.orderStatus = 'wait'
 					break;
 					case 2:
-					this.orderStatus = 'peisong'
-					break;
-					case 3:
 					this.orderStatus = 'peisoged'
 					break;
-					case 4:
+					case 3:
 					this.orderStatus = 'complete'
+					break;
+					case 4:
+					this.orderStatus = ''
 					break;
 				}
 			}
@@ -175,11 +176,6 @@
 			this.getOrderData(this.tabCurrentIndex)
 		},
 		methods: {
-			toInfo () {
-				uni.switchTab({
-					url:"/pages/client/info/index"
-				})
-			},
 			async getOrderData (tabIndex = 0) {
 				uni.showLoading({
 					title: '正在加载',
@@ -199,7 +195,9 @@
 						switch (tabIndex) {
 							case 0:
 								for (let tmp in tmpData) {
-									this.orderList.push(tmpData[tmp])
+									if (tmpData[tmp].orderStatus === 'peisong') {
+										this.orderList.push(tmpData[tmp])
+									}
 								}
 							break;
 							case 1:
@@ -211,23 +209,21 @@
 							break;
 							case 2:
 								for (let tmp in tmpData) {
-									if (tmpData[tmp].orderStatus === 'peisong') {
+									if (tmpData[tmp].orderStatus === 'peisoged') {
 										this.orderList.push(tmpData[tmp])
 									}
 								}
 							break;
 							case 3:
 								for (let tmp in tmpData) {
-									if (tmpData[tmp].orderStatus === 'peisoged') {
+									if (tmpData[tmp].orderStatus === 'complete') {
 										this.orderList.push(tmpData[tmp])
 									}
 								}
 							break;
 							case 4:
 								for (let tmp in tmpData) {
-									if (tmpData[tmp].orderStatus === 'complete') {
-										this.orderList.push(tmpData[tmp])
-									}
+									this.orderList.push(tmpData[tmp])
 								}
 							break;
 						}
@@ -435,13 +431,14 @@
 			height: 80upx;
 			font-size: 22upx;
 			color: #999999;
+			border-bottom: 1upx solid #eee;
 			.time {
 				color: #333333;
-				font-size: 24upx;
+				font-size: 28upx;
 			}
 			.state {
 				color: #49B1FD;
-				font-size: 24upx;
+				font-size: 28upx;
 			}
 			.price-box {
 				color: #999;
@@ -740,7 +737,6 @@
 	.state-btn {
 		padding: 20upx 0;
 		margin: 0;
-		border-top: 1upx solid #eee;
 		.cu-btn {
 			background-image: linear-gradient(#39A9FF, #2D9BEF);
 			color: #fff;

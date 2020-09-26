@@ -79,7 +79,7 @@
 				</view>
 				<view class="cu-item arrow"  @click="toapplyAgent('/pages/agent/info/index')" v-if="user.userType == 'leader'">
 					<view class="content">
-						<text class="cuIcon-vip"></text>
+						<text class="cuIcon-vip text-yellow"></text>
 						<text class="text-block text">团长入口</text>
 					</view>
 				</view>

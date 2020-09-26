@@ -16,19 +16,22 @@
 			<view class="logistics-main">
 				<view class="logistics-main-content" v-for="item in logisticsList" :key="item.id" @click="onLogisticsDetail(item.id)">
 					<view class="logistics-time">
-						<text>下单时间：{{item.allocationTime}}</text>
-					</view>
-					<view class="logistics-info">
-						<text class="name">{{item.agentBean.name}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.agentBean.phone}}</text>
+						<text>配送时间：{{item.allocationTime}}</text>
 						<template>
 							<text class="status" v-if="item.status === 'dps'">待配送</text>
 							<text class="status" v-else-if="item.status === 'yps'">已配送</text>
 							<text class="status" v-else-if="item.status === 'ysd'">已送达</text>
 						</template>
 					</view>
+					<view class="logistics-info">
+						<text class="name">{{item.agentBean.name}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.agentBean.phone}}</text>
+						
+					</view>
 					<view class="logistics-address">
 						<text>{{item.agentBean.detailAddress}}</text>
-						<button>确认签收</button>
+					</view>
+					<view class="logistics-btn" v-if="item.status === 'yps'">
+						<button @click.stop="onShowModal(item)">确认签收</button>
 					</view>
 				</view>
 			</view>
@@ -78,7 +81,7 @@
 		},
 		onReachBottom() { //上拉加载
 		 	this.pageNum = this.pageNum + 1;
-			this.logisticsList.length = 0
+			// this.logisticsList.length = 0
 			this.netWork().getLogistics()
 		},
 		methods: {
@@ -92,16 +95,32 @@
 						}
 						let data = await Api.apiCall('post', Api.agent.agentLogistics.list, parmas, true )
 						if (data) {
-							this.logisticsList = data.result.records
+							this.logisticsList = this.logisticsList.concat(data.result.records)
 						}
 					}
 				}
 			},
-			handler () {
+			handle () {
 				return {
 					initData: () => {
-						this.pageNum = 1
-					}
+						this.pageNum = 1,
+						this.logisticsList.length = 0
+					},
+					onAffirm: async (item) => {
+						let parmas = {
+							id: item.id,
+							deliveryType: 'Logistics'
+						}
+						console.log(item)
+						let data = await Api.apiCall('post', Api.agent.agentLogistics.yps, parmas, true )
+						if(data) {
+							if (data.code === 0) {
+								this.$api.msg('确认收货成功')
+								this.netWork().getLogistics(this.id)
+								this.handle().initData()
+							}
+						}
+					},
 				}
 			},
 			onTabSelect (item) {
@@ -109,7 +128,20 @@
 				this.status = item.status
 				this.tabName = item.name
 				this.pageNum = 1
+				this.handle().initData()
 				this.netWork().getLogistics()
+			},
+			onShowModal (item) {
+				uni.showModal({
+					title: '提示',
+					content: '您确认收货吗',
+					showCancel: true,
+					cancelText: '取消',
+					confirmText: '确认',
+					success: res => {
+						this.handle().onAffirm(item)
+					}
+				})
 			},
 			onLogisticsDetail (id) {
 				uni.navigateTo({
@@ -176,12 +208,19 @@
 			}
 			.logistics-address {
 				// line-height: 70upx;
-				height: 70upx;
+				height: 50upx;
 				font-size: 24upx;
 				color: #555;
 				display: flex;
 				justify-content: space-between;
 				align-items: flex-start;
+				border-bottom: 1upx solid #eee;
+			}
+			.logistics-btn {
+				height: 70upx;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
 				button {
 					width: 135upx;
 					height: 45upx;
