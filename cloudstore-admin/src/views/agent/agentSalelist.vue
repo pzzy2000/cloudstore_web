@@ -44,7 +44,8 @@
         @click="exportXml"
         type="primary"
         size="mini"
-        :disabled="disabled">
+        :disabled="disabled"
+        v-if="powershowing(power.agent_export)">
         {{btnText}}
       </el-button>
     </el-card>
