@@ -314,6 +314,15 @@
             	"enablePullDownRefresh": false
             }
         }
+		,{
+		    "path" : "pages/agent/info/logistics/orderDetail",
+		    "style" : { //物流详情
+		    	"navigationBarTitleText": "订单详情",
+		    	"navigationStyle": "custom",
+		    	"enablePullDownRefresh": false
+		    }
+		}
+		
         ,{
             "path" : "pages/agent/info/logistics/detail",
             "style" : { //物流详情
