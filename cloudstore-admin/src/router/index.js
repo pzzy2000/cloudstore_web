@@ -551,6 +551,12 @@ export const asyncRouterMap = [
         hidden: true
       },
       {
+        path: 'slide/list',
+        name: 'slide_list',
+        component: () => import('@/views/sys/slide/list'),
+        meta: {title: '轮播图列表', icon: 'ums-resource'}
+      },
+      {
         path: 'index/slideshow',
         name: 'slide_add',
         component: () => import('@/views/sys/slide/slideshow'),
@@ -563,12 +569,6 @@ export const asyncRouterMap = [
         component: () => import('@/views/sys/slide/slideshow'),
         meta: {title: '编辑轮播图', icon: 'ums-resource'},
         hidden: true
-      },
-      {
-        path: 'slide/list',
-        name: 'slide_list',
-        component: () => import('@/views/sys/slide/list'),
-        meta: {title: '轮播图列表', icon: 'ums-resource'}
       },
       {
         path: 'setting',
