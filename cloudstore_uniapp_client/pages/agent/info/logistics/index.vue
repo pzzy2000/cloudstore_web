@@ -24,7 +24,7 @@
 						</template>
 					</view>
 					<view class="logistics-info">
-						<text class="name">{{item.agentBean.name}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.agentBean.phone}}</text>
+						<text class="name">团长:{{item.agentBean.name}}&nbsp;&nbsp;&nbsp;&nbsp;电话:{{item.agentBean.phone}}</text>
 						
 					</view>
 					<view class="logistics-address">
@@ -48,24 +48,29 @@
 				tabList: [
 					{
 						id: 0,
+						name: '全部', //默认显示全部
+						status: '',
+					},
+					{
+						id: 1,
 						name: '待配送',
 						status: 'dps',
 					},
 					{
-						id: 1,
+						id: 2,
 						name: '已配送',
 						status: 'yps',
 					},
 					{
-						id: 2,
+						id: 3,
 						name: '已送达',
 						status: 'ysd'
 					}
 				],
 				TabCur: 0,
-				tabName: '待配送',
+				tabName: '',
 				pageNum: 1,
-				status: 'dps',
+				status: '',
 				logisticsList: []
 			}
 		},
@@ -78,6 +83,7 @@
 		onPullDownRefresh() { //下拉刷新
 			this.pageNum = 1
 			this.logisticsList.length = 0
+			this.netWork().getLogistics()
 		},
 		onReachBottom() { //上拉加载
 		 	this.pageNum = this.pageNum + 1;
@@ -94,9 +100,13 @@
 							status: this.status
 						}
 						let data = await Api.apiCall('post', Api.agent.agentLogistics.list, parmas, true )
-						if (data) {
+						if (data.result.records.length != 0) {
 							this.logisticsList = this.logisticsList.concat(data.result.records)
+						} else {
+							// this.$api.msg('没有更多了')
+							this.pageNum--
 						}
+						uni.stopPullDownRefresh();
 					}
 				}
 			},

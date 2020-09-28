@@ -48,7 +48,6 @@
 			<view class="order-detail" v-for="item in detailList" :key="item.id" @click="toDetail(item.orderId, item.id)">
 				<view class="time">
 					<text>下单时间：{{item.orderBean.createTime}}</text>
-					<button class="affirm-btn" @click="onShowModal(item)" v-if="item.deliveryType === 'Manual' && item.status === 'yps'">确认收货</button>
 				</view>
 				<view class="name-phone">
 					收货人：<text style="margin-right: 20upx;">{{item.orderBean.clientAddressBean.name}}</text><text>{{item.orderBean.clientAddressBean.phone}}</text>
@@ -57,6 +56,9 @@
 				<view class="order-person">
 					下单人信息:<view class="">姓名:{{item.orderBean.clientBean.name}}</view>
 					<view class="">电话:{{item.orderBean.clientBean.phone}}</view>
+				</view>
+				<view class="affirm-btn" v-if="item.deliveryType === 'Manual' && item.status === 'yps'">
+					<button @click.stop="onShowModal(item)" v-if="item.deliveryType === 'Manual' && item.status === 'yps'">确认收货</button>
 				</view>
 			</view>
 		</view>
@@ -81,6 +83,12 @@
 			this.id = ops.id
 			this.netWork().getLogisticsDetail(ops.id)
 		},
+		// onReachBottom() {
+		// 	this.netWork().getLogisticsDetail(this.id)
+		// },
+		onPullDownRefresh() {
+			this.netWork().getLogisticsDetail(this.id)
+		},
 		methods: {
 			toDetail(orderId, allocationDetailId) {
 				console.log("orderId "+orderId+" allocationDetailI "+allocationDetailId)
@@ -100,6 +108,7 @@
 							this.detailList = this.detail.orderBeans
 							// this.logisticsList = data.result.records
 						}
+						uni.stopPullDownRefresh();
 					}
 				}
 			},
@@ -204,7 +213,7 @@
 		margin-top: 20upx;
 		margin-bottom: 30upx;
 		.order-detail {
-			padding: 20upx 30upx;
+			padding: 10upx 30upx;
 			border-radius: 20upx;
 			font-size: 24upx;
 			border-bottom: 1upx solid #EEE;
@@ -216,18 +225,6 @@
 				justify-content: space-between;
 				align-items: center;
 				color: #999;
-				.affirm-btn {
-					width: 135upx;
-					height: 45upx;
-					line-height: 45upx;
-					text-align: center;
-					background-image: linear-gradient(#68BDFF,#49B1FE);
-					color: #fff;
-					border-radius: 25upx;
-					font-size: 24upx;
-					margin: 0;
-					padding: 0;
-				}
 			}
 			.name-phone {
 				color: #333333;
@@ -240,6 +237,25 @@
 		.order-person {
 			display: flex;
 			justify-content: space-between;
+		}
+		.affirm-btn {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			height: 80upx;
+			border-top: 1upx solid #eee;
+			button {
+				width: 135upx;
+				height: 45upx;
+				line-height: 45upx;
+				text-align: center;
+				background-image: linear-gradient(#68BDFF,#49B1FE);
+				color: #fff;
+				border-radius: 25upx;
+				font-size: 24upx;
+				margin: 0;
+				padding: 0;
+			}
 		}
 	}
 </style>

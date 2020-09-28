@@ -398,7 +398,7 @@ export default {
 					goodsId: this.goodsId,
 					goodsSkuId: this.goodsSkuId,
 					number: this.buyNumberValue,
-					payPrice:  (Number(this.buyNumberValue) *  Number(this.offlinePrice) * 1000)/1000 ,
+					payPrice:  ((Number(this.offlinePrice) * 1000) * Number(this.buyNumberValue))/1000 ,
 					price: this.offlinePrice,
 					shareId: '-1'
 				}]

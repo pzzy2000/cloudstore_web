@@ -346,14 +346,14 @@
 				if (this.transportAgentId === '-1') {
 					uni.showModal({
 						title: '提示',
-						content: '您所处小区暂无团长前置仓，您目前无法下单，敬请理解！',
+						content: '您收货地址小区暂无团长前置仓，您目前无法下单，敬请理解！',
 						showCancel: false,
 						cancelText: '取消',
 						confirmText: '确定',
 						success: res => {
-							uni.navigateBack({
-							    delta: 1
-							});
+							// uni.navigateBack({
+							//     delta: 1
+							// });
 						},
 					});
 					return false;

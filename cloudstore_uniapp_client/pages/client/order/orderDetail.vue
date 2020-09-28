@@ -28,7 +28,7 @@
 				<view class="goods-detail">
 					<view class="detail-title">
 						<text class="clamp">{{item.goodsPicesBean.goodsName}} </text>	
-						<text class="detail-title-price price-symbol">{{item.price || ''}}</text>
+						<text class="detail-title-price price-symbol">{{item.payPrice || ''}}</text>
 					</view>
 					<view class="detail-subtitle">
 						<text class="clamp">{{item.goodsPicesBean.goodsSubtitle}}</text>
@@ -39,7 +39,7 @@
 						</view>
 					</view>
 					<view class="detail-price">
-						<view class="price-num price-symbol">{{item.payPrice}} <text class="price-sku">/{{item.goodsSkuBean.skuValue}}</text> </view>
+						<view class="price-num price-symbol">{{item.price}} <text class="price-sku">/{{item.goodsSkuBean.skuValue}}</text> </view>
 						<text>× {{item.quantity}}</text>
 					</view>
 				</view>
