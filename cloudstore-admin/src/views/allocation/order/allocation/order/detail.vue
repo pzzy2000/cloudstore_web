@@ -18,7 +18,7 @@
 <!--        <el-button size="mini">修改费用信息</el-button>-->
 <!--        <el-button size="mini">发送站内信息</el-button>-->
 <!--         <el-button size="mini">关闭订单</el-button>-->
-         <el-button type="primary" size="mini" v-if="baseInfo.orderStatus == 'peisong' ? true : false">配送</el-button>
+<!--         <el-button type="primary" size="mini" v-if="baseInfo.orderStatus == 'peisong' ? true : false">配送</el-button>-->
         <el-button size="mini" @click="backPage">返回</el-button>
       </div>
     </div>

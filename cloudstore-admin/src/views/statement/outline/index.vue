@@ -137,13 +137,25 @@
         })
       },
       handleSizeChange(val) {
+        if (this.listQuery.startTime !== undefined) {
+          delete this.listQuery.startTime;
+        }
+        if (this.listQuery.endsTime !== undefined) {
+          delete this.listQuery.endsTime;
+        }
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.getList();
+        this.getList(this.listQuery);
       },
       handleCurrentChange(val) {
+        if (this.listQuery.startTime !== undefined) {
+          delete this.listQuery.startTime;
+        }
+        if (this.listQuery.endsTime !== undefined) {
+          delete this.listQuery.endsTime;
+        }
         this.listQuery.pageNum = val;
-        this.getList();
+        this.getList(this.listQuery);
       },
       today() {
         this.value = '';
