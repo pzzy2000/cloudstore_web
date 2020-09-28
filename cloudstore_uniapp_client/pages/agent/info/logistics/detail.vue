@@ -45,7 +45,7 @@
 			</view>
 		</view>
 		<view class="logistics-detail-order">
-			<view class="order-detail" v-for="item in detailList" :key="item.id">
+			<view class="order-detail" v-for="item in detailList" :key="item.id" @click="toDetail(item.orderId, item.id)">
 				<view class="time">
 					<text>下单时间：{{item.orderBean.createTime}}</text>
 					<button class="affirm-btn" @click="onShowModal(item)" v-if="item.deliveryType === 'Manual' && item.status === 'yps'">确认收货</button>
@@ -82,6 +82,12 @@
 			this.netWork().getLogisticsDetail(ops.id)
 		},
 		methods: {
+			toDetail(orderId, allocationDetailId) {
+				console.log("orderId "+orderId+" allocationDetailI "+allocationDetailId)
+				uni.navigateTo({
+					url: '/pages/agent/info/logistics/orderDetail?orderId='+orderId+'&allocationDetailId='+allocationDetailId
+				})
+			},
 			netWork () {
 				return {
 					getLogisticsDetail: async (id) => {
